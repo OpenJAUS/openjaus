@@ -1,0 +1,15 @@
+#! /bin/bash
+# CIMAR Node Manager Install Script
+
+echo ;
+echo CIMAR Node Manager Install Begin
+echo ;
+
+if [ ! -f ./nodeManager.conf ]; then cp ./nodeManager.conf.template ./nodeManager.conf; fi;
+if [ ! -d /var/log/CIMAR ]; then mkdir /var/log/CIMAR; fi;
+chmod -v +x `pwd`/NM
+ln -vsf `pwd`/NM /usr/bin/NM
+
+echo ;
+echo CIMAR Node Manager Install Complete
+echo ;

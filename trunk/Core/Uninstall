@@ -1,0 +1,18 @@
+#! /bin/bash
+# CIMAR Core Software Uninstall Script
+
+# JAVA Library and Node Manager
+cd ./libjausJava; ./Uninstall; cd ..;
+cd ./nodeManager; ./Uninstall; cd ..;
+
+# C Libraries
+cd ./libcimar; ./Uninstall; cd ..;
+cd ./libjausC; ./Uninstall; cd ..;
+cd ./libnodeManager; ./Uninstall; cd ..;
+cd ./nodeManager; ./Uninstall; cd ..;
+
+rm -Rfv /usr/include/cimar
+
+echo ;
+echo CIMAR Core Software Uninstall Complete
+echo ;

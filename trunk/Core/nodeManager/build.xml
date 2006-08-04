@@ -1,0 +1,74 @@
+<project name="NodeManager" default="all" basedir=".">
+	<description>
+        Ant Build File for teh NodeManager
+    </description>
+
+	<property name="seg" location="." />
+	
+	<property name="src" location="${seg}/src" />
+	<property name="class" location="${seg}/Build" />
+	<property name="doc" location="${data}/doc" />
+	<property name="jars" location="${seg}/bin" />
+	<property name="lib" location="/usr/include/cimar/jaus.jar" />
+	
+	<property name="deprecation" value="true" />
+
+	<target name="init">
+		<mkdir dir="${src}" />
+		<mkdir dir="${class}" />
+		<!--<mkdir dir="${doc}" />-->
+		<mkdir dir="${jars}" />
+	</target>
+	
+	<target name="compile" depends="init" description="generate all classes">
+		<mkdir dir="${class}" />
+		<!--<mkdir dir="${class}/com" />-->
+		<copy todir="${class}">
+			<fileset dir="${src}">
+				<exclude name="**/*.java" />
+			</fileset>
+		</copy>
+		<javac debug="true"
+               source="1.4"
+		       target="1.4"
+		       srcdir="${src}"
+		       destdir="${class}"
+			   listfiles="no"
+			   deprecation="${deprication}"
+			   classpath="${lib}"
+		/>
+	</target>
+	
+	<!-- Creates nodeManager.jar -->
+	<target name="all" depends="compile, init" description="Compiles and creates nodeManager.jar">
+		<jar jarfile="${jars}/nodeManager.jar" basedir="${class}" compress="false"
+			includes="**/*.class">
+			<manifest>
+				<attribute name="Main-Class" value="NodeManager"/>
+			</manifest>
+		</jar>
+	</target>
+
+	<!-- Generats javadoc -->
+	<target name="doc" depends="compile" description="generate the javadoc documentation">
+		<javadoc destdir="${doc}" author="true" version="true" use="true" package="yes" windowtitle="HealthCenter API">
+			<fileset dir="${src}">
+				<include name="**/*.java" />
+			</fileset>
+		</javadoc>
+	</target>
+
+	<!-- Removes all compiled files and documentation, but leaves any created jars -->
+	<target name="clean" description="clean up">
+		<delete dir="${class}" />
+		<!--<delete dir="${doc}" />-->
+		<delete>
+			<fileset dir="${src}" includes="**/*.class" />
+			<fileset dir="${jars}" includes="**/*.jar" />
+		</delete>
+	</target>
+
+	<target name="rebuild" depends="clean" description="build from clean">
+		<ant />
+	</target>
+</project>

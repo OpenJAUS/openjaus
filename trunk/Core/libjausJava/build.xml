@@ -1,0 +1,71 @@
+<project name="libjausJava" default="all" basedir=".">
+	<description>
+        Ant Build File for teh libjausJava
+    </description>
+
+	<property name="seg" location="." />
+	
+	<property name="src" location="${seg}/src" />
+	<property name="class" location="${seg}/Build/class" />
+	<property name="doc" location="${data}/doc" />
+	<property name="jars" location="${seg}/lib" />
+	
+	<property name="deprecation" value="true" />
+
+	<target name="init">
+		<mkdir dir="${src}" />
+		<mkdir dir="${class}" />
+		<!--<mkdir dir="${doc}" />-->
+		<mkdir dir="${jars}" />
+	</target>
+	
+	<target name="compile" depends="init" description="generate all classes">
+		<mkdir dir="${class}" />
+		<mkdir dir="${class}/jaus" />
+		<copy todir="${class}/jaus">
+			<fileset dir="${src}">
+				<exclude name="**/*.java" />
+			</fileset>
+		</copy>
+		<javac debug="true"
+			target="1.4"
+			source="1.4"
+			srcdir="${src}"
+			destdir="${class}"
+			listfiles="no"
+			deprecation="${deprication}"
+		/>
+	</target>
+	
+	<!-- Creates jaus.jar -->
+	<target name="all" depends="compile, init" description="Compiles and creates jaus.jar">
+		<jar jarfile="${jars}/jaus.jar" basedir="${class}" compress="false"
+			includes="jaus/**/*.class">
+			<!-- no manifest --><!--<manifest>
+				<attribute name="Main-Class" value="NodeManager"/>
+			</manifest>-->
+		</jar>
+	</target>
+
+	<!-- Generats javadoc -->
+	<target name="doc" depends="compile" description="generate the javadoc documentation">
+		<javadoc destdir="${doc}" author="true" version="true" use="true" package="yes" windowtitle="HealthCenter API">
+			<fileset dir="${src}">
+				<include name="**/*.java" />
+			</fileset>
+		</javadoc>
+	</target>
+
+	<!-- Removes all compiled files and documentation, but leaves any created jars -->
+	<target name="clean" description="clean up">
+		<delete dir="${class}" />
+		<!--<delete dir="${doc}" />-->
+		<delete>
+			<fileset dir="${src}" includes="**/*.class" />
+		</delete>
+	</target>
+
+	<target name="rebuild" depends="clean" description="build from clean">
+		<ant />
+	</target>
+</project> 

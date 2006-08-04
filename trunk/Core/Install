@@ -1,0 +1,16 @@
+#! /bin/bash 
+# CIMAR Core Software Install Script
+
+# JAVA Library and Node Manager
+cd ./libjausJava; ./Install; cd ..;
+cd ./nodeManager; ./Install; cd ..;
+
+# C Libraries
+cd ./libcimar; ./Install; cd ..;
+cd ./libjausC; ./Install; cd ..;
+cd ./libnodeManager; ./Install; cd ..;	
+cd ./nodeManager; ./Install; cd ..;	
+
+echo ;
+echo CIMAR Core Software Install Complete
+echo ;

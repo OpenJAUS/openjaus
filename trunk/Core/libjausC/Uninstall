@@ -1,0 +1,14 @@
+#! /bin/bash
+# CIMAR C JAUS Library Uninstall Script
+
+echo ;
+echo CIMAR C JAUS Library Uninstall Begin
+echo ;
+
+rm -Rfv /usr/include/cimar/jaus
+rm -fv /usr/include/cimar/jaus.h
+rm -fv /usr/lib/libjausC.*
+
+echo ;
+echo CIMAR C JAUS Library Uninstall Complete
+echo ;

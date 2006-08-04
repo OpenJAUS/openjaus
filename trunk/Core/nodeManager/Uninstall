@@ -1,0 +1,12 @@
+#! /bin/bash
+# CIMAR Node Manager Uninstall Script
+
+echo ;
+echo CIMAR Node Manager Uninstall Begin
+echo ;
+
+rm -fv /usr/bin/NM
+
+echo ;
+echo CIMAR Node Manager Uninstall Complete
+echo ;

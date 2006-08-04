@@ -1,0 +1,13 @@
+#! /bin/bash
+# CIMAR Java JAUS Library Install Script
+
+echo ;
+echo CIMAR Java JAUS Library Install Begin
+echo ;
+
+if [ ! -d /usr/include/cimar ]; then mkdir /usr/include/cimar; fi;
+cp -PpRv ./lib/jaus.jar /usr/include/cimar/
+
+echo ;
+echo CIMAR Java JAUS Library Install Complete
+echo ;

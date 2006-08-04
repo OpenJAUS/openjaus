@@ -1,0 +1,829 @@
+// File:		libNodeManager.c
+// Version:		3.2
+// Written by:	Tom Galluzzo (galluzzo AT gmail DOT com) and Danny Kent (jaus AT dannykent DOT com)
+// Date:		08/04/06
+// Description:	The libnodeManager provides an interface for a commponent to access core node management,
+//				service connections, large message handling and default message processing
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/time.h>
+#include <cimar.h>
+#include <cimar/jaus.h>
+#include "nodeManager.h"
+
+#define NODE_MANAGER_INTERFACE_PORT 24627
+#define NODE_MANAGER_MESSAGE_PORT 24629
+#define NODE_MANAGER_TIMEOUT_SEC 3.0
+
+#define INTERFACE_THREAD_TIMEOUT_SEC	3.0
+#define INTERFACE_SOCKET_TIMEOUT_SEC	1.0
+#define MESSAGE_SOCKET_TIMEOUT_SEC		0.5
+
+#define INTERFACE_MESSAGE_SIZE_BYTES 							8
+#define INTERFACE_MESSAGE_CHECK_IN								0x01
+#define INTERFACE_MESSAGE_REPORT_ADDRESS						0x02
+#define INTERFACE_MESSAGE_CHECK_OUT								0x03
+#define INTERFACE_MESSAGE_VERIFY_ADDRESS						0x04
+#define INTERFACE_MESSAGE_ADDRESS_VERIFIED						0x05
+#define INTERFACE_MESSAGE_GET_COMPONENT_ADDRESS_LIST			0x06
+#define INTERFACE_MESSAGE_COMPONENT_ADDRESS_LIST_RESPONSE		0x07
+#define INTERFACE_MESSAGE_LOOKUP_ADDRESS						0x08
+#define INTERFACE_MESSAGE_LOOKUP_ADDRESS_RESPONSE				0x09
+#define INTERFACE_MESSAGE_LOOKUP_SERVICE_ADDRESS				0x0A
+#define INTERFACE_MESSAGE_LOOKUP_SERVICE_ADDRESS_RESPONSE		0x0B
+#define INTERFACE_MESSAGE_LOOKUP_SERVICE_ADDRESS_LIST			0x0C
+#define INTERFACE_MESSAGE_LOOKUP_SERVICE_ADDRESS_LIST_RESPONSE	0x0D
+
+static int checkIntoNodeManager(NodeManagerInterface);
+static int checkOutOfNodeManager(NodeManagerInterface);
+void *heartbeatThread(void *);
+void *receiveThread(void *);
+
+NodeManagerInterface nodeManagerOpen(JausComponent cmpt)
+{
+	pthread_attr_t threadAttributes;	// Thread attributes for the component threads spawned in this function
+	NodeManagerInterface nmi = NULL;
+
+	if(cmpt == NULL)
+	{
+		return NULL;
+	}
+	
+	nmi = (NodeManagerInterface)malloc(sizeof(NodeManagerInterfaceStruct));
+	if(nmi == NULL)
+	{
+		return NULL;
+	}
+	
+	nmi->cmpt = cmpt;
+	nmi->timestamp = getTimeSeconds();
+
+	nmi->ipAddress = inetAddressGetLocalHost();
+	if(nmi->ipAddress == NULL)
+	{
+		free(nmi);
+		return NULL;
+	}
+
+	nmi->interfaceSocket = datagramSocketCreate(0, nmi->ipAddress);
+	if(nmi->interfaceSocket == NULL)
+	{
+		inetAddressDestroy(nmi->ipAddress);
+		free(nmi);
+		return NULL;
+	}
+	datagramSocketSetTimeout(nmi->interfaceSocket, INTERFACE_SOCKET_TIMEOUT_SEC);
+	
+	memset(&nmi->messageSocket, 0, sizeof(nmi->messageSocket));
+	nmi->messageSocket = datagramSocketCreate(0, nmi->ipAddress);
+	if(nmi->messageSocket == NULL)
+	{
+		datagramSocketDestroy(nmi->interfaceSocket);
+		inetAddressDestroy(nmi->ipAddress);
+		free(nmi);
+		return NULL;
+	}
+	datagramSocketSetTimeout(nmi->messageSocket, MESSAGE_SOCKET_TIMEOUT_SEC);
+
+	if(checkIntoNodeManager(nmi))
+	{
+		datagramSocketDestroy(nmi->messageSocket);
+		datagramSocketDestroy(nmi->interfaceSocket);
+		inetAddressDestroy(nmi->ipAddress);
+		free(nmi);
+		return NULL;
+	}
+
+	nmi->receiveQueue = queueCreate(NULL);
+	
+	nmi->scm = scManagerCreate();
+	if(nmi->scm == NULL)
+	{
+		queueDestroy(nmi->receiveQueue, NULL);
+		checkOutOfNodeManager(nmi);
+		datagramSocketDestroy(nmi->messageSocket);
+		datagramSocketDestroy(nmi->interfaceSocket);
+		inetAddressDestroy(nmi->ipAddress);
+		free(nmi);
+		return NULL;
+	}
+		
+	nmi->lmh = lmHandlerCreate();
+	if(nmi->lmh == NULL)
+	{
+		scManagerDestroy(nmi->scm);
+		queueDestroy(nmi->receiveQueue, NULL);
+		checkOutOfNodeManager(nmi);
+		datagramSocketDestroy(nmi->messageSocket);
+		datagramSocketDestroy(nmi->interfaceSocket);
+		inetAddressDestroy(nmi->ipAddress);
+		free(nmi);
+		return NULL;
+	}
+
+	nmi->isOpen = TRUE;
+
+	memset(&threadAttributes, 0, sizeof(threadAttributes));
+	if(pthread_attr_init(&threadAttributes))
+	{
+		lmHandlerDestroy(nmi->lmh);
+		scManagerDestroy(nmi->scm);
+		queueDestroy(nmi->receiveQueue, NULL);
+		checkOutOfNodeManager(nmi);
+		datagramSocketDestroy(nmi->messageSocket);
+		datagramSocketDestroy(nmi->interfaceSocket);
+		inetAddressDestroy(nmi->ipAddress);
+		free(nmi);
+		return NULL;
+	}
+
+	if(pthread_attr_setdetachstate(&threadAttributes, PTHREAD_CREATE_DETACHED))
+	{
+		lmHandlerDestroy(nmi->lmh);
+		scManagerDestroy(nmi->scm);
+		queueDestroy(nmi->receiveQueue, NULL);
+		checkOutOfNodeManager(nmi);
+		datagramSocketDestroy(nmi->messageSocket);
+		datagramSocketDestroy(nmi->interfaceSocket);
+		inetAddressDestroy(nmi->ipAddress);
+		free(nmi);
+		return NULL;
+	}
+
+	nmi->heartbeatThreadId = 0;
+	if(pthread_create(&nmi->heartbeatThreadId, &threadAttributes, heartbeatThread, (void *)nmi))
+	{
+		lmHandlerDestroy(nmi->lmh);
+		scManagerDestroy(nmi->scm);
+		queueDestroy(nmi->receiveQueue, NULL);
+		checkOutOfNodeManager(nmi);
+		datagramSocketDestroy(nmi->messageSocket);
+		datagramSocketDestroy(nmi->interfaceSocket);
+		inetAddressDestroy(nmi->ipAddress);
+		free(nmi);
+		return NULL;
+	}
+
+	nmi->receiveThreadId = 0;
+	if(pthread_create(&nmi->receiveThreadId, &threadAttributes, receiveThread, (void *)nmi))
+	{
+		pthread_cancel(nmi->heartbeatThreadId);
+		lmHandlerDestroy(nmi->lmh);
+		scManagerDestroy(nmi->scm);
+		queueDestroy(nmi->receiveQueue, NULL);
+		checkOutOfNodeManager(nmi);
+		datagramSocketDestroy(nmi->messageSocket);
+		datagramSocketDestroy(nmi->interfaceSocket);
+		inetAddressDestroy(nmi->ipAddress);
+		free(nmi);
+		return NULL;
+	}
+	
+	pthread_attr_destroy(&threadAttributes);
+
+	scManagerAddSupportedMessage(nmi, JAUS_REPORT_COMPONENT_STATUS);
+	scManagerAddSupportedMessage(nmi, JAUS_REPORT_COMPONENT_AUTHORITY);
+
+	return nmi;
+}
+
+int nodeManagerClose(NodeManagerInterface nmi)
+{
+	int result = 0;
+	double timeOutSec;
+	
+	if(nmi == NULL)
+	{
+		return -1;
+	}
+	
+	if(nmi->isOpen) // Execute the close only if the connection is open
+	{
+		scManagerRemoveSupportedMessage(nmi, JAUS_REPORT_COMPONENT_STATUS);
+		scManagerRemoveSupportedMessage(nmi, JAUS_REPORT_COMPONENT_AUTHORITY);
+
+		nmi->isOpen = 0;
+
+		timeOutSec = getTimeSeconds() + INTERFACE_THREAD_TIMEOUT_SEC;
+		while(nmi->heartbeatThreadRunning)
+		{
+			usleep(10000);
+			if(getTimeSeconds() >= timeOutSec)
+			{
+				pthread_cancel(nmi->heartbeatThreadId);
+				nmi->heartbeatThreadRunning = 0;
+				result = -4;			
+				break;
+			}
+		}
+
+		timeOutSec = getTimeSeconds() + INTERFACE_THREAD_TIMEOUT_SEC;
+		while(nmi->receiveThreadRunning)
+		{
+			usleep(10000);
+			if(getTimeSeconds() >= timeOutSec)
+			{
+				pthread_cancel(nmi->receiveThreadId);
+				nmi->receiveThreadRunning = 0;
+				result -= 3;
+				break;
+			}
+		}
+
+		lmHandlerDestroy(nmi->lmh);
+		scManagerDestroy(nmi->scm);
+		queueDestroy(nmi->receiveQueue, free); 
+		checkOutOfNodeManager(nmi);
+		datagramSocketDestroy(nmi->messageSocket);
+		datagramSocketDestroy(nmi->interfaceSocket);
+		inetAddressDestroy(nmi->ipAddress);
+		free(nmi);
+	}
+	else
+	{
+		return -2;
+	}
+
+	return result;
+};
+
+static int checkIntoNodeManager(NodeManagerInterface nmi)
+{
+	DatagramPacket packet;
+
+	packet = datagramPacketCreate();
+
+	packet->bufferSizeBytes = INTERFACE_MESSAGE_SIZE_BYTES;
+	packet->buffer = (unsigned char *)malloc(packet->bufferSizeBytes);
+	memset(packet->buffer, 0, packet->bufferSizeBytes);	
+	packet->buffer[0]= INTERFACE_MESSAGE_CHECK_IN;
+	packet->buffer[1]= nmi->cmpt->address->component;
+	packet->buffer[2] = (unsigned char)(nmi->messageSocket->port & 0xFF);
+	packet->buffer[3] = (unsigned char)((nmi->messageSocket->port & 0xFF00) >> 8);
+
+	packet->port = NODE_MANAGER_INTERFACE_PORT;
+	packet->address->value = nmi->ipAddress->value;
+	
+	datagramSocketSend(nmi->interfaceSocket, packet);
+	datagramSocketReceive(nmi->interfaceSocket, packet);
+
+	if(packet->buffer[0] == INTERFACE_MESSAGE_REPORT_ADDRESS)
+	{
+		nmi->cmpt->address->instance = packet->buffer[1];
+		nmi->cmpt->address->component = packet->buffer[2];
+		nmi->cmpt->address->node = packet->buffer[3];
+		nmi->cmpt->address->subsystem = packet->buffer[4];
+
+		free(packet->buffer);
+		datagramPacketDestroy(packet);
+		return 0;
+	}
+	else
+	{
+		free(packet->buffer);
+		datagramPacketDestroy(packet);
+		return -1;
+	}
+}
+
+static int checkOutOfNodeManager(NodeManagerInterface nmi)
+{
+	DatagramPacket packet;
+
+	packet = datagramPacketCreate();
+
+	packet->bufferSizeBytes = INTERFACE_MESSAGE_SIZE_BYTES * sizeof(unsigned char);
+	packet->buffer = (unsigned char*)malloc(packet->bufferSizeBytes);
+	memset(packet->buffer, 0, packet->bufferSizeBytes);	
+	packet->buffer[0]= INTERFACE_MESSAGE_CHECK_OUT;
+	packet->buffer[1]= nmi->cmpt->address->instance;
+	packet->buffer[2] = nmi->cmpt->address->component;
+	packet->buffer[3] = nmi->cmpt->address->node;
+	packet->buffer[4] = nmi->cmpt->address->subsystem;
+	packet->port = NODE_MANAGER_INTERFACE_PORT;
+	packet->address->value = nmi->ipAddress->value;
+
+	datagramSocketSend(nmi->interfaceSocket, packet);
+
+	// datagramSocketReceive(nmi->interfaceSocket, &packet);  TODO: Implement reply
+
+	free(packet->buffer);
+	datagramPacketDestroy(packet);
+	return 1;
+}
+
+void *heartbeatThread(void *threadArgument)
+{
+	NodeManagerInterface nmi = (NodeManagerInterface)threadArgument;
+	JausMessage txMessage;
+	ReportHeartbeatPulseMessage heartbeat = reportHeartbeatPulseMessageCreate();
+	
+	nmi->heartbeatThreadRunning = 1;
+	nmi->heartbeatCount = 0;
+	
+	heartbeat->source->id = nmi->cmpt->address->id;
+	heartbeat->destination->subsystem = nmi->cmpt->address->subsystem;
+	heartbeat->destination->node = nmi->cmpt->address->node;
+	heartbeat->destination->component = JAUS_NODE_MANAGER_COMPONENT;
+	heartbeat->destination->instance = 1;
+
+	txMessage = reportHeartbeatPulseMessageToJausMessage(heartbeat);
+
+	while(nmi->isOpen)
+	{
+		nodeManagerSend(nmi, txMessage);
+		nmi->heartbeatCount++;
+		if( (getTimeSeconds() - NODE_MANAGER_TIMEOUT_SEC) > nmi->timestamp)
+		{
+			cError("libNodeManager: Node Manager Has Timed Out\n");
+			//nmi->cmpt->state = JAUS_FAILURE_STATE;
+			//break;
+		}
+		sleep(1); // sleep one second
+	}
+
+	jausMessageDestroy(txMessage);	
+	reportHeartbeatPulseMessageDestroy(heartbeat);
+	nmi->heartbeatThreadRunning = 0;
+	
+	return NULL;
+}
+
+void *receiveThread(void *threadArgument)
+{
+	int bufferSizeBytes = JAUS_HEADER_SIZE_BYTES + JAUS_MAX_DATA_SIZE_BYTES;
+
+	NodeManagerInterface nmi = (NodeManagerInterface)threadArgument;
+	DatagramPacket packet;
+
+	JausMessage message;
+
+	nmi->receiveThreadRunning = 1;
+
+	nmi->receiveCount = 0;
+	
+	packet = datagramPacketCreate();
+
+	packet->bufferSizeBytes = JAUS_HEADER_SIZE_BYTES + JAUS_MAX_DATA_SIZE_BYTES;
+	packet->buffer = (unsigned char*)malloc(packet->bufferSizeBytes);
+	memset(packet->buffer, 0, packet->bufferSizeBytes);
+	
+	while(nmi->isOpen)
+	{
+		if(datagramSocketReceive(nmi->messageSocket, packet) > 0)
+		{	
+			message = jausMessageCreate();		
+			if(jausMessageFromBuffer(message, packet->buffer, bufferSizeBytes))
+			{
+				if(message->dataFlag)
+				{
+					lmHandlerReceiveLargeMessage(nmi, message);
+				}
+				else
+				{
+					if(message->scFlag)
+					{
+						if(	(message->commandCode >= JAUS_CREATE_SERVICE_CONNECTION && 
+							message->commandCode <= JAUS_TERMINATE_SERVICE_CONNECTION) ||
+							message->commandCode == JAUS_CREATE_EVENT ||
+							message->commandCode == JAUS_CONFIRM_EVENT ||
+							message->commandCode == JAUS_CANCEL_EVENT)
+						{
+							// This is to take Service Connection Control messages and send them on through
+							// to the regular receiveQueue. JAUS 3.2 RA says to set the scFlag bit if it is
+							// a Service Connection Control message, but logically they do not need to go
+							// to the scManager and instead to the component
+							queuePush(nmi->receiveQueue, (void *)message);
+						}
+						else
+						{
+							scManagerReceiveMessage(nmi, message);
+						}
+					}
+					else
+					{
+						queuePush(nmi->receiveQueue, (void *)message);
+					}
+				}
+				nmi->receiveCount++;
+				//printf("NMI: Receive Count: %d\n", nmi->receiveCount);
+			}
+			else
+			{
+				jausMessageDestroy(message);
+			}
+		}
+	}
+	
+	free(packet->buffer);
+
+	datagramPacketDestroy(packet);
+
+	nmi->receiveThreadRunning = 0;
+	
+	return NULL;
+}
+
+JausAddressList *nodeManagerGetComponentAddressList(NodeManagerInterface nmi, unsigned char componentId)
+{	
+	JausAddressList *addressList = NULL;
+	JausAddressList *currentAddress = NULL;
+	DatagramPacket packet;
+
+	if(!nmi || !nmi->isOpen || !componentId)
+	{
+		return NULL;
+	}
+
+	packet = datagramPacketCreate();
+
+	packet->bufferSizeBytes = INTERFACE_MESSAGE_SIZE_BYTES;
+	packet->buffer = (unsigned char *)malloc(packet->bufferSizeBytes);
+	memset(packet->buffer, 0, packet->bufferSizeBytes);	
+	packet->buffer[0] = INTERFACE_MESSAGE_GET_COMPONENT_ADDRESS_LIST;
+	packet->buffer[1] = componentId;
+	packet->buffer[2] = 0;
+	packet->buffer[3] = 0;
+	packet->buffer[4] = 0;
+
+	packet->port = NODE_MANAGER_INTERFACE_PORT;
+	packet->address->value = nmi->ipAddress->value;
+	
+	datagramSocketSend(nmi->interfaceSocket, packet);
+	datagramSocketReceive(nmi->interfaceSocket, packet);
+
+	while(packet->buffer[0] == INTERFACE_MESSAGE_COMPONENT_ADDRESS_LIST_RESPONSE && packet->buffer[4])
+	{
+		if(currentAddress)
+		{
+			currentAddress->nextAddress = (JausAddressList *)malloc(sizeof(JausAddressList));
+			currentAddress = currentAddress->nextAddress;
+			currentAddress->address = jausAddressCreate();
+			currentAddress->address->instance = packet->buffer[1];
+			currentAddress->address->component = packet->buffer[2];
+			currentAddress->address->node = packet->buffer[3];
+			currentAddress->address->subsystem = packet->buffer[4];			
+			currentAddress->nextAddress = NULL;
+		}
+		else
+		{
+			addressList = (JausAddressList *)malloc(sizeof(JausAddressList));
+			currentAddress = addressList;
+			currentAddress->address = jausAddressCreate();
+			currentAddress->address->instance = packet->buffer[1];
+			currentAddress->address->component = packet->buffer[2];
+			currentAddress->address->node = packet->buffer[3];
+			currentAddress->address->subsystem = packet->buffer[4];			
+			currentAddress->nextAddress = NULL;
+		}
+
+		packet->buffer[0] = INTERFACE_MESSAGE_GET_COMPONENT_ADDRESS_LIST;
+		packet->buffer[1] = 0;
+		packet->buffer[2] = 0;
+		packet->buffer[3] = 0;
+		packet->buffer[4] = 0;
+
+		datagramSocketSend(nmi->interfaceSocket, packet);
+		datagramSocketReceive(nmi->interfaceSocket, packet);
+	}
+	
+	free(packet->buffer);
+	datagramPacketDestroy(packet);
+
+	return addressList;	
+}
+
+JausBoolean nodeManagerLookupAddress(NodeManagerInterface nmi, JausAddress lookupAddress)
+{	
+	DatagramPacket packet;
+
+	if(!nmi || !nmi->isOpen)
+	{
+		return JAUS_FALSE;
+	}
+
+	packet = datagramPacketCreate();
+
+	packet->bufferSizeBytes = INTERFACE_MESSAGE_SIZE_BYTES;
+	packet->buffer = (unsigned char *)malloc(packet->bufferSizeBytes);
+	memset(packet->buffer, 0, packet->bufferSizeBytes);	
+	packet->buffer[0] = INTERFACE_MESSAGE_LOOKUP_ADDRESS;
+	packet->buffer[1] = lookupAddress->instance;
+	packet->buffer[2] = lookupAddress->component;
+	packet->buffer[3] = lookupAddress->node;
+	packet->buffer[4] = lookupAddress->subsystem;
+
+	packet->port = NODE_MANAGER_INTERFACE_PORT;
+	packet->address->value = nmi->ipAddress->value;
+	
+	datagramSocketSend(nmi->interfaceSocket, packet);
+	datagramSocketReceive(nmi->interfaceSocket, packet);
+
+	if(	packet->buffer[0] == INTERFACE_MESSAGE_LOOKUP_ADDRESS_RESPONSE && packet->buffer[5])
+	{
+		lookupAddress->instance = packet->buffer[1];
+		lookupAddress->component = packet->buffer[2];
+		lookupAddress->node = packet->buffer[3];
+		lookupAddress->subsystem = packet->buffer[4];			
+		
+		free(packet->buffer);
+		datagramPacketDestroy(packet);
+		return JAUS_TRUE;
+	}
+	else
+	{
+		free(packet->buffer);
+		datagramPacketDestroy(packet);
+		return JAUS_FALSE;
+	}
+}
+
+JausAddressList *nodeManagerLookupServiceAddressList(NodeManagerInterface nmi, JausAddress lookupAddress, unsigned short commandCode, int serviceCommandType)
+{	
+	JausAddressList *addressList = NULL;
+	JausAddressList *currentAddress = NULL;
+	DatagramPacket packet;
+
+	if(!nmi || !nmi->isOpen || !commandCode)
+	{
+		return JAUS_FALSE;
+	}
+
+	packet = datagramPacketCreate();
+
+	packet->bufferSizeBytes = INTERFACE_MESSAGE_SIZE_BYTES;
+	packet->buffer = (unsigned char *)malloc(packet->bufferSizeBytes);
+	memset(packet->buffer, 0, packet->bufferSizeBytes);	
+	packet->buffer[0] = INTERFACE_MESSAGE_LOOKUP_SERVICE_ADDRESS_LIST;
+	packet->buffer[1] = lookupAddress->instance;
+	packet->buffer[2] = lookupAddress->component;
+	packet->buffer[3] = lookupAddress->node;
+	packet->buffer[4] = lookupAddress->subsystem;
+	packet->buffer[5] = (unsigned char)(commandCode & 0xFF);
+	packet->buffer[6] = (unsigned char)((commandCode & 0xFF00) >> 8);
+	packet->buffer[7] = (unsigned char)(serviceCommandType & 0xFF);
+
+	packet->port = NODE_MANAGER_INTERFACE_PORT;
+	packet->address->value = nmi->ipAddress->value;
+	
+	datagramSocketSend(nmi->interfaceSocket, packet);
+	datagramSocketReceive(nmi->interfaceSocket, packet);
+
+	while(packet->buffer[0] == INTERFACE_MESSAGE_COMPONENT_ADDRESS_LIST_RESPONSE && packet->buffer[5])
+	{
+		if(currentAddress)
+		{
+			currentAddress->nextAddress = (JausAddressList *)malloc(sizeof(JausAddressList));
+			currentAddress = currentAddress->nextAddress;
+			currentAddress->address = jausAddressCreate();
+			currentAddress->address->instance = packet->buffer[1];
+			currentAddress->address->component = packet->buffer[2];
+			currentAddress->address->node = packet->buffer[3];
+			currentAddress->address->subsystem = packet->buffer[4];			
+			currentAddress->nextAddress = NULL;
+		}
+		else
+		{
+			addressList = (JausAddressList *)malloc(sizeof(JausAddressList));
+			currentAddress = addressList;
+			currentAddress->address = jausAddressCreate();
+			currentAddress->address->instance = packet->buffer[1];
+			currentAddress->address->component = packet->buffer[2];
+			currentAddress->address->node = packet->buffer[3];
+			currentAddress->address->subsystem = packet->buffer[4];			
+			currentAddress->nextAddress = NULL;
+		}
+
+		packet->buffer[0] = INTERFACE_MESSAGE_GET_COMPONENT_ADDRESS_LIST;
+		packet->buffer[1] = lookupAddress->instance;
+		packet->buffer[2] = lookupAddress->component;
+		packet->buffer[3] = lookupAddress->node;
+		packet->buffer[4] = lookupAddress->subsystem;
+		packet->buffer[5] = 0;
+		packet->buffer[6] = 0;
+		packet->buffer[7] = (unsigned char)(serviceCommandType & 0xFF);
+
+		datagramSocketSend(nmi->interfaceSocket, packet);
+		datagramSocketReceive(nmi->interfaceSocket, packet);
+	}
+	
+	free(packet->buffer);
+	datagramPacketDestroy(packet);
+
+	return addressList;	
+}
+
+JausBoolean nodeManagerLookupServiceAddress(NodeManagerInterface nmi, JausAddress lookupAddress, unsigned short commandCode, int serviceCommandType)
+{	
+	DatagramPacket packet;
+
+	if(!nmi || !nmi->isOpen)
+	{
+		return JAUS_FALSE;
+	}
+
+	packet = datagramPacketCreate();
+
+	packet->bufferSizeBytes = INTERFACE_MESSAGE_SIZE_BYTES;
+	packet->buffer = (unsigned char *)malloc(packet->bufferSizeBytes);
+	memset(packet->buffer, 0, packet->bufferSizeBytes);	
+	packet->buffer[0] = INTERFACE_MESSAGE_LOOKUP_SERVICE_ADDRESS;
+	packet->buffer[1] = lookupAddress->instance;
+	packet->buffer[2] = lookupAddress->component;
+	packet->buffer[3] = lookupAddress->node;
+	packet->buffer[4] = lookupAddress->subsystem;
+	packet->buffer[5] = (unsigned char)(commandCode & 0xFF);
+	packet->buffer[6] = (unsigned char)((commandCode & 0xFF00) >> 8);
+	packet->buffer[7] = (unsigned char)(serviceCommandType & 0xFF);
+
+	packet->port = NODE_MANAGER_INTERFACE_PORT;
+	packet->address->value = nmi->ipAddress->value;
+	
+	datagramSocketSend(nmi->interfaceSocket, packet);
+	datagramSocketReceive(nmi->interfaceSocket, packet);
+
+	if(	packet->buffer[0] == INTERFACE_MESSAGE_LOOKUP_SERVICE_ADDRESS_RESPONSE && packet->buffer[5])
+	{
+		lookupAddress->instance = packet->buffer[1];
+		lookupAddress->component = packet->buffer[2];
+		lookupAddress->node = packet->buffer[3];
+		lookupAddress->subsystem = packet->buffer[4];			
+		
+		free(packet->buffer);
+		datagramPacketDestroy(packet);
+		return JAUS_TRUE;
+	}
+	else
+	{
+		free(packet->buffer);
+		datagramPacketDestroy(packet);
+		return JAUS_FALSE;
+	}
+}
+
+void nodeManagerDestroyAddressList(JausAddressList *addressList)
+{
+	JausAddressList *deadAddressList;
+
+	while(addressList)
+	{
+		deadAddressList = addressList;
+		addressList = addressList->nextAddress;
+		
+		jausAddressDestroy(deadAddressList->address);
+		free(deadAddressList);
+	}
+}
+
+int nodeManagerVerifyAddress(NodeManagerInterface nmi, JausAddress address)
+{
+	DatagramPacket packet;
+	int response = 0;
+
+	packet = datagramPacketCreate();
+
+	packet->bufferSizeBytes = INTERFACE_MESSAGE_SIZE_BYTES;
+	packet->buffer = (unsigned char *)malloc(packet->bufferSizeBytes);
+	memset(packet->buffer, 0, packet->bufferSizeBytes);	
+	packet->buffer[0] = INTERFACE_MESSAGE_VERIFY_ADDRESS;
+	packet->buffer[1] = (unsigned char)address->instance;
+	packet->buffer[2] = (unsigned char)address->component;
+	packet->buffer[3] = (unsigned char)address->node;
+	packet->buffer[4] = (unsigned char)address->subsystem;
+
+	packet->port = NODE_MANAGER_INTERFACE_PORT;
+	packet->address->value = nmi->ipAddress->value;
+	
+	datagramSocketSend(nmi->interfaceSocket, packet);
+	datagramSocketReceive(nmi->interfaceSocket, packet);
+
+	if(packet->buffer[0] == INTERFACE_MESSAGE_ADDRESS_VERIFIED)
+	{
+		response = packet->buffer[1];
+
+		free(packet->buffer);
+		datagramPacketDestroy(packet);
+		return response;
+	}
+	else
+	{
+		free(packet->buffer);
+		datagramPacketDestroy(packet);
+		return 0;
+	}
+		
+}
+
+int nodeManagerReceive(NodeManagerInterface nmi, JausMessage *message)
+{
+	if(nmi->isOpen && nmi->receiveQueue->size)
+	{
+		*message = (JausMessage)queuePop(nmi->receiveQueue);
+		return 1;		
+	}
+	else
+	{
+		return 0;
+	}
+}
+
+int nodeManagerSend(NodeManagerInterface nmi, JausMessage message)
+{
+	int result = -1;
+	
+	if(nmi->isOpen)
+	{
+		result = lmHandlerSendLargeMessage(nmi, message);
+	}
+		
+	return result;
+}
+
+int nodeManagerSendSingleMessage(NodeManagerInterface nmi, JausMessage message)
+{
+	DatagramPacket packet;
+	int result = -1;
+	
+	if(nmi->isOpen)
+	{
+		packet = datagramPacketCreate();
+		packet->bufferSizeBytes = (int)jausMessageSize(message);
+		packet->buffer = (unsigned char*)malloc(packet->bufferSizeBytes);
+		packet->port = NODE_MANAGER_MESSAGE_PORT;
+		packet->address->value = nmi->ipAddress->value;
+		memset(packet->buffer, 0, packet->bufferSizeBytes);
+		
+		if(jausMessageToBuffer(message, packet->buffer, packet->bufferSizeBytes))
+		{
+			result = datagramSocketSend(nmi->messageSocket, packet);
+		}
+	
+		free(packet->buffer);
+		datagramPacketDestroy(packet);
+	}
+		
+	return result;
+}
+
+void nodeManagerSendCoreServiceConnections(NodeManagerInterface nmi)
+{
+	JausMessage message = NULL;
+	ServiceConnection scList = NULL;
+	ServiceConnection sc;
+	ReportComponentStatusMessage reportStatus;	
+	ReportComponentAuthorityMessage reportAuthority;	
+
+	// Respond to a ReportComponentStatus Service Connection
+	scList = scManagerGetSendList(nmi, JAUS_REPORT_COMPONENT_STATUS);
+	if(scList)
+	{
+		reportStatus = reportComponentStatusMessageCreate();
+		reportStatus->source->id = nmi->cmpt->address->id;
+		reportStatus->scFlag = JAUS_SERVICE_CONNECTION_MESSAGE;
+		reportStatus->primaryStatusCode = nmi->cmpt->state;
+
+		sc = scList;
+		while(sc)
+		{
+				reportStatus->destination->id = sc->address->id;
+				reportStatus->sequenceNumber = sc->sequenceNumber;
+
+				message = reportComponentStatusMessageToJausMessage(reportStatus);
+				nodeManagerSend(nmi, message);
+				jausMessageDestroy(message);
+
+				sc = sc->nextSc;
+		}
+		reportComponentStatusMessageDestroy(reportStatus);
+	}
+	scManagerDestroySendList(scList);
+
+	scList = NULL;
+	// Respond to a ReportComponentAuthorityMessage Service Connection
+	scList = scManagerGetSendList(nmi, JAUS_REPORT_COMPONENT_AUTHORITY);
+	if(scList)
+	{
+		reportAuthority = reportComponentAuthorityMessageCreate();
+		reportAuthority->source->id = nmi->cmpt->address->id;
+		reportAuthority->scFlag = JAUS_SERVICE_CONNECTION_MESSAGE;
+		reportAuthority->authorityCode = nmi->cmpt->authority;
+
+		sc = scList;
+		while(sc)
+		{
+				reportAuthority->destination->id = sc->address->id;
+				reportAuthority->sequenceNumber = sc->sequenceNumber;
+
+				message = reportComponentAuthorityMessageToJausMessage(reportAuthority);
+				nodeManagerSend(nmi, message);
+				jausMessageDestroy(message);
+
+				sc = sc->nextSc;
+		}
+		reportComponentAuthorityMessageDestroy(reportAuthority);
+	}
+	scManagerDestroySendList(scList);
+}

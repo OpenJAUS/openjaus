@@ -1,0 +1,13 @@
+#! /bin/bash
+# CIMAR Node Manager Library Uninstall Script
+
+echo ;
+echo CIMAR Node Manager Library Uninstall Begin
+echo ;
+
+rm -fv /usr/include/cimar/nodeManager.h
+rm -fv /usr/lib/libnodeManager.*
+
+echo ;
+echo CIMAR Node Manager Library Uninstall Complete
+echo ;

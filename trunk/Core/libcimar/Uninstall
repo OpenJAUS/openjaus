@@ -1,0 +1,35 @@
+#! /bin/bash
+# CIMAR library Uninstall Script
+
+echo ;
+echo CIMAR Library Uninstall Begin
+echo ;
+
+rm -fv /usr/include/cimar.h
+rm -rfv /usr/include/cimar/utm
+rm -fv /usr/include/cimar/bres.h
+rm -fv /usr/include/cimar/datagramPacket.h
+rm -fv /usr/include/cimar/datagramSocket.h
+rm -fv /usr/include/cimar/greatCircle.h
+rm -fv /usr/include/cimar/gridMapLib.h
+rm -fv /usr/include/cimar/inetAddress.h
+rm -fv /usr/include/cimar/logLib.h
+rm -fv /usr/include/cimar/monitor.h
+rm -fv /usr/include/cimar/multicastSocket.h
+rm -fv /usr/include/cimar/networkInterface.h
+rm -fv /usr/include/cimar/pointGg.h
+rm -fv /usr/include/cimar/pointLla.h
+rm -fv /usr/include/cimar/pointUtm.h
+rm -fv /usr/include/cimar/portLib.h
+rm -fv /usr/include/cimar/properties.h
+rm -fv /usr/include/cimar/queue.h
+rm -fv /usr/include/cimar/ringBuffer.h
+rm -fv /usr/include/cimar/timeLib.h
+rm -fv /usr/include/cimar/torusBuffer.h
+rm -fv /usr/include/cimar/vector.h
+
+rm -fv /usr/lib/libcimar.*
+
+echo ;
+echo CIMAR Library Uninstall Complete
+echo ;

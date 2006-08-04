@@ -1,0 +1,12 @@
+#! /bin/bash
+# CIMAR Java JAUS Library Uninstall Script
+
+echo ;
+echo CIMAR Java JAUS Library Uninstall Begin
+echo ;
+
+rm -fv /usr/include/cimar/jaus.jar
+
+echo ;
+echo CIMAR Java JAUS Library Uninstall Complete
+echo ;
