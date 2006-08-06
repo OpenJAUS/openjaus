@@ -33,7 +33,8 @@
  ****************************************************************************/
 // File:		scManager.c
 // Version:		3.2
-// Written by:	Tom Galluzzo (galluzzo AT gmail DOT com) and Danny Kent (jaus AT dannykent DOT com)
+// Written by:	Tom Galluzzo (galluzzo AT gmail DOT com) and 
+//              Danny Kent (jaus AT dannykent DOT com)
 // Date:		08/04/06
 // Description:	Provides the core service connection management routines
 
@@ -55,7 +56,7 @@ ServiceConnection serviceConnectionCreate(void)
 	{
 		sc->address = jausAddressCreate();
 		sc->queryMessage = NULL;
-		sc->queue = queueCreate(NULL);
+		sc->queue = queueCreate();
 		sc->serviceConnectionType = 0;
 		return sc;
 	}

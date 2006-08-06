@@ -50,7 +50,6 @@ OBJECTS =	\
 			$(BUILD)datagramSocket.o \
 			$(BUILD)inetAddress.o \
 			$(BUILD)logLib.o \
-			$(BUILD)monitor.o \
 			$(BUILD)multicastSocket.o \
 			$(BUILD)networkInterface.o \
 			$(BUILD)portLib.o \
@@ -59,8 +58,6 @@ OBJECTS =	\
 			$(BUILD)timeLib.o \
 			$(BUILD)vector.o \
 			$(BUILD)greatCircle.o \
-			$(BUILD)ringBuffer.o \
-			$(BUILD)gridMapLib.o \
 			$(BUILD)torusBuffer.o \
 			$(BUILD)pointGg.o \
 			$(BUILD)pointLla.o \
@@ -96,9 +93,6 @@ $(BUILD)inetAddress.o : $(SRC)inetAddress.c
 $(BUILD)logLib.o : $(SRC)logLib.c
 	$(CC) $(CCFLAGS) -o $(BUILD)logLib.o $(SRC)logLib.c
 
-$(BUILD)monitor.o : $(SRC)monitor.c
-	$(CC) $(CCFLAGS) -o $(BUILD)monitor.o $(SRC)monitor.c
-
 $(BUILD)multicastSocket.o : $(SRC)multicastSocket.c
 	$(CC) $(CCFLAGS) -o $(BUILD)multicastSocket.o $(SRC)multicastSocket.c
 
@@ -123,9 +117,6 @@ $(BUILD)vector.o : $(SRC)vector.c
 $(BUILD)greatCircle.o : $(SRC)greatCircle.c
 	$(CC) $(CCFLAGS) -o $(BUILD)greatCircle.o $(SRC)greatCircle.c
 
-$(BUILD)ringBuffer.o : $(SRC)ringBuffer.c
-	$(CC) $(CCFLAGS) -o $(BUILD)ringBuffer.o $(SRC)ringBuffer.c
-
 $(BUILD)torusBuffer.o : $(SRC)torusBuffer.c
 	$(CC) $(CCFLAGS) -o $(BUILD)torusBuffer.o $(SRC)torusBuffer.c
 
@@ -137,9 +128,6 @@ $(BUILD)pointUtm.o : $(SRC)pointUtm.c
 
 $(BUILD)pointLla.o : $(SRC)pointLla.c
 	$(CC) $(CCFLAGS) -o $(BUILD)pointLla.o $(SRC)pointLla.c
-
-$(BUILD)gridMapLib.o : $(SRC)gridMapLib.c
-	$(CC) $(CCFLAGS) -o $(BUILD)gridMapLib.o $(SRC)gridMapLib.c
 
 $(BUILD)cproj.o : $(SRC)utm/cproj.c
 	$(CC) $(CCFLAGS) -o $(BUILD)cproj.o $(SRC)utm/cproj.c

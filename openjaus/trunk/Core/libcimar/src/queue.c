@@ -44,7 +44,7 @@
 #include <stdlib.h>
 #include "cimar.h"
 
-Queue queueCreate(Monitor monitor)
+Queue queueCreate(void)
 {
 	Queue queue = NULL;
 	
@@ -54,7 +54,6 @@ Queue queueCreate(Monitor monitor)
 		return NULL;
 	}
 	
-	queue->monitor = monitor;
 	queue->firstObject = NULL;
 	queue->lastObject = NULL;
 	queue->size = 0;
@@ -138,9 +137,4 @@ void queuePush(Queue queue, void *object)
 	queue->lastObject = queueObject;
 
 	queue->size++;
-	
-	if(queue->monitor)
-	{
-		monitorSignal(queue->monitor);
-	}
 }

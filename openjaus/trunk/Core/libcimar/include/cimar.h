@@ -33,13 +33,15 @@
  ****************************************************************************/
 // File Name: cimar.h
 //
-// Written By: Danny Kent (jaus AT dannykent DOT com), Tom Galluzzo (galluzzo AT gmail DOT com)
+// Written By: Danny Kent (jaus AT dannykent DOT com), 
+//             Tom Galluzzo (galluzzo AT gmail DOT com)
 //
 // Version: 3.2
 //
 // Date: 08/04/06
 //
-// Description: This file is used to include all the associated header files for the libcimar.so library
+// Description: This file is used to include all the associated header files 
+//              for the libcimar.so library
 
 #ifndef CIMAR_H
 #define CIMAR_H
@@ -65,10 +67,8 @@ extern "C"
 #include "cimar/multicastSocket.h"
 
 // Storage Containers
-#include "cimar/monitor.h"
 #include "cimar/queue.h"
 #include "cimar/vector.h"
-#include "cimar/ringBuffer.h"
 #include "cimar/torusBuffer.h"
 #include "cimar/properties.h"
 
@@ -86,11 +86,9 @@ extern "C"
 #include "cimar/logLib.h"
 #include "cimar/portLib.h"
 #include "cimar/timeLib.h"
-#include "cimar/gridMapLib.h"
 
 #ifdef __cplusplus
 }
 #endif
 
 #endif
-

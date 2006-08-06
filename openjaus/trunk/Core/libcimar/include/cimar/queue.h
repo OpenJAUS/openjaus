@@ -52,7 +52,6 @@ typedef struct queueObject
 
 typedef struct
 {
-	Monitor monitor;
 	QueueObject *firstObject;
 	QueueObject *lastObject;
 	int size;
@@ -60,7 +59,7 @@ typedef struct
 
 typedef QueueStruct *Queue;
 
-Queue queueCreate(Monitor);
+Queue queueCreate(void);
 void queueDestroy(Queue, void (*)(void *));
 void*  queuePop(Queue);
 void queuePush(Queue, void *);

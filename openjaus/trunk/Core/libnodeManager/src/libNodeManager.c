@@ -130,7 +130,7 @@ NodeManagerInterface nodeManagerOpen(JausComponent cmpt)
 		return NULL;
 	}
 
-	nmi->receiveQueue = queueCreate(NULL);
+	nmi->receiveQueue = queueCreate();
 	
 	nmi->scm = scManagerCreate();
 	if(nmi->scm == NULL)
