@@ -58,7 +58,7 @@ void torusBufferCleanCell(TorusBuffer buffer, int rowValue, int colValue);
 TorusBuffer torusBufferCreate(int rows, int columns, char dataType, TorusBufferCell defaultCell, TorusBufferCell createCell(void), void destroyCell(void *), double getCellValue(void *))
 {
 	int i, j;
-		
+	TorusBuffer buffer;
 	// Test rows and columns non-zero
 	if(rows == 0 || columns == 0)
 	{
@@ -75,7 +75,7 @@ TorusBuffer torusBufferCreate(int rows, int columns, char dataType, TorusBufferC
 	}
 
 	// Malloc the TorusBufferStruct
-	TorusBuffer buffer = (TorusBuffer)malloc(sizeof(TorusBufferStruct));
+	buffer = (TorusBuffer)malloc(sizeof(TorusBufferStruct));
 	if(buffer == NULL)
 	{
 		return NULL;
