@@ -41,32 +41,28 @@
 //
 // Description:	CIMAR timing library header file
 
-#ifdef __APPLE__
-
-	#include <sys/time.h>
-	#include "cimar.h"
-	
-	double getTimeSeconds(void)
-	{
-		static struct timeval time;
-	
-		gettimeofday(&time, NULL);
-		
-		return (double)time.tv_sec + (double)time.tv_usec/1.0e6;  
-	}
-	
-#else
-
-	#include <time.h>
-	#include "cimar.h"
-	
-	double getTimeSeconds(void)
-	{
-		static struct timespec time;
-		
-		clock_gettime(CLOCK_REALTIME, &time);
-		
-		return (double)time.tv_sec + (double)time.tv_nsec/1.0e9;  
-	}
-
+#include "config.h"
+#ifdef HAVE_SYS_TIME_H
+#include <sys/time.h>
 #endif
+#ifdef HAVE_TIME_H
+#include <time.h>
+#endif
+#include "cimar.h"
+	
+double getTimeSeconds(void)
+{
+#ifdef HAVE_GETTIMEOFDAY
+      static struct timeval time;
+      
+      gettimeofday(&time, NULL);
+      
+      return (double)time.tv_sec + (double)time.tv_usec/1.0e6;
+#elif defined(HAVE_CLOCK_GETTIME)
+      static struct timespec time;
+      
+      clock_gettime(CLOCK_REALTIME, &time);
+      
+      return (double)time.tv_sec + (double)time.tv_nsec/1.0e9;
+#endif
+}

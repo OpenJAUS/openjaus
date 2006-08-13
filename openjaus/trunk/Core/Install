@@ -6,10 +6,9 @@ cd ./libjausJava; ./Install; cd ..;
 cd ./nodeManager; ./Install; cd ..;
 
 # C Libraries
-cd ./libcimar; ./Install; cd ..;
-cd ./libjausC; ./Install; cd ..;
-cd ./libnodeManager; ./Install; cd ..;	
-cd ./nodeManager; ./Install; cd ..;	
+cd ./libcimar; ./Install-CIMAR.sh; cd ..;
+cd ./libjausC; ./Install-CIMAR.sh; cd ..;
+cd ./libnodeManager; ./Install-CIMAR.sh; cd ..;
 
 echo ;
 echo CIMAR Core Software Install Complete

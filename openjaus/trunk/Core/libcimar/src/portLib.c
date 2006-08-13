@@ -41,7 +41,10 @@
 //
 // Description: Serial port hardware abstraction header file
 
+#include "config.h"
+#ifdef HAVE_SGTTY_H
 #include <sgtty.h>
+#endif
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/file.h>
@@ -49,7 +52,9 @@
 #include <time.h>
 #include <unistd.h>
 #include <fcntl.h>
+#ifdef HAVE_LINUX_SERIAL_H
 #include <linux/serial.h>
+#endif
 
 #include "cimar.h"
 
@@ -83,7 +88,9 @@ SerialPort portOpen(int whichPort, int baud, char *control)
 	tcflag_t bitFlag[]={CS5, CS6, CS7, CS8}, PAR_CTRL=IGNPAR, BITS, PARITY=0x00, STOP_BIT=0x00, SPEED=B19200;
 	struct termios t;
 	char device[32];
+#ifdef HAVE_LINUX_SERIAL_H
 	struct serial_struct serialInfo;
+#endif
 
 	sprintf(device,"/dev/ttyS%d",whichPort-1);
 
@@ -103,12 +110,14 @@ SerialPort portOpen(int whichPort, int baud, char *control)
 		return -1;
 	}
 
+#ifdef HAVE_SGTTY_H
 	//Get the structure of the serial port
 	if (ioctl(port, TIOCGSERIAL, &serialInfo) != 0)
 	{
 		perror("TIOCGSERIAL ioctl() failed\n");
 		return -1;
 	}
+#endif
 	
 	// Set the # bits, parity and stop bits 
 	if( (bit < 5) || (bit > 8) )
@@ -152,18 +161,20 @@ SerialPort portOpen(int whichPort, int baud, char *control)
 	  SPEED = B115200;
 	else if(baud == 500000)
 	{
+#ifdef HAVE_LINUX_SERIAL_H
 		serialInfo.flags = ASYNC_SPD_CUST;
-		serialInfo.custom_divisor = serialInfo.baud_base / 500000 ;	
+		serialInfo.custom_divisor = serialInfo.baud_base / 500000 ;
+#endif
 		SPEED = B38400;
 	}
 	
+#ifdef HAVE_SGTTY_H
 	if (ioctl(port, TIOCSSERIAL, &serialInfo) != 0)
 	{
 		perror("TIOCGSERIAL ioctl() failed\n");
 		return -1;
 	}
-	
-
+#endif
 
 	// Input Modes
 	t.c_iflag &= ~(	BRKINT	|	// Ignore break 
@@ -231,7 +242,6 @@ SerialPort portOpen(int whichPort, int baud, char *control)
 		pError("portLib: tcsetattr");
 		return -1;
 	}
-
 	return port ;
 
 }
