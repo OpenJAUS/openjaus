@@ -225,7 +225,10 @@ public class NodeManager
 			
 			heartBeat = new HeartBeat(heartBeatPeriodMilliSec, nodeSendQueue, componentReceiveQueue, subsystemTable);
 
-			fileLogger = new FileLogger(dataRepository, "/var/log/CIMAR/nodeManagerLog.csv");
+			String logFileName = properties.getProperty("LOG_FILE");
+			if (logFileName == null ||
+				logFileName.trim().equals("")) logFileName = "/var/log/CIMAR/nodeManagerLog.csv";
+			fileLogger = new FileLogger(dataRepository, logFileName);
 
 			componentInterface.start();
 			if(subsReceiveThread != null)
