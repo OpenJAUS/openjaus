@@ -47,7 +47,7 @@ import java.net.*;
 
 public class ComponentInterface extends Thread
 {
-	public static final int MINIMUM_VALID_COMPONENT_PORT = 5000; // This is a common minimum user reserved port value
+	public static final int MINIMUM_VALID_COMPONENT_PORT = 2500; // This is a common minimum user reserved port value
 	JausAddress thisAddress;
 	InetAddress ipAddress;
 	int componentInterfacePort;
@@ -135,7 +135,7 @@ public class ComponentInterface extends Thread
 						int instanceId = subsystemTable.checkInLocalComponent(componentId, componentMessagePort);
 						if(instanceId == JausAddress.INVALID_INSTANCE)
 						{
-						    System.out.println("ComponentInterface: Error: Component attempted to check in with an invalid port number");
+						    System.out.println("ComponentInterface: Error: Component attempted to check in with an invalid instance number");
 							// TODO: Send back checkin error reply (no available instance)							
 							break;
 						}
