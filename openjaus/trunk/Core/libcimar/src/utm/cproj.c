@@ -477,12 +477,3 @@ double lon;
 {
 	return((long)(((lon + 180.0) / 6.0) + 1.0));
 }
-
-/* Necessary to compile under cygwin */
-int __declspec(nothrow) __stdcall WinMain(int a, int b, char* c, int
-d);
-int __declspec(nothrow) __stdcall WinMain(int a, int b, char* c, int
-d)
-{
-    return 0;
-}
