@@ -6,7 +6,7 @@ echo CIMAR Node Manager Library Install Begin
 echo ;
 
 cp -PpRfv ./include/nodeManager.h /usr/include/cimar/
-cp -PpRfv ./lib/libnodeManager.* /usr/lib
+cp -PpRfv ./libnodeManager.* /usr/lib
 
 echo ;
 echo CIMAR Node Manager Library Install Complete

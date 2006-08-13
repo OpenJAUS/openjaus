@@ -7,7 +7,7 @@ echo ;
 
 cp -PpRfv ./include/* /usr/include/
 rm -Rfv `find /usr/include/cimar/ -name .svn`
-cp -PpRfv ./lib/libjausC.* /usr/lib
+cp -PpRfv ./libjausC.* /usr/lib
 
 echo ;
 echo CIMAR C JAUS Library Install Complete

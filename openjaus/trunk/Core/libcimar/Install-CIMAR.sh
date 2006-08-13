@@ -7,7 +7,7 @@ echo ;
 
 cp -PpRfv ./include/* /usr/include/
 rm -Rfv `find /usr/include/cimar/ -name .svn`
-cp -PpRfv ./lib/libcimar.* /usr/lib
+cp -PpRfv ./libcimar.* /usr/lib
 
 echo ;
 echo CIMAR Library Install Complete
