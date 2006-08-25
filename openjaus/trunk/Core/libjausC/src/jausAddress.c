@@ -69,6 +69,13 @@ void jausAddressDestroy(JausAddress address)
 
 int jausAddressToString(JausAddress address, char *buf)
 {
-	return sprintf(buf, "%d.%d.%d.%d", address->subsystem, address->node, address->component, address->instance);
+	if(address)
+	{
+		return sprintf(buf, "%d.%d.%d.%d", address->subsystem, address->node, address->component, address->instance);
+	}
+	else
+	{
+		return sprintf(buf, "Invalid JAUS Address");
+	}
 }
 
