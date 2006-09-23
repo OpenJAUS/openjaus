@@ -64,6 +64,9 @@
  *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
  *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ****************************************************************************/
+
+package openjaus.nodemanager;
+
 // File Name: Monitor.java
 //
 // Written By: Tom Galluzzo (galluzzo AT gmail DOT com)

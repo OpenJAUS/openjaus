@@ -31,7 +31,7 @@
  *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
  *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ****************************************************************************/
-// File Name: Queue.java
+// File Name: DataRepository.java
 //
 // Written By: Tom Galluzzo (galluzzo AT gmail DOT com)
 //
@@ -39,68 +39,22 @@
 //
 // Date: 08/04/06
 //
-// Description: The queue class maintians a linked list of objects and implements the push and pop methods
+// Description: Central HashMap location for any NodeManager logged issues
+
+package openjaus.nodemanager;
 
 import java.util.*;
 
-public class Queue extends LinkedList
+public class DataRepository extends HashMap
 {
-	String name;
-	Monitor monitor;
-	DataRepository dataRepository;
-	long maxSize;
-
-	int bufferIndex; // Circular buffer index
-	long sizeBuffer[]; // Circular size buffer
-	final int BUFFER_SIZE = 1000;
-	double averageSize;
-
-	public Queue(String name, Monitor monitor)
+	public DataRepository()
 	{
 		super();
-		this.name = name;
-		this.monitor = monitor;
-		dataRepository = NodeManager.getDataRepository();
-		
-		bufferIndex = 0;
-		sizeBuffer = new long[BUFFER_SIZE];
-		averageSize = size();
-
-		dataRepository.put(new String(name + " Average Size"), new Double(averageSize));
-		maxSize = size();
-		dataRepository.put(new String(name + " Max Size"), new Long(maxSize));
-	}
-
-	public synchronized void push(Object object)
-	{
-		addLast(object);
-
-		averageSize -= (double)sizeBuffer[bufferIndex] / (double)BUFFER_SIZE;
-		sizeBuffer[bufferIndex] = size();
-		averageSize += (double)sizeBuffer[bufferIndex] / (double)BUFFER_SIZE;
-		bufferIndex = (bufferIndex + 1) % BUFFER_SIZE;
-		
-		dataRepository.put(new String(name + " Average Size"), new Double(averageSize));
-		if(size() > maxSize)
-		{
-			maxSize = size();
-			dataRepository.put(new String(name + " Max Size"), new Long(maxSize));
-		}
-		monitor.signal(); // Signal waiting threads to continue
-	}
-
-	public synchronized Object pop()
-	{
-		Object object = removeFirst();
-
-		averageSize -= (double)sizeBuffer[bufferIndex] / (double)BUFFER_SIZE;
-		sizeBuffer[bufferIndex] = size();
-		averageSize += (double)sizeBuffer[bufferIndex] / (double)BUFFER_SIZE;
-		bufferIndex = (bufferIndex + 1) % BUFFER_SIZE;
-		
-		dataRepository.put(new String(name + " Average Size"), new Double(averageSize));
-
-		return object;
 	}
 	
+	public Object put(Object key, Object value)
+	{
+		// TODO: Generate event if necessary
+		return super.put(key, value);
+	}
 }

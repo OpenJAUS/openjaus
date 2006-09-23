@@ -41,8 +41,9 @@
 //
 // Description: The NodeManager class contains the main method and is responsible for user I/O, spawning and connecting the essential
 //				Node Manager objects and running all threads.
+package openjaus.nodemanager;
 
-import jaus.*;
+import openjaus.libjaus.*;
 import java.util.*;
 import java.io.*;
 import java.net.*;
@@ -227,7 +228,7 @@ public class NodeManager
 
 			String logFileName = properties.getProperty("LOG_FILE");
 			if (logFileName == null ||
-				logFileName.trim().equals("")) logFileName = "/var/log/CIMAR/nodeManagerLog.csv";
+				logFileName.trim().equals("")) logFileName = "/var/log/openjaus/nodeManagerLog.csv";
 			fileLogger = new FileLogger(dataRepository, logFileName);
 
 			componentInterface.start();

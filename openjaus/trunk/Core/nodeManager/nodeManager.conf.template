@@ -21,7 +21,7 @@ NODE_ID						=
 NODE_IDENTIFICATION			=	
 
 # This is the name the Node Manager reports when it recieves a Query Identification for component identification
-COMPONENT_IDENTIFICATION	=	CIMAR Node Manager
+COMPONENT_IDENTIFICATION	=	OpenJAUS Node Manager
 
 # The following two parameters define the behavior of the node manager. The NETWORK_INTERFACE is the ethernet 
 # device which will be used by the node manager to talk to other components on its subsystem. The 

@@ -41,14 +41,15 @@
 //
 // Description: The CoreMessageHandler class processes all messages which are destined for this NodeManager Instance.
 
+package openjaus.nodemanager;
+
 import java.net.*;
 import java.util.*;
-import jaus.*;
-import jaus.type.*;
-import jaus.message.*;
-import jaus.message.command.*;
-import jaus.message.experimental.*;
-import jaus.message.inform.*;
+import openjaus.libjaus.*;
+import openjaus.libjaus.message.*;
+import openjaus.libjaus.message.command.*;
+import openjaus.libjaus.message.experimental.*;
+import openjaus.libjaus.message.inform.*;
 
 public class CoreMessageHandler
 {

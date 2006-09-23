@@ -1,6 +1,6 @@
 <project name="NodeManager" default="all" basedir=".">
 	<description>
-        Ant Build File for teh NodeManager
+        Ant Build File for the NodeManager
     </description>
 
 	<property name="seg" location="." />
@@ -9,7 +9,7 @@
 	<property name="class" location="${seg}/Build" />
 	<property name="doc" location="${data}/doc" />
 	<property name="jars" location="${seg}/bin" />
-	<property name="lib" location="/usr/include/cimar/jaus.jar" />
+	<property name="lib" location="../libjausJava/lib/jaus.jar" />
 	
 	<property name="deprecation" value="true" />
 
@@ -41,12 +41,14 @@
 	
 	<!-- Creates nodeManager.jar -->
 	<target name="all" depends="compile, init" description="Compiles and creates nodeManager.jar">
+		<copy todir="${jars}" file="${lib}" />
 		<jar jarfile="${jars}/nodeManager.jar" basedir="${class}" compress="false"
-			includes="**/*.class">
+			includes="**/*.class" >
 			<manifest>
-				<attribute name="Main-Class" value="NodeManager"/>
+				<attribute name="Main-Class" value="openjaus.nodemanager.NodeManager"/>
 			</manifest>
 		</jar>
+		
 	</target>
 
 	<!-- Generats javadoc -->

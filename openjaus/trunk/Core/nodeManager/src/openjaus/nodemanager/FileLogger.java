@@ -41,6 +41,8 @@
 //
 // Description: This class manages writting all logged information to a log file.
 
+package openjaus.nodemanager;
+
 import java.io.*;
 import java.lang.reflect.Array;
 

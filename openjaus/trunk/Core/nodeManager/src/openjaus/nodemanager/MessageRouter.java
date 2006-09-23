@@ -41,8 +41,10 @@
 //
 // Description: 
 
-import jaus.*;
-import jaus.message.*;
+package openjaus.nodemanager;
+
+import openjaus.libjaus.*;
+import openjaus.libjaus.message.*;
 import java.net.*;
 import java.util.Enumeration;
 

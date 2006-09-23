@@ -42,8 +42,10 @@
 // Description: This class runs a thread that generates a JAUS Heartbeat message, which keeps the NodeManager active and
 //				Informs other NodeManagers and JAUS entities of this NodeManager's existence.
 
-import jaus.*;
-import jaus.message.inform.*;
+package openjaus.nodemanager;
+
+import openjaus.libjaus.*;
+import openjaus.libjaus.message.inform.*;
 import java.net.*;
 
 class HeartBeat extends Thread

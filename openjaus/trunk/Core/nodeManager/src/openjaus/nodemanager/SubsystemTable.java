@@ -41,11 +41,12 @@
 //
 // Description: The SubsystemTable class manages all of the JAUS system and subsystem information
 // 				such as addresses, ipaddresses, port numbers.
+package openjaus.nodemanager;
 
-import jaus.*;
-import jaus.message.*;
-import jaus.message.experimental.*;
-import jaus.message.inform.*;
+import openjaus.libjaus.*;
+import openjaus.libjaus.message.*;
+import openjaus.libjaus.message.experimental.*;
+import openjaus.libjaus.message.inform.*;
 
 import java.util.*;
 import java.net.*;

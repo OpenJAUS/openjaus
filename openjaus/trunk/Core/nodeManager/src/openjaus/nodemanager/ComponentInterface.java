@@ -42,7 +42,9 @@
 // Description: This class handles the NodeManager's side of the component to node manager interface 
 // 				It responds to and processes all component requests.  
 
-import jaus.*;
+package openjaus.nodemanager;
+
+import openjaus.libjaus.*;
 import java.net.*;
 
 public class ComponentInterface extends Thread
