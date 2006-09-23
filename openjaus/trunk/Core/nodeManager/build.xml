@@ -8,21 +8,36 @@
 	<property name="src" location="${seg}/src" />
 	<property name="class" location="${seg}/Build" />
 	<property name="doc" location="${data}/doc" />
-	<property name="jars" location="${seg}/bin" />
-	<property name="lib" location="../libjausJava/lib/jaus.jar" />
 	
+	<property name="lib" location="../libjausJava/lib/jaus.jar" />
+	<!-- where we are building the nodeManager distribution -->
+	<property name="dest" location="deploy" />
+	<property name="deploy" location="${dest}/NodeManager" />
+	<property name="jar_dest" location="${deploy}/lib" />
+	<property name="bin_dest" location="${deploy}/bin" />
+	<property name="log_dest" location="${deploy}/log" />
 	<property name="deprecation" value="true" />
 
 	<target name="init">
 		<mkdir dir="${src}" />
 		<mkdir dir="${class}" />
 		<!--<mkdir dir="${doc}" />-->
-		<mkdir dir="${jars}" />
+		<mkdir dir="${deploy}" />
+		<mkdir dir="${jar_dest}" />
+		<mkdir dir="${bin_dest}" />
+		<mkdir dir="${log_dest}" />
+		<!-- you need to create a nodeManager.conf for your configuration -->
+		<copy file="nodeManager.conf" todir="${deploy}" failonerror="true" />
+		<copy file="NM" todir="${bin_dest}" failonerror="true"/>
+		<copy file="NM.cmd" todir="${bin_dest}" failonerror="true"/>
+		<copy file="..\COPYING" todir="${deploy}" />
+		<copy file="..\LICENSE" todir="${deploy}" />
+		<copy file="..\readme.txt" todir="${deploy}" />
 	</target>
 	
 	<target name="compile" depends="init" description="generate all classes">
 		<mkdir dir="${class}" />
-		<!--<mkdir dir="${class}/com" />-->
+		
 		<copy todir="${class}">
 			<fileset dir="${src}">
 				<exclude name="**/*.java" />
@@ -41,8 +56,8 @@
 	
 	<!-- Creates nodeManager.jar -->
 	<target name="all" depends="compile, init" description="Compiles and creates nodeManager.jar">
-		<copy todir="${jars}" file="${lib}" />
-		<jar jarfile="${jars}/nodeManager.jar" basedir="${class}" compress="false"
+		<copy todir="${jar_dest}" file="${lib}" />
+		<jar jarfile="${jar_dest}/nodeManager.jar" basedir="${class}" compress="false"
 			includes="**/*.class" >
 			<manifest>
 				<attribute name="Main-Class" value="openjaus.nodemanager.NodeManager"/>
@@ -60,13 +75,15 @@
 		</javadoc>
 	</target>
 
-	<!-- Removes all compiled files and documentation, but leaves any created jars -->
+	<!-- Removes all compiled files and documentation, but leaves any created jar_dest -->
 	<target name="clean" description="clean up">
 		<delete dir="${class}" />
-		<!--<delete dir="${doc}" />-->
+		<delete dir="${doc}" />
+		<delete dir="${dest}"  />
+		<delete dir="${bin}"  />
 		<delete>
+
 			<fileset dir="${src}" includes="**/*.class" />
-			<fileset dir="${jars}" includes="**/*.jar" />
 		</delete>
 	</target>
 

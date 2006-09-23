@@ -410,6 +410,7 @@ void exCmptProcessMessage(JausMessage message)
 			reportVss = reportVelocityStateMessageFromJausMessage(message);
 			if(reportVss)
 			{
+				cError("Got VSS Message");
 				// USER: Determine if anything needs done upon receipt of a VSS Message
 			}
 			else

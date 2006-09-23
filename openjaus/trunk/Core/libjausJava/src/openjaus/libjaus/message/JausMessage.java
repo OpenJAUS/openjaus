@@ -56,7 +56,7 @@ public class JausMessage
 	public static final int HEADER_SIZE_BYTES = 16;
 
 	public static final int LOW_PRIORITY =		0;
-	public static final int DEFALT_PRIORITY =	6;
+	public static final int DEFAULT_PRIORITY =	6;
 	public static final int HIGH_PRIORITY =		11;
 	
 	public static final int ACK_NAK_NOT_REQUIRED =	0;
@@ -240,7 +240,7 @@ public class JausMessage
 	// Default Constructor
 	public JausMessage()
 	{
-		setPriority(DEFALT_PRIORITY);
+		setPriority(DEFAULT_PRIORITY);
 		setAckNak(ACK_NAK_NOT_REQUIRED);
 		setServiceConnectionFlag(NOT_SERVICE_CONNECTION_MESSAGE);
 		setUserDefinedFlag(NOT_EXPERIMENTAL_MESSAGE);

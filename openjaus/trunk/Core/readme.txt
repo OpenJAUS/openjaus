@@ -1,10 +1,14 @@
-Open JAUS Project Release Notes
+OpenJAUS Project Release Notes
 Version: 3.2
 Last Revised: 08/04/06
 
 1. Development Group Information
 
-The majority of this software was developed by Tom Galluzzo, Danny Kent, and 
+This is OpenJAUS, an open source implementation of the Joint Architecture
+for Unmanned Systems.  The latest code, documentation and support groups 
+are available at the OpenJAUS web site:  http://www.openjaus.com/
+
+The original codebase was developed by Tom Galluzzo, Danny Kent, and 
 Bob Touchton at the University of Florida's Center for Intelligent Machines and 
 Robotics (CIMAR). This JAUS implementation was used by Team CIMAR for the 2005 
 DARPA Grand Challenge. The primary purpose of the software was to use a 
@@ -12,24 +16,7 @@ standardized messaging architecture on Team CIMAR's vehicle, The NaviGator.
 Each source file contains within the header comments the names of the 
 developer(s), in order to establish proper ownership where appropriate.
 
-Contact information:
 
-Center for Intelligent Machines and Robotics (CIMAR)
-	Director: Dr. Carl Crane
-	phone: 352-392-9461
-	email: ccrane AT ufl DOT edu
-
-Tom Galluzzo:
-	phone: 352-870-2230
-	email: galluzzt AT gmail DOT com
-
-Danny Kent:
-	phone: 386-451-3802
-	email: jaus AT dannykent DOT com
-
-Bob Touchton:
-	phone: 904-612-9370
-	email: btouch AT comcast DOT net
 
 2. Target Operating Environment
 
@@ -39,9 +26,11 @@ i386 machines running a Redhat or Fedora distribution of Linux. If the target
 distribution has a significantly different directory structure, the install may 
 need to be modified to accommodate. 
 
+It is also known to run on Windows XP under Cygwin, and Sun's Java 1.4+.
+
 This JAUS implementation has two primary code bases written in separate languages:
 
-First, the CIMAR Node Manager and its referenced JAUS message library are written 
+First, the OpenJAUS Node Manager and its referenced JAUS message library are written 
 in Java. The Java JAUS message library contains a subset of the complete standard 
 JAUS message set, mostly containing only those messages which are needed by the 
 Node Manager (some others have been implemented to aid future development of a 
@@ -49,7 +38,7 @@ complete library in Java).
 
 Second, a JAUS message and data structure library is written in C. This library 
 is complete with the exception of the Manipulator Subgroup messages. Also 
-written in C is an interface to the CIMAR Node Manager, and a Template Component. 
+written in C is an interface to the OpenJAUS Node Manager, and a Template Component. 
 The Template Component is designed to use the C Node Manager interface to connect 
 to the CIMAR Node Manager and exchange JAUS messages.
 
@@ -70,7 +59,7 @@ Currently the software must be installed with root privileges. This is important
 as the installation scripts attempt to write to the /usr/lib and /usr/include 
 directories.
 
-Extract the software to a folder in the /opt directory called “CIMAR”. This should 
+Extract the software to a folder in the /opt directory called “CIMAR�?. This should 
 leave a folder containing the Core CIMAR libraries in the path (/opt/CIMAR/Core).
 
 To install the software, run the make command in the /opt/CIMAR/Core directory. 
@@ -81,7 +70,7 @@ files will be copied to the appropriate directories.
 *Note: The default installations of the libraries include all symbols and debug 
 information within the shared object (.so) files. This is to facilitate efficient 
 development and use of a run-time debugger. To reduce the size of the installed 
-libraries, the information can be removed by using the “strip” command. 
+libraries, the information can be removed by using the “strip�? command. 
 
 4. Method of Operation
 
@@ -100,7 +89,7 @@ Running the Template Component:
 2. Start a new terminal session.
 3. Enter the root directory of the component (i.e. the directory containing the 
    components Makefile)
-4. Make sure the component is compiled first by running the “make” command.
+4. Make sure the component is compiled first by running the “make�? command.
 5. Execute the component via the relative path. (./bin/cmpt) 
 	
 Custom or Experimental Message Implementation:
@@ -113,15 +102,15 @@ in their respective /src and /include folders within the /libjausC directory.
 		
 The general way to implement a new message based on these templates is as follows:
 
-1. Copy the “skeleton” templates into their proper directories (/command, 
+1. Copy the “skeleton�? templates into their proper directories (/command, 
    /experimental, etc...) based on the content of the intended message.
 
-2. Rename the “skeleton” files to the intended specific JAUS message name. 
+2. Rename the “skeleton�? files to the intended specific JAUS message name. 
    ex: rename "skeletonMessage.c" to "myExperimentalMessage.c".
 
 3. Change the contents of the header file (previously "skeletonMessage.h") to 
    reflect the correct JAUS message names.
-   ex: Rename all “xXxX” to the proper JAUS message name.
+   ex: Rename all “xXxX�? to the proper JAUS message name.
    (Don’t forget this process is CaSe SENsitive!)
 
 4. Add to the message data structure in the header file the variables which are 
@@ -131,7 +120,7 @@ The general way to implement a new message based on these templates is as follow
    JausDouble within the message data structure).
 
 5. Change the contents of the source file to reflect the correct JAUS message names
-   ex: Rename all “xXxX” to the proper JAUS message name.
+   ex: Rename all “xXxX�? to the proper JAUS message name.
    (Again, this process is CaSe SENsitive!)
 
 6. Add any initialization code to the dataInitialize() function.

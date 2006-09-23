@@ -13,12 +13,12 @@
 # USER: Ensure the NETWORK_INTERFACE and SUBSYSTEM_SIDE_INTERFACE parameters are correct
 
 # This is the unique numeric ID number and name for the subsystem that this node belongs to 
-SUBSYSTEM_ID				=	
-SUBSYSTEM_IDENTIFICATION	=	
+SUBSYSTEM_ID				= 1	
+SUBSYSTEM_IDENTIFICATION	= OpenJAUS Robot	
 
 # This is the unique numeric ID number and name for this node
-NODE_ID						=	
-NODE_IDENTIFICATION			=	
+NODE_ID						= 2	
+NODE_IDENTIFICATION			= OpenJAUS Node	
 
 # This is the name the Node Manager reports when it recieves a Query Identification for component identification
 COMPONENT_IDENTIFICATION	=	OpenJAUS Node Manager
