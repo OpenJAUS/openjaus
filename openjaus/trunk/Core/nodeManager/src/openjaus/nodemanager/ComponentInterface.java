@@ -49,7 +49,7 @@ import java.net.*;
 
 public class ComponentInterface extends Thread
 {
-	public static final int MINIMUM_VALID_COMPONENT_PORT = 2500; // This is a common minimum user reserved port value
+	public static final int MINIMUM_VALID_COMPONENT_PORT = 1024; // This is a common minimum user reserved port value
 	JausAddress thisAddress;
 	InetAddress ipAddress;
 	int componentInterfacePort;
@@ -129,7 +129,7 @@ public class ComponentInterface extends Thread
 						int componentMessagePort = (inMessage.getData()[1] & 0xFF) + ((inMessage.getData()[2] & 0xFF) << 8);
 						if(componentMessagePort < MINIMUM_VALID_COMPONENT_PORT || packet.getPort() < MINIMUM_VALID_COMPONENT_PORT)
 						{
-						    System.out.println("ComponentInterface: Error: Component attempted to check in with an invalid port number");
+						    System.out.println("ComponentInterface: Error: Component attempted to check in with an invalid port number (" + packet.getPort() + ")");
 							// TODO: Send back checkin error reply (invalid port number)
 							break;
 						}
