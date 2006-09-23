@@ -4,7 +4,7 @@
 route add -host 224.1.0.2 eth0
 route add -host 224.1.0.1 eth1
 
-cd /opt/CIMAR/Core/nodeManager
+cd ..
 
-java -cp /usr/include/cimar/jaus.jar:bin/nodeManager.jar NodeManager
+java -cp lib/jaus.jar:lib/nodeManager.jar openjaus.nodemanager.NodeManager
 

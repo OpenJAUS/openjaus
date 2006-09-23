@@ -228,7 +228,7 @@ public class NodeManager
 
 			String logFileName = properties.getProperty("LOG_FILE");
 			if (logFileName == null ||
-				logFileName.trim().equals("")) logFileName = "/var/log/openjaus/nodeManagerLog.csv";
+				logFileName.trim().equals("")) logFileName = "log/nodeManagerLog.csv";
 			fileLogger = new FileLogger(dataRepository, logFileName);
 
 			componentInterface.start();
