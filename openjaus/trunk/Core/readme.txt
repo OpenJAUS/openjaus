@@ -1,6 +1,6 @@
 OpenJAUS Project Release Notes
 Version: 3.2
-Last Revised: 08/04/06
+Last Revised: 09/23/06
 
 1. Development Group Information
 
@@ -15,7 +15,6 @@ DARPA Grand Challenge. The primary purpose of the software was to use a
 standardized messaging architecture on Team CIMAR's vehicle, The NaviGator. 
 Each source file contains within the header comments the names of the 
 developer(s), in order to establish proper ownership where appropriate.
-
 
 
 2. Target Operating Environment
@@ -50,16 +49,17 @@ Requirements:
 3. ant (http://ant.apache.org/)
 4. Java SDK with a Java Run Time Environment (RTE) 
    (version 1.4 or higher) (http://java.sun.com/)
-5. curses (Required for Template Componentâ€™s user interface) 
+5. curses (Required for Template Component's user interface) 
    (http://www.gnu.org/software/ncurses/ncurses.html)
-	
+
+
 3. Installation
 
 Currently the software must be installed with root privileges. This is important 
 as the installation scripts attempt to write to the /usr/lib and /usr/include 
 directories.
 
-Extract the software to a folder in the /opt directory called â€œCIMARâ€?. This should 
+Extract the software to a folder in the /opt directory called "CIMAR". This should 
 leave a folder containing the Core CIMAR libraries in the path (/opt/CIMAR/Core).
 
 To install the software, run the make command in the /opt/CIMAR/Core directory. 
@@ -70,7 +70,8 @@ files will be copied to the appropriate directories.
 *Note: The default installations of the libraries include all symbols and debug 
 information within the shared object (.so) files. This is to facilitate efficient 
 development and use of a run-time debugger. To reduce the size of the installed 
-libraries, the information can be removed by using the â€œstripâ€? command. 
+libraries, the information can be removed by using the "strip" command. 
+
 
 4. Method of Operation
 
@@ -89,7 +90,7 @@ Running the Template Component:
 2. Start a new terminal session.
 3. Enter the root directory of the component (i.e. the directory containing the 
    components Makefile)
-4. Make sure the component is compiled first by running the â€œmakeâ€? command.
+4. Make sure the component is compiled first by running the "make" command.
 5. Execute the component via the relative path. (./bin/cmpt) 
 	
 Custom or Experimental Message Implementation:
@@ -102,16 +103,16 @@ in their respective /src and /include folders within the /libjausC directory.
 		
 The general way to implement a new message based on these templates is as follows:
 
-1. Copy the â€œskeletonâ€? templates into their proper directories (/command, 
+1. Copy the "skeleton" templates into their proper directories (/command, 
    /experimental, etc...) based on the content of the intended message.
 
-2. Rename the â€œskeletonâ€? files to the intended specific JAUS message name. 
+2. Rename the "skeleton" files to the intended specific JAUS message name. 
    ex: rename "skeletonMessage.c" to "myExperimentalMessage.c".
 
 3. Change the contents of the header file (previously "skeletonMessage.h") to 
    reflect the correct JAUS message names.
-   ex: Rename all â€œxXxXâ€? to the proper JAUS message name.
-   (Donâ€™t forget this process is CaSe SENsitive!)
+   ex: Rename all "xXxX" to the proper JAUS message name.
+   (Don't forget this process is CaSe SENsitive!)
 
 4. Add to the message data structure in the header file the variables which are 
    defined for each of the fields in your JAUS message. The variables should be 
@@ -120,7 +121,7 @@ The general way to implement a new message based on these templates is as follow
    JausDouble within the message data structure).
 
 5. Change the contents of the source file to reflect the correct JAUS message names
-   ex: Rename all â€œxXxXâ€? to the proper JAUS message name.
+   ex: Rename all "xXxX" to the proper JAUS message name.
    (Again, this process is CaSe SENsitive!)
 
 6. Add any initialization code to the dataInitialize() function.
@@ -142,10 +143,11 @@ The general way to implement a new message based on these templates is as follow
 
 11. Reinstall the library
 
+
 5. Known Issues
 
 *  There is a general lack of documentation within the code, any questions or 
-   comments should be referred to the appropriate author.
+   comments should be referred to the openjaus.com discussion boards.
 
 *  There is no standalone API documentation, which describes all data structures, 
    functions, or default behavior.
@@ -161,6 +163,3 @@ The general way to implement a new message based on these templates is as follow
 *  A "ToString" method for each JAUS message and data structure is lacking from 
    this implementation and thus makes displaying critical information to the user 
    more cumbersome.
-   
-   
-   
