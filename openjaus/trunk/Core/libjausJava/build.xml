@@ -1,6 +1,6 @@
 <project name="libjausJava" default="all" basedir=".">
 	<description>
-        Ant Build File for teh libjausJava
+        Ant Build File for libjausJava
     </description>
 
 	<property name="seg" location="." />
@@ -33,14 +33,14 @@
 			srcdir="${src}"
 			destdir="${class}"
 			listfiles="no"
-			deprecation="${deprication}"
+			deprecation="${deprecation}"
 		/>
 	</target>
 	
 	<!-- Creates jaus.jar -->
 	<target name="all" depends="compile, init" description="Compiles and creates jaus.jar">
 		<jar jarfile="${jars}/jaus.jar" basedir="${class}" compress="false"
-			includes="jaus/**/*.class">
+			includes="**/*.class">
 			<!-- no manifest --><!--<manifest>
 				<attribute name="Main-Class" value="NodeManager"/>
 			</manifest>-->
@@ -62,6 +62,7 @@
 		<!--<delete dir="${doc}" />-->
 		<delete>
 			<fileset dir="${src}" includes="**/*.class" />
+			<fileset dir="${jars}" includes="**/*.jar" />
 		</delete>
 	</target>
 
