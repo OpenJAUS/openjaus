@@ -6,5 +6,6 @@ route add -host 224.1.0.1 eth1
 
 cd ..
 
-java -cp lib/jaus.jar:lib/nodeManager.jar openjaus.nodemanager.NodeManager
+# only need to use the main jar because it has a index which covers the other jars in lib
+java -Dlog4j.configuration=file:./log4j.properties -jar lib/nodeManager.jar
 

@@ -47,9 +47,14 @@ import openjaus.libjaus.*;
 import openjaus.libjaus.message.*;
 import java.net.*;
 import java.util.Enumeration;
+import org.apache.log4j.Logger;
 
 public class MessageRouter extends Thread
 {
+	
+	/** Logger that knows our class name */
+	static private final Logger log = Logger.getLogger(MessageRouter.class);
+
 //	int messageBlock;
 //	long messageCount;
 	DataRepository dataRepository;
@@ -103,8 +108,9 @@ public class MessageRouter extends Thread
 
 		if(source.getSubsystem() == thisAddress.getSubsystem() && source.getNode() == thisAddress.getNode())
 		{
-			// Error (Message from a local component has entered Node Manager from Node side queue)
-			// TODO: log this
+			// turns out this should not be a warning, it happens all the time, as 
+			// we hear our own multicasts
+			//log.warn("Message from a local component has entered Node Manager from Node side queue");
 		}
 		else
 		{
@@ -116,14 +122,14 @@ public class MessageRouter extends Thread
 				}
 				else
 				{
-					// error, destination node is not this node
-					// TODO: log this
+					log.warn("destination node is not this node");
+					
 				}
 			}
 			else
 			{
-				// error, destination subsystem is not this subsystem
-				// TODO: log this
+				log.warn("destination subsystem is not this subsystem");
+				
 			}
 		}
 	}// routeNodeSideMessage
@@ -190,8 +196,8 @@ public class MessageRouter extends Thread
 		}
 		else
 		{
-			// ERROR! Component-side messages can only come from components on its own node
-			// TODO: log this to something
+			log.warn("Component-side messages can only come from components on its own node");
+			
 		}
 	}
 
@@ -267,8 +273,7 @@ public class MessageRouter extends Thread
 		catch(Exception e)
 		{
 			dataRepository.put("MessageRouter Exception", e);
-			System.out.println("MessageRouter: " + e);
-			e.printStackTrace(); // now we'll know where it's coming from
+			log.warn("MessageRouter exception" , e);
 			return;
 		}
 
@@ -299,7 +304,8 @@ public class MessageRouter extends Thread
 		}
 		else
 		{
-			// TODO: log error
+			log.warn("Null port or address");
+
 		}
 	}
 
@@ -327,7 +333,7 @@ public class MessageRouter extends Thread
 					catch (Exception e)
 					{
 						dataRepository.put("MessageRouter Exception", e);
-						System.out.println("MessageRouter: " + e);
+						log.warn("Exception sending to componentSocket", e);
 					}
 		    	}
 
@@ -361,7 +367,7 @@ public class MessageRouter extends Thread
 							catch (Exception e)
 							{
 								dataRepository.put("MessageRouter Exception", e);
-								System.out.println("MessageRouter: " + e);
+								log.warn("Exception sending to componentSocket", e);
 							}
 						}
 		    		}
@@ -369,7 +375,7 @@ public class MessageRouter extends Thread
 
 		        if(!foundAnInstance)
 		        {
-			        // TODO: Log as error and move on
+			        log.warn("Could not find instance");
 		        }
 			}
 		}
@@ -381,7 +387,8 @@ public class MessageRouter extends Thread
 			}
 			else
 			{
-				// TODO: Log as error or warning and move on
+				log.warn("destination was not this, or a broadcast");
+				
 			}
 		}
 		else
@@ -407,13 +414,13 @@ public class MessageRouter extends Thread
 						catch (Exception e)
 						{
 							dataRepository.put("MessageRouter Exception", e);
-							System.out.println("MessageRouter: " + e);
+							log.warn("MessageRouter could not send", e);
 						}
 		    		}
 		    	}
 		        if(!foundAnInstance)
 		        {
-					// TODO: Log as error and move on
+					log.warn("Could not find instance");
 		        }
 			}
 			else
@@ -434,12 +441,13 @@ public class MessageRouter extends Thread
 					catch (Exception e)
 					{
 						dataRepository.put("MessageRouter Exception", e);
-						System.out.println("MessageRouter: " + e);
+						log.warn("MessageRouter exception sending to componentSocket" , e);
 					}
 		    	}
 		        else
 		        {
-					// TODO: Log as error and move on
+		        	log.warn("Component does not exist on this Node");
+					
 		        }
 			}
 		}
@@ -474,6 +482,7 @@ public class MessageRouter extends Thread
 //						messageCount++;
 //					}
 				    dataRepository.put("MessageRouter Current Message", message);
+				    if(log.isDebugEnabled())log.debug("Current Message command code:"+ message.getCommandCode());
 					routeNodeSideMessage(message, packet.getAddress(), packet.getPort());
 				}
 
@@ -503,11 +512,11 @@ public class MessageRouter extends Thread
 			catch(Exception e)
 			{
 				dataRepository.put("MessageRouter Exception", e);
-				System.out.println("MessageRouter: " + e);
-				e.printStackTrace(); // now we'll know where it's coming from
+				log.warn("MessageRouter: " , e);
+				
 			}
 		}
-	    System.out.println("MessageRouter: Shutting down");			
+	    log.info("Shutting down");			
 
 	}	
 }

@@ -44,8 +44,13 @@
 package openjaus.nodemanager;
 import java.net.*;
 
+import org.apache.log4j.Logger;
+
 public class SendThread extends Thread
 {
+	/** Logger that knows our class name */
+	static private final Logger log = Logger.getLogger(SendThread.class);
+
 	static long sendCount = 0;
 	MulticastSocket sendSocket;
 	MulticastSocket subsSocket;
@@ -64,6 +69,7 @@ public class SendThread extends Thread
 	
 	public void run()
 	{
+		log.info("SendThread starting");
 		while(NodeManager.isRunning())
 		{
 			try
@@ -76,7 +82,7 @@ public class SendThread extends Thread
 				if(!queue.isEmpty())
 				{
 					DatagramPacket packet = (DatagramPacket)queue.pop();
-					//System.out.println("Sending msg to: " + packet.getAddress());
+					if(log.isDebugEnabled())log.debug("Sending msg to: " + packet.getAddress());
 					sendSocket.send(packet);
 					dataRepository.put("Messages Sent Count", new Long(++sendCount));
 				}
@@ -84,11 +90,11 @@ public class SendThread extends Thread
 			catch (Exception e)
 			{
 				dataRepository.put("SendThread Exception", e);
-				System.out.println("SendThread: " + e);
-				e.printStackTrace();
+				log.warn("Could not send message", e);
+
 			}
 		}
-	    System.out.println("SendThread: Shutting down");			
+	    log.warn("SendThread: Shutting down");			
 
 	}
 		

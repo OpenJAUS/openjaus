@@ -46,9 +46,13 @@ package openjaus.nodemanager;
 
 import openjaus.libjaus.*;
 import java.net.*;
+import org.apache.log4j.Logger;
 
 public class ComponentInterface extends Thread
 {
+	/** Logger that knows our class name */
+	static private final Logger log = Logger.getLogger(ComponentInterface.class);
+	
 	public static final int MINIMUM_VALID_COMPONENT_PORT = 1024; // This is a common minimum user reserved port value
 	JausAddress thisAddress;
 	InetAddress ipAddress;
@@ -66,16 +70,18 @@ public class ComponentInterface extends Thread
 		{
 		    socket = new DatagramSocket(this.componentInterfacePort, ipAddress);
 		    socket.setSoTimeout(1000);
+		    if(log.isDebugEnabled()){log.debug("Socket created, port:" + this.componentInterfacePort + " ip:" + ipAddress);}
 		}
 		catch(Exception e)
 		{
 			NodeManager.getDataRepository().put("ComponentInterface Exception", e);
-		    System.out.println("ComponentInterface: " + e);
+		    log.warn("Exception creating DatagramSocket", e);
 		}
 	}
 	
 	public synchronized void run()
 	{
+		log.debug("ComponentInterface run()");
 		InterfaceMessage replyMessage;
 		JausAddress address;
 		DatagramPacket outPacket;
@@ -121,7 +127,7 @@ public class ComponentInterface extends Thread
 					    int componentId = inMessage.getData()[0] & 0xff;
 						if(componentId == JausAddress.INVALID_COMPONENT || componentId == JausAddress.BROADCAST_COMPONENT)
 						{
-						    System.out.println("ComponentInterface: Error: Component attempted to check in with an invalid component ID: " + componentId);
+						    log.warn("Error: Component attempted to check in with an invalid component ID: " + componentId);
 							// TODO: Send back checkin error reply (invalid component number)
 						    break;
 						}
@@ -129,7 +135,7 @@ public class ComponentInterface extends Thread
 						int componentMessagePort = (inMessage.getData()[1] & 0xFF) + ((inMessage.getData()[2] & 0xFF) << 8);
 						if(componentMessagePort < MINIMUM_VALID_COMPONENT_PORT || packet.getPort() < MINIMUM_VALID_COMPONENT_PORT)
 						{
-						    System.out.println("ComponentInterface: Error: Component attempted to check in with an invalid port number (" + packet.getPort() + ")");
+						    log.warn("Error: Component attempted to check in with an invalid port number (" + packet.getPort() + ")");
 							// TODO: Send back checkin error reply (invalid port number)
 							break;
 						}
@@ -137,7 +143,7 @@ public class ComponentInterface extends Thread
 						int instanceId = subsystemTable.checkInLocalComponent(componentId, componentMessagePort);
 						if(instanceId == JausAddress.INVALID_INSTANCE)
 						{
-						    System.out.println("ComponentInterface: Error: Component attempted to check in with an invalid instance number");
+						    log.warn("Error: Component attempted to check in with an invalid instance number");
 							// TODO: Send back checkin error reply (no available instance)							
 							break;
 						}
@@ -168,7 +174,7 @@ public class ComponentInterface extends Thread
 						{
 							response = 1;
 						}
-						//System.out.println("CmptInterface: Checked address: " + address + " returning: " + response);
+						if(log.isDebugEnabled())log.debug("Checked address: " + address + " returning: " + response);
 						
 						replyMessage = new InterfaceMessage();
 						replyMessage.setCommand(InterfaceMessage.NODE_MANAGER_ADDRESS_VERIFIED);
@@ -183,7 +189,7 @@ public class ComponentInterface extends Thread
 					case InterfaceMessage.NODE_MANAGER_GET_COMPONENT_ADDRESS_LIST:
 						componentId  = inMessage.getData()[0];
 					
-						//System.out.println("CmptInterface: Get address for component ID: " + componentId);
+						if(log.isDebugEnabled())log.debug("Get address for component ID: " + componentId);
 						address = subsystemTable.getComponentAddress(componentId);
 
 						replyMessage = new InterfaceMessage();
@@ -195,7 +201,7 @@ public class ComponentInterface extends Thread
 							replyMessage.getData()[1] = (byte)(0 & 0xff);
 							replyMessage.getData()[2] = (byte)(0 & 0xff);
 							replyMessage.getData()[3] = (byte)(0 & 0xff);
-							//System.out.println("CmptInterface: Get address for component ID: " + componentId + " returning: 0.0.0.0");
+							if(log.isDebugEnabled())log.debug("Get address for component ID: " + componentId + " returning: 0.0.0.0");
 						}
 						else	
 						{
@@ -203,7 +209,7 @@ public class ComponentInterface extends Thread
 							replyMessage.getData()[1] = (byte)(address.getComponent() & 0xff);
 							replyMessage.getData()[2] = (byte)(address.getNode() & 0xff);
 							replyMessage.getData()[3] = (byte)(address.getSubsystem() & 0xff);							
-							//System.out.println("CmptInterface: Get address for component ID: " + componentId + " returning: " + address);
+							if(log.isDebugEnabled())log.debug("Get address for component ID: " + componentId + " returning: " + address);
 						}
 						
 				    	replyBuffer = new byte[8];
@@ -218,7 +224,7 @@ public class ComponentInterface extends Thread
 						address.setComponent(inMessage.getData()[1] & 0xff);
 						address.setNode(inMessage.getData()[2] & 0xff);
 						address.setSubsystem(inMessage.getData()[3] & 0xff);						
-						//System.out.println("CmptInterface: Looking Up Address: " + address);
+						if(log.isDebugEnabled())log.debug("Looking Up Address: " + address);
 
 						replyMessage = new InterfaceMessage();
 						replyMessage.setCommand(InterfaceMessage.NODE_MANAGER_LOOKUP_ADDRESS_RESPONSE);
@@ -226,12 +232,12 @@ public class ComponentInterface extends Thread
 						if(subsystemTable.lookUpAddressInSystem(address))
 						{
 							replyMessage.getData()[4] = (byte)1;
-							//System.out.println("CmptInterface: Lookup Address Found: " + address);
+							if(log.isDebugEnabled())log.debug("Lookup Address Found: " + address);
 						}
 						else
 						{
 							replyMessage.getData()[4] = (byte)0;							
-							//System.out.println("CmptInterface: Lookup Address NOT Found: " + address);
+							if(log.isDebugEnabled())log.debug("Lookup Address NOT Found: " + address);
 						}
 						
 						replyMessage.getData()[0] = (byte)(address.getInstance() & 0xff);
@@ -255,7 +261,7 @@ public class ComponentInterface extends Thread
 						int commandCode = (inMessage.getData()[4] & 0xFF) + ((inMessage.getData()[5] & 0xFF) << 8);
 						
 						int serviceCommandType = (inMessage.getData()[6] & 0xFF);
-						//System.out.println("CmptInterface: Looking Up Address: " + address);
+						if(log.isDebugEnabled())log.debug("Looking Up Address: " + address);
 
 						replyMessage = new InterfaceMessage();
 						replyMessage.setCommand(InterfaceMessage.NODE_MANAGER_LOOKUP_SERVICE_ADDRESS_RESPONSE);
@@ -263,12 +269,12 @@ public class ComponentInterface extends Thread
 						if(subsystemTable.lookUpServiceAddressInSystem(address, commandCode, serviceCommandType))
 						{
 							replyMessage.getData()[4] = (byte)1;
-							//System.out.println("CmptInterface: Lookup Address Found: " + address);
+							if(log.isDebugEnabled())log.debug("Lookup Address Found: " + address);
 						}
 						else
 						{
 							replyMessage.getData()[4] = (byte)0;							
-							//System.out.println("CmptInterface: Lookup Address NOT Found: " + address);
+							if(log.isDebugEnabled())log.debug("Lookup Address NOT Found: " + address);
 						}
 						
 						replyMessage.getData()[0] = (byte)(address.getInstance() & 0xff);
@@ -324,17 +330,17 @@ public class ComponentInterface extends Thread
 					    break;
 					    
 					default:
-					    System.out.println("ComponentInterface: Received unknown message command");
+					    log.info("Received unknown message command");
 						break;
 				}
 			}
-		    System.out.println("ComponentInterface: Shutting down");
+		    log.warn("Shutting down");
 		}
 		catch (Exception e)
 		{
 			NodeManager.getDataRepository().put("ComponentInterface Exception", e);
-			System.out.println("ComponentInterface: " + e);
-			e.printStackTrace();
+			log.warn("Exception",e);
+			
 		}
 	}
 	

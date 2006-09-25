@@ -52,8 +52,13 @@ import java.util.*;
 import java.net.*;
 import java.text.*;
 
+import org.apache.log4j.Logger;
+
 public class SubsystemTable
 {
+	/** Logger that knows our class name */
+	static private final Logger log = Logger.getLogger(SubsystemTable.class);
+
 	Queue outputQueue;
 	Vector table; // Vector of JausSubsystems
 	Vector nodeConfChangedNotifyList;
@@ -98,7 +103,7 @@ public class SubsystemTable
        
 		instanceIdAvailable[thisComponent.getAddress().getComponent()][thisComponent.getAddress().getInstance()] = false;
 		table.add(thisSubsystem);
-		System.out.println("SubsystemTable: Added Component: " + thisSubsystem + " : " + thisNode + " : " + thisComponent);
+		log.info("SubsystemTable: Added Component: " + thisSubsystem + " : " + thisNode + " : " + thisComponent);
     }
     
     public void processHeartbeat(JausMessage message, InetAddress ipAddress, int port)
@@ -135,7 +140,7 @@ public class SubsystemTable
 					// TODO: Only add remote components (might not need this whole block)
 				    sourceComponent.setNode(node);
 					node.add(sourceComponent);
-					System.out.println("SubsystemTable: Added Component: " + subsystem + " : " + node + " : " + sourceComponent);    					    
+					log.info("SubsystemTable: Added Component: " + subsystem + " : " + node + " : " + sourceComponent);    					    
 					if(node.equals(thisNode))
 					{
 						sendNodeChangedEvents();
@@ -149,13 +154,13 @@ public class SubsystemTable
 			{
 			    sourceNode.setSubsystem(subsystem);
 				subsystem.add(sourceNode);
-				System.out.println("SubsystemTable: Added Component: " + subsystem + " : " + sourceNode + " : " + sourceComponent);
+				log.info("SubsystemTable: Added Component: " + subsystem + " : " + sourceNode + " : " + sourceComponent);
 			}
 		}
 		else
 		{
 			table.add(sourceSubsystem);
-			System.out.println("SubsystemTable: Added Component: " + sourceSubsystem + " : " + sourceNode + " : " + sourceComponent);
+			log.info("SubsystemTable: Added Component: " + sourceSubsystem + " : " + sourceNode + " : " + sourceComponent);
 		}
     }
     
@@ -196,26 +201,26 @@ public class SubsystemTable
 							break;
 						
 						default:
-							// TODO: Log as error, unhandled or invalid identification
+							log.warn("Unknown message type:" + message.getQueryType().getValue() );
 							return;
 					}
 				}
 				else
 				{
-					// TODO: Log Error
-					// Error, got identification for an object not in the subsystem table					
+					log.warn("Component not in node:" + sourceComponent);
+					
 				}
 			}
 			else
 			{
-				// TODO: Log Error
-				// Error, got identification for an object not in the subsystem table				
+				log.warn("Node not in subsystem:" + sourceNode);
+				
 			}
 		}
 		else
 		{
-			// TODO: Log Error
-			// Error, got identification for an object not in the subsystem table
+			log.warn("Subsystem does not exist: " + sourceSubsystem);
+
 		}
     }
 
@@ -348,20 +353,20 @@ public class SubsystemTable
 				}
 				else
 				{
-					// TODO: Log Error
-					// Error, got services for an object not in the subsystem table					
+					log.warn("Component not in node: " + sourceComponent);
+				
 				}
 			}
 			else
 			{
-				// TODO: Log Error
-				// Error, got services for an object not in the subsystem table				
+				log.warn("Node not in subsystem:" + sourceNode);
+			
 			}
 		}
 		else
 		{
-			// TODO: Log Error
-			// Error, got services for an object not in the subsystem table
+			log.warn("Subsystem not in system: " + sourceSubsystem);
+
 		}
     }
     
@@ -420,7 +425,8 @@ public class SubsystemTable
 				break;
 
 			default: 
-				// TODO: Log as error
+				log.warn("Unknown query field:" + queryConfMsg.getQueryField().getValue());
+	
 				return false;
 		}
 		return true;
@@ -447,17 +453,20 @@ public class SubsystemTable
 				}
 				else
 				{
-					// TODO: Log as error or warning
+					log.warn("Unknown source component: " + sourceComponent);
+
 				}
 			}
 			else
 			{
-				// TODO: Log as error or warning
+				log.warn("Unknown source Node: " + sourceNode);
+
 			}
 		}
 		else
 		{
-			// TODO: Log as error or warning
+			log.warn("Unknown subsystem:" + sourceSubsystem);
+	
 		}
     }
 
@@ -482,17 +491,20 @@ public class SubsystemTable
 				}
 				else
 				{
-					// TODO: Log as error or warning
+					log.warn("Unknown component:" + sourceComponent);
+
 				}
 			}
 			else
 			{
-				// TODO: Log as error or warning
+				log.warn("Unknown Node:" + sourceNode);
+				
 			}
 		}
 		else
 		{
-			// TODO: Log as error or warning
+			log.warn("Unknown subsystem:" + sourceSubsystem);
+
 		}
     }
 	
@@ -920,12 +932,14 @@ public class SubsystemTable
 				}
 				else
 				{
-					// TODO: log error
+					log.warn("lookUpIpAddress: no such Node:" + nodeID);
+					
 				}
 			} 
 			else
 			{
-				// TODO: log error
+				log.warn("lookUpIpAddress: no such Subsystem:" + subsystemID);
+		
 			}
 		}
 		return null;
@@ -943,12 +957,14 @@ public class SubsystemTable
 			}
 			else
 			{
-				// TODO: log error
+				log.warn("lookUpPort: no such Node:" + nodeID);
+				
 			}
 		} 
 		else
 		{
-			// TODO: log error
+			log.warn("lookUpPort: no such Subsystem:" + subsystemID);
+			
 		}
 		return null;
 	}
@@ -959,7 +975,7 @@ public class SubsystemTable
 		{
 			if(lookupComponentId == 0)
 			{
-				System.out.println("SubsystemTable: Error: getComponentAddress Called Uninitialized");	
+				log.warn("getComponentAddress Called Uninitialized");	
 				return null;
 			}
 		}
@@ -1007,7 +1023,7 @@ public class SubsystemTable
 		{
 			if(lookupCommandCode == 0)
 			{
-				System.out.println("SubsystemTable: Error: lookupServiceAddressList Called Uninitialized");	
+				log.warn("SubsystemTable: Error: lookupServiceAddressList Called Uninitialized");	
 				return null;
 			}
 		}
@@ -1101,7 +1117,8 @@ public class SubsystemTable
 		if (node != null)
 			return node.getIpAddress();
 		else
-			// TODO: log error, right now it'll just call the next line: (return null)
+			log.warn("lookUpLocalIpAddress: no such node:" + nodeId);
+		
 		return null;
     }
 
@@ -1135,7 +1152,7 @@ public class SubsystemTable
     			JausComponent sourceComponent = new JausComponent(componentAddress, 0, port);
     			sourceComponent.setNode(thisNode); // Set parent node
 				thisNode.add(sourceComponent);
-				System.out.println("SubsystemTable: Added Component: " + thisSubsystem + " : " + thisNode + " : " + sourceComponent);
+				log.info("Added Component: " + thisSubsystem + " : " + thisNode + " : " + sourceComponent);
 
 				sendNodeChangedEvents();
 				sendNodeChangedNotifications();
@@ -1324,7 +1341,7 @@ public class SubsystemTable
 			JausSubsystem subsystem = (JausSubsystem)tableElements.nextElement();
 			if(subsystem.hasTimedOut())
 			{
-				System.out.println("SubsystemTable: Timeout Occured: Removing Subsystem: " + subsystem);
+				log.info("SubsystemTable: Timeout Occured: Removing Subsystem: " + subsystem);
 				table.remove(subsystem);
 			}
 			else if(subsystem.getId() == thisComponent.getAddress().getSubsystem()) // Only remove nodes from this subsystem
@@ -1335,7 +1352,7 @@ public class SubsystemTable
 					JausNode node = (JausNode)subsystemElements.nextElement();
 					if(node.hasTimedOut())
 					{
-						System.out.println("SubsystemTable: Timeout Occured: Removing Node: " + node);
+						log.info("SubsystemTable: Timeout Occured: Removing Node: " + node);
 						subsystem.remove(node);
 						subsystemConfChanged = true;
 					}
@@ -1347,7 +1364,7 @@ public class SubsystemTable
 							JausComponent component = (JausComponent)nodeElements.nextElement();
 							if(component.hasTimedOut())
 							{
-								System.out.println("SubsystemTable: Timeout Occured: Removing Component: " + component);
+								log.info("SubsystemTable: Timeout Occured: Removing Component: " + component);
 								node.remove(component);
 								instanceIdAvailable[component.getAddress().getComponent()][component.getAddress().getInstance()] = true;
 								nodeConfChanged = true;

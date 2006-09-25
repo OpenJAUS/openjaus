@@ -43,10 +43,16 @@
 
 package openjaus.nodemanager;
 import java.net.*;
+
+import org.apache.log4j.Logger;
+
 import openjaus.libjaus.message.*;
 
 public class ReceiveThread extends Thread
 {
+	/** Logger that knows our class name */
+	static private final Logger log = Logger.getLogger(ReceiveThread.class);
+
 	static long receiveCount = 0;
     DatagramSocket socket;
 	Queue queue;
@@ -70,7 +76,7 @@ public class ReceiveThread extends Thread
 		catch(Exception e)
 		{
 			dataRepository.put("ReceiveThread Exception", e);
-			System.out.println(e);
+			log.warn("could not set socket timeout",e);
 		}
 	}
 	
@@ -78,6 +84,7 @@ public class ReceiveThread extends Thread
 	{
 		try
 		{
+			log.info("ReceiveThread running");
 		    // Initialize the datagram packet with a pre-sized array (Packets with more data will be truncated)
 			int maxJausRecvSize = JausMessage.MAX_DATA_SIZE; 
 			maxJausRecvSize += JausMessage.HEADER_SIZE_BYTES;
@@ -112,12 +119,13 @@ public class ReceiveThread extends Thread
 				}
 				    
 			}
-		    System.out.println("ReceiveThread: Shutting down");			
+		    log.warn("ReceiveThread: Shutting down");			
 
 		}
 		catch (Exception e)
 		{
 			dataRepository.put("ReceiveThread Exception", e);
+			log.error("Exception in ReceiveThread", e);
 			System.out.println(e);
 		}
 	}
