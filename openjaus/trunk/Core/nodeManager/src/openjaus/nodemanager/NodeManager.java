@@ -48,8 +48,13 @@ import java.util.*;
 import java.io.*;
 import java.net.*;
 
+import org.apache.log4j.Logger;
+
 public class NodeManager
 {
+	/** Logger that knows our class name */
+	static private final Logger log = Logger.getLogger(NodeManager.class);
+
 	// JAUS and State machine related variables
 	private static JausSubsystem subsystem;
 	private static JausNode node;
@@ -112,6 +117,7 @@ public class NodeManager
 		
 		try
 		{
+			log.info("NodeManager starting");
 			properties = new Properties();
 			properties.load(new FileInputStream(new File("./", "nodeManager.conf")));
 
@@ -122,66 +128,72 @@ public class NodeManager
 			address.setNode(Integer.parseInt(properties.getProperty("NODE_ID").trim()));
 			address.setComponent(JausComponent.NODE_MANAGER);
 			address.setInstance(JausAddress.PRIMARY_INSTANCE);
-			System.out.println("NodeManager: JAUS Address: " + address);
+			System.out.println("JAUS Address: " + address);
 
 			dataRepository = new DataRepository();
 		
 			NetworkInterface subsInterface = NetworkInterface.getByName(properties.getProperty("SUBSYSTEM_SIDE_INTERFACE"));
 			if(subsInterface != null)
 			{
-				System.out.println("NodeManager: Subsystem Side Interface: " + subsInterface.getName());				
+				log.info("Subsystem Side Interface: " + subsInterface.getName());				
 				Enumeration e = subsInterface.getInetAddresses();
 				if(e.hasMoreElements())
 				{
 					subsIpAddress = (InetAddress)e.nextElement();
-					System.out.println("NodeManager: Subsystem IP Address: " + subsIpAddress);				
+					log.info("Subsystem IP Address: " + subsIpAddress);				
 				}
 			}
 
 			NetworkInterface networkInterface = NetworkInterface.getByName(properties.getProperty("NETWORK_INTERFACE"));
-			System.out.println("NodeManager: Network Interface: " + networkInterface.getName());				
+			if(networkInterface  != null){
+				log.info("NodeManager: Network Interface: " + networkInterface.getName());				
+			}else{
+				log.warn("Network interface was null");
+				
+			}
+			
 			Enumeration e = networkInterface.getInetAddresses();
 			if(e.hasMoreElements())
 			{
 				nodeIpAddress = (InetAddress)e.nextElement();
-				System.out.println("NodeManager: Node IP Address: " + nodeIpAddress);				
+				log.info("Node IP Address: " + nodeIpAddress);				
 			}
 			
 			nodeGroupAddress = InetAddress.getByName(properties.getProperty("NODE_GROUP_ADDRESS").trim());
-			System.out.println("NodeManager: Node Side Group Address: " + nodeGroupAddress);				
+			log.info("Node Side Group Address: " + nodeGroupAddress);				
 			
 			nodePort = Integer.parseInt(properties.getProperty("NODE_PORT").trim());
-			System.out.println("NodeManager: Node Port: " + nodePort);
+			log.info("Node Port: " + nodePort);
 
 			nodeSocket = new MulticastSocket(nodePort);
 			nodeSocket.setNetworkInterface(networkInterface); // nodeSocket.setInterface(nodeIpAddress);
 			nodeSocket.joinGroup(nodeGroupAddress);
 			
-			System.out.println("NodeManager: Opened Node Side Multicast Socket: " + nodeSocket);				
+			log.info("Opened Node Side Multicast Socket: " + nodeSocket);				
 
 			if(subsInterface != null)
 			{
 				subsGroupAddress = InetAddress.getByName(properties.getProperty("SUBSYSTEM_GROUP_ADDRESS").trim());
-				System.out.println("NodeManager: Subsytem Side Group Address: " + subsGroupAddress);				
+				log.info("Subsystem Side Group Address: " + subsGroupAddress);				
 			
 				subsSocket = new MulticastSocket(nodePort);
 				subsSocket.setNetworkInterface(subsInterface); //subsSocket.setInterface(subsIpAddress);
 				subsSocket.joinGroup(subsGroupAddress);
-				System.out.println("NodeManager: Opened Subsystem Side Multicast Socket: " + subsSocket);				
+				log.info("Opened Subsystem Side Multicast Socket: " + subsSocket);				
 			}
 			
 			componentMessagePort = Integer.parseInt(properties.getProperty("COMPONENT_MESSAGE_PORT").trim());
-			System.out.println("NodeManager: Component Message Port: " + componentMessagePort);
+			log.info("Component Message Port: " + componentMessagePort);
 			
 			componentIpAddress = InetAddress.getByName("localhost");
 			componentSocket = new DatagramSocket(componentMessagePort, componentIpAddress);
 			//System.out.println("NodeManager: Component Side Recv Buff Size: " + componentSocket.getReceiveBufferSize());				
 			//System.out.println("NodeManager: Component Side Send Buff Size: " + componentSocket.getSendBufferSize());				
-			System.out.println("NodeManager: Component Side InetAddress: " + componentSocket.getLocalAddress());				
-			System.out.println("NodeManager: Opened Component Side Datagram Socket: " + componentSocket);				
+			log.info("Component Side InetAddress: " + componentSocket.getLocalAddress());				
+			log.info("Opened Component Side Datagram Socket: " + componentSocket);				
 
 			componentInterfacePort = Integer.parseInt(properties.getProperty("COMPONENT_INTERFACE_PORT").trim());
-			System.out.println("NodeManager: Component Interface Port: " + componentInterfacePort);
+			log.info("Component Interface Port: " + componentInterfacePort);
 			
 			// Instantiate JAUS self subsystem, node and component
 			subsystem = new JausSubsystem(address.getSubsystem());
@@ -203,7 +215,7 @@ public class NodeManager
 
 			if(subsSocket != null)
 			{
-				System.out.println("NodeManager: Creating subsystem side threads");
+				log.info("Creating subsystem side threads");
 				subsSendMonitor = new Monitor();
 				subsSendQueue = new Queue("Subsystem Send Queue", subsSendMonitor);
 				subsSendThread = new SendThread(subsSocket, subsSendQueue, subsSendMonitor);
@@ -296,7 +308,7 @@ public class NodeManager
 		}
 		catch(Exception e) 
 		{
-			System.out.println("NodeManager: " + e);
+			log.warn("NodeManager exception in main loop", e);
 			running = false;
 		}
 

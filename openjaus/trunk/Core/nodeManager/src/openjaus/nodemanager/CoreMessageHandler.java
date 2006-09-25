@@ -50,9 +50,13 @@ import openjaus.libjaus.message.*;
 import openjaus.libjaus.message.command.*;
 import openjaus.libjaus.message.experimental.*;
 import openjaus.libjaus.message.inform.*;
+import org.apache.log4j.Logger;
 
 public class CoreMessageHandler
 {
+	/** Logger that knows our class name */
+	static private final Logger log = Logger.getLogger(CoreMessageHandler.class);
+	
     SubsystemTable subsystemTable;
 	Queue outputQueue;
 	Queue nodeSendQueue;
@@ -257,8 +261,7 @@ public class CoreMessageHandler
 								}
 								catch(Exception e)
 								{
-									System.out.println("MessageRouter: " + e);
-									e.printStackTrace(); // now we'll know where it's coming from
+									log.warn("Exception in MessageRouter", e);
 									return;
 								}
 							}
@@ -316,7 +319,8 @@ public class CoreMessageHandler
 						break;
 					
 					default:
-						// TODO: Log as error
+						log.warn("Unknown CommandCode received");
+						
 						return;
 				}
 
@@ -359,11 +363,11 @@ public class CoreMessageHandler
 						return;
 
 					default:
-			        	// TODO: Log as error
+			        	log.warn("REPORT_IDENTIFICATION has unknown query type");
 			        	return;
 			    }
 
-				createEventMsg = new CreateEventMessage();
+			    createEventMsg = new CreateEventMessage();
 				createEventMsg.setDestination(message.getSource());
 				createEventMsg.setSource(thisComponent.getAddress());
 			    createEventMsg.setMessageCode(JausMessage.QUERY_CONFIGURATION);
@@ -531,7 +535,7 @@ public class CoreMessageHandler
 			    break;
 
 			default:
-			    // TODO: Log as error or warning
+			    log.warn("Unknown command code");
 				break;
 			
 		}// switch

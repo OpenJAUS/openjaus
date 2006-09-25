@@ -45,9 +45,13 @@ package openjaus.nodemanager;
 
 import java.io.*;
 import java.lang.reflect.Array;
+import org.apache.log4j.Logger;
 
 public class FileLogger extends Thread
 {
+	/** Logger that knows our class name */
+	static private final Logger log = Logger.getLogger(FileLogger.class);
+
 	DataRepository dataRepository;
 	String loggingList[] = {
 //							"MessageRouter Message Block",
@@ -79,6 +83,8 @@ public class FileLogger extends Thread
 		buffer += "\n";
 		fileWriter.write(buffer);
 		fileWriter.flush();
+		log.info("FileLogger writing to: " + fileString);
+		
 	}
 	
 	public void logData(DataRepository repository) throws IOException
@@ -112,11 +118,11 @@ public class FileLogger extends Thread
 			}
 			catch(Exception e)
 			{
-				System.out.println("FileLogger Exception: " + e);
+				log.warn("FileLogger Exception", e);
 			}
 			
 		}
-	    System.out.println("FileLogger: Shutting down");			
+	    log.info("FileLogger: Shutting down");			
 	}
 	
 }

@@ -47,9 +47,13 @@ package openjaus.nodemanager;
 import openjaus.libjaus.*;
 import openjaus.libjaus.message.inform.*;
 import java.net.*;
+import org.apache.log4j.Logger;
 
 class HeartBeat extends Thread
 {
+	/** Logger that knows our class name */
+	static private final Logger log = Logger.getLogger(HeartBeat.class);
+
 	static long beatCount  = 0;
 	long beatPerioidMilliSec;
 	Queue nodeSendQueue;
@@ -83,12 +87,14 @@ class HeartBeat extends Thread
 
 		dataRepository = NodeManager.getDataRepository();
 		dataRepository.put("Heartbeat Count", new Long(beatCount));
+		if(log.isDebugEnabled())log.debug("Heartbeat Count:"+ beatCount);
 	}
 
 	public void run()
 	{
 	    try
 	    {
+	    	if(log.isDebugEnabled())log.debug("Heartbeat starting");
 	        ReportHeartbeatPulseMessage heartBeatMessage = new ReportHeartbeatPulseMessage();
 			heartBeatMessage.setSource(thisAddress);
 			
@@ -140,12 +146,12 @@ class HeartBeat extends Thread
 					sleep(beatPerioidMilliSec);
 				}				
 			}
-		    System.out.println("Heartbeat: Shutting down");			
+		    log.info("Heartbeat: Shutting down");			
 	    }
 	    catch(Exception e)
 	    {
 			NodeManager.getDataRepository().put("HeartBeat Exception", e);
-	        System.out.println("HeartBeat: " + e);//Print and as usual ignore errors
+	        log.warn("HeartBeat exception",e);
 	        
 	    }
 	}

@@ -4,12 +4,20 @@
     </description>
 
 	<property name="seg" location="." />
-	
+
 	<property name="src" location="${seg}/src" />
 	<property name="class" location="${seg}/Build" />
 	<property name="doc" location="${data}/doc" />
+
+	<!-- The libjausJava JAR file.  All you should need to do is do make or ant
+		in the libjausJava directory, which will create this JAR which NodeManager
+		uses.  -->
+	<property name="jaus_jar" location="../libjausJava/lib/jaus.jar" />
 	
-	<property name="lib" location="../libjausJava/lib/jaus.jar" />
+	<!-- lib is where you put 3rd party JAR files.  Any JARs here will be
+		magically found at both compile and runtime -->
+	<property name="lib" location="lib" />
+	
 	<!-- where we are building the nodeManager distribution -->
 	<property name="dest" location="deploy" />
 	<property name="deploy" location="${dest}/NodeManager" />
@@ -17,6 +25,16 @@
 	<property name="bin_dest" location="${deploy}/bin" />
 	<property name="log_dest" location="${deploy}/log" />
 	<property name="deprecation" value="true" />
+
+	<!-- The class path for the project -->
+	<path id="project_classpath">
+		<pathelement path="${classpath}" />
+		<fileset dir="${lib}">
+			<!-- magically find all jars in lib -->
+			<include name="**/*.jar" />
+		</fileset>
+		<pathelement location="${jaus_jar}" />
+	</path>
 
 	<target name="init">
 		<mkdir dir="${src}" />
@@ -26,18 +44,26 @@
 		<mkdir dir="${jar_dest}" />
 		<mkdir dir="${bin_dest}" />
 		<mkdir dir="${log_dest}" />
-		<!-- you need to create a nodeManager.conf for your configuration -->
+		<!-- you need to create a nodeManager.conf for your configuration.  See the templates in this
+			directory and copy the one closest to what you need. -->
 		<copy file="nodeManager.conf" todir="${deploy}" failonerror="true" />
+		<copy file="log4j.properties" todir="${deploy}" failonerror="true" />
 		<copy file="NM" todir="${bin_dest}" failonerror="true"/>
 		<copy file="NM.cmd" todir="${bin_dest}" failonerror="true"/>
 		<copy file="..\COPYING" todir="${deploy}" />
 		<copy file="..\LICENSE" todir="${deploy}" />
 		<copy file="..\readme.txt" todir="${deploy}" />
+		<copy todir="${jar_dest}" >
+			<fileset dir="${lib}">
+				<include name="**/*" />
+			</fileset>
+		</copy>
+		<copy todir="${jar_dest}" file="${jaus_jar}" />
 	</target>
-	
+
 	<target name="compile" depends="init" description="generate all classes">
 		<mkdir dir="${class}" />
-		
+
 		<copy todir="${class}">
 			<fileset dir="${src}">
 				<exclude name="**/*.java" />
@@ -49,21 +75,27 @@
 		       srcdir="${src}"
 		       destdir="${class}"
 			   listfiles="no"
-			   deprecation="${deprication}"
-			   classpath="${lib}"
+			   deprecation="${deprecation}"
+			   classpathref="project_classpath"
 		/>
 	</target>
-	
+
 	<!-- Creates nodeManager.jar -->
 	<target name="all" depends="compile, init" description="Compiles and creates nodeManager.jar">
-		<copy todir="${jar_dest}" file="${lib}" />
-		<jar jarfile="${jar_dest}/nodeManager.jar" basedir="${class}" compress="false"
+
+		<jar jarfile="${jar_dest}/nodeManager.jar" basedir="${class}" compress="false" index="true"
 			includes="**/*.class" >
 			<manifest>
 				<attribute name="Main-Class" value="openjaus.nodemanager.NodeManager"/>
 			</manifest>
+		    <indexjars>
+				<fileset dir="${jar_dest}">
+					<include name="**/*.jar" />
+					<exclude name="nodeManager.jar" />
+				</fileset>
+		    </indexjars>
 		</jar>
-		
+
 	</target>
 
 	<!-- Generats javadoc -->
@@ -80,9 +112,9 @@
 		<delete dir="${class}" />
 		<delete dir="${doc}" />
 		<delete dir="${dest}"  />
-		<delete dir="${bin}"  />
+		<!-- was where we used to build to -->
+		<delete dir="bin"  />
 		<delete>
-
 			<fileset dir="${src}" includes="**/*.class" />
 		</delete>
 	</target>
