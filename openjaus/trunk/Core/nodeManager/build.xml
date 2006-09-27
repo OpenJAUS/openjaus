@@ -55,7 +55,12 @@
 		<copy file="..\readme.txt" todir="${deploy}" />
 		<copy todir="${jar_dest}" >
 			<fileset dir="${lib}">
-				<include name="**/*" />
+				<include name="**/*.jar" />
+			</fileset>
+		</copy>
+		<copy todir="${bin_dest}" >
+			<fileset dir="${lib}">
+				<include name="**/*.dll" />
 			</fileset>
 		</copy>
 		<copy todir="${jar_dest}" file="${jaus_jar}" />

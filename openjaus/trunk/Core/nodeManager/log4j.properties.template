@@ -1,23 +1,46 @@
-# Set root logger level to DEBUG and its only appender to A1.
+## rootLogger: This controls what level of messages are allowed to
+## be logged, and then a comma separated list of appenders.  Allowed
+## logging levels are:
+## allowed levels are: 
+## OFF, FATAL, ERROR, WARN, INFO, DEBUG, ALL
+## (note: DEBUG is a LOT of info.  INFO is probably what you want in any
+## situation approaching real life).
 log4j.rootLogger=DEBUG, FILE, CONSOLE
 
-# allowed levels are: 
-# OFF, FATAL, ERROR, WARN, INFO, DEBUG, ALL
+## Here are some example logging configurations.  Note that there are
+## many more options like Syslog for Unix, serving it over Telnet, raw
+## sockets, etc. See http://logging.apache.org/log4j/docs/api/index.html
+## for more options.
 	
-# CONSOLE stdout, of non-debug info
-log4j.appender.CONSOLE=INFO, org.apache.log4j.ConsoleAppender
-
+## CONSOLE stdout, of non-debug info
+log4j.appender.CONSOLE=org.apache.log4j.ConsoleAppender
+log4j.appender.CONSOLE.layout=org.apache.log4j.PatternLayout
+log4j.appender.CONSOLE.layout.ConversionPattern=%-5p %c %x - %m%n
+log4j.appender.CONSOLE.threshold=INFO
  	
-# FILE Rolling file log
+## FILE Rolling file log of everything
 log4j.appender.FILE.layout=org.apache.log4j.PatternLayout
 log4j.appender.FILE.layout.ConversionPattern=[%d] [%t] %-5p %c %x - %m%n
-	
 log4j.appender.FILE=org.apache.log4j.RollingFileAppender
 log4j.appender.FILE.File=log/nodemanager.log
- 	
 log4j.appender.FILE.MaxFileSize=1000KB
-# Keep two backup file
+## Keep two backup file
 log4j.appender.FILE.MaxBackupIndex=2
 
+## NT logs to the NT event log system.  (Windows only)
+#log4j.appender.NT=org.apache.log4j.nt.NTEventLogAppender
+#log4j.appender.NT.threshold=INFO
+#log4j.appender.NT.source=OJNodeManager
+#log4j.appender.NT.layout=org.apache.log4j.PatternLayout
+#log4j.appender.NT.layout.ConversionPattern=[%d] [%t] %-5p %c %x - %m%n
+
+## CHAINSAW_CLIENT:  A swing based graphical logging display
+## to use CHAINSAW, add this to the rootLogger, list, then 
+## cd to lib and type "java -cp log4j org.apache.log4j.chainsaw.Main"
+## it will bring up the graphical console
+#log4j.appender.CHAINSAW_CLIENT=org.apache.log4j.net.SocketAppender
+#log4j.appender.CHAINSAW_CLIENT.RemoteHost=localhost
+#log4j.appender.CHAINSAW_CLIENT.Port=4445
+#log4j.appender.CHAINSAW_CLIENT.LocationInfo=true
 
 

@@ -31,31 +31,29 @@
  *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
  *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ****************************************************************************/
-// File Name: Queue.java
-//
-// Written By: Tom Galluzzo (galluzzo AT gmail DOT com)
-//
-// Version: 3.2
-//
-// Date: 08/04/06
-//
-// Description: The queue class maintians a linked list of objects and implements the push and pop methods
 
 package openjaus.nodemanager;
 
 import java.util.*;
 
-public class Queue extends LinkedList
+/** Threadsafe, monitorable queue of objects.  
+ * 
+ *
+ */
+public class Queue 
 {
-	String name;
-	Monitor monitor;
-	DataRepository dataRepository;
-	long maxSize;
+	
+	private LinkedList list = new LinkedList();
+	
+	private String name;
+	private Monitor monitor;
+	private DataRepository dataRepository;
+	private long maxSize;
 
-	int bufferIndex; // Circular buffer index
-	long sizeBuffer[]; // Circular size buffer
-	final int BUFFER_SIZE = 1000;
-	double averageSize;
+	private int bufferIndex; // Circular buffer index
+	private long sizeBuffer[]; // Circular size buffer
+	private final int BUFFER_SIZE = 1000;
+	private double averageSize;
 
 	public Queue(String name, Monitor monitor)
 	{
@@ -66,17 +64,18 @@ public class Queue extends LinkedList
 		
 		bufferIndex = 0;
 		sizeBuffer = new long[BUFFER_SIZE];
-		averageSize = size();
+		averageSize = list.size();
 
 		dataRepository.put(new String(name + " Average Size"), new Double(averageSize));
-		maxSize = size();
+		maxSize = list.size();
 		dataRepository.put(new String(name + " Max Size"), new Long(maxSize));
 	}
 
 	public synchronized void push(Object object)
 	{
-		addLast(object);
+		list.addLast(object);
 
+		// maintains running average of size.
 		averageSize -= (double)sizeBuffer[bufferIndex] / (double)BUFFER_SIZE;
 		sizeBuffer[bufferIndex] = size();
 		averageSize += (double)sizeBuffer[bufferIndex] / (double)BUFFER_SIZE;
@@ -93,7 +92,7 @@ public class Queue extends LinkedList
 
 	public synchronized Object pop()
 	{
-		Object object = removeFirst();
+		Object object = list.removeFirst();
 
 		averageSize -= (double)sizeBuffer[bufferIndex] / (double)BUFFER_SIZE;
 		sizeBuffer[bufferIndex] = size();
@@ -104,5 +103,10 @@ public class Queue extends LinkedList
 
 		return object;
 	}
-	
+	public int size(){
+		return list.size();
+	}
+	public boolean isEmpty(){
+		return list.isEmpty();
+	}
 }

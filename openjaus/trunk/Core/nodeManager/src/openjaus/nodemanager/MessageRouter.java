@@ -55,8 +55,10 @@ public class MessageRouter extends Thread
 	/** Logger that knows our class name */
 	static private final Logger log = Logger.getLogger(MessageRouter.class);
 
-//	int messageBlock;
-//	long messageCount;
+	/** Keeps tracks of number of threads of this type */
+	static private final Counter counter = new Counter("OJMessageRouter");
+
+
 	DataRepository dataRepository;
 	Queue nodeSendQueue;
 	Queue nodeReceiveQueue;
@@ -76,6 +78,7 @@ public class MessageRouter extends Thread
 	public MessageRouter(	Queue nodeSendQueue, Queue nodeReceiveQueue, DatagramSocket componentSocket, Queue componentReceiveQueue, 
 	        				SubsystemTable subsystemTable, Monitor monitor, CoreMessageHandler coreMessageHandler)
 	{
+		this.setName(counter.nextName());
 //		messageBlock = 0;
 //		messageCount = 0;
 		dataRepository = NodeManager.getDataRepository();
