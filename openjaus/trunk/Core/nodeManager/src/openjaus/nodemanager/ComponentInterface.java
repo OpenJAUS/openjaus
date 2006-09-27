@@ -53,6 +53,9 @@ public class ComponentInterface extends Thread
 	/** Logger that knows our class name */
 	static private final Logger log = Logger.getLogger(ComponentInterface.class);
 	
+	/** Tracks number of threads of this type */
+	static private final Counter counter = new Counter("OJComponent");
+
 	public static final int MINIMUM_VALID_COMPONENT_PORT = 1024; // This is a common minimum user reserved port value
 	JausAddress thisAddress;
 	InetAddress ipAddress;
@@ -62,12 +65,14 @@ public class ComponentInterface extends Thread
 
 	public ComponentInterface(int componentInterfacePort, SubsystemTable subsystemTable)
 	{
+		this.setName(counter.nextName());
 		thisAddress = NodeManager.getComponent().getAddress();
 		ipAddress = NodeManager.getComponentSideIpAddress();
 	    this.componentInterfacePort = componentInterfacePort;
 	    this.subsystemTable = subsystemTable;
 		try
 		{
+			
 		    socket = new DatagramSocket(this.componentInterfacePort, ipAddress);
 		    socket.setSoTimeout(1000);
 		    if(log.isDebugEnabled()){log.debug("Socket created, port:" + this.componentInterfacePort + " ip:" + ipAddress);}

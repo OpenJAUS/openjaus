@@ -52,6 +52,10 @@ public class FileLogger extends Thread
 	/** Logger that knows our class name */
 	static private final Logger log = Logger.getLogger(FileLogger.class);
 
+	/** Tracks number of threads of this type */
+	static private final Counter counter = new Counter("OJFileLogger");
+
+	
 	DataRepository dataRepository;
 	String loggingList[] = {
 //							"MessageRouter Message Block",
@@ -70,6 +74,7 @@ public class FileLogger extends Thread
 	
 	public FileLogger(DataRepository dataRepository, String fileString) throws IOException
 	{
+		this.setName(counter.nextName());
 		this.dataRepository = dataRepository;
 		fileWriter = new FileWriter(fileString);
 		

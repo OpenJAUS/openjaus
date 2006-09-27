@@ -31,31 +31,32 @@
  *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
  *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ****************************************************************************/
-// File Name: DataRepository.java
-//
-// Written By: Tom Galluzzo (galluzzo AT gmail DOT com)
-//
-// Version: 3.2
-//
-// Date: 08/04/06
-//
-// Description: Central HashMap location for any NodeManager logged issues
+
 
 package openjaus.nodemanager;
 
 import java.util.*;
 
+import org.apache.log4j.Logger;
+
+/** Central table where various parts of the program can put name, value pairs
+ * for logging and debugging.  
+ * @author Alex Gizis
+ *
+ */
 public class DataRepository extends HashMap
 {
+	/** Logger that knows our class name */
+	static private final Logger log = Logger.getLogger(DataRepository.class);
+	
 	public DataRepository()
 	{
 		super();
 	}
-	
-	public Object put(Object key, Object value)
+	/** Put a name, value into the table.  */
+	public synchronized Object put(Object key, Object value)
 	{
 		
-		// TODO: Generate event if necessary
 		return super.put(key, value);
 	}
 }

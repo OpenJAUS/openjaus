@@ -54,6 +54,9 @@ class HeartBeat extends Thread
 	/** Logger that knows our class name */
 	static private final Logger log = Logger.getLogger(HeartBeat.class);
 
+	/** Tracks number of threads of this type */
+	static private final Counter counter = new Counter("OJHeartBeat");
+
 	static long beatCount  = 0;
 	long beatPerioidMilliSec;
 	Queue nodeSendQueue;
@@ -71,6 +74,7 @@ class HeartBeat extends Thread
 	
 	public HeartBeat(long beatPerioidMilliSec, Queue outputQueue, Queue componentQueue, SubsystemTable subsystemTable)
 	{
+		this.setName(counter.nextName());
 	    this.beatPerioidMilliSec = beatPerioidMilliSec;
 		this.nodeSendQueue = outputQueue;
 		this.subsystemTable = subsystemTable;

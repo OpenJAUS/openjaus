@@ -55,6 +55,7 @@ public class NodeManager
 	/** Logger that knows our class name */
 	static private final Logger log = Logger.getLogger(NodeManager.class);
 
+
 	// JAUS and State machine related variables
 	private static JausSubsystem subsystem;
 	private static JausNode node;

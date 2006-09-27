@@ -51,6 +51,8 @@ public class SendThread extends Thread
 	/** Logger that knows our class name */
 	static private final Logger log = Logger.getLogger(SendThread.class);
 
+	static private final Counter counter = new Counter("OJSendThread");
+
 	static long sendCount = 0;
 	MulticastSocket sendSocket;
 	MulticastSocket subsSocket;
@@ -60,6 +62,7 @@ public class SendThread extends Thread
 
 	public SendThread(MulticastSocket sendSocket, Queue queue, Monitor monitor)
 	{
+		this.setName(counter.nextName());
 		this.sendSocket = sendSocket;
 		this.queue = queue;
 		this.monitor = monitor;

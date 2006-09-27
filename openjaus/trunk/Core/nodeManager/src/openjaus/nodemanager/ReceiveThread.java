@@ -53,6 +53,8 @@ public class ReceiveThread extends Thread
 	/** Logger that knows our class name */
 	static private final Logger log = Logger.getLogger(ReceiveThread.class);
 
+	static private final Counter counter = new Counter("OJReceiveThread");
+	
 	static long receiveCount = 0;
     DatagramSocket socket;
 	Queue queue;
@@ -62,6 +64,7 @@ public class ReceiveThread extends Thread
 	
 	public ReceiveThread(DatagramSocket socket, Queue queue)
 	{
+		this.setName(counter.nextName());
 		this.socket = socket;
 		this.queue = queue;
 		this.nodeIpAddress = NodeManager.getNodeSideIpAddress();
