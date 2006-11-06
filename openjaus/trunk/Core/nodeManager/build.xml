@@ -46,7 +46,7 @@
 		<mkdir dir="${log_dest}" />
 		<!-- you need to create a nodeManager.conf for your configuration.  See the templates in this
 			directory and copy the one closest to what you need. -->
-		<copy file="nodeManager.conf" todir="${deploy}" failonerror="true" />
+		<copy file="nodeManager.conf" todir="${deploy}" failonerror="flase" />
 		<copy file="log4j.properties" todir="${deploy}" failonerror="true" />
 		<copy file="NM" todir="${bin_dest}" failonerror="true"/>
 		<copy file="NM.cmd" todir="${bin_dest}" failonerror="true"/>

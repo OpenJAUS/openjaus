@@ -37,9 +37,9 @@ all:
 	@cd ./nodeManager; make all install;
 
 	# C Libraries
-	@cd ./libcimar; make all install;
-	@cd ./libjausC; make all install;
-	@cd ./libnodeManager; make all install;	
+	@cd ./libcimar; if [ ! -f ./Makefile ]; then ./configure; fi; make all; ./Install-CIMAR.sh;
+	@cd ./libjausC; if [ ! -f ./Makefile ]; then ./configure; fi; make all; ./Install-CIMAR.sh;
+	@cd ./libnodeManager; if [ ! -f ./Makefile ]; then ./configure; fi; make all; ./Install-CIMAR.sh;
 
 clean:
 	# JAVA Library and Node Manager
