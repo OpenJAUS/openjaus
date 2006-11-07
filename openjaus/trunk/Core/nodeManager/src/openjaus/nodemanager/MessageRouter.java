@@ -485,7 +485,7 @@ public class MessageRouter extends Thread
 //						messageCount++;
 //					}
 				    dataRepository.put("MessageRouter Current Message", message);
-				    if(log.isDebugEnabled())log.debug("Current Message command code:"+ message.getCommandCode());
+//				     if(log.isDebugEnabled())log.debug("Current Node Side Message command code:"+ message.getCommandCode());
 					routeNodeSideMessage(message, packet.getAddress(), packet.getPort());
 				}
 
@@ -509,13 +509,15 @@ public class MessageRouter extends Thread
 //						messageCount++;
 //					}
 					dataRepository.put("MessageRouter Current Message", message);
-				    routeComponentSideMessage(message,  packet.getAddress(), packet.getPort());
+//				    if(log.isDebugEnabled())log.debug("Current Component Side Message command code:"+ message.getCommandCode());
+
+					routeComponentSideMessage(message,  packet.getAddress(), packet.getPort());
 				}
 			}
 			catch(Exception e)
 			{
 				dataRepository.put("MessageRouter Exception", e);
-				log.warn("MessageRouter: " , e);
+				log.warn("MessageRouter exception" , e);
 				
 			}
 		}
