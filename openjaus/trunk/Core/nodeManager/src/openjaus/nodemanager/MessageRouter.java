@@ -328,15 +328,19 @@ public class MessageRouter extends Thread
 		        while(nodeElements.hasMoreElements())
 		        {
 		            JausComponent component = (JausComponent)nodeElements.nextElement();
-		    		DatagramPacket packet = new DatagramPacket(buffer, buffer.length, componentSideIpAddress, component.getPort());
-		    		try
-					{
-		    			componentSocket.send(packet);
-					}
-					catch (Exception e)
-					{
-						dataRepository.put("MessageRouter Exception", e);
-						log.warn("Exception sending to componentSocket", e);
+		            // Added condition to keep messages with a JAUS destAddress of XXX.XXX.255.255 from looping back into the NodeManager
+		            if(component.getAddress().getId() != thisCompoenent.getAddress().getId() )
+		            {
+			    		DatagramPacket packet = new DatagramPacket(buffer, buffer.length, componentSideIpAddress, component.getPort());
+			    		try
+						{
+			    			componentSocket.send(packet);
+						}
+						catch (Exception e)
+						{
+							dataRepository.put("MessageRouter Exception", e);
+							log.warn("Exception sending to componentSocket", e);
+						}
 					}
 		    	}
 
