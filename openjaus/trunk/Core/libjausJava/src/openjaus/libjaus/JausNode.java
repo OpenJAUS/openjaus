@@ -36,7 +36,7 @@ package openjaus.libjaus;
 import java.util.*;
 import java.net.*;
 
-public class JausNode extends Vector
+public class JausNode
 {
 	public static final long TIMEOUT_MILLISEC = 5000;
 	//TODO: Check the RefreshTimeout Hack for AFRL compliance
@@ -49,7 +49,7 @@ public class JausNode extends Vector
 	JausSubsystem subsystem;
 	long timestamp;
 	long refreshTimestamp;
-	
+	Vector components = new Vector();
 	public JausNode()
 	{
 		super();
@@ -96,12 +96,46 @@ public class JausNode extends Vector
 		this.port = port;
 		timestamp = System.currentTimeMillis();
 	}
-
+	public void addComponent(JausComponent component){
+		components.add(component);
+	}
+	
+	public int componentCount(){
+		return components.size();
+		
+	}
+	/** All of the components in this Node */
+	public Enumeration componentEnumeration(){
+		return components.elements();
+		
+	}
+	/** Return index of a component in the internal data structure */
+	public int indexOfComponent(JausComponent comp){
+		return components.indexOf(comp);
+	}
+	/** Returns component based on its index in the internal data structure (NOT the
+	 * JAUS Id!)
+	 * @param index
+	 * @return
+	 */
+	public JausComponent getComponentByIndex(int index){
+		return (JausComponent) components.get(index);
+	}
+	
+	public void removeComponent(JausComponent comp){
+		components.remove(comp);
+		
+	}
+	/** does this node contain this component? */
+	public boolean containsComponent(JausComponent component){
+		return components.contains(component);
+	}
+	/** Gets component based on its JAUS Id */
 	public JausComponent getComponent(int id) {
 		JausComponent component = null;
-		int len = size();
+		int len = components.size();
 		for (int i=0; i<len; i++) {
-			component = (JausComponent)get(i);
+			component = (JausComponent)components.get(i);
 			if (component.getAddress().getComponent() == id)
 				return component;
 		}

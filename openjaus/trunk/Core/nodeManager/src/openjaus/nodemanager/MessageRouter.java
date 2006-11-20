@@ -214,7 +214,7 @@ public class MessageRouter extends Thread
 		while (subsystems.hasMoreElements())
 		{
 			ss = (JausSubsystem)subsystems.nextElement();
-			nodes = ss.elements();
+			nodes = ss.nodeEnumeration();
 			while (nodes.hasMoreElements())
 			{
 				node = (JausNode)nodes.nextElement();
@@ -227,7 +227,7 @@ public class MessageRouter extends Thread
 	{
 		int subsystemID = message.getDestination().getSubsystem();
 		JausSubsystem ss = subsystemTable.getSubsystem(subsystemID);
-		Enumeration nodes = ss.elements();
+		Enumeration nodes = ss.nodeEnumeration();
 		JausNode node = null;
 		
 		while (nodes.hasMoreElements())
@@ -324,12 +324,12 @@ public class MessageRouter extends Thread
 				// Send to all instances of all components on this node
 	    		byte[] buffer = new byte[message.size()];
 	    		message.toJausBuffer(buffer);
-				Enumeration nodeElements = thisNode.elements();
+				Enumeration nodeElements = thisNode.componentEnumeration();
 		        while(nodeElements.hasMoreElements())
 		        {
 		            JausComponent component = (JausComponent)nodeElements.nextElement();
 		            // Added condition to keep messages with a JAUS destAddress of XXX.XXX.255.255 from looping back into the NodeManager
-		            if(component.getAddress().getId() != thisCompoenent.getAddress().getId() )
+		            if(component.getAddress().getId() != thisComponent.getAddress().getId() )
 		            {
 			    		DatagramPacket packet = new DatagramPacket(buffer, buffer.length, componentSideIpAddress, component.getPort());
 			    		try
@@ -352,7 +352,7 @@ public class MessageRouter extends Thread
 				boolean foundAnInstance = false;
 	    		byte[] buffer = new byte[message.size()];
 	    		message.toJausBuffer(buffer);
-				Enumeration nodeElements = thisNode.elements();
+				Enumeration nodeElements = thisNode.componentEnumeration();
 		        while(nodeElements.hasMoreElements())
 		        {
 		            JausComponent component = (JausComponent)nodeElements.nextElement();
@@ -406,7 +406,7 @@ public class MessageRouter extends Thread
 				boolean foundAnInstance = false;
 	    		byte[] buffer = new byte[message.size()];
 	    		message.toJausBuffer(buffer);
-				Enumeration nodeElements = thisNode.elements();
+				Enumeration nodeElements = thisNode.componentEnumeration();
 		        while(nodeElements.hasMoreElements())
 		        {
 		            JausComponent component = (JausComponent)nodeElements.nextElement();
@@ -435,11 +435,11 @@ public class MessageRouter extends Thread
 				// Send to the specific instance of the specific component on this node
 				JausComponent component = new JausComponent(message.getDestination());
 				component.setNode(thisNode); // Set parent node
-		        if(thisNode.contains(component))
+		        if(thisNode.containsComponent(component))
 		        {
 					byte[] buffer = new byte[message.size()];
 		    		message.toJausBuffer(buffer);
-		            int componentPort = ((JausComponent)thisNode.get(thisNode.indexOf(component))).getPort();
+		            int componentPort = ((JausComponent)thisNode.getComponentByIndex(thisNode.indexOfComponent(component))).getPort();
 		            DatagramPacket packet = new DatagramPacket(buffer, buffer.length, componentSideIpAddress, componentPort);
 	    			try
 					{

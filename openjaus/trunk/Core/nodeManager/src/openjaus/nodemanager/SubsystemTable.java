@@ -117,29 +117,29 @@ public class SubsystemTable
 		JausComponent sourceComponent = new JausComponent(message.getSource(), 0, port);
 		sourceComponent.setNode(sourceNode); // Set parent node
 		
-		sourceNode.add(sourceComponent);
-		sourceSubsystem.add(sourceNode);
+		sourceNode.addComponent(sourceComponent);
+		sourceSubsystem.addNode(sourceNode);
 		
 		if(table.contains(sourceSubsystem))
 		{
 			JausSubsystem subsystem = (JausSubsystem)table.get(table.indexOf(sourceSubsystem));
 			subsystem.updateTimestamp();
 
-			if(subsystem.contains(sourceNode))
+			if(subsystem.containsNode(sourceNode))
 			{
-				JausNode node = (JausNode)subsystem.get(subsystem.indexOf(sourceNode));
+				JausNode node = (JausNode)subsystem.getNodeByIndex(subsystem.indexOfNode(sourceNode));
 				node.updateTimestamp();
 
-				if(node.contains(sourceComponent))
+				if(node.containsComponent(sourceComponent))
 				{
-					JausComponent component = (JausComponent)node.get(node.indexOf(sourceComponent));
+					JausComponent component = (JausComponent)node.getComponentByIndex(node.indexOfComponent(sourceComponent));
 					component.updateTimestamp();    					    
 				}
 				else
 				{
 					// TODO: Only add remote components (might not need this whole block)
 				    sourceComponent.setNode(node);
-					node.add(sourceComponent);
+					node.addComponent(sourceComponent);
 					log.info("SubsystemTable: Added Component: " + subsystem + " : " + node + " : " + sourceComponent);    					    
 					if(node.equals(thisNode))
 					{
@@ -153,7 +153,7 @@ public class SubsystemTable
 			else
 			{
 			    sourceNode.setSubsystem(subsystem);
-				subsystem.add(sourceNode);
+				subsystem.addNode(sourceNode);
 				log.info("SubsystemTable: Added Component: " + subsystem + " : " + sourceNode + " : " + sourceComponent);
 			}
 		}
@@ -171,20 +171,20 @@ public class SubsystemTable
 		sourceNode.setSubsystem(sourceSubsystem); // Set parent subsystem
 		JausComponent sourceComponent = new JausComponent(message.getSource(), 0, port);
 		sourceComponent.setNode(sourceNode); // Set parent node
-		sourceNode.add(sourceComponent);
-		sourceSubsystem.add(sourceNode);
+		sourceNode.addComponent(sourceComponent);
+		sourceSubsystem.addNode(sourceNode);
 
 		if(table.contains(sourceSubsystem))
 		{
 			JausSubsystem subsystem = (JausSubsystem)table.get(table.indexOf(sourceSubsystem));
 
-			if(subsystem.contains(sourceNode))
+			if(subsystem.containsNode(sourceNode))
 			{
-				JausNode node = (JausNode)subsystem.get(subsystem.indexOf(sourceNode));
+				JausNode node = (JausNode)subsystem.getNodeByIndex(subsystem.indexOfNode(sourceNode));
 				
-				if(node.contains(sourceComponent))
+				if(node.containsComponent(sourceComponent))
 				{
-					JausComponent component = (JausComponent)node.get(node.indexOf(sourceComponent));
+					JausComponent component = (JausComponent)node.getComponentByIndex(node.indexOfComponent(sourceComponent));
 					component.setAuthority(message.getAuthority().getValue());
 					switch(message.getQueryType().getValue())
 					{
@@ -229,14 +229,14 @@ public class SubsystemTable
     	JausSubsystem reportSubsystem = message.getSubsystemConfiguration();
 		boolean subsystemChanged = false;
     	
-    	Enumeration subsystemEnum = reportSubsystem.elements();
+    	Enumeration subsystemEnum = reportSubsystem.nodeEnumeration();
 		while(subsystemEnum.hasMoreElements())
 		{
 			JausNode reportNode = (JausNode)subsystemEnum.nextElement();
 			reportNode.setIpAddress(ipAddress);
 			reportNode.setPort(port);
 		
-			Enumeration nodeEnum = reportNode.elements();
+			Enumeration nodeEnum = reportNode.componentEnumeration();
 			while(nodeEnum.hasMoreElements())
 			{
 				JausComponent reportComponent = (JausComponent)nodeEnum.nextElement();
@@ -253,58 +253,58 @@ public class SubsystemTable
 			{
 				subsystemChanged = true;
 
-	    		subsystemEnum = reportSubsystem.elements();
+	    		subsystemEnum = reportSubsystem.nodeEnumeration();
 				while(subsystemEnum.hasMoreElements())
 				{
 					JausNode reportNode = (JausNode)subsystemEnum.nextElement();
-					if(subsystem.contains(reportNode))
+					if(subsystem.containsNode(reportNode))
 					{
-						JausNode node = (JausNode)subsystem.get(subsystem.indexOf(reportNode));
+						JausNode node = (JausNode)subsystem.getNodeByIndex(subsystem.indexOfNode(reportNode));
 						reportNode.setIdentification(node.getIdentification()); // Copy identification
 						reportNode.setIpAddress(node.getIpAddress()); // Copy identification
 						reportNode.setPort(node.getPort()); // Copy identification
 						
-						Enumeration nodeEnum = reportNode.elements();
+						Enumeration nodeEnum = reportNode.componentEnumeration();
 						while(nodeEnum.hasMoreElements())
 						{
 							JausComponent reportComponent = (JausComponent)nodeEnum.nextElement();
-							if(node.contains(reportComponent))
+							if(node.containsComponent(reportComponent))
 							{
-								JausComponent component = (JausComponent)node.get(node.indexOf(reportComponent));
+								JausComponent component = (JausComponent)node.getComponentByIndex(node.indexOfComponent(reportComponent));
 								reportComponent.setIdentification(component.getIdentification());
 								reportComponent.setPort(component.getPort());
 								reportComponent.setServices(component.getServices());
 							}
 						}
-						subsystem.remove(node);
-						subsystem.add(reportNode);
+						subsystem.removeNode(node);
+						subsystem.addNode(reportNode);
 					}
 					else
 					{
-						subsystem.add(reportNode);
+						subsystem.addNode(reportNode);
 					}
 				}
 			}
 			else
 			{
-	    		subsystemEnum = reportSubsystem.elements();
+	    		subsystemEnum = reportSubsystem.nodeEnumeration();
 				while(subsystemEnum.hasMoreElements())
 				{
 					JausNode reportNode = (JausNode)subsystemEnum.nextElement();
-					if(subsystem.contains(reportNode))
+					if(subsystem.containsNode(reportNode))
 					{
-						JausNode node = (JausNode)subsystem.get(subsystem.indexOf(reportNode));
+						JausNode node = (JausNode)subsystem.getNodeByIndex(subsystem.indexOfNode(reportNode));
 						reportNode.setIdentification(node.getIdentification()); // Copy identification
 						reportNode.setIpAddress(node.getIpAddress()); // Copy identification
 						reportNode.setPort(node.getPort()); // Copy identification
 						
-						Enumeration nodeEnum = reportNode.elements();
+						Enumeration nodeEnum = reportNode.componentEnumeration();
 						while(nodeEnum.hasMoreElements())
 						{
 							JausComponent reportComponent = (JausComponent)nodeEnum.nextElement();
-							if(node.contains(reportComponent))
+							if(node.containsComponent(reportComponent))
 							{
-								JausComponent component = (JausComponent)node.get(node.indexOf(reportComponent));
+								JausComponent component = (JausComponent)node.getComponentByIndex(node.indexOfComponent(reportComponent));
 								reportComponent.setIdentification(component.getIdentification());
 								reportComponent.setPort(component.getPort());
 								reportComponent.setServices(component.getServices());
@@ -335,20 +335,20 @@ public class SubsystemTable
 		sourceNode.setSubsystem(sourceSubsystem); // Set parent subsystem
 		JausComponent sourceComponent = new JausComponent(message.getSource(), 0, port);
 		sourceComponent.setNode(sourceNode); // Set parent node
-		sourceNode.add(sourceComponent);
-		sourceSubsystem.add(sourceNode);
+		sourceNode.addComponent(sourceComponent);
+		sourceSubsystem.addNode(sourceNode);
 
 		if(table.contains(sourceSubsystem))
 		{
 			JausSubsystem subsystem = (JausSubsystem)table.get(table.indexOf(sourceSubsystem));
 
-			if(subsystem.contains(sourceNode))
+			if(subsystem.containsNode(sourceNode))
 			{
-				JausNode node = (JausNode)subsystem.get(subsystem.indexOf(sourceNode));
+				JausNode node = (JausNode)subsystem.getNodeByIndex(subsystem.indexOfNode(sourceNode));
 				
-				if(node.contains(sourceComponent))
+				if(node.containsComponent(sourceComponent))
 				{
-					JausComponent component = (JausComponent)node.get(node.indexOf(sourceComponent));
+					JausComponent component = (JausComponent)node.getComponentByIndex(node.indexOfComponent(sourceComponent));
 					component.setServices(message.getServices());		
 				}
 				else
@@ -442,13 +442,13 @@ public class SubsystemTable
 		{
 			JausSubsystem subsystem = (JausSubsystem)table.get(table.indexOf(sourceSubsystem));
 
-			if(subsystem.contains(sourceNode))
+			if(subsystem.containsNode(sourceNode))
 			{
-				JausNode node = (JausNode)subsystem.get(subsystem.indexOf(sourceNode));
+				JausNode node = (JausNode)subsystem.getNodeByIndex(subsystem.indexOfNode(sourceNode));
 				
-				if(node.contains(sourceComponent))
+				if(node.containsComponent(sourceComponent))
 				{
-					JausComponent component = (JausComponent)node.get(node.indexOf(sourceComponent));
+					JausComponent component = (JausComponent)node.getComponentByIndex(node.indexOfComponent(sourceComponent));
 					component.setAuthority(message.getAuthorityCode().getValue());    					    
 				}
 				else
@@ -480,13 +480,13 @@ public class SubsystemTable
 		{
 			JausSubsystem subsystem = (JausSubsystem)table.get(table.indexOf(sourceSubsystem));
 
-			if(subsystem.contains(sourceNode))
+			if(subsystem.containsNode(sourceNode))
 			{
-				JausNode node = (JausNode)subsystem.get(subsystem.indexOf(sourceNode));
+				JausNode node = (JausNode)subsystem.getNodeByIndex(subsystem.indexOfNode(sourceNode));
 				
-				if(node.contains(sourceComponent))
+				if(node.containsComponent(sourceComponent))
 				{
-					JausComponent component = (JausComponent)node.get(node.indexOf(sourceComponent));
+					JausComponent component = (JausComponent)node.getComponentByIndex(node.indexOfComponent(sourceComponent));
 					component.getState().setValue(message.getPrimaryStatusCode().getValue());    					    
 				}
 				else
@@ -535,7 +535,7 @@ public class SubsystemTable
 		// Create a new JausSubsystem object and add just this node to it
 		// This will allow us to send just the components on this node
 		JausSubsystem subsystem = new JausSubsystem(thisSubsystem.getId());
-		subsystem.add(thisNode);
+		subsystem.addNode(thisNode);
 		reportConfMsg.setSubsystemConfiguration(subsystem);
 
 		Enumeration notifications = nodeReportConfEventList.elements();
@@ -598,18 +598,18 @@ public class SubsystemTable
 		sourceNode.setSubsystem(sourceSubsystem); // Set parent subsystem
 		JausComponent sourceComponent = new JausComponent(testComponent.getAddress(), 0, 0);
 		sourceComponent.setNode(sourceNode); // Set parent node
-		sourceNode.add(sourceComponent);
-		sourceSubsystem.add(sourceNode);
+		sourceNode.addComponent(sourceComponent);
+		sourceSubsystem.addNode(sourceNode);
 
 		if(table.contains(sourceSubsystem))
 		{
 			JausSubsystem subsystem = (JausSubsystem)table.get(table.indexOf(sourceSubsystem));
 
-			if(subsystem.contains(sourceNode))
+			if(subsystem.containsNode(sourceNode))
 			{
-				JausNode node = (JausNode)subsystem.get(subsystem.indexOf(sourceNode));
+				JausNode node = (JausNode)subsystem.getNodeByIndex(subsystem.indexOfNode(sourceNode));
 				
-				if(node.contains(sourceComponent))
+				if(node.containsComponent(sourceComponent))
 				{
 					return true;
 				}
@@ -625,20 +625,20 @@ public class SubsystemTable
 		sourceNode.setSubsystem(sourceSubsystem); // Set parent subsystem
 		JausComponent sourceComponent = new JausComponent(testComponent.getAddress(), 0, 0);
 		sourceComponent.setNode(sourceNode); // Set parent node
-		sourceNode.add(sourceComponent);
-		sourceSubsystem.add(sourceNode);
+		sourceNode.addComponent(sourceComponent);
+		sourceSubsystem.addNode(sourceNode);
 
 		if(table.contains(sourceSubsystem))
 		{
 			JausSubsystem subsystem = (JausSubsystem)table.get(table.indexOf(sourceSubsystem));
 
-			if(subsystem.contains(sourceNode))
+			if(subsystem.containsNode(sourceNode))
 			{
-				JausNode node = (JausNode)subsystem.get(subsystem.indexOf(sourceNode));
+				JausNode node = (JausNode)subsystem.getNodeByIndex(subsystem.indexOfNode(sourceNode));
 				
-				if(node.contains(sourceComponent))
+				if(node.containsComponent(sourceComponent))
 				{
-					JausComponent component = (JausComponent)node.get(node.indexOf(sourceComponent));
+					JausComponent component = (JausComponent)node.getComponentByIndex(node.indexOfComponent(sourceComponent));
 					if(component.getIdentification() != null)
 						return true;
 				}
@@ -669,9 +669,9 @@ public class SubsystemTable
 		{
 			JausSubsystem subsystem = (JausSubsystem)table.get(table.indexOf(testSubsystem));
 
-			if(subsystem.contains(testNode))
+			if(subsystem.containsNode(testNode))
 			{
-				JausNode node = (JausNode)subsystem.get(subsystem.indexOf(testNode));
+				JausNode node = (JausNode)subsystem.getNodeByIndex(subsystem.indexOfNode(testNode));
 				if(node.getIdentification() != null)
 				{
 					return true;
@@ -690,13 +690,13 @@ public class SubsystemTable
 		{
 			JausSubsystem subsystem = (JausSubsystem)table.get(table.indexOf(testSubsystem));
 
-			if(subsystem.contains(testNode))
+			if(subsystem.containsNode(testNode))
 			{
-				JausNode node = (JausNode)subsystem.get(subsystem.indexOf(testNode));
+				JausNode node = (JausNode)subsystem.getNodeByIndex(subsystem.indexOfNode(testNode));
 
-				if(node.contains(testComponent))
+				if(node.containsComponent(testComponent))
 				{
-					JausComponent component = (JausComponent)node.get(node.indexOf(testComponent));
+					JausComponent component = (JausComponent)node.getComponentByIndex(node.indexOfComponent(testComponent));
 					if(component.getIdentification() != null)
 					{
 						return true;
@@ -710,9 +710,9 @@ public class SubsystemTable
 
     public boolean lookUpAddressInNode(JausNode node, JausAddress lookupAddress)
     {
-		for(int componentIndex = 0; componentIndex < node.size(); componentIndex++)
+		for(int componentIndex = 0; componentIndex < node.componentCount(); componentIndex++)
 		{
-			JausComponent component = (JausComponent)node.get(componentIndex); 
+			JausComponent component = (JausComponent)node.getComponentByIndex(componentIndex); 
 
 			if(lookupAddress.getComponent() == 0)
 			{
@@ -757,9 +757,9 @@ public class SubsystemTable
     {
 		if(lookupAddress.getNode() == 0)
 		{
-			for(int nodeIndex = 0; nodeIndex < subsystem.size(); nodeIndex++)
+			for(int nodeIndex = 0; nodeIndex < subsystem.nodeCount(); nodeIndex++)
 			{
-				if(lookUpAddressInNode((JausNode)subsystem.get(nodeIndex), lookupAddress))
+				if(lookUpAddressInNode((JausNode)subsystem.getNodeByIndex(nodeIndex), lookupAddress))
 				{
 					return true;
 				}
@@ -768,9 +768,9 @@ public class SubsystemTable
 		else
 		{
 			JausNode testNode = new JausNode(lookupAddress.getNode());
-			if(subsystem.contains(testNode))
+			if(subsystem.containsNode(testNode))
 			{
-				if(lookUpAddressInNode((JausNode)subsystem.get(subsystem.indexOf(testNode)), lookupAddress))
+				if(lookUpAddressInNode((JausNode)subsystem.getNodeByIndex(subsystem.indexOfNode(testNode)), lookupAddress))
 				{
 					return true;
 				}
@@ -807,9 +807,9 @@ public class SubsystemTable
 
     public boolean lookUpServiceAddressInNode(JausNode node, JausAddress lookupAddress, int commandCode, int serviceCommandType)
     {
-		for(int componentIndex = 0; componentIndex < node.size(); componentIndex++)
+		for(int componentIndex = 0; componentIndex < node.componentCount(); componentIndex++)
 		{
-			JausComponent component = (JausComponent)node.get(componentIndex); 
+			JausComponent component = (JausComponent)node.getComponentByIndex(componentIndex); 
 
 			if(lookupAddress.getComponent() == 0)
 			{
@@ -866,9 +866,9 @@ public class SubsystemTable
     {
 		if(lookupAddress.getNode() == 0)
 		{
-			for(int nodeIndex = 0; nodeIndex < subsystem.size(); nodeIndex++)
+			for(int nodeIndex = 0; nodeIndex < subsystem.nodeCount(); nodeIndex++)
 			{
-				if(lookUpServiceAddressInNode((JausNode)subsystem.get(nodeIndex), lookupAddress, commandCode, serviceCommandType))
+				if(lookUpServiceAddressInNode((JausNode)subsystem.getNodeByIndex(nodeIndex), lookupAddress, commandCode, serviceCommandType))
 				{
 					return true;
 				}
@@ -877,9 +877,9 @@ public class SubsystemTable
 		else
 		{
 			JausNode testNode = new JausNode(lookupAddress.getNode());
-			if(subsystem.contains(testNode))
+			if(subsystem.containsNode(testNode))
 			{
-				if(lookUpServiceAddressInNode((JausNode)subsystem.get(subsystem.indexOf(testNode)), lookupAddress, commandCode, serviceCommandType))
+				if(lookUpServiceAddressInNode((JausNode)subsystem.getNodeByIndex(subsystem.indexOfNode(testNode)), lookupAddress, commandCode, serviceCommandType))
 				{
 					return true;
 				}
@@ -991,13 +991,13 @@ public class SubsystemTable
 		{
 			JausSubsystem subsystem = (JausSubsystem) table.get(lookupSubsystemIndex);
 				
-			while(lookupNodeIndex < subsystem.size())
+			while(lookupNodeIndex < subsystem.nodeCount())
 			{
-				JausNode node = (JausNode) subsystem.get(lookupNodeIndex);
+				JausNode node = (JausNode) subsystem.getNodeByIndex(lookupNodeIndex);
 				
-				while(lookupComponentIndex < node.size())
+				while(lookupComponentIndex < node.componentCount())
 				{
-					JausComponent component = (JausComponent) node.get(lookupComponentIndex);
+					JausComponent component = (JausComponent) node.getComponentByIndex(lookupComponentIndex);
 					lookupComponentIndex++;
 
 					if(component.getAddress().getComponent() == lookupComponentId)
@@ -1047,9 +1047,9 @@ public class SubsystemTable
 				continue;
 			}
 			
-			while(lookupNodeIndex < subsystem.size())
+			while(lookupNodeIndex < subsystem.nodeCount())
 			{
-				JausNode node = (JausNode) subsystem.get(lookupNodeIndex);
+				JausNode node = (JausNode) subsystem.getNodeByIndex(lookupNodeIndex);
 
 				if(lookupAddress.getNode() != 0 && lookupAddress.getNode() != node.getId())
 				{
@@ -1058,9 +1058,9 @@ public class SubsystemTable
 					continue;
 				}
 				
-				while(lookupComponentIndex < node.size())
+				while(lookupComponentIndex < node.componentCount())
 				{
-					JausComponent component = (JausComponent) node.get(lookupComponentIndex);
+					JausComponent component = (JausComponent) node.getComponentByIndex(lookupComponentIndex);
 					if(lookupAddress.getComponent() != 0 && lookupAddress.getComponent() != component.getAddress().getComponent())
 					{
 						lookupComponentIndex++;					
@@ -1130,7 +1130,7 @@ public class SubsystemTable
     public int checkInLocalComponent(int componentId, int port)
     {
 		// Install the component in table only if component with same port # is not allready in table
-   		Enumeration nodeElements = thisNode.elements();
+   		Enumeration nodeElements = thisNode.componentEnumeration();
    		while(nodeElements.hasMoreElements())
    		{
    			JausComponent component = (JausComponent)nodeElements.nextElement();
@@ -1151,7 +1151,7 @@ public class SubsystemTable
     			componentAddress.setComponent(componentId);
     			JausComponent sourceComponent = new JausComponent(componentAddress, 0, port);
     			sourceComponent.setNode(thisNode); // Set parent node
-				thisNode.add(sourceComponent);
+				thisNode.addComponent(sourceComponent);
 				log.info("Added Component: " + thisSubsystem + " : " + thisNode + " : " + sourceComponent);
 
 				sendNodeChangedEvents();
@@ -1168,14 +1168,14 @@ public class SubsystemTable
     
     public boolean checkOutLocalComponent(JausAddress address)
     {
-		Enumeration nodeElements = thisNode.elements();
+		Enumeration nodeElements = thisNode.componentEnumeration();
 		while(nodeElements.hasMoreElements())
 		{
 			JausComponent component = (JausComponent)nodeElements.nextElement();
 			if(component.getAddress().equals(address))
 			{
 				System.out.println("SubsystemTable: Removing Component: " + component);
-				thisNode.remove(component);
+				thisNode.removeComponent(component);
 				instanceIdAvailable[address.getComponent()][address.getInstance()] = true;
 	    		if(subsystemConfChangedNotifyList.contains(component.getAddress())) // If the component is already registered
 	    		{
@@ -1206,13 +1206,13 @@ public class SubsystemTable
     		JausSubsystem subsystem = (JausSubsystem)tableElements.nextElement();
     		result += "SubsystemTable:\t" + subsystem + "\n";
     		
-    		Enumeration subsystemElements = subsystem.elements();
+    		Enumeration subsystemElements = subsystem.nodeEnumeration();
     		while(subsystemElements.hasMoreElements())
     		{
     			JausNode node = (JausNode)subsystemElements.nextElement();
     			result += "SubsystemTable:\t\t" + node + "\n";
     			
-    			Enumeration nodeElements = node.elements();
+    			Enumeration nodeElements = node.componentEnumeration();
     			while(nodeElements.hasMoreElements())
     			{
     				JausComponent component = (JausComponent)nodeElements.nextElement();
@@ -1246,13 +1246,13 @@ public class SubsystemTable
     		JausSubsystem subsystem = (JausSubsystem)tableElements.nextElement();
     		result += "SubsystemTable:\t" + subsystem + "\n";
     		
-    		Enumeration subsystemElements = subsystem.elements();
+    		Enumeration subsystemElements = subsystem.nodeEnumeration();
     		while(subsystemElements.hasMoreElements())
     		{
     			JausNode node = (JausNode)subsystemElements.nextElement();
     			result += "SubsystemTable:\t\t" + node + "\n";
     			
-    			Enumeration nodeElements = node.elements();
+    			Enumeration nodeElements = node.componentEnumeration();
     			while(nodeElements.hasMoreElements())
     			{
     				JausComponent component = (JausComponent)nodeElements.nextElement();
@@ -1304,13 +1304,13 @@ public class SubsystemTable
     	
 		result += "SubsystemTable:\t" + subsystem + "\n";
 		
-		Enumeration subsystemElements = subsystem.elements();
+		Enumeration subsystemElements = subsystem.nodeEnumeration();
 		while(subsystemElements.hasMoreElements())
 		{
 			JausNode node = (JausNode)subsystemElements.nextElement();
 			result += "SubsystemTable:\t\t" + node + "\n";
 			
-			Enumeration nodeElements = node.elements();
+			Enumeration nodeElements = node.componentEnumeration();
 			while(nodeElements.hasMoreElements())
 			{
 				JausComponent component = (JausComponent)nodeElements.nextElement();
@@ -1346,26 +1346,26 @@ public class SubsystemTable
 			}
 			else if(subsystem.getId() == thisComponent.getAddress().getSubsystem()) // Only remove nodes from this subsystem
 			{	
-				Enumeration subsystemElements = subsystem.elements();
+				Enumeration subsystemElements = subsystem.nodeEnumeration();
 				while(subsystemElements.hasMoreElements())
 				{
 					JausNode node = (JausNode)subsystemElements.nextElement();
 					if(node.hasTimedOut())
 					{
 						log.info("SubsystemTable: Timeout Occured: Removing Node: " + node);
-						subsystem.remove(node);
+						subsystem.removeNode(node);
 						subsystemConfChanged = true;
 					}
 					else if(node.getId() == thisComponent.getAddress().getNode()) // Only remove components from this node
 					{
-						Enumeration nodeElements = node.elements();
+						Enumeration nodeElements = node.componentEnumeration();
 						while(nodeElements.hasMoreElements())
 						{
 							JausComponent component = (JausComponent)nodeElements.nextElement();
 							if(component.hasTimedOut())
 							{
 								log.info("SubsystemTable: Timeout Occured: Removing Component: " + component);
-								node.remove(component);
+								node.removeComponent(component);
 								instanceIdAvailable[component.getAddress().getComponent()][component.getAddress().getInstance()] = true;
 								nodeConfChanged = true;
 								subsystemConfChanged = true;

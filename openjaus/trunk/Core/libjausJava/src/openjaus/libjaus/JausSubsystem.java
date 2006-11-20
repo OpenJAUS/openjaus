@@ -35,13 +35,15 @@ package openjaus.libjaus;
 
 import java.util.*;
 
-public class JausSubsystem extends Vector
+public class JausSubsystem 
 {
 	public static final long TIMEOUT_MILLISEC = 5000;
 	
 	String identification;
 	int id;
 	long timestamp;
+	/** Vector of Nodes within this subsystem */
+	Vector jausNodes = new Vector();
 	
 	public JausSubsystem()
 	{
@@ -68,11 +70,44 @@ public class JausSubsystem extends Vector
 		timestamp = System.currentTimeMillis();
 	}
 
+	/** Returns number of Nodes in this Subsystem */
+	public int nodeCount(){
+		return jausNodes.size();
+	}
+	
+	/** Returns enumeration of all nodes in this subsystem */
+	public Enumeration nodeEnumeration(){
+		return jausNodes.elements();
+	}
+	/** Add a node to the end of the list */
+	public void addNode(JausNode newNode){
+		jausNodes.add(newNode);
+	}
+	
+	public boolean containsNode(JausNode compNode){
+		return jausNodes.contains(compNode);
+	}
+	public int indexOfNode(JausNode compNode){
+		return jausNodes.indexOf(compNode);
+	}
+	/** Returns a node based on it's index in the list.  This is NOT the same as NodeId,
+	 * but is instead just the order it got added to this particular JausSubsystem object.
+	 * @param index
+	 * @return
+	 */
+	public JausNode getNodeByIndex(int index){
+		return (JausNode) jausNodes.get(index);
+	}
+	
+	public void removeNode(JausNode removeNode){
+		jausNodes.remove(removeNode);
+	}
+	/** Returns a JausNode based on it's ID */
 	public JausNode getNode(int id) {
 		JausNode node = null;
-		int len = size();
+		int len = jausNodes.size();
 		for (int i=0; i<len; i++) {
-			node = (JausNode)get(i);
+			node = (JausNode)jausNodes.get(i);
 			if (node.getId() == id)
 				return node;
 		}

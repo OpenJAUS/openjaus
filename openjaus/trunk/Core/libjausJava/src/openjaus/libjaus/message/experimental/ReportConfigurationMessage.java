@@ -152,18 +152,18 @@ public class ReportConfigurationMessage extends JausMessage
 		int originalIndex = index;
 		
 		// Set Node Count Field
-		JausByte.toJausBuffer(subsystemConfiguration.size(), buffer, index); index++;
+		JausByte.toJausBuffer(subsystemConfiguration.nodeCount(), buffer, index); index++;
 	    
-	    Enumeration subsystemElements = subsystemConfiguration.elements();
+	    Enumeration subsystemElements = subsystemConfiguration.nodeEnumeration();
 	    while(subsystemElements.hasMoreElements())
 	    {
 	        JausNode node = (JausNode)subsystemElements.nextElement();
 		    // Set node Id field
 	        JausByte.toJausBuffer(node.getId(), buffer, index); index++;
 		    // Set component count field
-	        JausByte.toJausBuffer(node.size(), buffer, index); index++;
+	        JausByte.toJausBuffer(node.componentCount(), buffer, index); index++;
 	        
-		    Enumeration nodeElements = node.elements();
+		    Enumeration nodeElements = node.componentEnumeration();
 		    while(nodeElements.hasMoreElements())
 		    {
 		        JausComponent component = (JausComponent)nodeElements.nextElement();
@@ -207,7 +207,7 @@ public class ReportConfigurationMessage extends JausMessage
 			//Create node and add to table
 			JausNode tempNode = new JausNode(nodeId);
 			tempNode.setSubsystem(subsystemConfiguration);
-			subsystemConfiguration.add(tempNode);
+			subsystemConfiguration.addNode(tempNode);
 			
 			//read number of components on this node
 			int compCount = JausByte.fromJausBuffer(data, index);
@@ -229,7 +229,7 @@ public class ReportConfigurationMessage extends JausMessage
 				//create component and add to table
 				JausComponent tempComp = new JausComponent(address);
 				tempComp.setNode(tempNode);
-				tempNode.add(tempComp);
+				tempNode.addComponent(tempComp);
 			}
 		}
 		return index;

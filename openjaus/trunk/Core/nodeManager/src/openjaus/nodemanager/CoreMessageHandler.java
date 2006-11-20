@@ -240,7 +240,7 @@ public class CoreMessageHandler
 		        	if(thisNode.getId() == JausAddress.PRIMARY_NODE_MANAGER_NODE)
 		        	{
 						//System.out.println("Forwarding HB");
-						Enumeration nodes = thisSubsystem.elements();
+						Enumeration nodes = thisSubsystem.nodeEnumeration();
 						JausNode node = null;
 						message.getDestination().setSubsystem(thisSubsystem.getId());
 						message.getDestination().setComponent(JausComponent.NODE_MANAGER);
@@ -402,7 +402,7 @@ public class CoreMessageHandler
 						// Create a new JausSubsystem object and add just this node to it
 						// This will allow us to send just the components on this node
 						JausSubsystem subsystem = new JausSubsystem(thisSubsystem.getId());
-						subsystem.add(thisNode);
+						subsystem.addNode(thisNode);
 						reportConfMsg.setSubsystemConfiguration(subsystem);
 						break;
 
@@ -426,7 +426,7 @@ public class CoreMessageHandler
 			   
 			    // Check to see if there are any unidentified component and query their respective identification
 		    	JausSubsystem reportSubsystem = reportConfMsg.getSubsystemConfiguration();		    	
-		    	Enumeration subsystemEnum = reportSubsystem.elements();
+		    	Enumeration subsystemEnum = reportSubsystem.nodeEnumeration();
 				while(subsystemEnum.hasMoreElements())
 				{
 					JausNode reportNode = (JausNode)subsystemEnum.nextElement();
@@ -447,7 +447,7 @@ public class CoreMessageHandler
 					    outputQueue.push(packet);
 					}
 				
-					Enumeration nodeEnum = reportNode.elements();
+					Enumeration nodeEnum = reportNode.componentEnumeration();
 					while(nodeEnum.hasMoreElements())
 					{
 						JausComponent reportComponent = (JausComponent)nodeEnum.nextElement();
