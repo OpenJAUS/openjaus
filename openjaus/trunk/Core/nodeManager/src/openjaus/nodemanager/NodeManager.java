@@ -205,8 +205,8 @@ public class NodeManager
 			component.setIdentification(properties.getProperty("COMPONENT_IDENTIFICATION").trim());
 			node.setSubsystem(subsystem); // Set parent subsystem
 	 		component.setNode(node); // Set parent node
-	 		node.add(component);
-			subsystem.add(node);
+	 		node.addComponent(component);
+			subsystem.addNode(node);
 			
 			nodeSendMonitor = new Monitor();
 			messageRouterMonitor = new Monitor();
