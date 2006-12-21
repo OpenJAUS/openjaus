@@ -50,6 +50,8 @@ public class JausNode
 	long timestamp;
 	long refreshTimestamp;
 	Vector components = new Vector();
+	boolean nodeConfiguration;
+	
 	public JausNode()
 	{
 		super();
@@ -58,6 +60,7 @@ public class JausNode
 		id = 0;
 		timestamp = System.currentTimeMillis();
 		refreshTimestamp = System.currentTimeMillis();
+		this.nodeConfiguration = false;
 	}
 
 	public JausNode(String identification)
@@ -67,6 +70,7 @@ public class JausNode
 		this.identification = identification;
 		id = 0;
 		timestamp = System.currentTimeMillis();
+		this.nodeConfiguration = false;
 	}
 
 	public JausNode(int id)
@@ -77,6 +81,7 @@ public class JausNode
 		if(id > 0 && id < 255 ) this.id = id;
 		else id = 0;
 		timestamp = System.currentTimeMillis();
+		this.nodeConfiguration = false;
 	}
 
 	// IMPORTANT TODO: GET RID OF THIS CONSTRUCTOR!!!
@@ -95,6 +100,7 @@ public class JausNode
 		this.ipAddress = ipAddress;
 		this.port = port;
 		timestamp = System.currentTimeMillis();
+		this.nodeConfiguration = false;
 	}
 	public void addComponent(JausComponent component){
 		components.add(component);
@@ -165,6 +171,16 @@ public class JausNode
 		return id;
 	}
 	
+	public void setConfiguration(boolean value)
+	{
+		this.nodeConfiguration = value;
+	}
+
+	public boolean hasConfiguration()
+	{
+		return this.nodeConfiguration;
+	}
+
 	public void setId(int id)
 	{
 		if(id > 0 && id < 255 )

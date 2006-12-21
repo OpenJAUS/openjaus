@@ -349,7 +349,8 @@ public class SubsystemTable
 				if(node.containsComponent(sourceComponent))
 				{
 					JausComponent component = (JausComponent)node.getComponentByIndex(node.indexOfComponent(sourceComponent));
-					component.setServices(message.getServices());		
+					component.setServices(message.getServices());
+					component.setServicesInformation(true);						
 				}
 				else
 				{
@@ -681,6 +682,23 @@ public class SubsystemTable
     	return false;
     }
 
+    public boolean hasNodeConfiguration(JausNode testNode)
+    {
+    	JausSubsystem testSubsystem = testNode.getSubsystem();
+
+    	if(table.contains(testSubsystem))
+		{
+			JausSubsystem subsystem = (JausSubsystem)table.get(table.indexOf(testSubsystem));
+
+			if(subsystem.containsNode(testNode))
+			{
+				JausNode node = (JausNode)subsystem.getNodeByIndex(subsystem.indexOfNode(testNode));
+				return node.hasConfiguration();
+			}
+		}
+    	return false;
+    }
+
     public boolean hasComponentIdentification(JausComponent testComponent)
     {
     	JausNode testNode = testComponent.getNode();
@@ -708,6 +726,31 @@ public class SubsystemTable
     	return false;
     }
 
+    public boolean hasComponentServices(JausComponent testComponent)
+    {
+    	JausNode testNode = testComponent.getNode();
+    	JausSubsystem testSubsystem = testNode.getSubsystem();
+    	
+		if(table.contains(testSubsystem))
+		{
+			JausSubsystem subsystem = (JausSubsystem)table.get(table.indexOf(testSubsystem));
+
+			if(subsystem.containsNode(testNode))
+			{
+				JausNode node = (JausNode)subsystem.getNodeByIndex(subsystem.indexOfNode(testNode));
+
+				if(node.containsComponent(testComponent))
+				{
+					JausComponent component = (JausComponent)node.getComponentByIndex(node.indexOfComponent(testComponent));
+					return component.getServicesInformation();
+				}
+			}
+		}
+		
+    	return false;
+    }
+    
+    
     public boolean lookUpAddressInNode(JausNode node, JausAddress lookupAddress)
     {
 		for(int componentIndex = 0; componentIndex < node.componentCount(); componentIndex++)
@@ -1106,6 +1149,21 @@ public class SubsystemTable
 			if (subsystem.getId() == id)
 			{
 				return subsystem;
+			}
+		}
+		return null;
+	}
+	
+	public JausNode getNode(int subsystem, int id)
+	{
+		Enumeration subsystemEnum = getSubsystem(subsystem).nodeEnumeration();
+		while(subsystemEnum.hasMoreElements())
+		{
+			// Check Node Identification
+			JausNode node = (JausNode)subsystemEnum.nextElement();
+			if(node.getId() == id)
+			{
+				return node;
 			}
 		}
 		return null;
