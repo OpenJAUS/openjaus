@@ -88,6 +88,7 @@ public class JausComponent
 	boolean controllerActive;
 	int port;
 	long timestamp;
+	boolean servicesInformation;
 	
 	public JausComponent()
 	{
@@ -100,6 +101,7 @@ public class JausComponent
 		JausService service = new JausService();
 		service.addCoreServices();
 		services.add(service);
+		this.servicesInformation = false;
 		
 		authority = 0;
 		controllerActive = false;
@@ -118,6 +120,7 @@ public class JausComponent
 		JausService service = new JausService();
 		service.addCoreServices();
 		services.add(service);
+		this.servicesInformation = false;
 
 		authority = 0;
 		controllerActive = false;
@@ -136,6 +139,7 @@ public class JausComponent
 		JausService service = new JausService();
 		service.addCoreServices();
 		services.add(service);
+		this.servicesInformation = false;
 
 		authority = 0;
 		controllerActive = false;
@@ -154,6 +158,7 @@ public class JausComponent
 		JausService service = new JausService();
 		service.addCoreServices();
 		services.add(service);
+		this.servicesInformation = false;
 
 		this.authority = authority;
 		controllerActive = false;
@@ -172,11 +177,22 @@ public class JausComponent
 		JausService service = new JausService();
 		service.addCoreServices();
 		services.add(service);
+		this.servicesInformation = false;
 
 		this.authority = authority;
 		controllerActive = false;
 		this.port = port;
 		timestamp = System.currentTimeMillis();
+	}
+
+	public boolean getServicesInformation()
+	{
+        return this.servicesInformation;
+	}
+	
+	public void setServicesInformation(boolean value)
+	{
+		this.servicesInformation = value;
 	}
 
 	public String getIdentification()
@@ -378,9 +394,9 @@ public class JausComponent
 	public String toString()
 	{
 		if(identification == null)
-			return getType() + "-" + address.getComponent() + "." + address.getInstance() + " (Port: " + port + ")";
+			return getType() + "-" + address.getComponent() + "." + address.getInstance() + " (Port: " + port + ")" + " Service Info: " + servicesInformation;
 		else
-			return getIdentification() + " (" + getType() + ")-" + address.getComponent() + "." + address.getInstance() + " (Port: " + port + ")";			
+			return getIdentification() + " (" + getType() + ")-" + address.getComponent() + "." + address.getInstance() + " (Port: " + port + ")" + " Service Info: " + servicesInformation;			
 	}
 
 	public int hashCode()

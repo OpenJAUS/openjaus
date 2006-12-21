@@ -50,7 +50,7 @@ public class ReportServicesMessage extends JausMessage
 	private static final int COMMAND_CODE = REPORT_SERVICES;
 	
 	//TODO: Need Dynamic way to set data size
-	private static final int MAX_DATA_SIZE_BYTES = 4080;
+	private static final int MAX_DATA_SIZE_BYTES = 512;
 	
 	//Message Fields
 	Vector services;

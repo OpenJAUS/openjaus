@@ -207,6 +207,7 @@ public class ReportConfigurationMessage extends JausMessage
 			//Create node and add to table
 			JausNode tempNode = new JausNode(nodeId);
 			tempNode.setSubsystem(subsystemConfiguration);
+			tempNode.setConfiguration(true);			
 			subsystemConfiguration.addNode(tempNode);
 			
 			//read number of components on this node

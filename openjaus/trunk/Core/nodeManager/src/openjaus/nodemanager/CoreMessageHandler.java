@@ -98,19 +98,16 @@ public class CoreMessageHandler
 				break;
 				
 			case JausMessage.SHUTDOWN:
-				ShutdownMessage shutdownMsg = new ShutdownMessage(message);
 				thisComponent.getState().setValue(JausState.SHUTDOWN);
 				break;
 				
 			case JausMessage.STANDBY:
-				StandbyMessage standbyMsg = new StandbyMessage(message);
 				thisComponent.getState().setValue(JausState.STANDBY);
 				break;
 				
 			case JausMessage.RESUME:
 				if(thisComponent.getState().getValue() == JausState.STANDBY)
 				{
-					ResumeMessage resumeMsg = new ResumeMessage(message);
 					thisComponent.getState().setValue(JausState.STANDBY);					
 				}
 				break;
@@ -120,12 +117,10 @@ public class CoreMessageHandler
 				break;
 				
 			case JausMessage.SET_EMERGENCY:
-				SetEmergencyMessage emergencyMsg = new SetEmergencyMessage(message);
 				thisComponent.getState().setValue(JausState.EMERGENCY);
 				break;
 				
 			case JausMessage.CLEAR_EMERGENCY:
-				ClearEmergencyMessage clearEmergenceMsg = new ClearEmergencyMessage(message);
 				thisComponent.getState().setValue(JausState.STANDBY);
 				break;
 				
@@ -195,12 +190,30 @@ public class CoreMessageHandler
 				{
 					if(message.getSource().getNode() == thisComponent.getAddress().getNode())
 					{
-			        	JausComponent component = new JausComponent(message.getSource());
+			        	// HB from component on this node
+						JausComponent component = new JausComponent(message.getSource());
 			        	component.setNode(new JausNode(message.getSource().getNode()));
 			        	component.getNode().setSubsystem(new JausSubsystem(message.getSource().getSubsystem()));
 			        	if(subsystemTable.hasComponentIdentification(component))
 			        	{
-			        		return;
+			        		if(subsystemTable.hasComponentServices(component))
+			        		{
+			        			// We have Id & Service information for a component
+			        			return;
+			        		}
+			        		else
+			        		{
+			        			// We have Id but not Services... Assume this is at least the second time we ask for this
+			        			queryServicesMsg = new QueryServicesMessage();
+								queryServicesMsg.setDestination(message.getSource());
+								queryServicesMsg.setSource(thisComponent.getAddress());
+								
+								buffer = new byte[queryServicesMsg.size()];
+								queryServicesMsg.toJausBuffer(buffer);
+								packet = new DatagramPacket(buffer, buffer.length, thisNode.getIpAddress(), thisComponent.getPort());
+							    outputQueue.push(packet);
+							    return;
+			        		}
 			        	}
 			        	else
 			        	{
@@ -208,16 +221,6 @@ public class CoreMessageHandler
 							queryIdMsg.setQueryType(QueryIdentificationMessage.COMPONENT_IDENTIFICATION);
 			        	}
 			        	
-			        	// If this is from something on our node, we need to query its services
-						//System.out.println("CMH: Querying Services of: " + message.getSource().getComponent() + " : " + message.getSource());						    
-						queryServicesMsg = new QueryServicesMessage();
-						queryServicesMsg.setDestination(message.getSource());
-						queryServicesMsg.setSource(thisComponent.getAddress());
-						
-						buffer = new byte[queryServicesMsg.size()];
-						queryServicesMsg.toJausBuffer(buffer);
-						packet = new DatagramPacket(buffer, buffer.length, thisNode.getIpAddress(), thisComponent.getPort());
-					    outputQueue.push(packet);			        	
 					}
 					else
 					{
@@ -225,7 +228,89 @@ public class CoreMessageHandler
 			        	sourceNode.setSubsystem(new JausSubsystem(message.getSource().getSubsystem()));
 			        	if(subsystemTable.hasNodeIdentification(sourceNode))
 			        	{
-			        		return;
+			        		// Check node configuration
+			        		if(subsystemTable.hasNodeConfiguration(sourceNode))
+			        		{
+				        		// Check the Id & Services of each component on the Node
+								Enumeration nodeEnum = sourceNode.componentEnumeration();
+								while(nodeEnum.hasMoreElements())
+								{
+									JausComponent component = (JausComponent)nodeEnum.nextElement();
+						        	if(subsystemTable.hasComponentIdentification(component))
+						        	{
+						        		if(subsystemTable.hasComponentServices(component))
+						        		{
+						        			// We have Id & Service information for a component
+						        			// Do Nothing
+						        		}
+						        		else
+						        		{
+						        			// We have Id but not Services... Assume this is at least the second time we ask for this
+						        			queryServicesMsg = new QueryServicesMessage();
+											queryServicesMsg.setDestination(component.getAddress());
+											queryServicesMsg.setSource(thisComponent.getAddress());
+											
+						        			//System.out.println("2 Querying Services of " + queryServicesMsg.getDestination());											
+											buffer = new byte[queryServicesMsg.size()];
+											queryServicesMsg.toJausBuffer(buffer);
+											packet = new DatagramPacket(buffer, buffer.length, thisNode.getIpAddress(), thisComponent.getPort());
+										    outputQueue.push(packet);
+						        		}
+						        	}
+						        	else
+						        	{
+										queryIdMsg = new QueryIdentificationMessage();
+										queryIdMsg.setQueryType(QueryIdentificationMessage.COMPONENT_IDENTIFICATION);
+										queryIdMsg.setDestination(component.getAddress());
+										queryIdMsg.setSource(thisComponent.getAddress());
+	
+										//System.out.println("3 Querying Comp Identification of " + queryIdMsg.getDestination());									
+										buffer = new byte[queryIdMsg.size()];
+										queryIdMsg.toJausBuffer(buffer);
+										packet = new DatagramPacket(buffer, buffer.length, thisNode.getIpAddress(), thisComponent.getPort());
+										outputQueue.push(packet);
+						        	}
+								}
+								return;
+			        		}
+			        		else
+			        		{
+								// Query Node Configuration
+								queryConfMsg = new QueryConfigurationMessage();
+								queryConfMsg.setDestination(message.getSource());
+								queryConfMsg.setSource(thisComponent.getAddress());
+
+								if(message.getSource().getNode() == JausAddress.PRIMARY_NODE_MANAGER_NODE)
+								{
+									queryConfMsg.setQueryField(QueryConfigurationMessage.SUBSYSTEM_CONFIGURATION);		        	    
+								}
+								else
+								{
+									queryConfMsg.setQueryField(QueryConfigurationMessage.NODE_CONFIGURATION);
+								}
+								
+			        			//System.out.println("4 Querying Configuration of " + queryConfMsg.getDestination());
+								buffer = new byte[queryConfMsg.size()];
+								queryConfMsg.toJausBuffer(buffer);
+								packet = new DatagramPacket(buffer, buffer.length, thisNode.getIpAddress(), thisComponent.getPort());
+							    outputQueue.push(packet);
+							    
+							    // Setup Event
+							    createEventMsg = new CreateEventMessage();
+								createEventMsg.setDestination(message.getSource());
+								createEventMsg.setSource(thisComponent.getAddress());
+							    createEventMsg.setMessageCode(JausMessage.QUERY_CONFIGURATION);
+							    createEventMsg.setEventType(CreateEventMessage.EVERY_CHANGE);
+							    createEventMsg.setQueryMessage(queryConfMsg);
+
+			        			//System.out.println("5 Create Event Message to " + createEventMsg.getDestination());
+								buffer = new byte[createEventMsg.size()];
+								createEventMsg.toJausBuffer(buffer);
+								packet = new DatagramPacket(buffer, buffer.length, thisNode.getIpAddress(), thisComponent.getPort());
+							    outputQueue.push(packet);			    
+							    
+							    return;
+			        		}
 			        	}
 			        	else
 			        	{
@@ -255,7 +340,8 @@ public class CoreMessageHandler
 								message.toJausUdpBuffer(buffer);
 								try
 								{
-									InetAddress destIpAddress = InetAddress.getByName("192.168." + thisSubsystem.getId() + "." + node.getId());
+									//InetAddress destIpAddress = InetAddress.getByName("192.168." + thisSubsystem.getId() + "." + node.getId());
+									InetAddress destIpAddress = subsystemTable.lookUpIpAddress(thisSubsystem.getId(), node.getId());
 									packet = new DatagramPacket(buffer, buffer.length, destIpAddress, thisComponent.getPort());
 									nodeSendQueue.push(packet);
 								}
@@ -271,6 +357,115 @@ public class CoreMessageHandler
 		        	JausSubsystem subsystem = new JausSubsystem(message.getSource().getSubsystem());
 		        	if(subsystemTable.hasSubsystemIdentification(subsystem))
 		        	{
+	        			//System.out.println("Have Subsystem Id");
+		        		// Check for Node Identifications of target Subsystem
+			    		Enumeration subsystemEnum = subsystemTable.getSubsystem(subsystem.getId()).nodeEnumeration();
+						while(subsystemEnum.hasMoreElements())
+						{
+							// Check Node Identification
+							JausNode reportNode = (JausNode)subsystemEnum.nextElement();
+							if(subsystemTable.hasNodeIdentification(reportNode))
+							{
+								//System.out.println("Have Node "+reportNode.getId()+" Id");
+								// Check each Node for configuration
+								if(subsystemTable.hasNodeConfiguration(reportNode))
+								{
+									Enumeration nodeEnum = reportNode.componentEnumeration();
+									while(nodeEnum.hasMoreElements())
+									{
+										// Check Component Information
+										JausComponent component = (JausComponent)nodeEnum.nextElement();
+							        	// Check Comp Id
+							        	if(subsystemTable.hasComponentIdentification(component))
+							        	{
+							        		// Check Comp Services
+							        		if(subsystemTable.hasComponentServices(component))
+							        		{
+							        			// We have Id & Service information for a component
+							        			// Do Nothing
+							        		}
+							        		else
+							        		{
+							        			// We have Id but not Services... Assume this is at least the second time we ask for this
+							        			queryServicesMsg = new QueryServicesMessage();
+							        			queryServicesMsg.setDestination(component.getAddress());
+												queryServicesMsg.setSource(thisComponent.getAddress());
+												
+							        			//System.out.println("6 Querying Services of " + queryServicesMsg.getDestination());
+												buffer = new byte[queryServicesMsg.size()];
+												queryServicesMsg.toJausBuffer(buffer);
+												packet = new DatagramPacket(buffer, buffer.length, thisNode.getIpAddress(), thisComponent.getPort());
+											    outputQueue.push(packet);
+							        		}
+							        	}
+							        	else
+							        	{
+											queryIdMsg = new QueryIdentificationMessage();
+											queryIdMsg.setQueryType(QueryIdentificationMessage.COMPONENT_IDENTIFICATION);
+											queryIdMsg.setDestination(component.getAddress());
+											queryIdMsg.setSource(thisComponent.getAddress());
+
+											//System.out.println("7 Querying Comp Identification of " + queryIdMsg.getDestination());
+											buffer = new byte[queryIdMsg.size()];
+										    queryIdMsg.toJausBuffer(buffer);
+											packet = new DatagramPacket(buffer, buffer.length, thisNode.getIpAddress(), thisComponent.getPort());
+										    outputQueue.push(packet);
+							        	}
+									}
+									
+								}
+								else
+								{
+									// Query Node Configuration
+									queryConfMsg = new QueryConfigurationMessage();
+									queryConfMsg.setDestination(new JausAddress(subsystem.getId(), reportNode.getId(), 1, 1));// reportNode.getAddress());
+									queryConfMsg.setSource(thisComponent.getAddress());
+
+									if(reportNode.getId() == JausAddress.PRIMARY_NODE_MANAGER_NODE)
+									{
+										queryConfMsg.setQueryField(QueryConfigurationMessage.SUBSYSTEM_CONFIGURATION);		        	    
+									}
+									else
+									{
+										queryConfMsg.setQueryField(QueryConfigurationMessage.NODE_CONFIGURATION);
+									}
+									
+				        			//System.out.println("8 Querying Configuration of " + queryConfMsg.getDestination());
+									buffer = new byte[queryConfMsg.size()];
+									queryConfMsg.toJausBuffer(buffer);
+									packet = new DatagramPacket(buffer, buffer.length, thisNode.getIpAddress(), thisComponent.getPort());
+								    outputQueue.push(packet);
+
+								    // Setup Event
+								    createEventMsg = new CreateEventMessage();
+									createEventMsg.setDestination(message.getSource());
+									createEventMsg.setSource(thisComponent.getAddress());
+								    createEventMsg.setMessageCode(JausMessage.QUERY_CONFIGURATION);
+								    createEventMsg.setEventType(CreateEventMessage.EVERY_CHANGE);
+								    createEventMsg.setQueryMessage(queryConfMsg);
+
+				        			//System.out.println("9 Create Event Message to " + createEventMsg.getDestination());
+									buffer = new byte[createEventMsg.size()];
+									createEventMsg.toJausBuffer(buffer);
+									packet = new DatagramPacket(buffer, buffer.length, thisNode.getIpAddress(), thisComponent.getPort());
+								    outputQueue.push(packet);								
+								}
+							}
+							else
+							{
+								// Query Node Identification
+								queryIdMsg = new QueryIdentificationMessage();
+								queryIdMsg.setQueryType(QueryIdentificationMessage.NODE_IDENTIFICATION);								
+								queryIdMsg.setDestination(new JausAddress(subsystem.getId(), reportNode.getId(),1, 1));
+								queryIdMsg.setSource(thisComponent.getAddress());
+
+			        			//System.out.println("0 Querying Node Identification of " + queryIdMsg.getDestination()+ " from "+queryIdMsg.getSource());									
+								buffer = new byte[queryIdMsg.size()];
+							    queryIdMsg.toJausBuffer(buffer);
+								packet = new DatagramPacket(buffer, buffer.length, thisNode.getIpAddress(), thisComponent.getPort());
+							    outputQueue.push(packet);
+							}
+						}
 		        		return;
 		        	}
 		        	else
