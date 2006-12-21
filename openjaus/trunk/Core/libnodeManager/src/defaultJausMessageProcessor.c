@@ -554,7 +554,7 @@ void defaultJausMessageProcessor(JausMessage message, NodeManagerInterface nmi, 
 
 				reportServices->destination->id = message->source->id;
 				reportServices->source->id = nmi->cmpt->address->id;
-				jausServicesDestroy(resportServices->jausServices);
+				jausServicesDestroy(reportServices->jausServices);
 				reportServices->jausServices = jausServicesDuplicate(nmi->cmpt->services);
 
 				txMessage = reportServicesMessageToJausMessage(reportServices);
