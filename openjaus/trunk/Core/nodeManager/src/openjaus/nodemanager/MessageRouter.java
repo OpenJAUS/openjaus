@@ -259,7 +259,7 @@ public class MessageRouter extends Thread
 	private void sendToNode(JausMessage message, int subsystem, int node)
 	{
 		// Send message off to a specific local node
-		InetAddress destIpAddress;// = subsystemTable.lookUpIpAddress(subsystem, node);
+		InetAddress destIpAddress;
 		Integer destPort;
 
 		try
@@ -270,7 +270,16 @@ public class MessageRouter extends Thread
 			}
 			else
 			{
-				destIpAddress = InetAddress.getByName("192.168.128." + subsystem);
+				if(thisNode.getId() == JausAddress.PRIMARY_NODE_MANAGER_NODE)
+				{
+					destIpAddress = subsystemTable.lookUpIpAddress(subsystem, node);
+				}
+				else
+				{
+					// this is for internal nodes, no way to discover the ip address, have to trust this is correct
+					// The following IP address is by convention as agreed upon by various members of the OPC committee in their experiments
+					destIpAddress = InetAddress.getByName("192.168.128." + subsystem); 
+				}
 			}
 		}
 		catch(Exception e)
@@ -473,21 +482,6 @@ public class MessageRouter extends Thread
 				{
 				    DatagramPacket packet = (DatagramPacket)nodeReceiveQueue.pop();
 				    JausMessage message = new JausMessage(packet.getData());
-//					if(message.getCommandCode() == 0xD1D0)
-//					{
-//						messageCount = 0;
-//					}
-//					else if(message.getCommandCode() == 0xD1D2)
-//					{
-//						messageBlock++;
-//						dataRepository.put("MessageRouter Message Block", new Integer(messageBlock));
-//						dataRepository.put("MessageRouter Message Count", new Long(messageCount));
-//						System.out.println("MessageRouter Message Block: " + messageBlock + " Count = " + messageCount);
-//					}
-//					else
-//					{
-//						messageCount++;
-//					}
 				    dataRepository.put("MessageRouter Current Message", message);
 //				     if(log.isDebugEnabled())log.debug("Current Node Side Message command code:"+ message.getCommandCode());
 					routeNodeSideMessage(message, packet.getAddress(), packet.getPort());
@@ -497,21 +491,6 @@ public class MessageRouter extends Thread
 				{
 				    DatagramPacket packet = (DatagramPacket)componentReceiveQueue.pop();
 				    JausMessage message = new JausMessage(packet.getData());
-//					if(message.getCommandCode() == 0xD1D0)
-//					{
-//						messageCount = 0;
-//					}
-//					else if(message.getCommandCode() == 0xD1D2)
-//					{
-//						messageBlock++;
-//						dataRepository.put("MessageRouter Message Block", new Integer(messageBlock));
-//						dataRepository.put("MessageRouter Message Count", new Long(messageCount));
-//						System.out.println("MessageRouter Message Block: " + messageBlock + " Count = " + messageCount);
-//					}
-//					else
-//					{
-//						messageCount++;
-//					}
 					dataRepository.put("MessageRouter Current Message", message);
 //				    if(log.isDebugEnabled())log.debug("Current Component Side Message command code:"+ message.getCommandCode());
 
