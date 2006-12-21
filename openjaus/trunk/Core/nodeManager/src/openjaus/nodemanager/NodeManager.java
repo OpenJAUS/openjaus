@@ -62,6 +62,7 @@ public class NodeManager
 	private static JausComponent component;
 	private static JausAddress address;
 
+	private static int multicastTimeToLive = 5;	
 	private static int heartBeatPeriodMilliSec = 1000;
 	private static boolean running = true;
 	
@@ -114,13 +115,27 @@ public class NodeManager
 	
 	public static void main(String[] args)
 	{
-		double lastLogTimeMilliSec = 0.0;
+		// This allows us to change the TTL value
+		// TTL > 1 is neccessary for VPN Experiments
+		// Has a drawback that this won't work on IPv6 hardware (whatever that means!)
+		System.setProperty("java.net.preferIPv4Stack", "true");		
 		
+		double lastLogTimeMilliSec = 0.0;		
+
 		try
 		{
 			log.info("NodeManager starting");
 			properties = new Properties();
-			properties.load(new FileInputStream(new File("./", "nodeManager.conf")));
+			if(args.length > 0)
+			{
+				System.out.println("Opening Config file "+args[0]);
+				properties.load(new FileInputStream(new File(args[0])));
+			}
+			else
+			{
+				System.out.println("Opening Config file ./nodeManager.conf");
+				properties.load(new FileInputStream(new File("./", "nodeManager.conf")));
+			}
 
 			System.out.println(properties.getProperty("COMPONENT_IDENTIFICATION") + " Version: 3.2 (03/22/2006)");
 			
@@ -169,6 +184,7 @@ public class NodeManager
 			nodeSocket = new MulticastSocket(nodePort);
 			nodeSocket.setNetworkInterface(networkInterface); // nodeSocket.setInterface(nodeIpAddress);
 			nodeSocket.joinGroup(nodeGroupAddress);
+			nodeSocket.setTimeToLive(multicastTimeToLive);			
 			
 			log.info("Opened Node Side Multicast Socket: " + nodeSocket);				
 
@@ -180,6 +196,7 @@ public class NodeManager
 				subsSocket = new MulticastSocket(nodePort);
 				subsSocket.setNetworkInterface(subsInterface); //subsSocket.setInterface(subsIpAddress);
 				subsSocket.joinGroup(subsGroupAddress);
+				subsSocket.setTimeToLive(multicastTimeToLive);
 				log.info("Opened Subsystem Side Multicast Socket: " + subsSocket);				
 			}
 			
@@ -240,8 +257,7 @@ public class NodeManager
 			heartBeat = new HeartBeat(heartBeatPeriodMilliSec, nodeSendQueue, componentReceiveQueue, subsystemTable);
 
 			String logFileName = properties.getProperty("LOG_FILE");
-			if (logFileName == null ||
-				logFileName.trim().equals("")) logFileName = "log/nodeManagerLog.csv";
+			if (logFileName == null || logFileName.trim().equals("")) logFileName = "log/nodeManagerLog.csv";
 			fileLogger = new FileLogger(dataRepository, logFileName);
 
 			componentInterface.start();
@@ -254,7 +270,6 @@ public class NodeManager
 			componentReceiveThread.start();
 			messageRouter.start();
 			heartBeat.start();
-			//fileLogger.start();
 			
 			byte[] inputBuffer = new byte[256];			
 			int inputCount = 0;
