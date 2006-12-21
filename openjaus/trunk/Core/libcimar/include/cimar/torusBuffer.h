@@ -66,7 +66,7 @@ typedef union
 	int integerValue;
 	long long longValue;
 	unsigned char uCharValue;
-	unsigned int uShortValue;
+	unsigned short uShortValue;
 	unsigned int uIntegerValue;
 	unsigned long long uLongValue;
 	float floatValue;
