@@ -1,8 +1,8 @@
 #! /bin/bash
 # Nodemanager startup script
 
-route add -host 224.1.0.2 eth0
-route add -host 224.1.0.1 eth1
+route add -host 224.1.0.2 eth1
+route add -host 224.1.0.1 eth0
 
 cd ..
 
