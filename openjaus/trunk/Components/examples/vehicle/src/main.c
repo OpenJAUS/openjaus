@@ -171,9 +171,10 @@ void updateScreen(int keyboardLock, int keyPress)
 			mvprintw(row++,col,"PD Wrench SC:\t    %s", wdGetPdWrenchScStatus()? "Active" : "Inactive");
 			mvprintw(row++,col,"PD State SC:\t    %s", wdGetPdStatusScStatus()? "Active" : "Inactive");
 			row++;
-			mvprintw(row++,col,"WD Request Control:\t    %s", wdGetRequestControl()? "True" : "False");
-			mvprintw(row++,col,"WD Control:\t    %s", wdGetInControlStatus()? "True" : "False");
-			mvprintw(row++,col,"PD State:\t    %s", jausStateGetString(wdGetPdState()));
+			mvprintw(row++,col,"WD Request Control:\t%s", wdGetRequestControl()? "True" : "False");
+			mvprintw(row++,col,"(Space to Toggle)");
+			mvprintw(row++,col,"WD Control:\t\t%s", wdGetInControlStatus()? "True" : "False");
+			mvprintw(row++,col,"PD State:\t\t%s", jausStateGetString(wdGetPdState()));
 			
 			row = 11;
 			col = 40;

@@ -382,12 +382,23 @@ void pdProcessMessage(JausMessage message)
 
 void pdStartupState(void)
 {
+	JausService service;	
+
 	// Populate Core Service
 	if(!jausServiceAddCoreServices(pd->services))
 	{
 		cError("pd: Addition of Core Services FAILED! Switching to FAILURE_STATE\n");
 		pd->state = JAUS_FAILURE_STATE;
 	}
+	service = jausServiceCreate(pd->address->component); 
+        jausServiceAddService(pd->services, service);
+		
+
+	// add each supported primitive driver input message 
+	jausServiceAddInputCommand(service, JAUS_SET_WRENCH_EFFORT, 0xFF);
+	jausServiceAddInputCommand(service, JAUS_SET_DISCRETE_DEVICES, 0xFF);
+	
+	// add each supported primitive driver output message
 
 	scManagerAddSupportedMessage(pdNmi, JAUS_REPORT_COMPONENT_STATUS);
 	scManagerAddSupportedMessage(pdNmi, JAUS_REPORT_WRENCH_EFFORT);
