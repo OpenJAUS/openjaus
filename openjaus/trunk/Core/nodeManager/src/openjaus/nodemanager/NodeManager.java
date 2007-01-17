@@ -183,7 +183,7 @@ public class NodeManager
 
 			nodeSocket = new MulticastSocket(nodePort);
 			nodeSocket.setNetworkInterface(networkInterface); // nodeSocket.setInterface(nodeIpAddress);
-			nodeSocket.joinGroup(nodeGroupAddress);
+			nodeSocket.joinGroup(new InetSocketAddress(nodeGroupAddress, nodePort), networkInterface);
 			nodeSocket.setTimeToLive(multicastTimeToLive);			
 			
 			log.info("Opened Node Side Multicast Socket: " + nodeSocket);				
@@ -195,7 +195,7 @@ public class NodeManager
 			
 				subsSocket = new MulticastSocket(nodePort);
 				subsSocket.setNetworkInterface(subsInterface); //subsSocket.setInterface(subsIpAddress);
-				subsSocket.joinGroup(subsGroupAddress);
+				subsSocket.joinGroup(new InetSocketAddress(subsGroupAddress, nodePort), subsInterface);
 				subsSocket.setTimeToLive(multicastTimeToLive);
 				log.info("Opened Subsystem Side Multicast Socket: " + subsSocket);				
 			}
@@ -237,14 +237,14 @@ public class NodeManager
 				subsSendMonitor = new Monitor();
 				subsSendQueue = new Queue("Subsystem Send Queue", subsSendMonitor);
 				subsSendThread = new SendThread(subsSocket, subsSendQueue, subsSendMonitor);
-				subsReceiveThread = new ReceiveThread(subsSocket, nodeReceiveQueue);
+				subsReceiveThread = new ReceiveThread("Subsystem Receive Thread", subsSocket, nodeReceiveQueue);
 			}
 
 			nodeSendThread = new SendThread(nodeSocket, nodeSendQueue, nodeSendMonitor);
-			nodeReceiveThread = new ReceiveThread(nodeSocket, nodeReceiveQueue);
+			nodeReceiveThread = new ReceiveThread("Node Receive Thread", nodeSocket, nodeReceiveQueue);
 			
 			componentReceiveQueue = new Queue("Component Receive Queue", messageRouterMonitor);
-			componentReceiveThread = new ReceiveThread(componentSocket, componentReceiveQueue);
+			componentReceiveThread = new ReceiveThread("Component Receive Thread", componentSocket, componentReceiveQueue);
 			
 			subsystemTable = new SubsystemTable(componentReceiveQueue);
 
@@ -270,7 +270,7 @@ public class NodeManager
 			componentReceiveThread.start();
 			messageRouter.start();
 			heartBeat.start();
-			
+
 			byte[] inputBuffer = new byte[256];			
 			int inputCount = 0;
 			while(inputBuffer[0] != 27)

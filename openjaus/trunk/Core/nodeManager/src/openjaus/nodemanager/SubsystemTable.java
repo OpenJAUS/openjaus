@@ -1169,6 +1169,21 @@ public class SubsystemTable
 		return null;
 	}
 	
+	public JausComponent getComponent(JausAddress address)
+	{
+		JausNode node = this.getNode(address.getSubsystem(), address.getNode());
+		Enumeration e = node.componentEnumeration();
+		while(e.hasMoreElements())
+		{
+			JausComponent cmpt = (JausComponent)e.nextElement();
+			if(cmpt.getAddress().getComponent() == address.getComponent())
+			{
+				return cmpt;
+			}
+		}
+		return null;
+	}
+	
     public InetAddress lookUpLocalIpAddress(int nodeId)
     {
 		JausNode node = thisSubsystem.getNode(nodeId);

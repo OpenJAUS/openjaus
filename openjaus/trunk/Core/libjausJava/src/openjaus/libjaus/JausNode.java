@@ -41,6 +41,7 @@ public class JausNode
 	public static final long TIMEOUT_MILLISEC = 5000;
 	//TODO: Check the RefreshTimeout Hack for AFRL compliance
 	public static final long REFRESH_TIMEOUT_MILLISEC = 3600000;
+	public static final long CONFIGURATION_TIMEOUT_MILLISEC = 900;	// approx 1s	
 	
 	String identification;
 	int id;
@@ -51,6 +52,10 @@ public class JausNode
 	long refreshTimestamp;
 	Vector components = new Vector();
 	boolean nodeConfiguration;
+	long nextIdentificationRequestTime;
+	long nextConfigurationRequestTime;
+	int identificationRequestCount;
+	int configurationRequestCount;
 	
 	public JausNode()
 	{
@@ -61,6 +66,11 @@ public class JausNode
 		timestamp = System.currentTimeMillis();
 		refreshTimestamp = System.currentTimeMillis();
 		this.nodeConfiguration = false;
+		this.nextIdentificationRequestTime = 0;
+		this.nextConfigurationRequestTime = 0;
+		this.identificationRequestCount = 0;
+		this.configurationRequestCount = 0;
+
 	}
 
 	public JausNode(String identification)
@@ -71,6 +81,10 @@ public class JausNode
 		id = 0;
 		timestamp = System.currentTimeMillis();
 		this.nodeConfiguration = false;
+		this.nextIdentificationRequestTime = 0;
+		this.nextConfigurationRequestTime = 0;
+		this.identificationRequestCount = 0;
+		this.configurationRequestCount = 0;
 	}
 
 	public JausNode(int id)
@@ -82,6 +96,10 @@ public class JausNode
 		else id = 0;
 		timestamp = System.currentTimeMillis();
 		this.nodeConfiguration = false;
+		this.nextIdentificationRequestTime = 0;
+		this.nextConfigurationRequestTime = 0;
+		this.identificationRequestCount = 0;
+		this.configurationRequestCount = 0;
 	}
 
 	// IMPORTANT TODO: GET RID OF THIS CONSTRUCTOR!!!
@@ -101,7 +119,12 @@ public class JausNode
 		this.port = port;
 		timestamp = System.currentTimeMillis();
 		this.nodeConfiguration = false;
+		this.nextIdentificationRequestTime = 0;
+		this.nextConfigurationRequestTime = 0;
+		this.identificationRequestCount = 0;
+		this.configurationRequestCount = 0;
 	}
+	
 	public void addComponent(JausComponent component){
 		components.add(component);
 	}
@@ -248,4 +271,37 @@ public class JausNode
 	{
 		return hashCode() == ((JausNode)comparisionObject).hashCode();
 	}
+
+	public long getNextIdentificationRequestTime()
+	{
+		return nextIdentificationRequestTime;
+	}
+	
+	public int getIdentificationRequestCount()
+	{
+		return identificationRequestCount;
+	}
+	
+	public void setIdentificationRequestTime(long time)
+	{
+		nextIdentificationRequestTime = time + CONFIGURATION_TIMEOUT_MILLISEC;
+		identificationRequestCount++;
+	}
+
+	public long getNextConfigurationRequestTime()
+	{
+		return nextConfigurationRequestTime;
+	}
+	
+	public int getConfigurationRequestCount()
+	{
+		return configurationRequestCount;
+	}
+	
+	public void setConfigurationRequestTime(long time)
+	{
+		nextConfigurationRequestTime = time + CONFIGURATION_TIMEOUT_MILLISEC;
+		configurationRequestCount++;
+	}
+
 }

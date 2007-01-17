@@ -109,4 +109,9 @@ public class Queue
 	public boolean isEmpty(){
 		return list.isEmpty();
 	}
+	
+	public String getName()
+	{
+		return name;
+	}
 }
