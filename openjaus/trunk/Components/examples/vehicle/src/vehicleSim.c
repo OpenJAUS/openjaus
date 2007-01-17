@@ -329,7 +329,7 @@ void *vehicleSimThread(void *threadData)
 		}
 		vehiclePosLla = pointUtmToPointLla(vehiclePosUtm);
 
-		usleep(1000);
+		usleep(25000);
 	}	
 	
 	usleep(50000);	// Sleep for 50 milliseconds and then exit
