@@ -427,7 +427,7 @@ int main(int argCount, char **argString)
 			}
 		}
 				
-		usleep(50000);
+		usleep(100000);
 	}
 	
 	if(verbose)

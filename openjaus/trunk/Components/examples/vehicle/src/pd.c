@@ -316,6 +316,9 @@ void *pdThread(void *threadData)
 void pdProcessMessage(JausMessage message)
 {
 	ReportComponentStatusMessage reportComponentStatus;
+	QueryPlatformSpecificationsMessage queryPlatformSpecifications;
+	ReportPlatformSpecificationsMessage reportPlatformSpecifications;
+	JausMessage txMessage;
 	char buf[64] = {0};
 
 	// This block of code is intended to reject commands from non-controlling components
@@ -372,6 +375,28 @@ void pdProcessMessage(JausMessage message)
 				cError("pd: Error unpacking %s message\n", jausMessageCommandCodeString(message));
 			}
 			jausMessageDestroy(message);
+			break;
+
+		case JAUS_QUERY_PLATFORM_SPECIFICATIONS:
+			queryPlatformSpecifications = queryPlatformSpecificationsMessageFromJausMessage(message);
+			if(!queryPlatformSpecifications)
+			{
+				reportPlatformSpecifications = reportPlatformSpecificationsMessageCreate();
+				
+				reportPlatformSpecifications->destination->id = queryPlatformSpecifications->source->id;
+				reportPlatformSpecifications->source->id = queryPlatformSpecifications->destination->id;
+				
+				reportPlatformSpecifications->maximumVelocityXMps = 10.0;
+				
+				txMessage = reportPlatformSpecificationsMessageToJausMessage(reportPlatformSpecifications);
+				nodeManagerSend(pdNmi, txMessage);		
+				jausMessageDestroy(txMessage);
+				
+				
+				cError("pd: Error unpacking %s message\n", jausMessageCommandCodeString(message));
+			}
+			jausMessageDestroy(message);
+			
 			break;
 
 		default:

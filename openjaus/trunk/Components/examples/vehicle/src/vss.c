@@ -392,6 +392,8 @@ void vssReadyState(void)
 	JausMessage txMessage;
 	ServiceConnection scList;
 	ServiceConnection sc;
+	char buf[64] = {0};
+	char buf2[64] = {0};
 
 	vssMessage->velocityXMps = vehicleSimGetSpeed();
 	vssMessage->velocityYMps = 0;
@@ -419,6 +421,10 @@ void vssReadyState(void)
 			txMessage = reportVelocityStateMessageToJausMessage(vssMessage);
 			nodeManagerSend(vssNmi, txMessage);		
 			jausMessageDestroy(txMessage);
+	
+			jausAddressToString(vssMessage->source, buf);
+			jausAddressToString(vssMessage->destination, buf2);
+			cDebug(9, "Sent VSS SC from %s to %s\n", buf, buf2);
 	
 			sc = sc->nextSc;
 		}
