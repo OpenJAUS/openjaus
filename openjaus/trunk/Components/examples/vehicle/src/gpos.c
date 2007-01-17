@@ -353,6 +353,14 @@ void gposStartupState(void)
 	}
 	// USER: Add the rest of your component specific service(s) here
 	service = jausServiceCreate(gpos->address->component);
+        if(!service)
+        {
+                cError("gpos:%d: Creation of JausService FAILED! Switching to FAILURE_STATE\n", __LINE__);
+                gpos->state = JAUS_FAILURE_STATE;
+        }
+        jausServiceAddService(gpos->services, service);
+        jausServiceAddInputCommand(service, JAUS_QUERY_GLOBAL_POSE, 0xFF);
+        jausServiceAddOutputCommand(service, JAUS_REPORT_GLOBAL_POSE, 0xFF);
 	
 
 	gposMessage = reportGlobalPoseMessageCreate();

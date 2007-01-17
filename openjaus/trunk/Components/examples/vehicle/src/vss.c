@@ -347,6 +347,8 @@ void vssProcessMessage(JausMessage message)
 
 void vssStartupState(void)
 {
+	JausService service;
+
 	// Populate Core Service
 	if(!jausServiceAddCoreServices(vss->services))
 	{
@@ -354,6 +356,18 @@ void vssStartupState(void)
 		vss->state = JAUS_FAILURE_STATE;
 	}
 	// USER: Add the rest of your component specific service(s) here
+
+        // Add a new service to support the VSS input and output messages
+        service = jausServiceCreate(vss->address->component);
+        if(!service)
+        {
+                cError("vss:%d: Creation of JausService FAILED! Switching to FAILURE_STATE\n", __LINE__);
+                vss->state = JAUS_FAILURE_STATE;
+        }
+        jausServiceAddService(vss->services, service);
+        jausServiceAddInputCommand(service, JAUS_QUERY_VELOCITY_STATE, 0xFF);
+        jausServiceAddOutputCommand(service, JAUS_REPORT_VELOCITY_STATE, 0xFF);
+
 
 	// Code run once through the init state
 	vssMessage = reportVelocityStateMessageCreate();
