@@ -79,11 +79,7 @@ public class MessageRouter extends Thread
 	        				SubsystemTable subsystemTable, Monitor monitor, CoreMessageHandler coreMessageHandler)
 	{
 		this.setName(counter.nextName());
-//		messageBlock = 0;
-//		messageCount = 0;
 		dataRepository = NodeManager.getDataRepository();
-//		dataRepository.put("MessageRouter Message Count", new Long(messageCount));
-//		dataRepository.put("MessageRouter Message Block", new Integer(messageBlock));
 		
 		this.nodeSendQueue = nodeSendQueue;
 		this.nodeReceiveQueue = nodeReceiveQueue;
@@ -255,7 +251,6 @@ public class MessageRouter extends Thread
 	}
 
 	// this method used to be called sendToDestinationNode
-
 	private void sendToNode(JausMessage message, int subsystem, int node)
 	{
 		// Send message off to a specific local node
@@ -356,7 +351,7 @@ public class MessageRouter extends Thread
 				coreMessageHandler.process(message, sourceIp, sourcePort);
 			}
 			else
-			{	
+			{
 				// Send to the specific instances of all components on this node
 				boolean foundAnInstance = false;
 	    		byte[] buffer = new byte[message.size()];
@@ -483,7 +478,8 @@ public class MessageRouter extends Thread
 				    DatagramPacket packet = (DatagramPacket)nodeReceiveQueue.pop();
 				    JausMessage message = new JausMessage(packet.getData());
 				    dataRepository.put("MessageRouter Current Message", message);
-//				     if(log.isDebugEnabled())log.debug("Current Node Side Message command code:"+ message.getCommandCode());
+//					log.info("Routed NRQ "+JausCommand.commandCodeString(message.getCommandCode())+" from "+message.getSource() +""+packet.getAddress()+":"+packet.getPort()+" to "+message.getDestination());
+//					if(log.isDebugEnabled())log.debug("Current Node Side Message command code:"+ message.getCommandCode());
 					routeNodeSideMessage(message, packet.getAddress(), packet.getPort());
 				}
 
@@ -492,8 +488,8 @@ public class MessageRouter extends Thread
 				    DatagramPacket packet = (DatagramPacket)componentReceiveQueue.pop();
 				    JausMessage message = new JausMessage(packet.getData());
 					dataRepository.put("MessageRouter Current Message", message);
-//				    if(log.isDebugEnabled())log.debug("Current Component Side Message command code:"+ message.getCommandCode());
-
+//					log.info("Routed CRQ "+JausCommand.commandCodeString(message.getCommandCode())+" from "+message.getSource() +""+packet.getAddress()+":"+packet.getPort()+" to "+message.getDestination());					
+//					if(log.isDebugEnabled())log.debug("Current Component Side Message command code:"+ message.getCommandCode());
 					routeComponentSideMessage(message,  packet.getAddress(), packet.getPort());
 				}
 			}

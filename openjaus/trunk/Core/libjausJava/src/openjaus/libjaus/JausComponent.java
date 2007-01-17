@@ -77,6 +77,7 @@ public class JausComponent
 	public static final int RANGE_SENSOR = 50;
 
 	public static final long TIMEOUT_MILLISEC = 3000;
+	public static final long CONFIGURATION_TIMEOUT_MILLISEC = 900;	// approx 1s	
 	
 	String identification;
 	JausAddress address;
@@ -89,6 +90,10 @@ public class JausComponent
 	int port;
 	long timestamp;
 	boolean servicesInformation;
+	long nextIdentificationRequestTime;
+	long nextServicesRequestTime;
+	int identificationRequestCount;
+	int servicesRequestCount;
 	
 	public JausComponent()
 	{
@@ -107,6 +112,10 @@ public class JausComponent
 		controllerActive = false;
 		port = -1;
 		timestamp = System.currentTimeMillis();
+		this.nextIdentificationRequestTime = 0;
+		this.nextServicesRequestTime = 0;
+		this.identificationRequestCount = 0;
+		this.servicesRequestCount = 0;
 	}
 
 	public JausComponent(String identification)
@@ -126,6 +135,10 @@ public class JausComponent
 		controllerActive = false;
 		port = -1;
 		timestamp = System.currentTimeMillis();
+		this.nextIdentificationRequestTime = 0;
+		this.nextServicesRequestTime = 0;
+		this.identificationRequestCount = 0;
+		this.servicesRequestCount = 0;
 	}
 
 	public JausComponent(JausAddress address)
@@ -145,6 +158,10 @@ public class JausComponent
 		controllerActive = false;
 		port = -1;
 		timestamp = System.currentTimeMillis();
+		this.nextIdentificationRequestTime = 0;
+		this.nextServicesRequestTime = 0;
+		this.identificationRequestCount = 0;
+		this.servicesRequestCount = 0;
 	}
 	
 	public JausComponent(JausAddress address, int authority)
@@ -164,6 +181,10 @@ public class JausComponent
 		controllerActive = false;
 		port = -1;
 		timestamp = System.currentTimeMillis();
+		this.nextIdentificationRequestTime = 0;
+		this.nextServicesRequestTime = 0;
+		this.identificationRequestCount = 0;
+		this.servicesRequestCount = 0;
 	}
 	
 	public JausComponent(JausAddress address, int authority, int port)
@@ -183,6 +204,10 @@ public class JausComponent
 		controllerActive = false;
 		this.port = port;
 		timestamp = System.currentTimeMillis();
+		this.nextIdentificationRequestTime = 0;
+		this.nextServicesRequestTime = 0;
+		this.identificationRequestCount = 0;
+		this.servicesRequestCount = 0;
 	}
 
 	public boolean getServicesInformation()
@@ -408,4 +433,38 @@ public class JausComponent
 	{
 		return hashCode() == ((JausComponent)comparisionComponent).hashCode();
 	}
+
+	public long getNextIdentificationRequestTime()
+	{
+		return nextIdentificationRequestTime;
+	}
+	
+	public int getIdentificationRequestCount()
+	{
+		return identificationRequestCount;
+	}
+	
+	public void setIdentificationRequestTime(long time)
+	{
+		nextIdentificationRequestTime = time + CONFIGURATION_TIMEOUT_MILLISEC;
+		identificationRequestCount++;
+	}
+
+	public long getNextServicesRequestTime()
+	{
+		return nextServicesRequestTime;
+	}
+	
+	public int getServicesRequestCount()
+	{
+		return servicesRequestCount;
+	}
+	
+	public void setServicesRequestTime(long time)
+	{
+		nextServicesRequestTime = time + CONFIGURATION_TIMEOUT_MILLISEC;
+		servicesRequestCount++;
+	}
+
+
 }

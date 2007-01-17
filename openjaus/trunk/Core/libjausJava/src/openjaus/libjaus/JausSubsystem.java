@@ -37,11 +37,15 @@ import java.util.*;
 
 public class JausSubsystem 
 {
-	public static final long TIMEOUT_MILLISEC = 5000;
+	public static final long TIMEOUT_MILLISEC = 5000;				// 5s
+	public static final long CONFIGURATION_TIMEOUT_MILLISEC = 900;	// approx 1s
 	
 	String identification;
 	int id;
 	long timestamp;
+	long nextIdentificationRequestTime;
+	int identificationRequestCount;
+	
 	/** Vector of Nodes within this subsystem */
 	Vector jausNodes = new Vector();
 	
@@ -51,6 +55,8 @@ public class JausSubsystem
 		identification = null;
 		id = 0;
 		timestamp = System.currentTimeMillis();
+		nextIdentificationRequestTime = 0;
+		identificationRequestCount = 0;
 	}
 
 	public JausSubsystem(String identification)
@@ -59,6 +65,8 @@ public class JausSubsystem
 		this.identification = identification;
 		id = 0;
 		timestamp = System.currentTimeMillis();
+		nextIdentificationRequestTime = 0;
+		identificationRequestCount = 0;
 	}
 
 	public JausSubsystem(int id)
@@ -68,6 +76,8 @@ public class JausSubsystem
 		if(id > 0 && id < 255 ) this.id = id;
 		else id = 0;
 		timestamp = System.currentTimeMillis();
+		nextIdentificationRequestTime = 0;
+		identificationRequestCount = 0;
 	}
 
 	/** Returns number of Nodes in this Subsystem */
@@ -161,5 +171,21 @@ public class JausSubsystem
 	public boolean equals(Object comparisionObject)
 	{
 		return hashCode() == ((JausSubsystem)comparisionObject).hashCode();
+	}
+
+	public long getNextIdentificationRequestTime()
+	{
+		return nextIdentificationRequestTime;
+	}
+	
+	public int getIdentificationRequestCount()
+	{
+		return identificationRequestCount;
+	}
+	
+	public void setIdentificationRequestTime(long time)
+	{
+		nextIdentificationRequestTime = time + CONFIGURATION_TIMEOUT_MILLISEC;
+		identificationRequestCount++;
 	}
 }

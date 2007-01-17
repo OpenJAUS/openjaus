@@ -43,7 +43,7 @@
 
 package openjaus.nodemanager;
 import java.net.*;
-
+import java.util.Enumeration;
 import org.apache.log4j.Logger;
 
 import openjaus.libjaus.message.*;
@@ -53,22 +53,22 @@ public class ReceiveThread extends Thread
 	/** Logger that knows our class name */
 	static private final Logger log = Logger.getLogger(ReceiveThread.class);
 
-	static private final Counter counter = new Counter("OJReceiveThread");
+	//static private final Counter counter = new Counter("OJReceiveThread");
 	
 	static long receiveCount = 0;
     DatagramSocket socket;
-	Queue queue;
-	InetAddress nodeIpAddress;
-	int nodePort;
+	InetAddress socketIpAddress;
+	int socketPort;
+    Queue queue;
 	DataRepository dataRepository;
 	
-	public ReceiveThread(DatagramSocket socket, Queue queue)
+	public ReceiveThread(String name, DatagramSocket socket, Queue queue)
 	{
-		this.setName(counter.nextName());
+		this.setName(name);
 		this.socket = socket;
 		this.queue = queue;
-		this.nodeIpAddress = NodeManager.getNodeSideIpAddress();
-		this.nodePort = NodeManager.getNodePort();
+		this.socketIpAddress = null;
+		this.socketPort = 0;
 		dataRepository = NodeManager.getDataRepository();
 		dataRepository.put("Messages Received Count", new Long(receiveCount));
 		
@@ -87,12 +87,24 @@ public class ReceiveThread extends Thread
 	{
 		try
 		{
-			log.info("ReceiveThread running");
+			log.info(this.getName()+"("+queue.getName()+") running");
 		    // Initialize the datagram packet with a pre-sized array (Packets with more data will be truncated)
 			int maxJausRecvSize = JausMessage.MAX_DATA_SIZE; 
 			maxJausRecvSize += JausMessage.HEADER_SIZE_BYTES;
 			maxJausRecvSize += JausMessage.UDP_HEADER_SIZE_BYTES;
 
+			if(socket instanceof MulticastSocket)
+			{
+				//System.out.println("Inet: "+((MulticastSocket)socket).getNetworkInterface()+":"+socket.getLocalPort());
+				
+				Enumeration e = ((MulticastSocket)socket).getNetworkInterface().getInetAddresses();
+				if(e.hasMoreElements())
+				{
+					socketIpAddress = (InetAddress) e.nextElement();
+					socketPort = socket.getLocalPort();
+				}
+			}
+			
 			while(NodeManager.isRunning())
 			{
 				DatagramPacket packet = new DatagramPacket(new byte[maxJausRecvSize], maxJausRecvSize);
@@ -106,24 +118,37 @@ public class ReceiveThread extends Thread
 				}
 				dataRepository.put("Messages Received Count", new Long(++receiveCount));
 				
-				//System.out.println("ReceiveThread: " + this + ", from: " + packet.getAddress());
-				
+		//		System.out.println(this.getName()+" ("+queue.getName()+") packet from: " + packet.getAddress()+":"+packet.getPort()+" to: "+socketIpAddress);
+
 				// If the packet is from another socket then push it on the node Receive Queue
 				// Otherwise ignore it because Datagram and Multicast packets are not allowed to loop
 				// on this socket. This prevents infinite message loops in the NodeManager
-
-				if(!packet.getAddress().equals(nodeIpAddress))
+					
+				if(socket instanceof MulticastSocket)
 				{
-					queue.push(packet);
+					if(!packet.getAddress().equals(socketIpAddress))
+					{
+						queue.push(packet);
+					}
+					else if(packet.getPort() != socketPort)
+					{
+						queue.push(packet);
+					}
 				}
-				else if(packet.getPort() != nodePort)   
+				else
 				{
-					queue.push(packet);				
+					if(!packet.getAddress().equals(NodeManager.getNodeSideIpAddress()))
+					{
+						queue.push(packet);
+					}
+					else if(packet.getPort() != NodeManager.getNodePort())
+					{
+						queue.push(packet);
+					}
 				}
-				    
 			}
-		    log.warn("ReceiveThread: Shutting down");			
-
+		    
+			log.warn("ReceiveThread ("+queue.getName()+"): Shutting down");			
 		}
 		catch (Exception e)
 		{
