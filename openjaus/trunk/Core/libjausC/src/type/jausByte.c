@@ -100,4 +100,34 @@ JausByte jausByteFromDouble(double value, double min, double max)
 	return newJausByte((unsigned char) rint((value - bias)/scaleFactor));
 }
 
+JausBoolean jausByteIsBitSet(JausByte input, int bit )
+{
+        return (input & (0x01 << bit)) > 0 ? JAUS_TRUE : JAUS_FALSE;
+}
+
+JausBoolean jausByteSetBit(JausByte *input, int bit)
+{
+        if(JAUS_BYTE_SIZE_BYTES*8 < bit) // 8 bits per byte
+        {
+                return JAUS_FALSE;
+        }
+        else
+        {
+                *input |= 0x01 << bit;
+                return JAUS_TRUE;
+        }
+}
+
+JausBoolean jausByteClearBit(JausByte *input, int bit)
+{
+        if(JAUS_BYTE_SIZE_BYTES*8 < bit) // 8 bits per byte
+        {
+                return JAUS_FALSE;
+        }
+        else
+        {
+                *input &= ~(0x01 << bit);
+                return JAUS_TRUE;
+        }
+}
 
