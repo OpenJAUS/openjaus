@@ -63,4 +63,8 @@ JausBoolean jausByteToBuffer(JausByte input, unsigned char *buf, unsigned int bu
 JausByte jausByteFromDouble(double val, double min, double max);
 double jausByteToDouble(JausByte input, double min, double max);
 
+JausBoolean jausByteIsBitSet(JausByte byte, int bit);
+JausBoolean jausByteSetBit(JausByte *byte, int bit);
+JausBoolean jausByteClearBit(JausByte *byte, int bit);
+
 #endif //JAUS_BYTE_H
