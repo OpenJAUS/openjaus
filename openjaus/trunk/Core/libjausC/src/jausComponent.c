@@ -51,7 +51,7 @@ JausComponent jausComponentCreate(void)
 {
 	JausComponent component;
 	
-	component = (JausComponent)malloc( sizeof(JausComponentStruct) );
+	component = (JausComponent) calloc( 1, sizeof(JausComponentStruct) );
 	if(component == NULL)
 	{
 		return NULL;
@@ -60,15 +60,37 @@ JausComponent jausComponentCreate(void)
 	// Init Values
 	component->identification = NULL;
 	component->address = jausAddressCreate();
+	if(!component->address)
+	{
+		cError("JausComponent:%d: Error allocating memory for component->address.\n", __LINE__);
+		free(component);
+		return NULL;
+	}
+	
 	component->node = NULL;
 	component->state = JAUS_UNDEFINED_STATE;
 	component->authority = JAUS_DEFAULT_AUTHORITY;
 	component->services = jausServicesCreate();
+	if(!component->services)
+	{
+		cError("JausComponent:%d: Error allocating memory for component->services.\n", __LINE__);
+		jausAddressDestroy(component->address);
+		free(component);
+		return NULL;
+	}
 
 	component->controller.active = JAUS_FALSE;
 	component->controller.authority = JAUS_DEFAULT_AUTHORITY;
 	component->controller.state = JAUS_UNDEFINED_STATE;
 	component->controller.address = jausAddressCreate();
+	if(!component->controller.address)
+	{
+		cError("JausComponent:%d: Error allocating memory for component->controller.address.\n", __LINE__);
+		jausServicesDestroy(component->services);
+		jausAddressDestroy(component->address);
+		free(component);
+		return NULL;
+	}
 
 	component->port = 0;
 	jausComponentUpdateTimestamp(component);
