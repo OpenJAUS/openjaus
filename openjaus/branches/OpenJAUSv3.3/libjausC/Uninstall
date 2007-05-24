@@ -1,0 +1,20 @@
+#! /bin/bash
+# CIMAR C JAUS Library Uninstall Script
+
+echo ;
+echo CIMAR C JAUS Library Uninstall Begin
+echo ;
+
+if [ "$OPENJAUS_HOME" = "" ]; then
+    echo OPENJAUS_HOME not set...  Using /usr
+    echo ;
+    OPENJAUS_HOME=/usr
+fi
+
+rm -Rfv $OPENJAUS_HOME/include/cimar/jaus
+rm -fv $OPENJAUS_HOME/include/cimar/jaus.h
+rm -fv $OPENJAUS_HOME/lib/libjausC.*
+
+echo ;
+echo CIMAR C JAUS Library Uninstall Complete
+echo ;
