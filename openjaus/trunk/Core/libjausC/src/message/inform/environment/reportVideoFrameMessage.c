@@ -48,7 +48,7 @@
 #include "cimar/jaus.h"
 
 static const int commandCode = JAUS_REPORT_VIDEO_FRAME;
-static const int maxDataSizeBytes = 0;
+static const int maxDataSizeBytes = 512000;
 
 static JausBoolean headerFromBuffer(ReportVideoFrameMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static JausBoolean headerToBuffer(ReportVideoFrameMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);

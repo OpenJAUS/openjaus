@@ -41,8 +41,6 @@
 //
 // Description: This file defines the functionality of a QueryVideoFrameMessage
 
-
-
 #include <stdlib.h>
 #include <string.h>
 #include "cimar/jaus.h"

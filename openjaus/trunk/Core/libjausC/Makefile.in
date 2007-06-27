@@ -34,7 +34,6 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-LIBOBJDIR =
 subdir = .
 DIST_COMMON = README $(am__configure_deps) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in $(srcdir)/config.h.in \
@@ -116,6 +115,7 @@ am_libjausC_a_OBJECTS = jausAddress.$(OBJEXT) jausComponent.$(OBJEXT) \
 	reportComponentAuthorityMessage.$(OBJEXT) \
 	reportComponentStatusMessage.$(OBJEXT) \
 	reportTimeMessage.$(OBJEXT) reportVideoFrameMessage.$(OBJEXT) \
+	reportCameraCountMessage.$(OBJEXT) \
 	reportDiscreteDevicesMessage.$(OBJEXT) \
 	reportGlobalPoseMessage.$(OBJEXT) \
 	reportGlobalVectorMessage.$(OBJEXT) \
@@ -130,6 +130,7 @@ am_libjausC_a_OBJECTS = jausAddress.$(OBJEXT) jausComponent.$(OBJEXT) \
 	queryComponentAuthorityMessage.$(OBJEXT) \
 	queryComponentStatusMessage.$(OBJEXT) \
 	queryTimeMessage.$(OBJEXT) queryVideoFrameMessage.$(OBJEXT) \
+	queryCameraCountMessage.$(OBJEXT) \
 	queryDiscreteDevicesMessage.$(OBJEXT) \
 	queryGlobalPoseMessage.$(OBJEXT) \
 	queryGlobalVectorMessage.$(OBJEXT) \
@@ -310,6 +311,7 @@ libjausC_a_SOURCES = \
 	src/message/inform/core/reportComponentStatusMessage.c \
 	src/message/inform/core/reportTimeMessage.c \
 	src/message/inform/environment/reportVideoFrameMessage.c \
+	src/message/inform/environment/reportCameraCountMessage.c \
 	src/message/inform/platform/reportDiscreteDevicesMessage.c \
 	src/message/inform/platform/reportGlobalPoseMessage.c \
 	src/message/inform/platform/reportGlobalVectorMessage.c \
@@ -325,6 +327,7 @@ libjausC_a_SOURCES = \
 	src/message/query/core/queryComponentStatusMessage.c \
 	src/message/query/core/queryTimeMessage.c \
 	src/message/query/environment/queryVideoFrameMessage.c \
+	src/message/query/environment/queryCameraCountMessage.c \
 	src/message/query/platform/queryDiscreteDevicesMessage.c \
 	src/message/query/platform/queryGlobalPoseMessage.c \
 	src/message/query/platform/queryGlobalVectorMessage.c \
@@ -484,6 +487,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jausUnsignedShort.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jausWorldModelFeatureClass.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jausWorldModelVectorObject.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/queryCameraCountMessage.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/queryComponentAuthorityMessage.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/queryComponentStatusMessage.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/queryConfigurationMessage.Po@am__quote@
@@ -509,6 +513,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/queryWrenchEffortMessage.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rejectComponentControlMessage.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/releaseComponentControlMessage.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/reportCameraCountMessage.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/reportComponentAuthorityMessage.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/reportComponentStatusMessage.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/reportConfigurationMessage.Po@am__quote@
@@ -1476,6 +1481,20 @@ reportVideoFrameMessage.obj: src/message/inform/environment/reportVideoFrameMess
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o reportVideoFrameMessage.obj `if test -f 'src/message/inform/environment/reportVideoFrameMessage.c'; then $(CYGPATH_W) 'src/message/inform/environment/reportVideoFrameMessage.c'; else $(CYGPATH_W) '$(srcdir)/src/message/inform/environment/reportVideoFrameMessage.c'; fi`
 
+reportCameraCountMessage.o: src/message/inform/environment/reportCameraCountMessage.c
+@am__fastdepCC_TRUE@	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT reportCameraCountMessage.o -MD -MP -MF "$(DEPDIR)/reportCameraCountMessage.Tpo" -c -o reportCameraCountMessage.o `test -f 'src/message/inform/environment/reportCameraCountMessage.c' || echo '$(srcdir)/'`src/message/inform/environment/reportCameraCountMessage.c; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/reportCameraCountMessage.Tpo" "$(DEPDIR)/reportCameraCountMessage.Po"; else rm -f "$(DEPDIR)/reportCameraCountMessage.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/message/inform/environment/reportCameraCountMessage.c' object='reportCameraCountMessage.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o reportCameraCountMessage.o `test -f 'src/message/inform/environment/reportCameraCountMessage.c' || echo '$(srcdir)/'`src/message/inform/environment/reportCameraCountMessage.c
+
+reportCameraCountMessage.obj: src/message/inform/environment/reportCameraCountMessage.c
+@am__fastdepCC_TRUE@	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT reportCameraCountMessage.obj -MD -MP -MF "$(DEPDIR)/reportCameraCountMessage.Tpo" -c -o reportCameraCountMessage.obj `if test -f 'src/message/inform/environment/reportCameraCountMessage.c'; then $(CYGPATH_W) 'src/message/inform/environment/reportCameraCountMessage.c'; else $(CYGPATH_W) '$(srcdir)/src/message/inform/environment/reportCameraCountMessage.c'; fi`; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/reportCameraCountMessage.Tpo" "$(DEPDIR)/reportCameraCountMessage.Po"; else rm -f "$(DEPDIR)/reportCameraCountMessage.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/message/inform/environment/reportCameraCountMessage.c' object='reportCameraCountMessage.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o reportCameraCountMessage.obj `if test -f 'src/message/inform/environment/reportCameraCountMessage.c'; then $(CYGPATH_W) 'src/message/inform/environment/reportCameraCountMessage.c'; else $(CYGPATH_W) '$(srcdir)/src/message/inform/environment/reportCameraCountMessage.c'; fi`
+
 reportDiscreteDevicesMessage.o: src/message/inform/platform/reportDiscreteDevicesMessage.c
 @am__fastdepCC_TRUE@	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT reportDiscreteDevicesMessage.o -MD -MP -MF "$(DEPDIR)/reportDiscreteDevicesMessage.Tpo" -c -o reportDiscreteDevicesMessage.o `test -f 'src/message/inform/platform/reportDiscreteDevicesMessage.c' || echo '$(srcdir)/'`src/message/inform/platform/reportDiscreteDevicesMessage.c; \
 @am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/reportDiscreteDevicesMessage.Tpo" "$(DEPDIR)/reportDiscreteDevicesMessage.Po"; else rm -f "$(DEPDIR)/reportDiscreteDevicesMessage.Tpo"; exit 1; fi
@@ -1685,6 +1704,20 @@ queryVideoFrameMessage.obj: src/message/query/environment/queryVideoFrameMessage
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/message/query/environment/queryVideoFrameMessage.c' object='queryVideoFrameMessage.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o queryVideoFrameMessage.obj `if test -f 'src/message/query/environment/queryVideoFrameMessage.c'; then $(CYGPATH_W) 'src/message/query/environment/queryVideoFrameMessage.c'; else $(CYGPATH_W) '$(srcdir)/src/message/query/environment/queryVideoFrameMessage.c'; fi`
+
+queryCameraCountMessage.o: src/message/query/environment/queryCameraCountMessage.c
+@am__fastdepCC_TRUE@	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT queryCameraCountMessage.o -MD -MP -MF "$(DEPDIR)/queryCameraCountMessage.Tpo" -c -o queryCameraCountMessage.o `test -f 'src/message/query/environment/queryCameraCountMessage.c' || echo '$(srcdir)/'`src/message/query/environment/queryCameraCountMessage.c; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/queryCameraCountMessage.Tpo" "$(DEPDIR)/queryCameraCountMessage.Po"; else rm -f "$(DEPDIR)/queryCameraCountMessage.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/message/query/environment/queryCameraCountMessage.c' object='queryCameraCountMessage.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o queryCameraCountMessage.o `test -f 'src/message/query/environment/queryCameraCountMessage.c' || echo '$(srcdir)/'`src/message/query/environment/queryCameraCountMessage.c
+
+queryCameraCountMessage.obj: src/message/query/environment/queryCameraCountMessage.c
+@am__fastdepCC_TRUE@	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT queryCameraCountMessage.obj -MD -MP -MF "$(DEPDIR)/queryCameraCountMessage.Tpo" -c -o queryCameraCountMessage.obj `if test -f 'src/message/query/environment/queryCameraCountMessage.c'; then $(CYGPATH_W) 'src/message/query/environment/queryCameraCountMessage.c'; else $(CYGPATH_W) '$(srcdir)/src/message/query/environment/queryCameraCountMessage.c'; fi`; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/queryCameraCountMessage.Tpo" "$(DEPDIR)/queryCameraCountMessage.Po"; else rm -f "$(DEPDIR)/queryCameraCountMessage.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/message/query/environment/queryCameraCountMessage.c' object='queryCameraCountMessage.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o queryCameraCountMessage.obj `if test -f 'src/message/query/environment/queryCameraCountMessage.c'; then $(CYGPATH_W) 'src/message/query/environment/queryCameraCountMessage.c'; else $(CYGPATH_W) '$(srcdir)/src/message/query/environment/queryCameraCountMessage.c'; fi`
 
 queryDiscreteDevicesMessage.o: src/message/query/platform/queryDiscreteDevicesMessage.c
 @am__fastdepCC_TRUE@	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT queryDiscreteDevicesMessage.o -MD -MP -MF "$(DEPDIR)/queryDiscreteDevicesMessage.Tpo" -c -o queryDiscreteDevicesMessage.o `test -f 'src/message/query/platform/queryDiscreteDevicesMessage.c' || echo '$(srcdir)/'`src/message/query/platform/queryDiscreteDevicesMessage.c; \

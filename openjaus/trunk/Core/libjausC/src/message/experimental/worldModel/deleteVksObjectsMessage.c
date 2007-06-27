@@ -48,7 +48,7 @@
 #include "cimar/jaus.h"
 
 static const int commandCode = JAUS_DELETE_VKS_OBJECTS;
-static const int maxDataSizeBytes = 0;
+static const int maxDataSizeBytes = 512000; // Max Message size: 500K
 
 static JausBoolean headerFromBuffer(DeleteVksObjectsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static JausBoolean headerToBuffer(DeleteVksObjectsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
@@ -504,6 +504,8 @@ DeleteVksObjectsMessage deleteVksObjectsMessageFromJausMessage(JausMessage jausM
 JausMessage deleteVksObjectsMessageToJausMessage(DeleteVksObjectsMessage message)
 {
 	JausMessage jausMessage;
+	
+	printf("*************** HERE *****************\n");
 	
 	jausMessage = (JausMessage)malloc( sizeof(JausMessageStruct) );
 	if(jausMessage == NULL)

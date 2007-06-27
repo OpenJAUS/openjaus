@@ -65,6 +65,7 @@ libjausC_a_SOURCES = \
 	src/message/inform/core/reportComponentStatusMessage.c \
 	src/message/inform/core/reportTimeMessage.c \
 	src/message/inform/environment/reportVideoFrameMessage.c \
+	src/message/inform/environment/reportCameraCountMessage.c \
 	src/message/inform/platform/reportDiscreteDevicesMessage.c \
 	src/message/inform/platform/reportGlobalPoseMessage.c \
 	src/message/inform/platform/reportGlobalVectorMessage.c \
@@ -80,6 +81,7 @@ libjausC_a_SOURCES = \
 	src/message/query/core/queryComponentStatusMessage.c \
 	src/message/query/core/queryTimeMessage.c \
 	src/message/query/environment/queryVideoFrameMessage.c \
+	src/message/query/environment/queryCameraCountMessage.c \
 	src/message/query/platform/queryDiscreteDevicesMessage.c \
 	src/message/query/platform/queryGlobalPoseMessage.c \
 	src/message/query/platform/queryGlobalVectorMessage.c \
