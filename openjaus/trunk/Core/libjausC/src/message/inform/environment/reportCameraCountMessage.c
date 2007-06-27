@@ -31,99 +31,59 @@
  *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
  *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ****************************************************************************/
-// File Name: reportVksObjectsMessage.c
+// File Name: reportCameraCountMessage.c
 //
-// Written By: Danny Kent (jaus AT dannykent DOT com)
+// Written By: Danny Kent (jaus AT dannykent DOT com), Tom Galluzzo (galluzzo AT gmail DOT com)
 //
 // Version: 3.2
 //
 // Date: 08/04/06
 //
-// Description: This file defines the functionality of a ReportVksObjectsMessage
+// Description: This file defines the functionality of a ReportCameraCountMessage
 
 #include <stdlib.h>
 #include <string.h>
-#include <cimar.h>
 #include "cimar/jaus.h"
 
-static const int commandCode = JAUS_REPORT_VKS_OBJECTS;
-static const int maxDataSizeBytes = 512000; // Max Message size: 500K
+static const int commandCode = JAUS_REPORT_CAMERA_COUNT;
+static const int maxDataSizeBytes = 1;
 
-static JausBoolean headerFromBuffer(ReportVksObjectsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-static JausBoolean headerToBuffer(ReportVksObjectsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+static JausBoolean headerFromBuffer(ReportCameraCountMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+static JausBoolean headerToBuffer(ReportCameraCountMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
-static JausBoolean dataFromBuffer(ReportVksObjectsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-static int dataToBuffer(ReportVksObjectsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-static void dataInitialize(ReportVksObjectsMessage message);
-static void dataDestroy(ReportVksObjectsMessage message);
+static JausBoolean dataFromBuffer(ReportCameraCountMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+static int dataToBuffer(ReportCameraCountMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+static void dataInitialize(ReportCameraCountMessage message);
+static void dataDestroy(ReportCameraCountMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS
 // ************************************************************************************************************** //
 
 // Initializes the message-specific fields
-static void dataInitialize(ReportVksObjectsMessage message)
+static void dataInitialize(ReportCameraCountMessage message)
 {
-	message->expFlag = JAUS_EXPERIMENTAL_MESSAGE;
 	// Set initial values of message fields
-	message->presenceVector = newJausBytePresenceVector();
-	message->requestId = newJausByte(0);
-	message->objectCount = newJausUnsignedShort(0);
-	message->vectorObjects = vectorCreate();
+	message->cameraCount = 0;
 }
 
 // Destructs the message-specific fields
-static void dataDestroy(ReportVksObjectsMessage message)
+static void dataDestroy(ReportCameraCountMessage message)
 {
 	// Free message fields
-	vectorDestroy(message->vectorObjects, (void *)vectorObjectDestroy);
 }
 
 // Return boolean of success
-static JausBoolean dataFromBuffer(ReportVksObjectsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
+static JausBoolean dataFromBuffer(ReportCameraCountMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
 {
 	int index = 0;
-	int i = 0;	
-	JausUnsignedInteger tempUInt;
-	JausWorldModelVectorObject object = NULL;
-
+	
 	if(bufferSizeBytes == message->dataSize)
 	{
 		// Unpack Message Fields from Buffer
-		// Presence Vector
-		if(!jausBytePresenceVectorFromBuffer(&message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_BYTE_PRESENCE_VECTOR_SIZE_BYTES;
-
-		// Request Id
-		if(!jausByteFromBuffer(&message->requestId, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		if(!jausByteFromBuffer(&message->cameraCount, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
-		
-		// Object Count
-		if(!jausUnsignedShortFromBuffer(&message->objectCount, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
-		
-		message->vectorObjects = vectorCreate();
-		if(!message->vectorObjects) return JAUS_FALSE;
 
-		// Actual object data is optional
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, VKS_PV_REPORT_DATA_BIT))
-		{
-
-			for(i = 0; i < message->objectCount; i++)
-			{
-				// Object Id
-				if(!jausUnsignedIntegerFromBuffer(&tempUInt, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-				index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
-
-				// Object Data
-				object = vectorObjectFromBuffer(buffer+index, bufferSizeBytes-index, JAUS_TRUE); // Always include buffer information
-				if(!object) return JAUS_FALSE;
-				index += vectorObjectSizeBytes(object, JAUS_TRUE); // Always include buffer information
-
-				object->id = tempUInt;
-				vectorAdd(message->vectorObjects, object);
-			}
-		}
 		return JAUS_TRUE;
 	}
 	else
@@ -133,49 +93,15 @@ static JausBoolean dataFromBuffer(ReportVksObjectsMessage message, unsigned char
 }
 
 // Returns number of bytes put into the buffer
-static int dataToBuffer(ReportVksObjectsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
+static int dataToBuffer(ReportCameraCountMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
 {
 	int index = 0;
-	int i = 0;
-	JausBoolean objectBuffered = JAUS_FALSE;	
-	JausWorldModelVectorObject object = NULL;
 
 	if(bufferSizeBytes >= message->dataSize)
 	{
 		// Pack Message Fields to Buffer
-		// Presence Vector
-		if(!jausBytePresenceVectorToBuffer(message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_BYTE_PRESENCE_VECTOR_SIZE_BYTES;
-
-		objectBuffered = jausBytePresenceVectorIsBitSet(message->presenceVector, VKS_PV_CREATE_BUFFERED_BIT);
-
-		if(!jausByteToBuffer(message->requestId, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		if(!jausByteToBuffer(message->cameraCount, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
-		
-		// Actual object data is optional
-		if(!jausBytePresenceVectorIsBitSet(message->presenceVector, VKS_PV_REPORT_DATA_BIT))
-		{
-			if(!jausUnsignedShortToBuffer(message->objectCount, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-			index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
-		}
-		else
-		{
-			if(!jausUnsignedShortToBuffer((JausUnsignedShort)message->vectorObjects->elementCount, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-			index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
-
-			for(i = 0; i < message->vectorObjects->elementCount; i++)
-			{
-				object = (JausWorldModelVectorObject) message->vectorObjects->elementData[i];
-				
-				// Object Id
-				if(!jausUnsignedIntegerToBuffer(object->id, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-				index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
-				
-				// Object Data
-				if(!vectorObjectToBuffer(object, buffer+index, bufferSizeBytes-index, JAUS_TRUE)) return JAUS_FALSE; 
-				index += vectorObjectSizeBytes(object, JAUS_TRUE);
-			}
-		}
 	}
 
 	return index;
@@ -185,11 +111,11 @@ static int dataToBuffer(ReportVksObjectsMessage message, unsigned char *buffer, 
 //                                    NON-USER CONFIGURED FUNCTIONS
 // ************************************************************************************************************** //
 
-ReportVksObjectsMessage reportVksObjectsMessageCreate(void)
+ReportCameraCountMessage reportCameraCountMessageCreate(void)
 {
-	ReportVksObjectsMessage message;
+	ReportCameraCountMessage message;
 
-	message = (ReportVksObjectsMessage)malloc( sizeof(ReportVksObjectsMessageStruct) );
+	message = (ReportCameraCountMessage)malloc( sizeof(ReportCameraCountMessageStruct) );
 	if(message == NULL)
 	{
 		return NULL;
@@ -214,7 +140,7 @@ ReportVksObjectsMessage reportVksObjectsMessageCreate(void)
 	return message;	
 }
 
-void reportVksObjectsMessageDestroy(ReportVksObjectsMessage message)
+void reportCameraCountMessageDestroy(ReportCameraCountMessage message)
 {
 	dataDestroy(message);
 	jausAddressDestroy(message->source);
@@ -222,7 +148,7 @@ void reportVksObjectsMessageDestroy(ReportVksObjectsMessage message)
 	free(message);
 }
 
-JausBoolean reportVksObjectsMessageFromBuffer(ReportVksObjectsMessage message, unsigned char* buffer, unsigned int bufferSizeBytes)
+JausBoolean reportCameraCountMessageFromBuffer(ReportCameraCountMessage message, unsigned char* buffer, unsigned int bufferSizeBytes)
 {
 	int index = 0;
 	
@@ -249,9 +175,9 @@ JausBoolean reportVksObjectsMessageFromBuffer(ReportVksObjectsMessage message, u
 	}
 }
 
-JausBoolean reportVksObjectsMessageToBuffer(ReportVksObjectsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
+JausBoolean reportCameraCountMessageToBuffer(ReportCameraCountMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
 {
-	if(bufferSizeBytes < reportVksObjectsMessageSize(message))
+	if(bufferSizeBytes < reportCameraCountMessageSize(message))
 	{
 		return JAUS_FALSE; //improper size	
 	}
@@ -264,27 +190,27 @@ JausBoolean reportVksObjectsMessageToBuffer(ReportVksObjectsMessage message, uns
 		}
 		else
 		{
-			return JAUS_FALSE; // headerToReportVksObjectsBuffer failed
+			return JAUS_FALSE; // headerToReportCameraCountBuffer failed
 		}
 	}
 }
 
-JausBoolean reportVksObjectsMessageToUdpBuffer(ReportVksObjectsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
+JausBoolean reportCameraCountMessageToUdpBuffer(ReportCameraCountMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
 {
-	if(bufferSizeBytes < reportVksObjectsMessageUdpSize(message))
+	if(bufferSizeBytes < reportCameraCountMessageUdpSize(message))
 	{
 		return JAUS_FALSE; // improper size
 	}
 	else
 	{
-		strncpy( (char *) buffer, JAUS_UDP_HEADER, JAUS_UDP_HEADER_SIZE_BYTES); //copies the UDP header into the buffer
-		return reportVksObjectsMessageToBuffer(message, buffer+JAUS_UDP_HEADER_SIZE_BYTES, bufferSizeBytes - JAUS_UDP_HEADER_SIZE_BYTES);
+		strncpy((char *)buffer, JAUS_UDP_HEADER, JAUS_UDP_HEADER_SIZE_BYTES); //copies the UDP header into the buffer
+		return reportCameraCountMessageToBuffer(message, buffer+JAUS_UDP_HEADER_SIZE_BYTES, bufferSizeBytes - JAUS_UDP_HEADER_SIZE_BYTES);
 	}
 }
 
-ReportVksObjectsMessage reportVksObjectsMessageFromJausMessage(JausMessage jausMessage)
+ReportCameraCountMessage reportCameraCountMessageFromJausMessage(JausMessage jausMessage)
 {
-	ReportVksObjectsMessage message;
+	ReportCameraCountMessage message;
 	
 	if(jausMessage->commandCode != commandCode)
 	{
@@ -292,7 +218,7 @@ ReportVksObjectsMessage reportVksObjectsMessageFromJausMessage(JausMessage jausM
 	}
 	else
 	{
-		message = (ReportVksObjectsMessage)malloc( sizeof(ReportVksObjectsMessageStruct) );
+		message = (ReportCameraCountMessage)malloc( sizeof(ReportCameraCountMessageStruct) );
 		if(message == NULL)
 		{
 			return NULL;
@@ -319,7 +245,7 @@ ReportVksObjectsMessage reportVksObjectsMessageFromJausMessage(JausMessage jausM
 	}
 }
 
-JausMessage reportVksObjectsMessageToJausMessage(ReportVksObjectsMessage message)
+JausMessage reportCameraCountMessageToJausMessage(ReportCameraCountMessage message)
 {
 	JausMessage jausMessage;
 	
@@ -344,19 +270,19 @@ JausMessage reportVksObjectsMessageToJausMessage(ReportVksObjectsMessage message
 	return jausMessage;
 }
 
-unsigned int reportVksObjectsMessageUdpSize(ReportVksObjectsMessage message)
+unsigned int reportCameraCountMessageUdpSize(ReportCameraCountMessage message)
 {
 	return (unsigned int)(message->dataSize + JAUS_HEADER_SIZE_BYTES + JAUS_UDP_HEADER_SIZE_BYTES);
 }
 
-unsigned int reportVksObjectsMessageSize(ReportVksObjectsMessage message)
+unsigned int reportCameraCountMessageSize(ReportCameraCountMessage message)
 {
 	return (unsigned int)(message->dataSize + JAUS_HEADER_SIZE_BYTES);
 }
 
 //********************* PRIVATE HEADER FUNCTIONS **********************//
 
-static JausBoolean headerFromBuffer(ReportVksObjectsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
+static JausBoolean headerFromBuffer(ReportCameraCountMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
 {
 	if(bufferSizeBytes < JAUS_HEADER_SIZE_BYTES)
 	{
@@ -385,7 +311,7 @@ static JausBoolean headerFromBuffer(ReportVksObjectsMessage message, unsigned ch
 	}
 }
 
-static JausBoolean headerToBuffer(ReportVksObjectsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
+static JausBoolean headerToBuffer(ReportCameraCountMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
 {
 	if(bufferSizeBytes < JAUS_HEADER_SIZE_BYTES)
 	{

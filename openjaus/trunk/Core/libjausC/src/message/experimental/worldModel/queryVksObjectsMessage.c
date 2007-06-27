@@ -237,6 +237,8 @@ static int dataToBuffer(QueryVksObjectsMessage message, unsigned char *buffer, u
 	PointLla point = NULL;
 	JausInteger tempInt;
 
+printf("%d	index = %d\n", __LINE__, index);
+
 	if(bufferSizeBytes >= message->dataSize)
 	{
 		// Ensure the PV rules are met
@@ -268,14 +270,17 @@ static int dataToBuffer(QueryVksObjectsMessage message, unsigned char *buffer, u
 		// Presence Vector
 		if(!jausBytePresenceVectorToBuffer(message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_PRESENCE_VECTOR_SIZE_BYTES;
+printf("%d	index = %d\n", __LINE__, index);
 	
 		// Response Presence Vector
 		if(!jausBytePresenceVectorToBuffer(message->responsePresenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_PRESENCE_VECTOR_SIZE_BYTES;
+printf("%d	index = %d\n", __LINE__, index);
 	
 		// Request Id
 		if(!jausByteToBuffer(message->requestId, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
+printf("%d	request id index = %d\n", __LINE__, index);
 
 		// objectCount is optional
 		if(jausBytePresenceVectorIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_ID_BIT))
@@ -283,12 +288,14 @@ static int dataToBuffer(QueryVksObjectsMessage message, unsigned char *buffer, u
 			// Object Count
 			if(!jausUnsignedShortToBuffer(message->objectCount, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 			index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+printf("%d	object count index = %d\n", __LINE__, index);
 					
 			// Pack Object Ids
 			for(i = 0; i < message->objectCount; i++)
 			{
 				if(!jausUnsignedIntegerToBuffer(message->objectIds[i], buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 				index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
+printf("%d	index = %d\n", __LINE__, index);
 			}
 		}
 
@@ -298,13 +305,15 @@ static int dataToBuffer(QueryVksObjectsMessage message, unsigned char *buffer, u
 			// Region Type
 			if(!jausByteToBuffer(message->queryRegion->type, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 			index += JAUS_BYTE_SIZE_BYTES;
+printf("%d	Region Type: index = %d\n", __LINE__, index);
 			
 			// Buffer is Optional
-			if(jausBytePresenceVectorIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_REGION_BIT))
+			if(jausBytePresenceVectorIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_BUFFER_BIT))
 			{
 				// Buffer
 				if(!jausFloatToBuffer(message->queryRegion->bufferMeters, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 				index += JAUS_FLOAT_SIZE_BYTES;
+printf("%d	Buffer: index = %d\n", __LINE__, index);
 			}
 		}
 		
@@ -314,6 +323,7 @@ static int dataToBuffer(QueryVksObjectsMessage message, unsigned char *buffer, u
 			// Feature Class Count
 			if(!jausByteToBuffer((JausByte)message->queryRegion->featureClasses->elementCount, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 			index += JAUS_BYTE_SIZE_BYTES;
+printf("%d	fc count index = %d\n", __LINE__, index);
 		}			
 		
 		if(jausBytePresenceVectorIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_FEATURE_CLASS_BIT))
@@ -325,12 +335,14 @@ static int dataToBuffer(QueryVksObjectsMessage message, unsigned char *buffer, u
 				// Feature Class Id
 				if(!jausUnsignedShortToBuffer(fcClass->id, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 				index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+printf("%d	fc id index = %d\n", __LINE__, index);
 				
 				// Attribute is Optional
 				if(jausBytePresenceVectorIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_ATTRIBUTE_BIT))
 				{
 					if(!featureClassAttributeToBuffer(fcClass->attribute, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 					index += featureClassAttributeSizeBytes(fcClass->attribute);
+printf("%d	fca index = %d\n", __LINE__, index);
 				}
 			}
 		}
@@ -342,6 +354,7 @@ static int dataToBuffer(QueryVksObjectsMessage message, unsigned char *buffer, u
 	
 				if(!featureClassAttributeToBuffer(fcClass->attribute, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 				index += featureClassAttributeSizeBytes(fcClass->attribute);	
+printf("%d	index = %d\n", __LINE__, index);
 			}
 		}
 		
@@ -351,6 +364,7 @@ static int dataToBuffer(QueryVksObjectsMessage message, unsigned char *buffer, u
 			// Point Count
 			if(!jausUnsignedShortToBuffer((JausUnsignedShort)message->queryRegion->dataPoints->elementCount, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 			index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+printf("%d	PointCount index = %d\n", __LINE__, index);
 
 			for(i = 0; i < message->queryRegion->dataPoints->elementCount; i++)
 			{
@@ -362,6 +376,7 @@ static int dataToBuffer(QueryVksObjectsMessage message, unsigned char *buffer, u
 				//pack Latitude
 				if(!jausIntegerToBuffer(tempInt, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 				index += JAUS_INTEGER_SIZE_BYTES;
+printf("%d	index = %d\n", __LINE__, index);
 	
 				// Scaled Int (-180, 180)
 				tempInt = jausIntegerFromDouble((point->longitudeRadians * DEG_PER_RAD), -180, 180);
@@ -369,6 +384,7 @@ static int dataToBuffer(QueryVksObjectsMessage message, unsigned char *buffer, u
 				//pack Longitude
 				if(!jausIntegerToBuffer(tempInt, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 				index += JAUS_INTEGER_SIZE_BYTES;
+printf("%d	index = %d\n", __LINE__, index);
 			}
 		}
 	}
