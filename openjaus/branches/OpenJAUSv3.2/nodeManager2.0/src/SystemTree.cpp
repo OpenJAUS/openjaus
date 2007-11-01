@@ -4,6 +4,7 @@
 SystemTree::SystemTree(FileLoader *configData)
 {
 	this->configData = configData;
+	memset(system, 0, sizeof(system));
 	subsystemCount = 0;
 }
 
@@ -566,7 +567,7 @@ bool SystemTree::addNode(int subsystemId, int nodeId, JausNode node)
 			}
 			else
 			{
-				JausNode node = jausNodeCreate();
+				node = jausNodeCreate();
 				node->id = nodeId;
 			}
 
@@ -602,11 +603,11 @@ bool SystemTree::addSubsystem(int subsystemId, JausSubsystem subs)
 			}
 			else
 			{
-				JausSubsystem subs = jausSubsystemCreate();
+				subs = jausSubsystemCreate();
 				subs->id = subsystemId;
 			}
 			
-			this->system[subs->id] = subs;
+			system[subs->id] = subs;
 			subsystemCount++;
 			return true;
 		}
@@ -909,13 +910,28 @@ char *SystemTree::getNodeIdentification(int subsId, int nodeId)
 	}
 }
 
+std::string SystemTree::toString()
+{
+	string output = string();
+	char buffer[4096];
 
+	if(subsystemCount == 0)
+	{
+		return "System Tree Empty\n";
+	}
 
-//bool SystemTree::compareComponent(JausComponent component);
-//bool SystemTree::compareNode(JausNode node);
-//bool SystemTree::compareSubsystem(JausSubsystem subs);
-//
-//std::string SystemTree::toString();
+	for(int i=0; i<255; i++)
+	{
+		if(system[i])
+		{
+			jausSubsystemTableToString(system[i], buffer);
+			output += buffer;
+		}
+	}
+
+	return output;
+}
+	
 //std::string SystemTree::toDetailedString();
 //void SystemTree::refresh(JausAddress address);
 
