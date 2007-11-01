@@ -104,6 +104,8 @@ public:
 	bool removeComponent(int subsystemId, int nodeId, int componentId, int instanceId);
 
 	bool replaceSubsystem(JausAddress address, JausSubsystem newSubs);
+	bool replaceSubsystem(int subsystemId, JausSubsystem newSubs);
+
 	bool replaceNode(JausAddress address, JausNode newNode);
 	bool replaceNode(int subsystemId, int nodeId, JausNode newNode);
 	bool replaceComponent(JausAddress address, JausComponent newCmpt);
