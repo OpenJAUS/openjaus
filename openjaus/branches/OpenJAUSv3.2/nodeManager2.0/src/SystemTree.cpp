@@ -269,9 +269,483 @@ bool SystemTree::hasComponentServices(int subsystemId, int nodeId, int component
 	}
 }
 
-//JausAddress SystemTree::lookUpAddressInNode(JausNode node, JausAddress address);
-//JausAddress SystemTree::lookUpAddressInSubsystem(JausSubsystem subs, JausAddress address);
-//JausAddress SystemTree::lookUpAddressInSystem(JausAddress address);
+JausAddress SystemTree::lookUpAddress(JausAddress address)
+{
+	return lookUpAddress(address->subsystem, address->node, address->component, address->instance);
+}
+
+JausAddress SystemTree::lookUpAddress(int lookupSubs, int lookupNode, int lookupCmpt, int lookupInst)
+{
+	JausSubsystem subs = NULL;
+	JausNode node = NULL;
+	JausComponent cmpt = NULL;
+	
+	JausAddress address = jausAddressCreate();
+	if(!address)
+	{
+		// TODO: Log Error. Throw Exception.
+		return NULL;
+	}
+	address->subsystem = JAUS_INVALID_SUBSYSTEM_ID;
+	address->node = JAUS_INVALID_NODE_ID;
+	address->component = JAUS_INVALID_COMPONENT_ID;
+	address->instance = JAUS_INVALID_INSTANCE_ID;
+	address->next = NULL;
+
+	JausAddress returnAddress = address;
+
+	// Find this address
+	if(lookupSubs == JAUS_ADDRESS_WILDCARD_OCTET)
+	{
+		// Look through all subsystems
+		for(int i = JAUS_MINIMUM_SUBSYSTEM_ID; i < JAUS_MAXIMUM_SUBSYSTEM_ID; i++)
+		{
+			subs = system[i];
+			if(!subs)
+			{
+				continue;
+			}
+
+			if(lookupNode == JAUS_ADDRESS_WILDCARD_OCTET)
+			{
+				// Look through all nodes
+				for(int j = 0; j < subs->nodes->elementCount; j++)
+				{
+					node = (JausNode) subs->nodes->elementData[j];
+					if(lookupCmpt == JAUS_ADDRESS_WILDCARD_OCTET || lookupInst == JAUS_ADDRESS_WILDCARD_OCTET)
+					{
+						// Look through all components
+						for(int k = 0; k < node->components->elementCount; k++)
+						{
+							cmpt = (JausComponent) node->components->elementData[k];
+
+							if(	lookupCmpt == JAUS_ADDRESS_WILDCARD_OCTET &&
+								cmpt->address->instance == lookupInst)
+							{
+								if(jausAddressIsValid(address))
+								{
+									address->next = jausAddressClone(cmpt->address);
+									if(!address->next)
+									{
+										return returnAddress;
+									}
+									else
+									{
+										address = address->next;
+									}
+								}
+								else
+								{
+									jausAddressCopy(address, cmpt->address);
+									address->next = jausAddressCreate();
+									if(!address->next)
+									{
+										return returnAddress;
+									}
+									else
+									{
+										address = address->next;
+									}
+								}
+							}
+							else if(lookupInst == JAUS_ADDRESS_WILDCARD_OCTET &&
+									cmpt->address->component == lookupCmpt)
+							{
+								if(jausAddressIsValid(address))
+								{
+									address->next = jausAddressClone(cmpt->address);
+									if(!address->next)
+									{
+										return returnAddress;
+									}
+									else
+									{
+										address = address->next;
+									}
+								}
+								else
+								{
+									jausAddressCopy(address, cmpt->address);
+									address->next = jausAddressCreate();
+									if(!address->next)
+									{
+										return returnAddress;
+									}
+									else
+									{
+										address = address->next;
+									}
+								}								
+							}
+						}
+					}
+					else
+					{
+						cmpt = findComponent(subs->id, node->id, lookupCmpt, lookupInst);
+
+						if(cmpt)
+						{
+							if(jausAddressIsValid(address))
+							{
+								address->next = jausAddressClone(cmpt->address);
+								if(!address->next)
+								{
+									return returnAddress;
+								}
+								else
+								{
+									address = address->next;
+								}
+							}
+							else
+							{
+								jausAddressCopy(address, cmpt->address);
+								address->next = jausAddressCreate();
+								if(!address->next)
+								{
+									return returnAddress;
+								}
+								else
+								{
+									address = address->next;
+								}
+							}								
+						}
+					}
+				}
+			}
+			else
+			{
+				node = findNode(i, lookupNode);
+				if(lookupCmpt == JAUS_ADDRESS_WILDCARD_OCTET || lookupInst == JAUS_ADDRESS_WILDCARD_OCTET)
+				{
+					// Look through all components
+					for(int k = 0; k < node->components->elementCount; k++)
+					{
+						cmpt = (JausComponent) node->components->elementData[k];
+
+						if(	lookupCmpt == JAUS_ADDRESS_WILDCARD_OCTET &&
+							cmpt->address->instance == lookupInst)
+						{
+							if(jausAddressIsValid(address))
+							{
+								address->next = jausAddressClone(cmpt->address);
+								if(!address->next)
+								{
+									return returnAddress;
+								}
+								else
+								{
+									address = address->next;
+								}
+							}
+							else
+							{
+								jausAddressCopy(address, cmpt->address);
+								address->next = jausAddressCreate();
+								if(!address->next)
+								{
+									return returnAddress;
+								}
+								else
+								{
+									address = address->next;
+								}
+							}
+						}
+						else if(lookupInst == JAUS_ADDRESS_WILDCARD_OCTET &&
+								cmpt->address->component == lookupCmpt)
+						{
+							if(jausAddressIsValid(address))
+							{
+								address->next = jausAddressClone(cmpt->address);
+								if(!address->next)
+								{
+									return returnAddress;
+								}
+								else
+								{
+									address = address->next;
+								}
+							}
+							else
+							{
+								jausAddressCopy(address, cmpt->address);
+								address->next = jausAddressCreate();
+								if(!address->next)
+								{
+									return returnAddress;
+								}
+								else
+								{
+									address = address->next;
+								}
+							}								
+						}
+					}
+				}
+				else
+				{
+					cmpt = findComponent(subs->id, node->id, lookupCmpt, lookupInst);
+
+					if(cmpt)
+					{
+						if(jausAddressIsValid(address))
+						{
+							address->next = jausAddressClone(cmpt->address);
+							if(!address->next)
+							{
+								return returnAddress;
+							}
+							else
+							{
+								address = address->next;
+							}
+						}
+						else
+						{
+							jausAddressCopy(address, cmpt->address);
+							address->next = jausAddressCreate();
+							if(!address->next)
+							{
+								return returnAddress;
+							}
+							else
+							{
+								address = address->next;
+							}
+						}								
+					}
+				}
+			}
+		}
+	}
+	else
+	{
+		subs = system[lookupSubs];
+		if(!subs)
+		{
+			// Subsystem not found
+			// TODO: Log Error. Throw Exception.
+			return address;
+		}
+
+		if(lookupNode == JAUS_ADDRESS_WILDCARD_OCTET)
+		{
+			// Look through all nodes
+			for(int j = 0; j < subs->nodes->elementCount; j++)
+			{
+				node = (JausNode) subs->nodes->elementData[j];
+				if(lookupCmpt == JAUS_ADDRESS_WILDCARD_OCTET || lookupInst == JAUS_ADDRESS_WILDCARD_OCTET)
+				{
+					// Look through all components
+					for(int k = 0; k < node->components->elementCount; k++)
+					{
+						cmpt = (JausComponent) node->components->elementData[k];
+
+						if(	lookupCmpt == JAUS_ADDRESS_WILDCARD_OCTET &&
+							cmpt->address->instance == lookupInst)
+						{
+							if(jausAddressIsValid(address))
+							{
+								address->next = jausAddressClone(cmpt->address);
+								if(!address->next)
+								{
+									return returnAddress;
+								}
+								else
+								{
+									address = address->next;
+								}
+							}
+							else
+							{
+								jausAddressCopy(address, cmpt->address);
+								address->next = jausAddressCreate();
+								if(!address->next)
+								{
+									return returnAddress;
+								}
+								else
+								{
+									address = address->next;
+								}
+							}
+						}
+						else if(lookupInst == JAUS_ADDRESS_WILDCARD_OCTET &&
+								cmpt->address->component == lookupCmpt)
+						{
+							if(jausAddressIsValid(address))
+							{
+								address->next = jausAddressClone(cmpt->address);
+								if(!address->next)
+								{
+									return returnAddress;
+								}
+								else
+								{
+									address = address->next;
+								}
+							}
+							else
+							{
+								jausAddressCopy(address, cmpt->address);
+								address->next = jausAddressCreate();
+								if(!address->next)
+								{
+									return returnAddress;
+								}
+								else
+								{
+									address = address->next;
+								}
+							}								
+						}
+					}
+				}
+				else
+				{
+					cmpt = findComponent(subs->id, node->id, lookupCmpt, lookupInst);
+
+					if(cmpt)
+					{
+						if(jausAddressIsValid(address))
+						{
+							address->next = jausAddressClone(cmpt->address);
+							if(!address->next)
+							{
+								return returnAddress;
+							}
+							else
+							{
+								address = address->next;
+							}
+						}
+						else
+						{
+							jausAddressCopy(address, cmpt->address);
+							address->next = jausAddressCreate();
+							if(!address->next)
+							{
+								return returnAddress;
+							}
+							else
+							{
+								address = address->next;
+							}
+						}								
+					}
+				}
+			}
+		}
+		else
+		{
+			node = findNode(subs->id, lookupNode);
+			if(lookupCmpt == JAUS_ADDRESS_WILDCARD_OCTET || lookupInst == JAUS_ADDRESS_WILDCARD_OCTET)
+			{
+				// Look through all components
+				for(int k = 0; k < node->components->elementCount; k++)
+				{
+					cmpt = (JausComponent) node->components->elementData[k];
+
+					if(	lookupCmpt == JAUS_ADDRESS_WILDCARD_OCTET &&
+						cmpt->address->instance == lookupInst)
+					{
+						if(jausAddressIsValid(address))
+						{
+							address->next = jausAddressClone(cmpt->address);
+							if(!address->next)
+							{
+								return returnAddress;
+							}
+							else
+							{
+								address = address->next;
+							}
+						}
+						else
+						{
+							jausAddressCopy(address, cmpt->address);
+							address->next = jausAddressCreate();
+							if(!address->next)
+							{
+								return returnAddress;
+							}
+							else
+							{
+								address = address->next;
+							}
+						}
+					}
+					else if(lookupInst == JAUS_ADDRESS_WILDCARD_OCTET &&
+							cmpt->address->component == lookupCmpt)
+					{
+						if(jausAddressIsValid(address))
+						{
+							address->next = jausAddressClone(cmpt->address);
+							if(!address->next)
+							{
+								return returnAddress;
+							}
+							else
+							{
+								address = address->next;
+							}
+						}
+						else
+						{
+							jausAddressCopy(address, cmpt->address);
+							address->next = jausAddressCreate();
+							if(!address->next)
+							{
+								return returnAddress;
+							}
+							else
+							{
+								address = address->next;
+							}
+						}								
+					}
+				}
+			}
+			else
+			{
+				cmpt = findComponent(subs->id, node->id, lookupCmpt, lookupInst);
+
+				if(cmpt)
+				{
+					if(jausAddressIsValid(address))
+					{
+						address->next = jausAddressClone(cmpt->address);
+						if(!address->next)
+						{
+							return returnAddress;
+						}
+						else
+						{
+							address = address->next;
+						}
+					}
+					else
+					{
+						jausAddressCopy(address, cmpt->address);
+						address->next = jausAddressCreate();
+						if(!address->next)
+						{
+							return returnAddress;
+						}
+						else
+						{
+							address = address->next;
+						}
+					}								
+				}
+			}
+		}
+	}
+	return returnAddress;
+}
+
 //JausAddress SystemTree::lookUpServiceInNode(JausNode node, int commandCode, int serviceType);
 //JausAddress SystemTree::lookUpServiceInSubsystem(JausSubsystem subs, int commandCode, int serviceType);
 
@@ -279,14 +753,13 @@ JausAddress SystemTree::lookUpServiceInSystem(int commandCode, int serviceType)
 {
 	JausAddress list = NULL;
 	JausAddress cur = list;
-	int i;
 
 	if(serviceType != JAUS_SERVICE_INPUT_COMMAND && serviceType != JAUS_SERVICE_OUTPUT_COMMAND)
 	{
 		return NULL;
 	}
 
-	for(i = 1; i < 254; i++)
+	for(int i = JAUS_MINIMUM_SUBSYSTEM_ID; i < JAUS_MAXIMUM_SUBSYSTEM_ID; i++)
 	{
 		JausSubsystem subs = system[i];
 		if(!subs)
@@ -294,16 +767,17 @@ JausAddress SystemTree::lookUpServiceInSystem(int commandCode, int serviceType)
 			continue;
 		}
 
-		for(int i = 0; i < subs->nodes->elementCount; i++)
+		for(int j = 0; j < subs->nodes->elementCount; j++)
 		{
-			JausNode node = (JausNode) subs->nodes->elementData[i];
+			JausNode node = (JausNode) subs->nodes->elementData[j];
 
-			for(int j = 0; j < node->components->elementCount; j++)
+			for(int k = 0; k < node->components->elementCount; k++)
 			{
-				JausComponent cmpt = (JausComponent) node->components->elementData[j];
-				for(int k = 0; cmpt->services->elementCount; k++)
+				JausComponent cmpt = (JausComponent) node->components->elementData[k];
+				
+				for(int m = 0; cmpt->services->elementCount; m++)
 				{
-					JausService service = (JausService) cmpt->services->elementData[i];
+					JausService service = (JausService) cmpt->services->elementData[m];
 					JausCommand command = NULL;
 					switch(serviceType)
 					{

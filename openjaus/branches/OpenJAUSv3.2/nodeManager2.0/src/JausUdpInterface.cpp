@@ -1,8 +1,27 @@
 #include "JausUdpInterface.h"
+#include "JausSubsystemCommunicationManager.h"
+#include "JausNodeCommunicationManager.h"
+#include "JausComponentCommunicationManager.h"
 
 JausUdpInterface::JausUdpInterface(FileLoader *configData, JausCommunicationManager *commMngr)
 {
-	// Do something!
+	// Determine the type of our commMngr
+	if(dynamic_cast<JausSubsystemCommunicationManager  *>(commMngr))
+	{
+		this->type = SUBSYSTEM_INTERFACE;
+	}
+	else if(dynamic_cast<JausNodeCommunicationManager *>(commMngr))
+	{
+		this->type = NODE_INTERFACE;
+	}
+	else if(dynamic_cast<JausComponentCommunicationManager *>(commMngr))
+	{
+		this->type = COMPONENT_INTERFACE;
+	}
+	else
+	{
+		this->type = UNKNOWN_INTERFACE;
+	}
 }
 
 JausUdpInterface::~JausUdpInterface(void)
@@ -16,7 +35,7 @@ InetAddress JausUdpInterface::getInetAddress(void)
 	return this->socket->address;
 }
 
-bool JausUdpInterface::processMessage(JausTransportPacket jtPacket)
+bool JausUdpInterface::routeMessage(JausMessage message)
 {
 	// Todo route this packet to the proper output
 	return true;

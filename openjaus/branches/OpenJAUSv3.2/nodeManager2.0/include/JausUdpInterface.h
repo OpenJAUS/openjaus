@@ -23,7 +23,7 @@ public:
 
 	InetAddress getInetAddress(void);
 
-	bool processMessage(JausTransportPacket jtPacket);
+	bool routeMessage(JausMessage message);
 
 	void queueEmpty();
 	void queueFull();

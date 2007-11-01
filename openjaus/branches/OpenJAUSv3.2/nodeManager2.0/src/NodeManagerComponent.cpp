@@ -80,20 +80,20 @@ NodeManagerComponent::NodeManagerComponent(FileLoader *configData, JausComponent
 
 NodeManagerComponent::~NodeManagerComponent(void){}
 
-bool NodeManagerComponent::processMessage(JausTransportPacket *jtPacket)
+bool NodeManagerComponent::processMessage(JausMessage message)
 {
 	// First, let double check this is for me!
-	if(!jausAddressEqual(jtPacket->getJausMessage()->destination, cmpt->address))
+	if(!jausAddressEqual(message->destination, cmpt->address))
 	{
 		// Whoa... this is wrong
 		// TODO: Throw exception? Log an Error.
-		delete jtPacket;
+		jausMessageDestroy(message);
 		return false;
 	}
 
 	// TODO: Let's add our hack here for making every message look like a heartbeat!
 
-	switch(jtPacket->getJausMessage()->commandCode)
+	switch(message->commandCode)
 	{
 		case JAUS_SET_COMPONENT_AUTHORITY:
 		case JAUS_SHUTDOWN:
@@ -106,84 +106,84 @@ bool NodeManagerComponent::processMessage(JausTransportPacket *jtPacket)
 			break;
 		
 		case JAUS_CREATE_SERVICE_CONNECTION:
-			processCreateServiceConnection(jtPacket);
+			processCreateServiceConnection(message);
 			break;
 
 		case JAUS_ACTIVATE_SERVICE_CONNECTION:
-			processActivateServiceConnection(jtPacket);
+			processActivateServiceConnection(message);
 			break;
 
 		case JAUS_SUSPEND_SERVICE_CONNECTION:
-			processSuspendServiceConnection(jtPacket);
+			processSuspendServiceConnection(message);
 			break;
 
 		case JAUS_TERMINATE_SERVICE_CONNECTION:
-			processTerminateServiceConnection(jtPacket);
+			processTerminateServiceConnection(message);
 			break;
 
 		case JAUS_REQUEST_COMPONENT_CONTROL:
-			processRequestComponentControl(jtPacket);
+			processRequestComponentControl(message);
 			break;
 
 		case JAUS_QUERY_COMPONENT_AUTHORITY:
-			processQueryComponentAuthority(jtPacket);
+			processQueryComponentAuthority(message);
 			break;
 
 		case JAUS_QUERY_COMPONENT_STATUS:
-			processQueryComponentStatus(jtPacket);
+			processQueryComponentStatus(message);
 			break;
 
 		case JAUS_QUERY_HEARTBEAT_PULSE:
-			processQueryHeartbeatPulse(jtPacket);
+			processQueryHeartbeatPulse(message);
 			break;
 
 		case JAUS_REPORT_HEARTBEAT_PULSE:
-			processReportHeartbeatPulse(jtPacket);
+			processReportHeartbeatPulse(message);
 			break;
 
 		case JAUS_QUERY_CONFIGURATION:
-			processQueryConfiguration(jtPacket);
+			processQueryConfiguration(message);
 			break;
 
 		case JAUS_QUERY_IDENTIFICATION:
-			processQueryIdentification(jtPacket);
+			processQueryIdentification(message);
 			break;
 
 		case JAUS_QUERY_SERVICES:
-			processQueryServices(jtPacket);
+			processQueryServices(message);
 			break;
 
 		case JAUS_REPORT_CONFIGURATION:
-			processReportConfiguration(jtPacket);
+			processReportConfiguration(message);
 			break;
 
 		case JAUS_REPORT_IDENTIFICATION:
-			processReportIdentification(jtPacket);
+			processReportIdentification(message);
 			break;
 
 		case JAUS_REPORT_SERVICES:
-			processReportServices(jtPacket);
+			processReportServices(message);
 			break;
 
 		case JAUS_CANCEL_EVENT:
-			processCancelEvent(jtPacket);
+			processCancelEvent(message);
 			break;
 
 		case JAUS_CONFIRM_EVENT:
-			processConfirmEvent(jtPacket);
+			processConfirmEvent(message);
 			break;
 
 		case JAUS_CREATE_EVENT:
-			processCreateEvent(jtPacket);
+			processCreateEvent(message);
 			break;
 
 		default:
 			// Unhandled message received by node manager component
-			delete jtPacket;
+			jausMessageDestroy(message);
 			return false;
 	}
 	
-	delete jtPacket;
+	jausMessageDestroy(message);
 	return true;
 }
 
@@ -333,17 +333,17 @@ void NodeManagerComponent::allState()
 	// TODO: Check for serviceConnections
 }
 
-bool NodeManagerComponent::processReportConfiguration(JausTransportPacket *jtPacket)
+bool NodeManagerComponent::processReportConfiguration(JausMessage message)
 {
 	// This function follows the flowchart designed for NM 2.0 by D. Kent and T. Galluzzo
 	ReportConfigurationMessage reportConf = NULL;
 
-	reportConf = reportConfigurationMessageFromJausMessage(jtPacket->getJausMessage());
+	reportConf = reportConfigurationMessageFromJausMessage(message);
 	if(!reportConf)
 	{
 		// Error unpacking the reportConf
 		// TODO: Log Error
-		delete jtPacket;
+		jausMessageDestroy(message);
 		return false;
 	}
 
@@ -352,7 +352,7 @@ bool NodeManagerComponent::processReportConfiguration(JausTransportPacket *jtPac
 	{
 		// TODO: Throw Exception. Log Error.
 		reportConfigurationMessageDestroy(reportConf);
-		delete jtPacket;
+		jausMessageDestroy(message);
 		return false;
 	}
 
@@ -374,7 +374,7 @@ bool NodeManagerComponent::processReportConfiguration(JausTransportPacket *jtPac
 				{
 					// TODO: Throw Exception. Log Error.
 					reportConfigurationMessageDestroy(reportConf);
-					delete jtPacket;
+					jausMessageDestroy(message);
 					return false;
 				}
 				address->subsystem = reportConf->source->subsystem;
@@ -404,7 +404,7 @@ bool NodeManagerComponent::processReportConfiguration(JausTransportPacket *jtPac
 
 		jausSubsystemDestroy(subs);
 		reportConfigurationMessageDestroy(reportConf);
-		delete jtPacket;
+		jausMessageDestroy(message);
 		return true;
 	} // End !MySubs?
 	
@@ -413,7 +413,7 @@ bool NodeManagerComponent::processReportConfiguration(JausTransportPacket *jtPac
 		// Report Conf from unknown node! This is an unsolicited report
 		// TODO: Throw Exception? Log error?
 		reportConfigurationMessageDestroy(reportConf);
-		delete jtPacket;
+		jausMessageDestroy(message);
 		return true;
 	}
 
@@ -448,22 +448,22 @@ bool NodeManagerComponent::processReportConfiguration(JausTransportPacket *jtPac
 	sendSubsystemChangedEvents();
 	
 	reportConfigurationMessageDestroy(reportConf);
-	delete jtPacket;
+	jausMessageDestroy(message);
 	return true;
 }
 
 
-bool NodeManagerComponent::processReportIdentification(JausTransportPacket *jtPacket)
+bool NodeManagerComponent::processReportIdentification(JausMessage message)
 {
 	// This function follows the flowchart designed for NM 2.0 by D. Kent and T. Galluzzo
 	ReportIdentificationMessage reportId = NULL;
 	
-	reportId = reportIdentificationMessageFromJausMessage(jtPacket->getJausMessage());
+	reportId = reportIdentificationMessageFromJausMessage(message);
 	if(!reportId)
 	{
 		// Error unpacking the reportId msg
 		// TODO: Log Error. Throw Exception?
-		delete jtPacket;
+		jausMessageDestroy(message);
 		return false;
 	}
 
@@ -472,7 +472,7 @@ bool NodeManagerComponent::processReportIdentification(JausTransportPacket *jtPa
 		case JAUS_QUERY_FIELD_SYSTEM_IDENTITY:
 			// We don't care about this (actually we never ask for this, so this shouldn't happen)
 			reportIdentificationMessageDestroy(reportId);
-			delete jtPacket;
+			jausMessageDestroy(message);
 			return true;
 
 		case JAUS_QUERY_FIELD_SS_IDENTITY:
@@ -482,7 +482,7 @@ bool NodeManagerComponent::processReportIdentification(JausTransportPacket *jtPa
 				// Report ID from unknown Subsystem
 				// TODO: Log Error. Throw Exception
 				reportIdentificationMessageDestroy(reportId);
-				delete jtPacket;
+				jausMessageDestroy(message);
 				return false;
 			}
 
@@ -492,7 +492,7 @@ bool NodeManagerComponent::processReportIdentification(JausTransportPacket *jtPa
 			// Query Subs Conf & Setup event
 			sendQuerySubsystemConfiguration(reportId->source, true);
 			reportIdentificationMessageDestroy(reportId);
-			delete jtPacket;
+			jausMessageDestroy(message);
 			return true;
 			
 		case JAUS_QUERY_FIELD_NODE_IDENTITY:
@@ -502,7 +502,7 @@ bool NodeManagerComponent::processReportIdentification(JausTransportPacket *jtPa
 				// Report ID from unknown Node
 				// TODO: Log Error. Throw Exception
 				reportIdentificationMessageDestroy(reportId);
-				delete jtPacket;
+				jausMessageDestroy(message);
 				return false;
 			}
 
@@ -512,7 +512,7 @@ bool NodeManagerComponent::processReportIdentification(JausTransportPacket *jtPa
 			// Query Subs Conf & Setup event
 			sendQueryNodeConfiguration(reportId->source, true);
 			reportIdentificationMessageDestroy(reportId);
-			delete jtPacket;
+			jausMessageDestroy(message);
 			return true;
 
 		case JAUS_QUERY_FIELD_COMPONENT_IDENTITY:
@@ -522,37 +522,37 @@ bool NodeManagerComponent::processReportIdentification(JausTransportPacket *jtPa
 				// Report ID from unknown Component
 				// TODO: Log Error. Throw Exception
 				reportIdentificationMessageDestroy(reportId);
-				delete jtPacket;
+				jausMessageDestroy(message);
 				return false;
 			}
 
 			// Add Identification
 			systemTree->setComponentIdentification(reportId->source, reportId->identification);
 			reportIdentificationMessageDestroy(reportId);
-			delete jtPacket;
+			jausMessageDestroy(message);
 			return true;
 
 		default:
 			// TODO: Log Error. Throw Exception.
 			reportIdentificationMessageDestroy(reportId);
-			delete jtPacket;
+			jausMessageDestroy(message);
 			return true;
 	}
 
 	reportIdentificationMessageDestroy(reportId);
-	delete jtPacket;
+	jausMessageDestroy(message);
 	return true;
 }
 
-bool NodeManagerComponent::processReportServices(JausTransportPacket *jtPacket)
+bool NodeManagerComponent::processReportServices(JausMessage message)
 {
 	ReportServicesMessage reportServices = NULL;
 
-	reportServices = reportServicesMessageFromJausMessage(jtPacket->getJausMessage());
+	reportServices = reportServicesMessageFromJausMessage(message);
 	if(!reportServices)
 	{
 		// TODO: Log error. Throw Exception.
-		delete jtPacket;
+		jausMessageDestroy(message);
 		return false;
 	}
 
@@ -562,14 +562,13 @@ bool NodeManagerComponent::processReportServices(JausTransportPacket *jtPacket)
 	}
 
 	reportServicesMessageDestroy(reportServices);
-	delete jtPacket;
+	jausMessageDestroy(message);
 	return true;
 }
 
-bool NodeManagerComponent::processReportHeartbeatPulse(JausTransportPacket *jtPacket)
+bool NodeManagerComponent::processReportHeartbeatPulse(JausMessage message)
 {
 	// This function follows the flowchart designed for NM 2.0 by D. Kent and T. Galluzzo
-	JausMessage message = jtPacket->getJausMessage();
 
 	// Has Subs?
 	if(!systemTree->hasSubsystem(message->source))
@@ -579,7 +578,7 @@ bool NodeManagerComponent::processReportHeartbeatPulse(JausTransportPacket *jtPa
 		
 		// Query SubsId
 		sendQuerySubsystemIdentification(message->source);
-		delete jtPacket;
+		jausMessageDestroy(message);
 		return true;
 	}
 
@@ -591,7 +590,7 @@ bool NodeManagerComponent::processReportHeartbeatPulse(JausTransportPacket *jtPa
 	{
 		// Query SubsId
 		sendQuerySubsystemIdentification(message->source);
-		delete jtPacket;
+		jausMessageDestroy(message);
 		return true;
 	}
 
@@ -602,7 +601,7 @@ bool NodeManagerComponent::processReportHeartbeatPulse(JausTransportPacket *jtPa
 		if(!systemTree->hasSubsystemConfiguration(message->source))
 		{
 			sendQuerySubsystemConfiguration(message->source, true);
-			delete jtPacket;
+			jausMessageDestroy(message);
 			return true;
 		}
 
@@ -610,7 +609,7 @@ bool NodeManagerComponent::processReportHeartbeatPulse(JausTransportPacket *jtPa
 		if(!subs)
 		{
 			// TODO: Throw Exception. Log Error.
-			delete jtPacket;
+			jausMessageDestroy(message);
 			return false;
 		}
 
@@ -625,7 +624,7 @@ bool NodeManagerComponent::processReportHeartbeatPulse(JausTransportPacket *jtPa
 				{
 					// TODO: Throw Exception. Log Error.
 					jausSubsystemDestroy(subs);
-					delete jtPacket;
+					jausMessageDestroy(message);
 					return false;
 				}
 				address->subsystem = message->source->subsystem;
@@ -653,7 +652,7 @@ bool NodeManagerComponent::processReportHeartbeatPulse(JausTransportPacket *jtPa
 			} // end For(Components)
 		} // end For(Nodes)
 
-		delete jtPacket;
+		jausMessageDestroy(message);
 		return true;
 	} // End !MySubs
 
@@ -669,7 +668,7 @@ bool NodeManagerComponent::processReportHeartbeatPulse(JausTransportPacket *jtPa
 		if(!address)
 		{
 			// TODO: Throw Exception. Log Error.
-			delete jtPacket;
+			jausMessageDestroy(message);
 			return false;
 		}
 		address->subsystem = message->source->subsystem;
@@ -680,7 +679,7 @@ bool NodeManagerComponent::processReportHeartbeatPulse(JausTransportPacket *jtPa
 		// Query Node ID
 		sendQueryNodeIdentification(address);
 		jausAddressDestroy(address);
-		delete jtPacket;
+		jausMessageDestroy(message);
 		return true;
 	}
 
@@ -696,7 +695,7 @@ bool NodeManagerComponent::processReportHeartbeatPulse(JausTransportPacket *jtPa
 		if(!address)
 		{
 			// TODO: Throw Exception. Log Error.
-			delete jtPacket;
+			jausMessageDestroy(message);
 			return false;
 		}
 		address->subsystem = message->source->subsystem;
@@ -707,7 +706,7 @@ bool NodeManagerComponent::processReportHeartbeatPulse(JausTransportPacket *jtPa
 		// Query Node ID
 		sendQueryNodeIdentification(address);
 		jausAddressDestroy(address);
-		delete jtPacket;
+		jausMessageDestroy(message);
 		return true;
 	}
 
@@ -722,7 +721,7 @@ bool NodeManagerComponent::processReportHeartbeatPulse(JausTransportPacket *jtPa
 			if(!address)
 			{
 				// TODO: Throw Exception. Log Error.
-				delete jtPacket;
+				jausMessageDestroy(message);
 				return false;
 			}
 			address->subsystem = message->source->subsystem;
@@ -732,7 +731,7 @@ bool NodeManagerComponent::processReportHeartbeatPulse(JausTransportPacket *jtPa
 
 			sendQueryNodeConfiguration(address, true);
 			jausAddressDestroy(address);
-			delete jtPacket;
+			jausMessageDestroy(message);
 			return true;
 		}
 		else
@@ -754,7 +753,7 @@ bool NodeManagerComponent::processReportHeartbeatPulse(JausTransportPacket *jtPa
 				}
 			}
 
-			delete jtPacket;
+			jausMessageDestroy(message);
 			return false;
 		} 
 	}// End !MyNode
@@ -781,11 +780,11 @@ bool NodeManagerComponent::processReportHeartbeatPulse(JausTransportPacket *jtPa
 		sendQueryComponentServices(message->source);
 	}
 
-	delete jtPacket;
+	jausMessageDestroy(message);
 	return true;
 }
 
-bool NodeManagerComponent::processCreateEvent(JausTransportPacket *jtPacket)
+bool NodeManagerComponent::processCreateEvent(JausMessage message)
 {
 	// Only support Configuration Changed events
 	CreateEventMessage createEvent = NULL;
@@ -801,10 +800,10 @@ bool NodeManagerComponent::processCreateEvent(JausTransportPacket *jtPacket)
 		//TODO: Log Error. Throw Exception
 		return false;
 	}
-	jausAddressCopy(confirmEvent->destination, jtPacket->getJausMessage()->source);
+	jausAddressCopy(confirmEvent->destination, message->source);
 	jausAddressCopy(confirmEvent->source, cmpt->address);
 	
-	createEvent = createEventMessageFromJausMessage(jtPacket->getJausMessage());
+	createEvent = createEventMessageFromJausMessage(message);
 	if(!createEvent)
 	{
 		//TODO: Log Error. Throw Exception
@@ -812,7 +811,7 @@ bool NodeManagerComponent::processCreateEvent(JausTransportPacket *jtPacket)
 		txMessage = confirmEventMessageToJausMessage(confirmEvent);
 		if(txMessage)
 		{
-			this->commMngr->routeJausMessage(new JausTransportPacket(txMessage, this, NULL));
+			this->commMngr->receiveJausMessage(txMessage, this);
 		}
 		confirmEventMessageDestroy(confirmEvent);
 		return false;
@@ -825,7 +824,7 @@ bool NodeManagerComponent::processCreateEvent(JausTransportPacket *jtPacket)
 		txMessage = confirmEventMessageToJausMessage(confirmEvent);
 		if(txMessage)
 		{
-			this->commMngr->routeJausMessage(new JausTransportPacket(txMessage, this, NULL));
+			this->commMngr->receiveJausMessage(txMessage, this);
 		}
 		confirmEventMessageDestroy(confirmEvent);
 		return false;
@@ -841,7 +840,7 @@ bool NodeManagerComponent::processCreateEvent(JausTransportPacket *jtPacket)
 		txMessage = confirmEventMessageToJausMessage(confirmEvent);
 		if(txMessage)
 		{
-			this->commMngr->routeJausMessage(new JausTransportPacket(txMessage, this, NULL));
+			this->commMngr->receiveJausMessage(txMessage, this);
 		}
 		confirmEventMessageDestroy(confirmEvent);
 		return false;
@@ -910,7 +909,7 @@ bool NodeManagerComponent::processCreateEvent(JausTransportPacket *jtPacket)
 			txMessage = confirmEventMessageToJausMessage(confirmEvent);
 			if(txMessage)
 			{
-				this->commMngr->routeJausMessage(new JausTransportPacket(txMessage, this, NULL));
+				this->commMngr->receiveJausMessage(txMessage, this);
 			}
 			confirmEventMessageDestroy(confirmEvent);
 			return false;
@@ -920,7 +919,7 @@ bool NodeManagerComponent::processCreateEvent(JausTransportPacket *jtPacket)
 	txMessage = confirmEventMessageToJausMessage(confirmEvent);
 	if(txMessage)
 	{
-		this->commMngr->routeJausMessage(new JausTransportPacket(txMessage, this, NULL));
+		this->commMngr->receiveJausMessage(txMessage, this);
 	}
 
 	queryConfigurationMessageDestroy(queryConf);
@@ -928,11 +927,11 @@ bool NodeManagerComponent::processCreateEvent(JausTransportPacket *jtPacket)
 	return true;
 }
 
-bool NodeManagerComponent::processCancelEvent(JausTransportPacket *jtPacket)
+bool NodeManagerComponent::processCancelEvent(JausMessage message)
 {
 	CancelEventMessage cancelEvent = NULL;
 
-	cancelEvent = cancelEventMessageFromJausMessage(jtPacket->getJausMessage());
+	cancelEvent = cancelEventMessageFromJausMessage(message);
 	if(!cancelEvent)
 	{
 		// Error unpacking message
@@ -963,38 +962,38 @@ bool NodeManagerComponent::processCancelEvent(JausTransportPacket *jtPacket)
 	return true;
 }
 
-bool NodeManagerComponent::processCreateServiceConnection(JausTransportPacket *jtPacket)
+bool NodeManagerComponent::processCreateServiceConnection(JausMessage message)
 {
 	// Not implemented right now
 	return true;
 }
 
-bool NodeManagerComponent::processActivateServiceConnection(JausTransportPacket *jtPacket)
+bool NodeManagerComponent::processActivateServiceConnection(JausMessage message)
 {
 	// Not Implemented right now
 	return true;
 }
 
-bool NodeManagerComponent::processSuspendServiceConnection(JausTransportPacket *jtPacket)
+bool NodeManagerComponent::processSuspendServiceConnection(JausMessage message)
 {
 	// Not Implemented right now
 	return true;
 }
 
-bool NodeManagerComponent::processTerminateServiceConnection(JausTransportPacket *jtPacket)
+bool NodeManagerComponent::processTerminateServiceConnection(JausMessage message)
 {
 	// Not Implemented right now
 	return true;
 }
 
-bool NodeManagerComponent::processRequestComponentControl(JausTransportPacket *jtPacket)
+bool NodeManagerComponent::processRequestComponentControl(JausMessage message)
 {
 	RequestComponentControlMessage requestComponentControl = NULL;
 	RejectComponentControlMessage rejectComponentControl = NULL;
 	ConfirmComponentControlMessage confirmComponentControl = NULL;
 	JausMessage txMessage = NULL;
 
-	JausMessage message = jtPacket->getJausMessage();
+
 
 	requestComponentControl = requestComponentControlMessageFromJausMessage(message);
 	if(!requestComponentControl)
@@ -1015,7 +1014,7 @@ bool NodeManagerComponent::processRequestComponentControl(JausTransportPacket *j
 			txMessage = rejectComponentControlMessageToJausMessage(rejectComponentControl); 
 			if(txMessage)
 			{
-				this->commMngr->routeJausMessage(new JausTransportPacket(txMessage, this, NULL));
+				this->commMngr->receiveJausMessage(txMessage, this);
 			}
 			
 			// Accept control of new component
@@ -1026,7 +1025,7 @@ bool NodeManagerComponent::processRequestComponentControl(JausTransportPacket *j
 			txMessage = confirmComponentControlMessageToJausMessage(confirmComponentControl); 
 			if(txMessage)
 			{
-				this->commMngr->routeJausMessage(new JausTransportPacket(txMessage, this, NULL));
+				this->commMngr->receiveJausMessage(txMessage, this);
 			}
 			
 			// Update cmpt controller information
@@ -1046,7 +1045,7 @@ bool NodeManagerComponent::processRequestComponentControl(JausTransportPacket *j
 				txMessage = rejectComponentControlMessageToJausMessage(rejectComponentControl); 
 				if(txMessage)
 				{
-					this->commMngr->routeJausMessage(new JausTransportPacket(txMessage, this, NULL));
+					this->commMngr->receiveJausMessage(txMessage, this);
 				}
 
 				rejectComponentControlMessageDestroy(rejectComponentControl);
@@ -1061,7 +1060,7 @@ bool NodeManagerComponent::processRequestComponentControl(JausTransportPacket *j
 				txMessage = confirmComponentControlMessageToJausMessage(confirmComponentControl); 
 				if(txMessage)
 				{
-					this->commMngr->routeJausMessage(new JausTransportPacket(txMessage, this, NULL));
+					this->commMngr->receiveJausMessage(txMessage, this);
 				}
 				
 				confirmComponentControlMessageDestroy(confirmComponentControl);						
@@ -1077,7 +1076,7 @@ bool NodeManagerComponent::processRequestComponentControl(JausTransportPacket *j
 		txMessage = confirmComponentControlMessageToJausMessage(confirmComponentControl); 
 		if(txMessage)
 		{
-			this->commMngr->routeJausMessage(new JausTransportPacket(txMessage, this, NULL));
+			this->commMngr->receiveJausMessage(txMessage, this);
 		}
 
 		jausAddressCopy(cmpt->controller.address, message->source);
@@ -1091,11 +1090,11 @@ bool NodeManagerComponent::processRequestComponentControl(JausTransportPacket *j
 	return true;
 }
 
-bool NodeManagerComponent::processQueryComponentAuthority(JausTransportPacket *jtPacket)
+bool NodeManagerComponent::processQueryComponentAuthority(JausMessage message)
 {
 	ReportComponentAuthorityMessage report = NULL;
 	JausMessage txMessage = NULL;
-	JausMessage message = jtPacket->getJausMessage();
+
 
 	report = reportComponentAuthorityMessageCreate();
 	if(!report)
@@ -1111,18 +1110,18 @@ bool NodeManagerComponent::processQueryComponentAuthority(JausTransportPacket *j
 	txMessage = reportComponentAuthorityMessageToJausMessage(report);	
 	if(txMessage)
 	{
-		this->commMngr->routeJausMessage(new JausTransportPacket(txMessage, this, NULL));
+		this->commMngr->receiveJausMessage(txMessage, this);
 	}
 
 	reportComponentAuthorityMessageDestroy(report);
 	return true;
 }
 
-bool NodeManagerComponent::processQueryComponentStatus(JausTransportPacket *jtPacket)
+bool NodeManagerComponent::processQueryComponentStatus(JausMessage message)
 {
 	ReportComponentStatusMessage reportComponentStatus = NULL;
 	JausMessage txMessage = NULL;
-	JausMessage message = jtPacket->getJausMessage();
+
 
 	reportComponentStatus = reportComponentStatusMessageCreate();
 	jausAddressCopy(reportComponentStatus->source, cmpt->address);
@@ -1132,16 +1131,16 @@ bool NodeManagerComponent::processQueryComponentStatus(JausTransportPacket *jtPa
 	txMessage = reportComponentStatusMessageToJausMessage(reportComponentStatus);	
 	if(txMessage)
 	{
-		this->commMngr->routeJausMessage(new JausTransportPacket(txMessage, this, NULL));
+		this->commMngr->receiveJausMessage(txMessage, this);
 	}
 
 	reportComponentStatusMessageDestroy(reportComponentStatus);
 	return true;
 }
 
-bool NodeManagerComponent::processQueryHeartbeatPulse(JausTransportPacket *jtPacket)
+bool NodeManagerComponent::processQueryHeartbeatPulse(JausMessage message)
 {
-	JausMessage message = jtPacket->getJausMessage();
+
 	JausMessage txMessage = NULL;
 	ReportHeartbeatPulseMessage reportHeartbeat = NULL;
 
@@ -1157,19 +1156,19 @@ bool NodeManagerComponent::processQueryHeartbeatPulse(JausTransportPacket *jtPac
 	txMessage = reportHeartbeatPulseMessageToJausMessage(reportHeartbeat);
 	if(txMessage)
 	{
-		this->commMngr->routeJausMessage(new JausTransportPacket(txMessage, this, NULL));
+		this->commMngr->receiveJausMessage(txMessage, this);
 	}
 	return true;
 }
 
-bool NodeManagerComponent::processQueryConfiguration(JausTransportPacket *jtPacket)
+bool NodeManagerComponent::processQueryConfiguration(JausMessage message)
 {
 	QueryConfigurationMessage queryConf = NULL;
 	ReportConfigurationMessage reportConf = NULL;
 	JausMessage txMessage = NULL;
 	JausNode node = NULL;
 
-	queryConf = queryConfigurationMessageFromJausMessage(jtPacket->getJausMessage());
+	queryConf = queryConfigurationMessageFromJausMessage(message);
 	if(!queryConf)
 	{
 		// TODO: Log Error. Throw Exception.
@@ -1202,7 +1201,7 @@ bool NodeManagerComponent::processQueryConfiguration(JausTransportPacket *jtPack
 					txMessage = reportConfigurationMessageToJausMessage(reportConf);
 					if(txMessage)
 					{
-						this->commMngr->routeJausMessage(new JausTransportPacket(txMessage, this, NULL));
+						this->commMngr->receiveJausMessage(txMessage, this);
 					}
 				}
 
@@ -1238,7 +1237,7 @@ bool NodeManagerComponent::processQueryConfiguration(JausTransportPacket *jtPack
 			txMessage = reportConfigurationMessageToJausMessage(reportConf);
 			if(txMessage)
 			{
-				this->commMngr->routeJausMessage(new JausTransportPacket(txMessage, this, NULL));
+				this->commMngr->receiveJausMessage(txMessage, this);
 			}
 
 			reportConfigurationMessageDestroy(reportConf);
@@ -1253,14 +1252,14 @@ bool NodeManagerComponent::processQueryConfiguration(JausTransportPacket *jtPack
 	}
 }
 
-bool NodeManagerComponent::processQueryIdentification(JausTransportPacket *jtPacket)
+bool NodeManagerComponent::processQueryIdentification(JausMessage message)
 {
 	QueryIdentificationMessage queryId = NULL;
 	ReportIdentificationMessage reportId = NULL;
 	JausMessage txMessage = NULL;
 	char *identification = NULL;
 
-	queryId = queryIdentificationMessageFromJausMessage(jtPacket->getJausMessage());
+	queryId = queryIdentificationMessageFromJausMessage(message);
 	if(!queryId)
 	{
 		// TODO: Log Error. Throw Exception.
@@ -1298,7 +1297,7 @@ bool NodeManagerComponent::processQueryIdentification(JausTransportPacket *jtPac
 				txMessage = reportIdentificationMessageToJausMessage(reportId);
 				if(txMessage)
 				{
-					this->commMngr->routeJausMessage(new JausTransportPacket(txMessage, this, NULL));
+					this->commMngr->receiveJausMessage(txMessage, this);
 				}
 
 				reportIdentificationMessageDestroy(reportId);
@@ -1337,7 +1336,7 @@ bool NodeManagerComponent::processQueryIdentification(JausTransportPacket *jtPac
 			txMessage = reportIdentificationMessageToJausMessage(reportId);
 			if(txMessage)
 			{
-				this->commMngr->routeJausMessage(new JausTransportPacket(txMessage, this, NULL));
+				this->commMngr->receiveJausMessage(txMessage, this);
 			}
 
 			reportIdentificationMessageDestroy(reportId);
@@ -1368,7 +1367,7 @@ bool NodeManagerComponent::processQueryIdentification(JausTransportPacket *jtPac
 			txMessage = reportIdentificationMessageToJausMessage(reportId);
 			if(txMessage)
 			{
-				this->commMngr->routeJausMessage(new JausTransportPacket(txMessage, this, NULL));
+				this->commMngr->receiveJausMessage(txMessage, this);
 			}
 
 			reportIdentificationMessageDestroy(reportId);
@@ -1381,12 +1380,12 @@ bool NodeManagerComponent::processQueryIdentification(JausTransportPacket *jtPac
 	}
 }
 
-bool NodeManagerComponent::processQueryServices(JausTransportPacket *jtPacket)
+bool NodeManagerComponent::processQueryServices(JausMessage message)
 {
 	QueryServicesMessage queryServices = NULL;
 	ReportServicesMessage reportServices = NULL;
 	JausMessage txMessage = NULL;
-	JausMessage message = jtPacket->getJausMessage();
+
 
 	queryServices = queryServicesMessageFromJausMessage(message);
 	if(!queryServices)
@@ -1412,7 +1411,7 @@ bool NodeManagerComponent::processQueryServices(JausTransportPacket *jtPacket)
 	txMessage = reportServicesMessageToJausMessage(reportServices);
 	if(txMessage)
 	{
-		this->commMngr->routeJausMessage(new JausTransportPacket(txMessage, this, NULL));
+		this->commMngr->receiveJausMessage(txMessage, this);
 	}
 
 	reportServicesMessageDestroy(reportServices);
@@ -1420,7 +1419,7 @@ bool NodeManagerComponent::processQueryServices(JausTransportPacket *jtPacket)
 	return true;
 }
 
-bool NodeManagerComponent::processConfirmEvent(JausTransportPacket *jtPacket)
+bool NodeManagerComponent::processConfirmEvent(JausMessage message)
 {
 	// Not currently implemented
 	return true;
@@ -1455,7 +1454,7 @@ void NodeManagerComponent::sendNodeChangedEvents()
 	for(iterator = nodeChangeList.begin(); iterator != nodeChangeList.end(); iterator++)
 	{
 		jausAddressCopy(txMessage->destination, iterator->second);
-		this->commMngr->routeJausMessage(new JausTransportPacket(jausMessageDuplicate(txMessage), this, NULL));
+		this->commMngr->receiveJausMessage(jausMessageDuplicate(txMessage), this);
 	}
 	
 	jausMessageDestroy(txMessage);
@@ -1492,7 +1491,7 @@ void NodeManagerComponent::sendSubsystemChangedEvents()
 	for(iterator = subsystemChangeList.begin(); iterator != subsystemChangeList.end(); iterator++)
 	{
 		jausAddressCopy(txMessage->destination, iterator->second);
-		this->commMngr->routeJausMessage(new JausTransportPacket(jausMessageDuplicate(txMessage), this, NULL));
+		this->commMngr->receiveJausMessage(jausMessageDuplicate(txMessage), this);
 	}
 
 	jausMessageDestroy(txMessage);
@@ -1541,14 +1540,14 @@ void NodeManagerComponent::generateHeartbeats()
 		nodeHeartbeat->destination->node = JAUS_BROADCAST_NODE_ID;
 		nodeHeartbeat->destination->component = JAUS_NODE_MANAGER_COMPONENT;
 		nodeHeartbeat->destination->instance = 1;
-		this->commMngr->routeJausMessage(new JausTransportPacket(nodeHeartbeat, this, NULL));
+		this->commMngr->receiveJausMessage(nodeHeartbeat, this);
 
 		// Send Heartbeat to components on this node
 		cmptHeartbeat->destination->subsystem = cmpt->address->subsystem;
 		cmptHeartbeat->destination->node = cmpt->address->node;
 		cmptHeartbeat->destination->component = JAUS_BROADCAST_COMPONENT_ID;
 		cmptHeartbeat->destination->instance = JAUS_BROADCAST_INSTANCE_ID;
-		this->commMngr->routeJausMessage(new JausTransportPacket(cmptHeartbeat, this, NULL));
+		this->commMngr->receiveJausMessage(cmptHeartbeat, this);
 
 		nextSendTime = getTimeSeconds() + 1.0;
 		reportHeartbeatPulseMessageDestroy(heartbeat);
@@ -1583,7 +1582,7 @@ bool NodeManagerComponent::sendQueryNodeIdentification(JausAddress address)
 
 		jausAddressCopy(txMessage->destination, address);
 		jausAddressCopy(txMessage->source, cmpt->address);
-		this->commMngr->routeJausMessage(new JausTransportPacket(txMessage, this, NULL));
+		this->commMngr->receiveJausMessage(txMessage, this);
 		queryIdentificationMessageDestroy(queryId);
 		return true;
 	}
@@ -1618,7 +1617,7 @@ bool NodeManagerComponent::sendQuerySubsystemIdentification(JausAddress address)
 
 		jausAddressCopy(txMessage->destination, address);
 		jausAddressCopy(txMessage->source, cmpt->address);
-		this->commMngr->routeJausMessage(new JausTransportPacket(txMessage, this, NULL));
+		this->commMngr->receiveJausMessage(txMessage, this);
 		queryIdentificationMessageDestroy(queryId);
 		return true;
 	}
@@ -1653,7 +1652,7 @@ bool NodeManagerComponent::sendQueryComponentIdentification(JausAddress address)
 
 		jausAddressCopy(txMessage->destination, address);
 		jausAddressCopy(txMessage->source, cmpt->address);
-		this->commMngr->routeJausMessage(new JausTransportPacket(txMessage, this, NULL));
+		this->commMngr->receiveJausMessage(txMessage, this);
 		queryIdentificationMessageDestroy(queryId);
 		return true;
 	}
@@ -1687,7 +1686,7 @@ bool NodeManagerComponent::sendQueryComponentServices(JausAddress address)
 
 		jausAddressCopy(txMessage->destination, address);
 		jausAddressCopy(txMessage->source, cmpt->address);
-		this->commMngr->routeJausMessage(new JausTransportPacket(txMessage, this, NULL));
+		this->commMngr->receiveJausMessage(txMessage, this);
 		queryServicesMessageDestroy(query);
 		return true;
 	}
@@ -1722,7 +1721,7 @@ bool NodeManagerComponent::sendQueryNodeConfiguration(JausAddress address, bool 
 
 		jausAddressCopy(txMessage->destination, address);
 		jausAddressCopy(txMessage->source, cmpt->address);
-		this->commMngr->routeJausMessage(new JausTransportPacket(txMessage, this, NULL));
+		this->commMngr->receiveJausMessage(txMessage, this);
 		
 		if(createEvent)
 		{
@@ -1755,7 +1754,7 @@ bool NodeManagerComponent::sendQueryNodeConfiguration(JausAddress address, bool 
 
 			jausAddressCopy(txMessage->destination, address);
 			jausAddressCopy(txMessage->source, cmpt->address);
-			this->commMngr->routeJausMessage(new JausTransportPacket(txMessage, this, NULL));
+			this->commMngr->receiveJausMessage(txMessage, this);
 		}
 
 		queryConfigurationMessageDestroy(query);
@@ -1793,7 +1792,7 @@ bool NodeManagerComponent::sendQuerySubsystemConfiguration(JausAddress address, 
 
 		jausAddressCopy(txMessage->destination, address);
 		jausAddressCopy(txMessage->source, cmpt->address);
-		this->commMngr->routeJausMessage(new JausTransportPacket(txMessage, this, NULL));
+		this->commMngr->receiveJausMessage(txMessage, this);
 		jausMessageDestroy(txMessage); // Send Query Node Configuration
 
 		if(createEvent)
@@ -1827,7 +1826,7 @@ bool NodeManagerComponent::sendQuerySubsystemConfiguration(JausAddress address, 
 
 			jausAddressCopy(txMessage->destination, address);
 			jausAddressCopy(txMessage->source, cmpt->address);
-			this->commMngr->routeJausMessage(new JausTransportPacket(txMessage, this, NULL));
+			this->commMngr->receiveJausMessage(txMessage, this);
 		}
 
 		queryConfigurationMessageDestroy(query);

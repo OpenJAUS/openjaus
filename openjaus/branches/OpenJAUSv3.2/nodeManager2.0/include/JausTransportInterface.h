@@ -38,8 +38,9 @@ public:
 
 	JausTransportType getType(void);
 	unsigned long queueSize();
-	
-	virtual bool processMessage(JausTransportPacket *);
+	void queueJausMessage(JausMessage message);
+
+	virtual bool routeMessage(JausMessage message);
 	virtual std::string toString();
 	virtual void run();
 

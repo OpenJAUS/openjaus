@@ -20,7 +20,7 @@ public:
 	OjApiComponentInterface(FileLoader *configData, JausComponentCommunicationManager *cmptMngr);
 	~OjApiComponentInterface(void);
 
-	bool processMessage(JausTransportPacket *jtPacket);
+	bool routeMessage(JausMessage message);
 	JausAddress checkIn(int cmptId, void messageParser(JausMessage));
 	void checkout(JausAddress address);
 	bool verifyAddress(JausAddress addressPattern);

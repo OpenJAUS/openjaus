@@ -14,7 +14,7 @@ JausTransportInterface *JausCommunicationManager::getJausInterface(unsigned long
 {
 	if(index < this->interfaces.size())
 	{
-		return &(this->interfaces.at(index));
+		return this->interfaces.at(index);
 	}
 	else
 	{
@@ -26,9 +26,9 @@ JausTransportInterface *JausCommunicationManager::getJausInterface(std::string i
 {
 	for(unsigned long i = 0; i < this->interfaces.size(); i++)
 	{
-		if(this->interfaces.at(i).getName() == interfaceName)
+		if(this->interfaces.at(i)->getName() == interfaceName)
 		{
-			return &(this->interfaces.at(i));
+			return this->interfaces.at(i);
 		}
 	}
 	return NULL;
@@ -38,7 +38,7 @@ bool JausCommunicationManager::interfaceExists(std::string interfaceName)
 {
 	for(unsigned long i = 0; i < this->interfaces.size(); i++)
 	{
-		if(this->interfaces.at(i).getName() == interfaceName)
+		if(this->interfaces.at(i)->getName() == interfaceName)
 		{
 			return true;
 		}
@@ -66,10 +66,18 @@ SystemTree *JausCommunicationManager::getSystemTree()
 	return this->systemTree;
 }
 
-void JausCommunicationManager::routeJausMessage(JausTransportPacket *jtPacket)
+bool JausCommunicationManager::sendJausMessage(JausMessage message)
 {
 	// Does nothing
 	// TODO: Throw an error
+	return false;
+}
+
+bool JausCommunicationManager::receiveJausMessage(JausMessage message, JausTransportInterface *srcInf)
+{
+	// Does nothing
+	// TODO: Throw an error
+	return false;
 }
 
 MessageRouter *JausCommunicationManager::getMessageRouter()

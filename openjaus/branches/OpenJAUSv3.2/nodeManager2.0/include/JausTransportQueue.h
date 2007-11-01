@@ -14,8 +14,9 @@
 
 #include <vector>
 #include <queue>
-#include "JausTransportPacket.h"
+//#include "JausTransportPacket.h"
 #include "JausQueueMonitor.h"
+#include "jaus.h"
 
 class JausTransportQueue
 {
@@ -24,14 +25,14 @@ public:
 	~JausTransportQueue(void);
 
 	bool registerMonitor(JausQueueMonitor *monitor);
-	void push(JausTransportPacket *inc);
-	JausTransportPacket *pop(void);
+	void push(JausMessage inc);
+	JausMessage pop(void);
 	bool isEmpty(void);
 	unsigned long size(void);
 
 private:
 	std::vector <JausQueueMonitor *> monitors;
-	std::queue <JausTransportPacket *> list;
+	std::queue <JausMessage> list;
 };
 
 #endif

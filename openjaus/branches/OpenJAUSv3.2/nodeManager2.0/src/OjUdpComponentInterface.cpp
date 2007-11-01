@@ -9,7 +9,7 @@ unsigned int OjUdpComponentInterface::getPort(void)
 	return this->socket->port;
 }
 
-bool OjUdpComponentInterface::processMessage(JausTransportPacket jtPacket){ return true;}
+bool OjUdpComponentInterface::routeMessage(JausMessage message){ return true;}
 void OjUdpComponentInterface::queueEmpty() {}
 void OjUdpComponentInterface::queueFull() {}
 

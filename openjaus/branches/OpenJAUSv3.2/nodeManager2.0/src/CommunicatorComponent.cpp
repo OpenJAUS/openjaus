@@ -23,7 +23,7 @@ CommunicatorComponent::~CommunicatorComponent(void)
 {
 }
 
-bool CommunicatorComponent::processMessage(JausTransportPacket jtPacket)
+bool CommunicatorComponent::processMessage(JausMessage message)
 {
 	return true;
 }
@@ -73,36 +73,36 @@ void CommunicatorComponent::allState()
 
 }
 
-bool CommunicatorComponent::processReportIdentification(JausTransportPacket jtPacket)
+bool CommunicatorComponent::processReportIdentification(JausMessage message)
 {
 	return true;
 }
 
-bool CommunicatorComponent::processReportConfiguration(JausTransportPacket jtPacket)
-{
-
-	return true;
-}
-
-bool CommunicatorComponent::processReportServices(JausTransportPacket jtPacket)
+bool CommunicatorComponent::processReportConfiguration(JausMessage message)
 {
 
 	return true;
 }
 
-bool CommunicatorComponent::processReportHeartbeat(JausTransportPacket jtPacket)
+bool CommunicatorComponent::processReportServices(JausMessage message)
 {
 
 	return true;
 }
 
-bool CommunicatorComponent::processCreateEvent(JausTransportPacket jtPacket)
+bool CommunicatorComponent::processReportHeartbeat(JausMessage message)
 {
 
 	return true;
 }
 
-bool CommunicatorComponent::processCancelEvent(JausTransportPacket jtPacket)
+bool CommunicatorComponent::processCreateEvent(JausMessage message)
+{
+
+	return true;
+}
+
+bool CommunicatorComponent::processCancelEvent(JausMessage message)
 {
 
 	return true;

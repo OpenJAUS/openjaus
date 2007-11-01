@@ -20,7 +20,7 @@ OjApiComponentInterface::OjApiComponentInterface(FileLoader *configData, JausCom
 
 OjApiComponentInterface::~OjApiComponentInterface(void){}
 
-bool OjApiComponentInterface::processMessage(JausTransportPacket *jtPacket)
+bool OjApiComponentInterface::routeMessage(JausMessage message)
 {
 	// Retrieve the transportData object from the list
 	OjApiComponentTransportData transportData = NULL; //transportDataList[jausAddressHash(jtPacket->getJausMessage()->destination)].getData();
@@ -28,7 +28,7 @@ bool OjApiComponentInterface::processMessage(JausTransportPacket *jtPacket)
 	// Send it off to the callback function
 	if(transportData && transportData->messageParser)
 	{
-		transportData->messageParser(jtPacket->getJausMessage());
+		transportData->messageParser(message);
 		return true;
 	}
 	else 
@@ -71,7 +71,7 @@ bool OjApiComponentInterface::verifyAddress(JausAddress address)
 
 JausAddress OjApiComponentInterface::lookupJausEntities(JausAddress addressPattern)
 {
-	//return this->commMngr->getSystemTree()->lookUpAddressInSystem(addressPattern);
+	return this->commMngr->getSystemTree()->lookUpAddress(addressPattern);
 	return NULL;
 }
 
@@ -82,7 +82,7 @@ JausAddress OjApiComponentInterface::lookupService(int commandCode, int serviceT
 
 bool OjApiComponentInterface::sendJausMessage(JausMessage txMessage)
 {
-	//this->commMngr->routeJausMessage(new JausTransportPacket(txMessage, this, this->commMngr->getSystemTree()->getTransportData(txMessage->source)->getData()));
+	this->commMngr->receiveJausMessage(txMessage, this);
 	return true;
 }
 
@@ -115,7 +115,7 @@ void OjApiComponentInterface::run()
 		while(!this->queue.isEmpty())
 		{
 			// Pop a packet off the queue and send it off
-			processMessage(queue.pop());
+			routeMessage(queue.pop());
 		}
 	}
 	pthread_mutex_unlock(&threadMutex);

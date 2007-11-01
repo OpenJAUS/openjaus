@@ -36,7 +36,7 @@ void LocalComponent::run()
 				while(!this->queue.isEmpty())
 				{
 					// Pop a packet off the queue and send it off
-					processMessage(queue.pop());
+					routeMessage(queue.pop());
 				}
 				break;
 			

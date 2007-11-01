@@ -10,16 +10,16 @@ public:
 	CommunicatorComponent(FileLoader *configData, JausComponentCommunicationManager *cmptComms);
 	~CommunicatorComponent(void);
 
-	bool processMessage(JausTransportPacket jtPacket);
+	bool processMessage(JausMessage message);
 	std::string toString();
 
 private:
-	bool processReportIdentification(JausTransportPacket jtPacket);
-	bool processReportConfiguration(JausTransportPacket jtPacket);
-	bool processReportServices(JausTransportPacket jtPacket);
-	bool processReportHeartbeat(JausTransportPacket jtPacket);
-	bool processCreateEvent(JausTransportPacket jtPacket);
-	bool processCancelEvent(JausTransportPacket jtPacket);
+	bool processReportIdentification(JausMessage message);
+	bool processReportConfiguration(JausMessage message);
+	bool processReportServices(JausMessage message);
+	bool processReportHeartbeat(JausMessage message);
+	bool processCreateEvent(JausMessage message);
+	bool processCancelEvent(JausMessage message);
 
 	void startupState();
 	void intializeState();

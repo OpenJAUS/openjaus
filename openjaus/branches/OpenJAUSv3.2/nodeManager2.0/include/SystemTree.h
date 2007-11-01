@@ -110,10 +110,12 @@ public:
 	bool replaceNode(int subsystemId, int nodeId, JausNode newNode);
 	bool replaceComponent(JausAddress address, JausComponent newCmpt);
 
-	JausAddress lookUpAddressInNode(JausNode node, JausAddress address);
-	JausAddress lookUpAddressInSubsystem(JausSubsystem subs, JausAddress address);
-	JausAddress lookUpAddressInSystem(JausAddress address);
+	JausAddress lookUpAddress(JausAddress address);
+	JausAddress lookUpAddress(int lookupSubs, int lookupNode, int lookupCmpt, int lookupInst);
+	
+	JausAddress lookUpServiceInNode(int nodeId, int commandCode, int serviceType);
 	JausAddress lookUpServiceInNode(JausNode node, int commandCode, int serviceType);
+	JausAddress lookUpServiceInSubsystem(int subsId, int nodeId, int commandCode, int serviceType);
 	JausAddress lookUpServiceInSubsystem(JausSubsystem subs, int commandCode, int serviceType);
 	JausAddress lookUpServiceInSystem(int commandCode, int serviceType);
 
