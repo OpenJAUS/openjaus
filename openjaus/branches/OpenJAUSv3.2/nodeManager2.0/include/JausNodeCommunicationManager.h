@@ -10,6 +10,9 @@ public:
 	~JausNodeCommunicationManager(void);
 	bool sendJausMessage(JausMessage message);
 	bool receiveJausMessage(JausMessage message, JausTransportInterface *srcInf);
+
+private:
+	bool sendToSubsystemGateway(JausMessage message);
 };
 
 #endif

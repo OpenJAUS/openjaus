@@ -53,6 +53,14 @@ JausNodeCommunicationManager::~JausNodeCommunicationManager(void)
 
 bool JausNodeCommunicationManager::sendJausMessage(JausMessage message)
 {
+	if(!this->enabled)
+	{
+		// This Communication Manager is turned off
+		// Destroy this message
+		jausMessageDestroy(message);
+		return false;
+	}
+
 	// This conforms to the NodeCommMngr Routing Table's MsgRouter Source Table v2.0
 	if(!message)
 	{
@@ -66,7 +74,48 @@ bool JausNodeCommunicationManager::sendJausMessage(JausMessage message)
 		if( message->destination->subsystem == JAUS_BROADCAST_SUBSYSTEM_ID ||
 			message->destination->subsystem == mySubsystemId)
 		{
-			
+			if(message->destination->node == JAUS_BROADCAST_NODE_ID)
+			{
+				// Send to all other nodes on this subs
+				JausSubsystem subs = systemTree->getSubsystem(mySubsystemId);
+				for(int i = 0; i < subs->nodes->elementCount; i++)
+				{
+					JausNode node = (JausNode) subs->nodes->elementData[i];
+					if(node->id != myNodeId)
+					{
+						JausTransportInterface *jtInf = interfaceMap[node->id];
+						if(jtInf)
+						{
+							jtInf->queueJausMessage(jausMessageDuplicate(message));
+						}
+					}
+				}
+				jausMessageDestroy(message);
+				return true;
+			}
+			else if(message->destination->node != myNodeId)
+			{
+				// Route to Node X
+				JausTransportInterface *jtInf = interfaceMap[message->destination->node];
+				if(jtInf)
+				{
+					jtInf->queueJausMessage(message);
+					return true;
+				}
+				else
+				{
+					// I don't know how to send something to that node
+					jausMessageDestroy(message);
+					return false;
+				}
+			}
+			else
+			{
+				// ERROR: Message received from MsgRouter that is not from this subs is for this node!
+				// TODO: Log Error. Throw Exception.
+				jausMessageDestroy(message);
+				return false;
+			}
 		}
 		else
 		{
@@ -88,13 +137,239 @@ bool JausNodeCommunicationManager::sendJausMessage(JausMessage message)
 		else
 		{
 			// Special behavior in here to handle routing of messages to the communicator / primary nodemngr
+			if( message->destination->subsystem != mySubsystemId &&
+				message->destination->subsystem != JAUS_BROADCAST_SUBSYSTEM_ID)
+			{
+					return sendToSubsystemGateway(message);
+			}
+			else if(message->destination->subsystem == JAUS_BROADCAST_SUBSYSTEM_ID)
+			{
+				if(message->destination->node == JAUS_BROADCAST_SUBSYSTEM_ID)
+				{
+					// Send to all other nodes
+					JausSubsystem subs = systemTree->getSubsystem(mySubsystemId);
+					for(int i = 0; i < subs->nodes->elementCount; i++)
+					{
+						JausNode node = (JausNode) subs->nodes->elementData[i];
+						if(node->id != myNodeId)
+						{
+							JausTransportInterface *jtInf = interfaceMap[node->id];
+							if(jtInf)
+							{
+								jtInf->queueJausMessage(jausMessageDuplicate(message));
+							}
+						}
+					}
+					jausMessageDestroy(message);
+					return true;
+				}
+				else if(message->destination->node == myNodeId)
+				{
+					return sendToSubsystemGateway(message);
+				}
+				else //message->destination->node == X
+				{
+					// Route to node X
+					JausTransportInterface *jtInf = interfaceMap[message->destination->node];
+					if(jtInf)
+					{
+						jtInf->queueJausMessage(jausMessageDuplicate(message));
+					}
+
+					// PREVENT DUPLICATION!
+					// If Node X is not the Communicator Node or the Primary node, sendToSubsystemGateway
+					JausAddress commAddress = systemTree->lookUpAddress(mySubsystemId, JAUS_ADDRESS_WILDCARD_OCTET, JAUS_COMMUNICATOR, JAUS_ADDRESS_WILDCARD_OCTET);
+					if(commAddress && commAddress->node != message->destination->node && message->destination->node != JAUS_PRIMARY_NODE_MANAGER_NODE)
+					{
+						sendToSubsystemGateway(jausMessageDuplicate(message));
+					}
+					
+					jausMessageDestroy(message);
+					return true;
+				}
+			}
+			else //message->destination->subsystem == mySubsystemId
+			{
+				if(message->destination->node == myNodeId)
+				{
+					// ERROR: Msg recv'd which is for this node!
+					// TODO: Log Error. Throw Exception.
+					jausMessageDestroy(message);
+					return false;
+				}
+				else if(message->destination->node == JAUS_BROADCAST_NODE_ID)
+				{
+					// Send to all other nodes
+					JausSubsystem subs = systemTree->getSubsystem(mySubsystemId);
+					for(int i = 0; i < subs->nodes->elementCount; i++)
+					{
+						JausNode node = (JausNode) subs->nodes->elementData[i];
+						if(node->id != myNodeId)
+						{
+							JausTransportInterface *jtInf = interfaceMap[node->id];
+							if(jtInf)
+							{
+								jtInf->queueJausMessage(jausMessageDuplicate(message));
+							}
+						}
+					}
+					jausMessageDestroy(message);
+					return true;
+				}
+				else 
+				{
+					// Route to Node X
+					JausTransportInterface *jtInf = interfaceMap[message->destination->node];
+					if(jtInf)
+					{
+						jtInf->queueJausMessage(message);
+						return true;
+					}
+					else
+					{
+						// I don't know how to send something to that node
+						jausMessageDestroy(message);
+						return false;
+					}
+				}
+			}
 		}
 	}
 }
 
 bool JausNodeCommunicationManager::receiveJausMessage(JausMessage message, JausTransportInterface *srcInf)
 {
-	// TODO: Implement this method
-	return false;
+	if(!this->enabled)
+	{
+		// This Communication Manager is turned off
+		// Destroy this message
+		jausMessageDestroy(message);
+		return false;
+	}
+
+	// This conforms to the NodeCommMngr Routing Table's MsgRouter Source Table v2.0
+	if(!message)
+	{
+		// Error: Invalid message
+		// TODO: Log Error. Throw Exception
+		return false;
+	}
+
+	// Check for errors
+	if(message->source->subsystem == mySubsystemId)
+	{
+		if(message->source->node == myNodeId)
+		{
+			// Error: Msg recv'd from this node through NodeInf, invalid!
+			// TODO: Log Error. Throw Exception
+			jausMessageDestroy(message);
+			return false;
+		}
+		else
+		{
+			// Put Interface data on the map
+			interfaceMap[message->source->node] = srcInf;
+
+			if(message->destination->node == myNodeId)
+			{
+				// ERROR: Message not for this node recv'd from another node
+				// TODO: Log Error. Throw Exception
+				jausMessageDestroy(message);
+				return false;
+			}
+			else
+			{
+				msgRouter->routeNodeSourceMessage(message);
+				return true;
+			}
+		}
+	}
+	else //message->source->subsystem != mySubsystemId
+	{
+		if(	message->destination->subsystem == JAUS_BROADCAST_SUBSYSTEM_ID ||
+			message->destination->subsystem == mySubsystemId)
+		{
+			if(message->destination->node == myNodeId)
+			{
+				// ERROR: Message not for this node recv'd from another node
+				// TODO: Log Error. Throw Exception
+				jausMessageDestroy(message);
+				return false;
+			}
+			else
+			{
+				msgRouter->routeNodeSourceMessage(message);
+				return true;
+			}
+		}
+		else // message->destination->subsystem == X
+		{
+			// ERROR: Message not for this subsystem and not from this subsystem recv'd from another node
+			// TODO: Log Error. Throw Exception
+			jausMessageDestroy(message);
+			return false;
+		}
+	}
+}
+
+bool JausNodeCommunicationManager::sendToSubsystemGateway(JausMessage message)
+{
+	if(!message)
+	{
+		// Error: Invalid message
+		// TODO: Log Error. Throw Exception
+		return false;
+	}
+
+	if(msgRouter->subsystemCommunicationEnabled())
+	{
+		// ERROR: This should have gone out to the SubsCommMngr
+		// TODO: Log Error. Throw Exception.
+		jausMessageDestroy(message);
+		return false;
+	}
+
+	// Find the Communicator's Address
+	JausAddress commAddress = systemTree->lookUpAddress(mySubsystemId, JAUS_ADDRESS_WILDCARD_OCTET, JAUS_COMMUNICATOR, JAUS_ADDRESS_WILDCARD_OCTET);
+	if(commAddress)
+	{
+		// Send to the Communicator's Node
+		JausTransportInterface *jtInf = interfaceMap[commAddress->node];
+		if(jtInf)
+		{
+			jtInf->queueJausMessage(message);
+			return true;
+		}
+		else
+		{
+			// I don't know how to send something to that node
+			jausMessageDestroy(message);
+			return false;
+		}
+	}
+	else if(myNodeId != JAUS_PRIMARY_NODE_MANAGER_NODE)
+	{
+		// Send to the Primary Node Manager (note this is mainly for backwards compatibility)
+		JausTransportInterface *jtInf = interfaceMap[commAddress->node];
+		if(jtInf)
+		{
+			jtInf->queueJausMessage(message);
+			return true;
+		}
+		else
+		{
+			// I don't know how to send something to that node
+			jausMessageDestroy(message);
+			return false;
+		}
+	}
+	else
+	{
+		// No known communicator
+		// This is the Primary Node
+		// And I don't have an active SubsCommMngr
+		jausMessageDestroy(message);
+		return false;
+	}
 }
 
