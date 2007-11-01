@@ -23,7 +23,7 @@ JausTransportQueue::~JausTransportQueue(void)
 	monitors.~vector();
 }
 
-void JausTransportQueue::push(JausTransportPacket *inc)
+void JausTransportQueue::push(JausMessage inc)
 {
 	list.push(inc);
 
@@ -34,9 +34,9 @@ void JausTransportQueue::push(JausTransportPacket *inc)
 
 }
 
-JausTransportPacket *JausTransportQueue::pop(void)
+JausMessage JausTransportQueue::pop(void)
 {
-	JausTransportPacket *out = list.front();
+	JausMessage out = list.front();
 	list.pop();
 
 	if(list.empty())

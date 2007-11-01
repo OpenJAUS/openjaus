@@ -33,17 +33,20 @@ public:
 	void disable(void);
 	bool isEnabled(void);
 	SystemTree *getSystemTree();
-	virtual void routeJausMessage(JausTransportPacket *jtPacket);
+	virtual bool sendJausMessage(JausMessage message);
+	virtual bool receiveJausMessage(JausMessage message, JausTransportInterface *jtInterface);
 	MessageRouter *getMessageRouter();
 
 protected:
 	int jausAddressHash(JausAddress address);
 
 	MessageRouter *msgRouter;
-	std::vector <JausTransportInterface> interfaces;
-	HASH_MAP<int, JausTransportData *> transportDataList;
+	std::vector <JausTransportInterface *> interfaces;
+	HASH_MAP<int, JausTransportInterface *> interfaceMap;
 	FileLoader *configData;
 	SystemTree *systemTree;
+	int mySubsystemId;
+	int myNodeId;
 	bool enabled;
 };
 

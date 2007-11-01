@@ -11,7 +11,8 @@ class JausComponentCommunicationManager : public JausCommunicationManager
 public:
 	JausComponentCommunicationManager(FileLoader *configData, MessageRouter *msgRouter, SystemTree *systemTree);
 	~JausComponentCommunicationManager(void);
-	void routeJausMessage(JausTransportPacket *jtPacket);
+	bool sendJausMessage(JausMessage message);
+	bool receiveJausMessage(JausMessage message, JausTransportInterface *srcInf);
 
 	NodeManagerComponent *getNodeManagerComponent(void);
 	

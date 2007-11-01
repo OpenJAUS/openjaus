@@ -6,9 +6,10 @@
 class JausNodeCommunicationManager : public JausCommunicationManager
 {
 public:
-	JausNodeCommunicationManager(void);
+	JausNodeCommunicationManager(FileLoader *configData, MessageRouter *msgRouter, SystemTree *systemTree);
 	~JausNodeCommunicationManager(void);
-	void routeJausMessage(JausTransportPacket *jtPacket);
+	bool sendJausMessage(JausMessage message);
+	bool receiveJausMessage(JausMessage message, JausTransportInterface *srcInf);
 };
 
 #endif

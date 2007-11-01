@@ -26,31 +26,31 @@ public:
 	NodeManagerComponent(FileLoader *configData, JausComponentCommunicationManager *cmptComms);
 	~NodeManagerComponent(void);
 
-	bool processMessage(JausTransportPacket *jtPacket);
+	bool processMessage(JausMessage message);
 	std::string toString();
 
 	JausAddress checkInLocalComponent(int cmptId, JausTransportData *data);
 	void checkOutLocalComponent(JausAddress address);
 
 private:
-	bool processReportIdentification(JausTransportPacket *jtPacket);
-	bool processReportConfiguration(JausTransportPacket *jtPacket);
-	bool processReportServices(JausTransportPacket *jtPacket);
-	bool processReportHeartbeatPulse(JausTransportPacket *jtPacket);
-	bool processCreateEvent(JausTransportPacket *jtPacket);
-	bool processCancelEvent(JausTransportPacket *jtPacket);
-	bool processCreateServiceConnection(JausTransportPacket *jtPacket);
-	bool processActivateServiceConnection(JausTransportPacket *jtPacket);
-	bool processSuspendServiceConnection(JausTransportPacket *jtPacket);
-	bool processTerminateServiceConnection(JausTransportPacket *jtPacket);
-	bool processRequestComponentControl(JausTransportPacket *jtPacket);
-	bool processQueryComponentAuthority(JausTransportPacket *jtPacket);
-	bool processQueryComponentStatus(JausTransportPacket *jtPacket);
-	bool processQueryHeartbeatPulse(JausTransportPacket *jtPacket);
-	bool processQueryConfiguration(JausTransportPacket *jtPacket);
-	bool processQueryIdentification(JausTransportPacket *jtPacket);
-	bool processQueryServices(JausTransportPacket *jtPacket);
-	bool processConfirmEvent(JausTransportPacket *jtPacket);
+	bool processReportIdentification(JausMessage message);
+	bool processReportConfiguration(JausMessage message);
+	bool processReportServices(JausMessage message);
+	bool processReportHeartbeatPulse(JausMessage message);
+	bool processCreateEvent(JausMessage message);
+	bool processCancelEvent(JausMessage message);
+	bool processCreateServiceConnection(JausMessage message);
+	bool processActivateServiceConnection(JausMessage message);
+	bool processSuspendServiceConnection(JausMessage message);
+	bool processTerminateServiceConnection(JausMessage message);
+	bool processRequestComponentControl(JausMessage message);
+	bool processQueryComponentAuthority(JausMessage message);
+	bool processQueryComponentStatus(JausMessage message);
+	bool processQueryHeartbeatPulse(JausMessage message);
+	bool processQueryConfiguration(JausMessage message);
+	bool processQueryIdentification(JausMessage message);
+	bool processQueryServices(JausMessage message);
+	bool processConfirmEvent(JausMessage message);
 
 	void sendNodeChangedEvents();
 	void sendSubsystemChangedEvents();

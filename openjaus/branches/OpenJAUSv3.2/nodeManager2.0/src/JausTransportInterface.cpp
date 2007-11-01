@@ -53,10 +53,16 @@ unsigned long JausTransportInterface::queueSize()
 	return this->queue.size();
 }
 
-bool JausTransportInterface::processMessage(JausTransportPacket *)
+bool JausTransportInterface::routeMessage(JausMessage message)
 {
 	// Should never be used!
+	// TODO: Throw exception. Log Error.
 	return false;
+}
+
+void JausTransportInterface::queueJausMessage(JausMessage message)
+{
+	this->queue.push(message);
 }
 
 void JausTransportInterface::run()

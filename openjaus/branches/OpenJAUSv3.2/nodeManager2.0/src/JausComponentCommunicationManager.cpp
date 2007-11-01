@@ -15,9 +15,16 @@ JausComponentCommunicationManager::~JausComponentCommunicationManager(void)
 	delete this->nodeManagerCmpt;
 }
 
-void JausComponentCommunicationManager::routeJausMessage(JausTransportPacket *jtPacket)
+bool JausComponentCommunicationManager::sendJausMessage(JausMessage message)
 {
 	// TODO: Implement this method
+	return false;
+}
+
+bool JausComponentCommunicationManager::receiveJausMessage(JausMessage message, JausTransportInterface *srcInf)
+{
+	// TODO: Implement this method
+	return false;
 }
 
 NodeManagerComponent *JausComponentCommunicationManager::getNodeManagerComponent(void)
