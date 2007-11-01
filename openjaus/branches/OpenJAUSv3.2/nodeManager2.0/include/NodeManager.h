@@ -18,7 +18,7 @@ private:
 	FileLoader *configData;
 
 	MessageRouter *msgRouter;
-	SystemTree *SystemTree;
+	SystemTree *systemTree;
 	
 	JausSubsystemCommunicationManager *subsComms;
 	JausNodeCommunicationManager *nodeComms;

@@ -1,18 +1,21 @@
 #ifndef JAUS_TRANSPORT_INTERFACE
 #define JAUS_TRANSPORT_INTERFACE
 
+#ifdef WIN32
+	#include "pthread.h"	
+#elif defined(__GNUC__)
+	#include <pthread.h>
+	#include <errno.h>
+#endif
+
 #include <string>
 #include "JausQueueMonitor.h"
 #include "JausTransportQueue.h"
+#include "JausTransportData.h"
 #include "SystemTree.h"
 #include "FileLoader.h"
 #include "jaus.h"
-#ifndef WIN32
-	#include <pthread.h>
-	#include <errno.h>
-#else
-	#include "pthread.h"
-#endif
+
 
 typedef enum JausTransportType {UNKNOWN_INTERFACE, SUBSYSTEM_INTERFACE, NODE_INTERFACE, COMPONENT_INTERFACE};
 
@@ -55,6 +58,7 @@ protected:
 	pthread_attr_t threadAttributes;
 	pthread_cond_t threadConditional;
 	pthread_mutex_t threadMutex;
+
 };
 
 #endif

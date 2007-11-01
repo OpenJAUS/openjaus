@@ -22,8 +22,8 @@ OjApiComponentInterface::~OjApiComponentInterface(void){}
 
 bool OjApiComponentInterface::processMessage(JausTransportPacket *jtPacket)
 {
-	// Retrieve the transportData object from the packet
-	OjApiComponentTransportData transportData = NULL; //(OjApiComponentTransportData) jtPacket->getJausTransportData()->getData();
+	// Retrieve the transportData object from the list
+	OjApiComponentTransportData transportData = NULL; //transportDataList[jausAddressHash(jtPacket->getJausMessage()->destination)].getData();
 
 	// Send it off to the callback function
 	if(transportData && transportData->messageParser)

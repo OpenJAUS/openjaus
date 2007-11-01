@@ -71,6 +71,9 @@ NodeManagerComponent::NodeManagerComponent(FileLoader *configData, JausComponent
 	{
 		// TODO: Log Error, we can't add a node manager with instance 1
 	}
+
+	this->cmpt->node = systemTree->getNode(subsystemId, nodeId);
+
 	this->setupThread();
 	this->startupState();
 }
@@ -789,6 +792,7 @@ bool NodeManagerComponent::processCreateEvent(JausTransportPacket *jtPacket)
 	QueryConfigurationMessage queryConf = NULL;
 	ConfirmEventMessage confirmEvent = NULL;
 	JausMessage txMessage = NULL;
+	int nextEventId = -1;
 	HASH_MAP <int, JausAddress>::iterator iterator;
 	
 	confirmEvent = confirmEventMessageCreate();
@@ -857,11 +861,12 @@ bool NodeManagerComponent::processCreateEvent(JausTransportPacket *jtPacket)
 				}
 			}
 
-			confirmEvent->eventId = getNextEventId();
-			if(confirmEvent->eventId >= 0)
+			nextEventId = getNextEventId();
+			if(nextEventId >= 0)
 			{
-				eventId[confirmEvent->eventId] = true;
-				subsystemChangeList[confirmEvent->eventId] = createEvent->source;
+				confirmEvent->eventId = (JausByte) nextEventId;
+				eventId[nextEventId] = true;
+				subsystemChangeList[nextEventId] = createEvent->source;
 				confirmEvent->responseCode = SUCCESSFUL_RESPONSE;
 			}
 			else
@@ -883,11 +888,12 @@ bool NodeManagerComponent::processCreateEvent(JausTransportPacket *jtPacket)
 				}
 			}
 
-			confirmEvent->eventId = getNextEventId();
-			if(confirmEvent->eventId >= 0)
+			nextEventId = getNextEventId();
+			if(nextEventId >= 0)
 			{
-				eventId[confirmEvent->eventId] = true;
-				nodeChangeList[confirmEvent->eventId] = createEvent->source;
+				confirmEvent->eventId = (JausByte) nextEventId;
+				eventId[nextEventId] = true;
+				nodeChangeList[nextEventId] = createEvent->source;
 				confirmEvent->responseCode = SUCCESSFUL_RESPONSE;
 			}
 			else
@@ -1159,8 +1165,9 @@ bool NodeManagerComponent::processQueryHeartbeatPulse(JausTransportPacket *jtPac
 bool NodeManagerComponent::processQueryConfiguration(JausTransportPacket *jtPacket)
 {
 	QueryConfigurationMessage queryConf = NULL;
-	ReportConfigurationMessage reportCong = NULL;
+	ReportConfigurationMessage reportConf = NULL;
 	JausMessage txMessage = NULL;
+	JausNode node = NULL;
 
 	queryConf = queryConfigurationMessageFromJausMessage(jtPacket->getJausMessage());
 	if(!queryConf)
@@ -1174,60 +1181,248 @@ bool NodeManagerComponent::processQueryConfiguration(JausTransportPacket *jtPack
 	{
 		case JAUS_SUBSYSTEM_CONFIGURATION:
 			// Subsystem Configuration requests should go to the Communicator!
-			// This hack will fix bad implementation from other systems
-			if(this->commMngr->getMessageRouter()->subsystemCommunicationEnabled() &&
-				//systemTable->)
+			// This is included for backwards compatibility and other implementation support
+			if(this->commMngr->getMessageRouter()->subsystemCommunicationEnabled())
 			{
-				queryConf->destination->component = JAUS_COMMUNICATOR;
-				queryConf->destination->instance = JAUS_MINIMUM_INSTANCE;
-				txMessage = queryConfigurationMessageToJausMessage(queryConf);
-				if(txMessage)
+				reportConf = reportConfigurationMessageCreate();
+				if(!reportConf)
 				{
-					this->commMngr->routeJausMessage(new JausTransportPacket(txMessage, this, NULL));	
+					// TODO: Log Error. Throw Exception
+					queryConfigurationMessageDestroy(queryConf);
+					return false;
 				}
+				
+				// Remove the subsystem created by the constructor
+				jausSubsystemDestroy(reportConf->subsystem);
+
+				// This call to the systemTree returns a copy, so safe to set this pointer to it
+				reportConf->subsystem = systemTree->getSubsystem(this->cmpt->address->subsystem);
+				if(reportConf->subsystem)
+				{
+					txMessage = reportConfigurationMessageToJausMessage(reportConf);
+					if(txMessage)
+					{
+						this->commMngr->routeJausMessage(new JausTransportPacket(txMessage, this, NULL));
+					}
+				}
+
+				reportConfigurationMessageDestroy(reportConf);
+				queryConfigurationMessageDestroy(queryConf);
+				return true;
 			}
 			else
 			{
 				// This NM is not connected to the subsystem network, 
 				// therefore no one should be asking us for subsystem configuration
 				// TODO: Log Error. Throw Exception.
+				queryConfigurationMessageDestroy(queryConf);
+				return false;
 			}
-			break;
 
 		case JAUS_NODE_CONFIGURATION:
-			break;
+			reportConf = reportConfigurationMessageCreate();
+			if(!reportConf)
+			{
+				// TODO: Log Error. Throw Exception
+				queryConfigurationMessageDestroy(queryConf);
+				return false;
+			}
+			
+			// This call to the systemTree returns a copy, so safe to set this pointer to it
+			node = systemTree->getNode(this->cmpt->address->subsystem, this->cmpt->address->node);
+			if(node)
+			{
+				jausArrayAdd(reportConf->subsystem->nodes, node);
+			}
 
-		case JAUS_COMPONENT_CONFIGURATION:
-			break;
-		
-		case JAUS_INSTANCE_CONFIGURATION:
-		case JAUS_SYSTEM_CONFIGURATION:
-			// TODO: Log Warning.
-			// Unhandled/Unknown requests
-			break;
+			txMessage = reportConfigurationMessageToJausMessage(reportConf);
+			if(txMessage)
+			{
+				this->commMngr->routeJausMessage(new JausTransportPacket(txMessage, this, NULL));
+			}
+
+			reportConfigurationMessageDestroy(reportConf);
+			queryConfigurationMessageDestroy(queryConf);
+			return true;
 
 		default:
 			// TODO: Log Error. Throw Exception.
 			// Unknown query type
-			break;
+			queryConfigurationMessageDestroy(queryConf);
+			return false;
 	}
-
-	queryConfigurationMessageDestroy(queryConf);
-	return true;
 }
 
 bool NodeManagerComponent::processQueryIdentification(JausTransportPacket *jtPacket)
 {
-	return true;
+	QueryIdentificationMessage queryId = NULL;
+	ReportIdentificationMessage reportId = NULL;
+	JausMessage txMessage = NULL;
+	char *identification = NULL;
+
+	queryId = queryIdentificationMessageFromJausMessage(jtPacket->getJausMessage());
+	if(!queryId)
+	{
+		// TODO: Log Error. Throw Exception.
+		// Error unpacking message	
+		return false;
+	}
+	
+	switch(queryId->queryField)
+	{
+		case JAUS_QUERY_FIELD_SS_IDENTITY:
+			// Subsystem Configuration requests should go to the Communicator!
+			// This is included for backwards compatibility and other implementation support
+			if(this->commMngr->getMessageRouter()->subsystemCommunicationEnabled())
+			{
+				reportId = reportIdentificationMessageCreate();
+				if(!reportId)
+				{
+					// TODO: Log Error. Throw Exception
+					queryIdentificationMessageDestroy(queryId);
+					return false;
+				}
+
+				identification = systemTree->getSubsystemIdentification(cmpt->address);
+				if(strlen(identification) < JAUS_IDENTIFICATION_LENGTH_BYTES)
+				{
+					sprintf(reportId->identification, "%s", identification);
+				}
+				else
+				{
+					memcpy(reportId->identification, identification, JAUS_IDENTIFICATION_LENGTH_BYTES-1);
+					reportId->identification[JAUS_IDENTIFICATION_LENGTH_BYTES-1] = 0;
+				}
+
+				reportId->queryType = JAUS_QUERY_FIELD_SS_IDENTITY;
+				txMessage = reportIdentificationMessageToJausMessage(reportId);
+				if(txMessage)
+				{
+					this->commMngr->routeJausMessage(new JausTransportPacket(txMessage, this, NULL));
+				}
+
+				reportIdentificationMessageDestroy(reportId);
+				queryIdentificationMessageDestroy(queryId);
+				return true;
+			}
+			else
+			{
+				// This NM is not connected to the subsystem network, 
+				// therefore no one should be asking us for subsystem configuration
+				// TODO: Log Error. Throw Exception.
+				queryIdentificationMessageDestroy(queryId);
+				return false;
+			}
+		case JAUS_QUERY_FIELD_NODE_IDENTITY:
+			reportId = reportIdentificationMessageCreate();
+			if(!reportId)
+			{
+				// TODO: Log Error. Throw Exception
+				queryIdentificationMessageDestroy(queryId);
+				return false;
+			}
+			
+			identification = systemTree->getNodeIdentification(cmpt->address);
+			if(strlen(identification) < JAUS_IDENTIFICATION_LENGTH_BYTES)
+			{
+				sprintf(reportId->identification, "%s", identification);
+			}
+			else
+			{
+				memcpy(reportId->identification, identification, JAUS_IDENTIFICATION_LENGTH_BYTES-1);
+				reportId->identification[JAUS_IDENTIFICATION_LENGTH_BYTES-1] = 0;
+			}
+
+			reportId->queryType = JAUS_QUERY_FIELD_NODE_IDENTITY;
+			txMessage = reportIdentificationMessageToJausMessage(reportId);
+			if(txMessage)
+			{
+				this->commMngr->routeJausMessage(new JausTransportPacket(txMessage, this, NULL));
+			}
+
+			reportIdentificationMessageDestroy(reportId);
+			queryIdentificationMessageDestroy(queryId);
+			return true;
+
+		case JAUS_QUERY_FIELD_COMPONENT_IDENTITY:
+			reportId = reportIdentificationMessageCreate();
+			if(!reportId)
+			{
+				// TODO: Log Error. Throw Exception
+				queryIdentificationMessageDestroy(queryId);
+				return false;
+			}
+			
+			identification = cmpt->identification;
+			if(strlen(identification) < JAUS_IDENTIFICATION_LENGTH_BYTES)
+			{
+				sprintf(reportId->identification, "%s", identification);
+			}
+			else
+			{
+				memcpy(reportId->identification, identification, JAUS_IDENTIFICATION_LENGTH_BYTES-1);
+				reportId->identification[JAUS_IDENTIFICATION_LENGTH_BYTES-1] = 0;
+			}
+
+			reportId->queryType = JAUS_QUERY_FIELD_COMPONENT_IDENTITY;
+			txMessage = reportIdentificationMessageToJausMessage(reportId);
+			if(txMessage)
+			{
+				this->commMngr->routeJausMessage(new JausTransportPacket(txMessage, this, NULL));
+			}
+
+			reportIdentificationMessageDestroy(reportId);
+			queryIdentificationMessageDestroy(queryId);
+			return true;
+
+		default:
+			queryIdentificationMessageDestroy(queryId);
+			return false;
+	}
 }
 
 bool NodeManagerComponent::processQueryServices(JausTransportPacket *jtPacket)
 {
+	QueryServicesMessage queryServices = NULL;
+	ReportServicesMessage reportServices = NULL;
+	JausMessage txMessage = NULL;
+	JausMessage message = jtPacket->getJausMessage();
+
+	queryServices = queryServicesMessageFromJausMessage(message);
+	if(!queryServices)
+	{
+		// TODO: Log Error. Throw Exception.
+		return false;
+	}
+
+	// Respond with our services
+	reportServices = reportServicesMessageCreate();
+	if(!reportServices)
+	{
+		// TODO: Log Error. Throw Exception.
+		queryServicesMessageDestroy(queryServices);
+		return false;
+	}
+
+	jausAddressCopy(reportServices->destination, message->source);
+	jausAddressCopy(reportServices->source, cmpt->address);
+	jausServicesDestroy(reportServices->jausServices);
+	reportServices->jausServices = jausServicesDuplicate(cmpt->services);
+
+	txMessage = reportServicesMessageToJausMessage(reportServices);
+	if(txMessage)
+	{
+		this->commMngr->routeJausMessage(new JausTransportPacket(txMessage, this, NULL));
+	}
+
+	reportServicesMessageDestroy(reportServices);
+	queryServicesMessageDestroy(queryServices);
 	return true;
 }
 
 bool NodeManagerComponent::processConfirmEvent(JausTransportPacket *jtPacket)
 {
+	// Not currently implemented
 	return true;
 }
 

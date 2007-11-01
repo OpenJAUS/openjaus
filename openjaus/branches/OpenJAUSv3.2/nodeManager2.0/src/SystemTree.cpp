@@ -824,6 +824,54 @@ bool SystemTree::setComponentServices(JausAddress address, JausArray inputServic
 	return false;
 }
 
+char *SystemTree::getSubsystemIdentification(JausSubsystem subsystem)
+{
+	return getSubsystemIdentification(subsystem->id);
+}
+
+char *SystemTree::getSubsystemIdentification(JausAddress address)
+{
+	return getSubsystemIdentification(address->subsystem);
+}
+
+char *SystemTree::getSubsystemIdentification(int subsId)
+{
+	JausSubsystem subs = system[subsId];
+	if(subs)
+	{
+		return subs->identification;
+	}
+	else
+	{
+		return NULL;
+	}
+}
+
+char *SystemTree::getNodeIdentification(JausNode node)
+{
+	return getNodeIdentification(node->subsystem->id, node->id);
+}
+
+char *SystemTree::getNodeIdentification(JausAddress address)
+{
+	return getNodeIdentification(address->subsystem, address->node);
+}
+
+char *SystemTree::getNodeIdentification(int subsId, int nodeId)
+{
+	JausNode node = findNode(subsId, nodeId);
+	if(node)
+	{
+		return node->identification;
+	}
+	else
+	{
+		return NULL;
+	}
+}
+
+
+
 //bool SystemTree::compareComponent(JausComponent component);
 //bool SystemTree::compareNode(JausNode node);
 //bool SystemTree::compareSubsystem(JausSubsystem subs);
@@ -831,3 +879,5 @@ bool SystemTree::setComponentServices(JausAddress address, JausArray inputServic
 //std::string SystemTree::toString();
 //std::string SystemTree::toDetailedString();
 //void SystemTree::refresh(JausAddress address);
+
+
