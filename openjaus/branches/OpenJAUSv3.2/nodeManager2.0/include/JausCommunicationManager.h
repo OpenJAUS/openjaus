@@ -1,6 +1,16 @@
 #ifndef JAUS_COMMUNICATION_MANAGER
 #define JAUS_COMMUNICATION_MANAGER
 
+#ifdef WIN32
+	#include <errno.h>
+	#include <hash_map>
+	#define HASH_MAP stdext::hash_map
+#elif defined(__GNUC__)
+	#include <ext/hash_map>
+	#define HASH_MAP __gnu_cxx::hash_map
+#endif
+
+
 #include <vector>
 #include "JausTransportPacket.h"
 #include "JausQueueMonitor.h"
@@ -27,8 +37,11 @@ public:
 	MessageRouter *getMessageRouter();
 
 protected:
+	int jausAddressHash(JausAddress address);
+
 	MessageRouter *msgRouter;
 	std::vector <JausTransportInterface> interfaces;
+	HASH_MAP<int, JausTransportData *> transportDataList;
 	FileLoader *configData;
 	SystemTree *systemTree;
 	bool enabled;

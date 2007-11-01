@@ -21,6 +21,14 @@ public:
 	bool setNodeIdentification(JausAddress address, char *identification);
 	bool setComponentIdentification(JausAddress address, char *identification);
 
+	char *getSubsystemIdentification(JausSubsystem subsystem);
+	char *getSubsystemIdentification(JausAddress address);
+	char *getSubsystemIdentification(int subsId);
+
+	char *getNodeIdentification(JausNode node);
+	char *getNodeIdentification(JausAddress address);
+	char *getNodeIdentification(int subsId, int nodeId);
+
 	bool hasComponent(JausComponent cmpt);
 	bool hasComponent(JausAddress address);
 	bool hasComponent(int subsystemId, int nodeId, int componentId, int instanceId);

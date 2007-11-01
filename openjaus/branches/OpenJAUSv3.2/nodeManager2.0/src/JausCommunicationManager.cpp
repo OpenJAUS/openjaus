@@ -77,4 +77,9 @@ MessageRouter *JausCommunicationManager::getMessageRouter()
 	return this->msgRouter;
 }
 
+int JausCommunicationManager::jausAddressHash(JausAddress address)
+{
+	int hash = (address->subsystem << 24) | (address->node << 16) | (address->component << 8) | (address->instance);
+	return hash;
+}
 
