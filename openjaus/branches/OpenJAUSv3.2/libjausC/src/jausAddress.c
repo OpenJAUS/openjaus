@@ -128,3 +128,12 @@ int jausAddressToString(JausAddress address, char *buf)
 	}
 }
 
+
+JausBoolean jausAddressIsValid(JausAddress address)
+{
+	return (address &&
+			address->subsystem	!= JAUS_INVALID_SUBSYSTEM_ID &&
+			address->node		!= JAUS_INVALID_NODE_ID &&
+			address->component	!= JAUS_INVALID_COMPONENT_ID &&
+			address->instance	!= JAUS_INVALID_INSTANCE_ID);
+}
