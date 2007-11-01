@@ -53,6 +53,14 @@ JausSubsystemCommunicationManager::~JausSubsystemCommunicationManager(void)
 
 bool JausSubsystemCommunicationManager::sendJausMessage(JausMessage message)
 {
+	if(!this->enabled)
+	{
+		// This Communication Manager is turned off
+		// Destroy this message
+		jausMessageDestroy(message);
+		return false;
+	}
+
 	// This conforms to the SubsCommMngr MsgRouter Source Routing Table v2.0
 	if(!message)
 	{
@@ -112,13 +120,27 @@ bool JausSubsystemCommunicationManager::sendJausMessage(JausMessage message)
 		if(jtInf)
 		{
 			jtInf->queueJausMessage(message);
+			return true;
 		}
-		return true;
+		else
+		{
+			// I don't know how to send to Subsystem X
+			jausMessageDestroy(message);
+			return false;
+		}
 	}
 }
 
 bool JausSubsystemCommunicationManager::receiveJausMessage(JausMessage message, JausTransportInterface *srcInf)
 {
+	if(!this->enabled)
+	{
+		// This Communication Manager is turned off
+		// Destroy this message
+		jausMessageDestroy(message);
+		return false;
+	}
+
 	// This conforms to the SubsCommMngr MsgRouter Source Routing Table v2.0
 	if(!message)
 	{

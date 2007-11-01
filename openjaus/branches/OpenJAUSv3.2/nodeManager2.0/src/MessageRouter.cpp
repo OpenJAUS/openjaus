@@ -52,7 +52,8 @@ bool MessageRouter::routeSubsystemSourceMessage(JausMessage message)
 		return false;
 	}
 
-	if(message->destination->subsystem != mySubsystemId)
+	if( message->destination->subsystem != mySubsystemId && 
+		message->destination->subsystem != JAUS_BROADCAST_SUBSYSTEM_ID)
 	{
 		// ERROR: Message not for this Subsystem has entered the subsystemSource method
 		// TODO: Log Error. Throw Exception!
