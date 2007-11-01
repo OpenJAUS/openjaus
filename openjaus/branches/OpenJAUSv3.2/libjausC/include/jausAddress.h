@@ -69,6 +69,8 @@
 #define JAUS_NODE_MANAGER_COMPONENT 	1
 #define JAUS_PRIMARY_NODE_MANAGER_NODE 	1
 
+#define JAUS_ADDRESS_WILDCARD_OCTET	0
+
 struct JausAddressStruct
 {
 	JausByte instance;
@@ -88,5 +90,6 @@ int jausAddressToString(JausAddress, char *);
 JausAddress jausAddressClone(JausAddress src);
 JausBoolean jausAddressCopy(JausAddress dst, JausAddress src);
 JausBoolean jausAddressEqual(JausAddress, JausAddress);
+JausBoolean jausAddressIsValid(JausAddress address);
 
 #endif // JAUS_ADDRESS_H
