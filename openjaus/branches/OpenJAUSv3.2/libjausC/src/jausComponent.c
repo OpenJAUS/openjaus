@@ -260,4 +260,3 @@ int jausComponentToString(JausComponent component, char *buf)
 										component->address->instance);
 	}
 }
-	
