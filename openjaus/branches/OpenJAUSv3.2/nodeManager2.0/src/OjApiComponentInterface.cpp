@@ -11,9 +11,6 @@ OjApiComponentInterface::OjApiComponentInterface(FileLoader *configData, JausCom
 	
 	this->configData = configData;
 
-	// Register ourselves on our queue
-	this->queue.registerMonitor(this);
-
 	// Setup our pThread
 	this->setupThread();
 }
@@ -39,29 +36,35 @@ bool OjApiComponentInterface::routeMessage(JausMessage message)
 
 JausAddress OjApiComponentInterface::checkIn(int cmptId, void messageParser(JausMessage))
 {
-	JausTransportData *data = new JausTransportData();
+	NodeManagerComponent *nm = ((JausComponentCommunicationManager *)(this->commMngr))->getNodeManagerComponent();
+	JausAddress cmptAddress = nm->checkInLocalComponent(cmptId);
 
-	// Create the TransportData structure and populate it
-	OjApiComponentTransportData transportData;
-	transportData = (OjApiComponentTransportData) malloc(sizeof(OjApiComponentTransportDataStruct));
-	if(!transportData)
+	if(jausAddressIsValid(cmptAddress))
+	{
+		// Add this to my transport list
+		OjApiComponentTransportData transportData = (OjApiComponentTransportData) calloc(1, sizeof(OjApiComponentTransportDataStruct));
+		if(!transportData)
+		{
+			// Failed
+			return NULL;
+		}
+		transportData->messageParser = messageParser;
+
+		transportMap[jausAddressHash(cmptAddress)] = transportData;
+		return cmptAddress;
+	}
+	else
 	{
 		return NULL;
 	}
-	transportData->messageParser = messageParser;
-	
-	// Setup the JausTransportData object
-	data->setInterface(this);
-	data->setData((TransportData) transportData);
-	
-	// Check-in through the Node Manager
-	return ((JausComponentCommunicationManager *)(this->commMngr))->getNodeManagerComponent()->checkInLocalComponent(cmptId, data);
 }
 
 void OjApiComponentInterface::checkout(JausAddress address)
 {
 	NodeManagerComponent *nm = ((JausComponentCommunicationManager *)(this->commMngr))->getNodeManagerComponent();
 	nm->checkOutLocalComponent(address);
+
+	transportMap[jausAddressHash(address)] = NULL;
 }
 
 bool OjApiComponentInterface::verifyAddress(JausAddress address)
@@ -72,7 +75,6 @@ bool OjApiComponentInterface::verifyAddress(JausAddress address)
 JausAddress OjApiComponentInterface::lookupJausEntities(JausAddress addressPattern)
 {
 	return this->commMngr->getSystemTree()->lookUpAddress(addressPattern);
-	return NULL;
 }
 
 JausAddress OjApiComponentInterface::lookupService(int commandCode, int serviceType)
@@ -84,15 +86,6 @@ bool OjApiComponentInterface::sendJausMessage(JausMessage txMessage)
 {
 	this->commMngr->receiveJausMessage(txMessage, this);
 	return true;
-}
-
-void OjApiComponentInterface::queueEmpty() {}
-void OjApiComponentInterface::queueFull() {}
-
-void OjApiComponentInterface::queueNewItem()
-{
-	// Wake up our pThread
-	wakeThread();
 }
 
 std::string OjApiComponentInterface::toString()

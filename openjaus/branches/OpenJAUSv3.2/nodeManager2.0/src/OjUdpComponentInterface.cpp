@@ -1,6 +1,10 @@
 #include "OjUdpComponentInterface.h"
 
-OjUdpComponentInterface::OjUdpComponentInterface(void){}
+OjUdpComponentInterface::OjUdpComponentInterface(FileLoader *configData, JausCommunicationManager *commMngr)
+{
+
+}
+
 
 OjUdpComponentInterface::~OjUdpComponentInterface(void){}
 
@@ -10,14 +14,6 @@ unsigned int OjUdpComponentInterface::getPort(void)
 }
 
 bool OjUdpComponentInterface::routeMessage(JausMessage message){ return true;}
-void OjUdpComponentInterface::queueEmpty() {}
-void OjUdpComponentInterface::queueFull() {}
-
-void OjUdpComponentInterface::queueNewItem()
-{
-
-}
-
 bool OjUdpComponentInterface::sendDatagramPacket(DatagramPacket dgPacket)
 {
 	return true;

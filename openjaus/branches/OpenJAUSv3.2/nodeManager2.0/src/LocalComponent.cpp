@@ -91,12 +91,3 @@ void LocalComponent::run()
 	pthread_mutex_unlock(&threadMutex);
 	shutdownState();
 }
-
-void LocalComponent::queueEmpty(){}
-void LocalComponent::queueFull(){}
-
-void LocalComponent::queueNewItem()
-{
-	wakeThread();
-}
-

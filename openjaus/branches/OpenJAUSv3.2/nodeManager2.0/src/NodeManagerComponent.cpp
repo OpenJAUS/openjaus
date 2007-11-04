@@ -27,19 +27,15 @@ NodeManagerComponent::NodeManagerComponent(FileLoader *configData, JausComponent
 	this->configData = configData;
 	this->name = "NodeManager";
 	this->cmptRateHz = NM_RATE_HZ;
-	this->cmpt->identification = (char *)this->name.c_str();
 	this->systemTree = cmptComms->getSystemTree();
 	for(int i = 0; i < MAXIMUM_EVENT_ID; i++)
 	{
 		eventId[i] = false;
 	}
 
-	// Register ourselves on our queue
-	this->queue.registerMonitor(this);
-
 	// NOTE: These two values should exist in the properties file and should be checked 
 	// in the NodeManager class prior to constructing this object
-	subsystemId = configData->GetConfigDataInt("JAUS", "Subsystem Id = ");
+	subsystemId = configData->GetConfigDataInt("JAUS", "SubsystemId");
 	if(subsystemId < 1 || subsystemId > 254)
 	{
 		// Invalid ID
@@ -47,7 +43,7 @@ NodeManagerComponent::NodeManagerComponent(FileLoader *configData, JausComponent
 		return;
 	}
 
-	nodeId = configData->GetConfigDataInt("JAUS", "Node Id = ");
+	nodeId = configData->GetConfigDataInt("JAUS", "NodeId");
 	if(nodeId < 1 || nodeId > 254)
 	{
 		// Invalid ID
@@ -73,6 +69,9 @@ NodeManagerComponent::NodeManagerComponent(FileLoader *configData, JausComponent
 	}
 
 	this->cmpt->node = systemTree->getNode(subsystemId, nodeId);
+	this->cmpt->identification = (char *)this->name.c_str();
+
+	systemTree->addComponent(this->cmpt);
 
 	this->setupThread();
 	this->startupState();
@@ -192,7 +191,7 @@ std::string NodeManagerComponent::toString()
 	return "Communicator Component";
 }
 
-JausAddress NodeManagerComponent::checkInLocalComponent(int cmptId, JausTransportData *data)
+JausAddress NodeManagerComponent::checkInLocalComponent(int cmptId)
 {
 	JausComponent cmpt = jausComponentCreate();
 	if(!cmpt) return NULL;
@@ -568,6 +567,8 @@ bool NodeManagerComponent::processReportServices(JausMessage message)
 
 bool NodeManagerComponent::processReportHeartbeatPulse(JausMessage message)
 {
+	// TODO: Forward hearbeats if needed
+
 	// This function follows the flowchart designed for NM 2.0 by D. Kent and T. Galluzzo
 
 	// Has Subs?
@@ -1507,6 +1508,8 @@ void NodeManagerComponent::generateHeartbeats()
 	
 	if(getTimeSeconds() >= nextSendTime)
 	{
+		printf("Sending HBs\n");
+		
 		heartbeat = reportHeartbeatPulseMessageCreate();
 		if(!heartbeat)
 		{

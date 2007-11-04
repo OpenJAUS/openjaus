@@ -3,7 +3,6 @@
 
 #include "FileLoader.h"
 #include "jaus.h"
-#include "JausTransportData.h"
 
 class SystemTree
 {
@@ -120,7 +119,6 @@ public:
 	JausAddress lookUpServiceInSystem(int commandCode, int serviceType);
 
 	unsigned char getNextInstanceId(JausAddress address);
-	JausTransportData *getTransportData(JausAddress address);
 
 	std::string toString();
 	std::string toDetailedString();

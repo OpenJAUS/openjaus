@@ -18,10 +18,6 @@ protected:
 	virtual void shutdownState() = 0;
 	virtual void allState() = 0;
 
-	void queueEmpty();
-	void queueFull();
-	void queueNewItem();
-
 public:
 	void run();
 

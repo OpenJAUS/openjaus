@@ -10,6 +10,10 @@ public:
 	~JausSubsystemCommunicationManager(void);
 	bool sendJausMessage(JausMessage message);
 	bool receiveJausMessage(JausMessage message, JausTransportInterface *srcInf);
+
+private:
+	bool sendToSubsystemX(JausMessage message);
+	bool sendToAllInterfaces(JausMessage message);
 };
 
 #endif

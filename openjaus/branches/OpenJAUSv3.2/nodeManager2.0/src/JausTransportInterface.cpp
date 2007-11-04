@@ -40,6 +40,9 @@ void JausTransportInterface::setupThread()
 {
 	pthread_cond_init(&threadConditional, NULL);
 	pthread_mutex_init(&threadMutex, NULL);
+	pthread_attr_init(&this->threadAttributes);
+	pthread_attr_setdetachstate(&this->threadAttributes, PTHREAD_CREATE_DETACHED);
+
 	this->pThreadId = pthread_create(&this->pThread, &this->threadAttributes, ThreadRun, this);
 }
 
@@ -63,6 +66,11 @@ bool JausTransportInterface::routeMessage(JausMessage message)
 void JausTransportInterface::queueJausMessage(JausMessage message)
 {
 	this->queue.push(message);
+	
+	if(pthread_mutex_trylock(&threadMutex) != EBUSY)
+	{
+		wakeThread();
+	}
 }
 
 void JausTransportInterface::run()

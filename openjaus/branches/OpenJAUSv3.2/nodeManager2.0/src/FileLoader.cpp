@@ -70,7 +70,7 @@ bool FileLoader::load_cfg( string filename )
 			tmpInfo.label = token;
 		    while( token != NULL )
 		    {
-			    token = strtok_s( NULL, " ,\r", &next_token );
+			    token = strtok_s( NULL, " ,\r\t", &next_token );
 			    if( token != NULL )
 				{
 					tmpInfo.tok.push_back( token );

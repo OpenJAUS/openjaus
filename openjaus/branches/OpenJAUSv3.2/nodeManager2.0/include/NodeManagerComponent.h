@@ -2,7 +2,6 @@
 #define NODE_MANAGER_COMPONENT_H
 
 #include "LocalComponent.h"
-#include "JausTransportData.h"
 
 #if defined(WIN32)
 	#include <hash_map>
@@ -29,7 +28,7 @@ public:
 	bool processMessage(JausMessage message);
 	std::string toString();
 
-	JausAddress checkInLocalComponent(int cmptId, JausTransportData *data);
+	JausAddress checkInLocalComponent(int cmptId);
 	void checkOutLocalComponent(JausAddress address);
 
 private:

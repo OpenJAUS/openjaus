@@ -3,14 +3,14 @@
 #include "JausNodeCommunicationManager.h"
 #include "JausComponentCommunicationManager.h"
 
-MessageRouter::MessageRouter(FileLoader *configData, JausSubsystemCommunicationManager *subsComms, JausNodeCommunicationManager *nodeComms, JausComponentCommunicationManager *cmptComms, SystemTree *sysTree)
+MessageRouter::MessageRouter(FileLoader *configData, SystemTree *sysTree)
 {
-	this->cmptComms = cmptComms;
-	this->nodeComms = nodeComms;
-	this->subsComms = subsComms;
 	this->systemTree = sysTree;
-
 	this->configData = configData;
+
+	this->cmptComms = new JausComponentCommunicationManager(configData, this, systemTree);
+	this->nodeComms = new JausNodeCommunicationManager(configData, this, systemTree);
+	this->subsComms = new JausSubsystemCommunicationManager(configData, this, systemTree);
 
 	// NOTE: These two values should exist in the properties file and should be checked 
 	// in the NodeManager class prior to constructing this object

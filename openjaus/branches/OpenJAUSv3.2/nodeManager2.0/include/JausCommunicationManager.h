@@ -10,10 +10,7 @@
 	#define HASH_MAP __gnu_cxx::hash_map
 #endif
 
-
 #include <vector>
-#include "JausTransportPacket.h"
-#include "JausQueueMonitor.h"
 #include "JausTransportInterface.h"
 #include "FileLoader.h"
 #include "MessageRouter.h"
@@ -38,8 +35,6 @@ public:
 	MessageRouter *getMessageRouter();
 
 protected:
-	int jausAddressHash(JausAddress address);
-
 	MessageRouter *msgRouter;
 	std::vector <JausTransportInterface *> interfaces;
 	HASH_MAP<int, JausTransportInterface *> interfaceMap;
