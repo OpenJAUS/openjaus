@@ -137,3 +137,10 @@ JausBoolean jausAddressIsValid(JausAddress address)
 			address->component	!= JAUS_INVALID_COMPONENT_ID &&
 			address->instance	!= JAUS_INVALID_INSTANCE_ID);
 }
+
+int jausAddressHash(JausAddress address)
+{
+	int hash = (address->subsystem << 24) | (address->node << 16) | (address->component << 8) | (address->instance);
+	return hash;
+}
+

@@ -91,5 +91,6 @@ JausAddress jausAddressClone(JausAddress src);
 JausBoolean jausAddressCopy(JausAddress dst, JausAddress src);
 JausBoolean jausAddressEqual(JausAddress, JausAddress);
 JausBoolean jausAddressIsValid(JausAddress address);
+int jausAddressHash(JausAddress address);
 
 #endif // JAUS_ADDRESS_H
