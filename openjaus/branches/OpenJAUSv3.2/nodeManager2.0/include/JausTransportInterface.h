@@ -9,9 +9,7 @@
 #endif
 
 #include <string>
-#include "JausQueueMonitor.h"
 #include "JausTransportQueue.h"
-#include "JausTransportData.h"
 #include "SystemTree.h"
 #include "FileLoader.h"
 #include "jaus.h"
@@ -23,7 +21,7 @@ class JausCommunicationManager;
 
 extern "C" void *ThreadRun(void *);
 
-class JausTransportInterface : public JausQueueMonitor
+class JausTransportInterface
 {
 public:
 	JausTransportInterface(void);

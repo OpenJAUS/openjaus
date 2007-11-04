@@ -9,7 +9,7 @@ JausSubsystemCommunicationManager::JausSubsystemCommunicationManager(FileLoader 
 
 	// NOTE: These two values should exist in the properties file and should be checked 
 	// in the NodeManager class prior to constructing this object
-	mySubsystemId = configData->GetConfigDataInt("JAUS", "Subsystem Id = ");
+	mySubsystemId = configData->GetConfigDataInt("JAUS", "SubsystemId");
 	if(mySubsystemId < JAUS_MINIMUM_SUBSYSTEM_ID || mySubsystemId > JAUS_MAXIMUM_SUBSYSTEM_ID)
 	{
 		// Invalid ID
@@ -18,7 +18,7 @@ JausSubsystemCommunicationManager::JausSubsystemCommunicationManager(FileLoader 
 		return;
 	}
 
-	myNodeId = configData->GetConfigDataInt("JAUS", "Node Id = ");
+	myNodeId = configData->GetConfigDataInt("JAUS", "NodeId");
 	if(myNodeId < JAUS_MINIMUM_NODE_ID || myNodeId > JAUS_MAXIMUM_NODE_ID)
 	{
 		// Invalid ID
@@ -28,13 +28,13 @@ JausSubsystemCommunicationManager::JausSubsystemCommunicationManager(FileLoader 
 	}
 
 	// Start subsystem interface(s)
-	if(configData->GetConfigDataBool("Subsystem Communications", "UDP"))
+	if(configData->GetConfigDataBool("Subsystem_Communications", "JAUS_UDP"))
 	{
 		JausUdpInterface *udpInterface = new JausUdpInterface(configData, this);
 		this->interfaces.push_back(udpInterface);
 	}
 
-	if( configData->GetConfigDataBool("Subsystem Communications", "Enabled") &&
+	if( configData->GetConfigDataBool("Subsystem_Communications", "Enabled") &&
 		this->interfaces.size() > 0)
 	{
 		this->enabled = true;
@@ -88,46 +88,11 @@ bool JausSubsystemCommunicationManager::sendJausMessage(JausMessage message)
 
 	if(message->destination->subsystem == JAUS_BROADCAST_SUBSYSTEM_ID)
 	{
-		// Route to all known subsystems
-		JausSubsystem *system = systemTree->getSystem();
-		if(!system)
-		{
-			// No subsystems to send to
-			jausMessageDestroy(message);
-			return false;
-		}
-		
-		int i = 0;
-		while(system[i])
-		{
-			if(system[i]->id != mySubsystemId)
-			{
-				message->destination->subsystem = system[i]->id;
-				JausTransportInterface *jtInf = interfaceMap[message->destination->subsystem];
-				if(jtInf)
-				{
-					jtInf->queueJausMessage(jausMessageDuplicate(message));
-				}
-			}
-		}
-		jausMessageDestroy(message);
-		return true;
+		return sendToAllInterfaces(message);
 	}
 	else
 	{
-		// Route to subsystem X
-		JausTransportInterface *jtInf = interfaceMap[message->destination->subsystem];
-		if(jtInf)
-		{
-			jtInf->queueJausMessage(message);
-			return true;
-		}
-		else
-		{
-			// I don't know how to send to Subsystem X
-			jausMessageDestroy(message);
-			return false;
-		}
+		return sendToSubsystemX(message);
 	}
 }
 
@@ -181,4 +146,47 @@ bool JausSubsystemCommunicationManager::receiveJausMessage(JausMessage message, 
 		jausMessageDestroy(message);
 		return false;
 	}
+}
+
+bool JausSubsystemCommunicationManager::sendToSubsystemX(JausMessage message)
+{
+	if(!message)
+	{
+		// Error: Invalid message
+		// TODO: Log Error. Throw Exception
+		return false;
+	}
+
+	// Route to subsystem X
+	JausTransportInterface *jtInf = interfaceMap[message->destination->subsystem];
+	if(jtInf)
+	{
+		jtInf->queueJausMessage(message);
+		return true;
+	}
+	else
+	{
+		// I don't know how to send to Subsystem X
+		jausMessageDestroy(message);
+		return false;
+	}
+}
+
+bool JausSubsystemCommunicationManager::sendToAllInterfaces(JausMessage message)
+{
+	std::vector <JausTransportInterface *>::iterator iter;
+
+	if(!message)
+	{
+		// Error: Invalid message
+		// TODO: Log Error. Throw Exception
+		return false;
+	}
+
+	for(iter = interfaces.begin(); iter != interfaces.end(); iter++)
+	{
+		(*iter)->queueJausMessage(jausMessageDuplicate(message));
+	}
+	jausMessageDestroy(message);
+	return true;
 }

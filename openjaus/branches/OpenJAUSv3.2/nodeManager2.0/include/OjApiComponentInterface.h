@@ -6,6 +6,15 @@
 
 #define OJ_API_NAME "OpenJAUS API Component Interface"
 
+#ifdef WIN32
+	#include <errno.h>
+	#include <hash_map>
+	#define HASH_MAP stdext::hash_map
+#elif defined(__GNUC__)
+	#include <ext/hash_map>
+	#define HASH_MAP __gnu_cxx::hash_map
+#endif
+
 // Transport Data Structure
 typedef struct
 {
@@ -34,6 +43,9 @@ public:
 	std::string toString();
 
 	void run();
+
+private:
+	HASH_MAP <int, OjApiComponentTransportData> transportMap;
 };
 
 #endif

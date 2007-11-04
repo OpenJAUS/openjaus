@@ -3,10 +3,8 @@
 
 #include "MessageRouter.h"
 #include "SystemTree.h"
-#include "JausSubsystemCommunicationManager.h"
-#include "JausNodeCommunicationManager.h"
-#include "JausComponentCommunicationManager.h"
 #include "FileLoader.h"
+#include "jaus.h"
 
 class NodeManager
 {
@@ -14,15 +12,16 @@ public:
 	NodeManager(FileLoader *configData);
 	~NodeManager(void);
 
+	std::string getSystemTable();
+
 private:
 	FileLoader *configData;
 
 	MessageRouter *msgRouter;
 	SystemTree *systemTree;
 	
-	JausSubsystemCommunicationManager *subsComms;
-	JausNodeCommunicationManager *nodeComms;
-	JausComponentCommunicationManager *cmptComms;
+	JausNode node;
+	JausSubsystem subsystem;
 };
 
 #endif

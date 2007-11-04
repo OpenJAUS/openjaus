@@ -7,6 +7,10 @@
 #include "datagramPacket.h"
 #include "FileLoader.h"
 
+#define JAUS_UDP_NAME	"JAUS UDP Interface"
+#define SOCKET_TIMEOUT_SEC		0.5
+#define JAUS_DATA_PORT	3794
+
 // Transport Data Structure
 typedef struct
 {
@@ -25,9 +29,6 @@ public:
 
 	bool routeMessage(JausMessage message);
 
-	void queueEmpty();
-	void queueFull();
-	void queueNewItem();
 	std::string toString();
 	void run();
 

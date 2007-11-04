@@ -13,6 +13,8 @@ public:
 
 private:
 	bool sendToSubsystemGateway(JausMessage message);
+	bool sendToNodeX(JausMessage message);
+	bool sendToAllInterfaces(JausMessage message);
 };
 
 #endif

@@ -19,6 +19,9 @@ public:
 private:
 	NodeManagerComponent *nodeManagerCmpt;
 	CommunicatorComponent *communicatorCmpt;
+
+	bool sendToComponentX(JausMessage message);
+	bool sendToAllInterfaces(JausMessage message);
 };
 
 #endif
