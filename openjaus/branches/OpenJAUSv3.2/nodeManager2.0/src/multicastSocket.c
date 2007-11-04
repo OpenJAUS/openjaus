@@ -47,11 +47,11 @@
 #include <string.h>
 #include "multicastSocket.h"
 
-MulticastSocket multicastSocketCreate(short port)
+MulticastSocket multicastSocketCreate(short port, InetAddress ipAddress)
 {
 	MulticastSocket multicastSocket;
-//	struct sockaddr_in address;
-//	socklen_t addressLength = sizeof(address);
+	struct sockaddr_in address;
+	socklen_t addressLength = sizeof(address);
 
 	multicastSocket = (MulticastSocket)malloc( sizeof(MulticastSocketStruct) );
 	if(multicastSocket == NULL)
@@ -66,36 +66,45 @@ MulticastSocket multicastSocketCreate(short port)
 		return NULL;
 	}
 
-	//multicastSocket->netIf = NULL;
-	multicastSocket->port = port;
-	multicastSocket->timeout.tv_sec = 0;
-	multicastSocket->timeout.tv_usec = 0;
-	multicastSocket->blocking = 1;
-	
-	return multicastSocket;
-	
-/*	memset(&address, 0, sizeof(address));					// Clear the data structure to zero
+	memset(&address, 0, sizeof(address));					// Clear the data structure to zero
 	address.sin_family = AF_INET;							// Set Internet Socket (sin), Family to: Address Family (AF) IPv4 (INET)
-	address.sin_addr.s_addr = inet_addr(ipAddressString);	// Set Internet Socket (sin), Address to: The ipAddressString argument
+	address.sin_addr.s_addr = ipAddress->value;	// Set Internet Socket (sin), Address to: The ipAddressString argument
 	address.sin_port = htons(port);							// Set Internet Socket (sin), Port to: the port argument
 
 	// Bind our open socket to a free port on the localhost, with our defined ipAddress
 	if(bind(multicastSocket->descriptor, (struct sockaddr *)&address, sizeof(address)))
 	{
-		close(multicastSocket->descriptor);
-		return -2;
+		CLOSE_SOCKET(multicastSocket->descriptor);
+		return NULL;
 	}
 
 	if(getsockname(multicastSocket->descriptor, (struct sockaddr *)&address, &addressLength))
 	{
-		close(multicastSocket->descriptor);
-		return -3;
+		CLOSE_SOCKET(multicastSocket->descriptor);
+		return NULL;
 	}
 
-	memset(multicastSocket->ipAddressString, 0, IP_ADDRESS_STRING_SIZE_BYTES);
-	sprintf(multicastSocket->ipAddressString, "%s", inet_ntoa(address.sin_addr));
+#ifdef WIN32
+	if(setsockopt(multicastSocket->descriptor, IPPROTO_IP, IP_MULTICAST_IF, (char *)&ipAddress->value, sizeof(ipAddress->value)))
+	{
+		CLOSE_SOCKET(multicastSocket->descriptor);
+		return NULL;
+	}
+#else
+	if(setsockopt(multicastSocket->descriptor, IPPROTO_IP, IP_MULTICAST_IF, &ipAddress->value, sizeof(ipAddress->value)))
+	{
+		CLOSE_SOCKET(multicastSocket->descriptor);
+		return NULL;
+	}
+#endif
+
+	multicastSocket->address = ipAddress;
 	multicastSocket->port = ntohs(address.sin_port);
-	*/
+	multicastSocket->timeout.tv_sec = 0;
+	multicastSocket->timeout.tv_usec = 0;
+	multicastSocket->blocking = 1;
+	
+	return multicastSocket;
 }
 
 void multicastSocketDestroy(MulticastSocket multicastSocket)
@@ -236,4 +245,31 @@ void multicastSocketSetTimeout(MulticastSocket multicastSocket, double timeoutSe
 	multicastSocket->blocking = 0;
 }
 
+int multicastSocketSetTTL(MulticastSocket multicastSocket, unsigned int ttl)
+{
+	if(ttl > 255)
+	{
+		ttl = 255;
+	}
 
+	if(ttl < 1)
+	{
+		ttl = 1;
+	}
+
+#ifdef WIN32
+	return setsockopt(multicastSocket->descriptor, IPPROTO_IP, IP_MULTICAST_TTL, (char *)&ttl, sizeof(unsigned int)); 
+#else
+	return setsockopt(multicastSocket->descriptor, IPPROTO_IP, IP_MULTICAST_TTL, &ttl, sizeof(unsigned int)); 
+#endif
+	
+}
+
+int multicastSocketSetLoopback(MulticastSocket multicastSocket, unsigned int loop)
+{
+#ifdef WIN32
+	return setsockopt(multicastSocket->descriptor, IPPROTO_IP, IP_MULTICAST_LOOP, (char *)&loop, sizeof(unsigned int)); 
+#else
+	return setsockopt(multicastSocket->descriptor, IPPROTO_IP, IP_MULTICAST_LOOP, &loop, sizeof(unsigned int)); 
+#endif
+}

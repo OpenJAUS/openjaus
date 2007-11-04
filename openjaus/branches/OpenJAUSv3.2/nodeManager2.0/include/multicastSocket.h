@@ -86,12 +86,14 @@ typedef struct
 
 typedef MulticastSocketStruct *MulticastSocket;
 
-MulticastSocket multicastSocketCreate(short);
+MulticastSocket multicastSocketCreate(short, InetAddress ipAddress);
 void multicastSocketDestroy(MulticastSocket);
 //int multicastSocketSetNetIf(MulticastSocket, NetworkInterface);
 int multicastSocketJoinGroup(MulticastSocket, InetAddress);
 int multicastSocketSend(MulticastSocket, DatagramPacket);
 int multicastSocketReceive(MulticastSocket multicastSocket, DatagramPacket packet);
+int multicastSocketSetTTL(MulticastSocket multicastSocket, unsigned int ttl);
+int multicastSocketSetLoopback(MulticastSocket multicastSocket, unsigned int loop);
 
 #ifdef __cplusplus
 }
