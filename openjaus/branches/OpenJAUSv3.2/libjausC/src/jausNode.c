@@ -89,6 +89,7 @@ JausNode jausNodeClone(JausNode node)
 	//Init Values
 	if(node->identification)
 	{
+		clone->identification = (char *) malloc(strlen(node->identification)+1);
 		sprintf(clone->identification, "%s", node->identification);
 	}
 	else

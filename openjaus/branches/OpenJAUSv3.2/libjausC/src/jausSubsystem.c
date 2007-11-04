@@ -88,6 +88,7 @@ JausSubsystem jausSubsystemClone(JausSubsystem subsystem)
 	clone->id = subsystem->id;
 	if(subsystem->identification)
 	{
+		clone->identification = (char *) malloc(strlen(subsystem->identification)+1);
 		sprintf(clone->identification, "%s", subsystem->identification);
 	}
 	else

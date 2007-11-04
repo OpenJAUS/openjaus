@@ -96,7 +96,7 @@ typedef struct
 	JausByte queryType;
 	JausByte authority;
 	JausUnsignedShort type;
-	char identification[80];
+	char identification[JAUS_IDENTIFICATION_LENGTH_BYTES];
 	
 }ReportIdentificationMessageStruct;
 
