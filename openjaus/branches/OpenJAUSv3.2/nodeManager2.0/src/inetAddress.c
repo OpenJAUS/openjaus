@@ -62,6 +62,17 @@ InetAddress inetAddressGetLocalHost(void)
 {
 	struct hostent *localhost;
 	InetAddress address;
+
+#ifdef WIN32	
+	// Initialize the socket subsystem
+	WSADATA wsaData;
+	int err;
+	err = WSAStartup(MAKEWORD(2, 2), &wsaData);
+	if(err != 0)
+	{
+		return NULL;
+	}
+#endif
 	
 	address = (InetAddress) malloc( sizeof(InetAddressStruct) );
 	if( address == NULL )
@@ -87,6 +98,17 @@ InetAddress inetAddressGetByName(char *nameString)
 	struct hostent *host;
 	InetAddress address;
 	
+#ifdef WIN32	
+	// Initialize the socket subsystem
+	WSADATA wsaData;
+	int err;
+	err = WSAStartup(MAKEWORD(2, 2), &wsaData);
+	if(err != 0)
+	{
+		return NULL;
+	}
+#endif
+
 	address = (InetAddress) malloc( sizeof(InetAddressStruct) );
 	if( address == NULL )
 	{
@@ -110,6 +132,17 @@ InetAddress inetAddressGetByString(char *addressString)
 	struct hostent *host;
 	InetAddress address;
 	
+#ifdef WIN32	
+	// Initialize the socket subsystem
+	WSADATA wsaData;
+	int err;
+	err = WSAStartup(MAKEWORD(2, 2), &wsaData);
+	if(err != 0)
+	{
+		return NULL;
+	}
+#endif
+
 	address = (InetAddress) malloc( sizeof(InetAddressStruct) );
 	if( address == NULL )
 	{

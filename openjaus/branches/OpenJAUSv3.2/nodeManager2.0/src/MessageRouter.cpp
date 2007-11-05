@@ -171,12 +171,20 @@ bool MessageRouter::routeNodeSourceMessage(JausMessage message)
 
 bool MessageRouter::routeComponentSourceMessage(JausMessage message)
 {
+
 	// This complies with the MessageRouter Component Source Table v2.0
 	if(!message)
 	{
 		// TODO: Log Error. Throw exception. Invalid message object.
 		return false;
 	}
+
+	//char buf[80] = {0};
+	//printf("routeCmptMsg=> ");
+	//jausAddressToString(message->source, buf);
+	//printf("Routing %s from %s", jausMessageCommandCodeString(message), buf);
+	//jausAddressToString(message->destination, buf);
+	//printf(" to %s\n", buf);
 
 	if(message->source->subsystem != mySubsystemId)
 	{

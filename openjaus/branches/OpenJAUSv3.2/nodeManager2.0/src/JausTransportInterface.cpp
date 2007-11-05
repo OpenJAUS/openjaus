@@ -31,15 +31,10 @@ void JausTransportInterface::stopThread()
 	wakeThread();
 }
 
-void JausTransportInterface::wakeThread()
-{
-	pthread_cond_signal(&threadConditional);
-}
-
 void JausTransportInterface::setupThread()
 {
-	pthread_cond_init(&threadConditional, NULL);
-	pthread_mutex_init(&threadMutex, NULL);
+	pthread_cond_init(&this->threadConditional, NULL);
+	pthread_mutex_init(&this->threadMutex, NULL);
 	pthread_attr_init(&this->threadAttributes);
 	pthread_attr_setdetachstate(&this->threadAttributes, PTHREAD_CREATE_DETACHED);
 
@@ -56,26 +51,37 @@ unsigned long JausTransportInterface::queueSize()
 	return this->queue.size();
 }
 
-bool JausTransportInterface::routeMessage(JausMessage message)
+bool JausTransportInterface::processMessage(JausMessage message)
 {
 	// Should never be used!
 	// TODO: Throw exception. Log Error.
+
+	// Force Segfault
+	int *ptr = NULL;
+	ptr[1] = 1;
+
 	return false;
 }
 
 void JausTransportInterface::queueJausMessage(JausMessage message)
 {
 	this->queue.push(message);
-	
-	if(pthread_mutex_trylock(&threadMutex) != EBUSY)
-	{
-		wakeThread();
-	}
+	wakeThread();
+}
+
+void JausTransportInterface::wakeThread()
+{
+	pthread_cond_signal(&this->threadConditional);
 }
 
 void JausTransportInterface::run()
 {
 	// Should never be used!
+	printf("JausTransportInterface::run should never be used\n");
+	
+	// Force Segfault
+	int *ptr = NULL;
+	ptr[1] = 1;
 }
 
 std::string JausTransportInterface::toString()
@@ -89,6 +95,4 @@ void *ThreadRun(void *obj)
 	jtInterface->run();
 	return NULL;
 }
-
-
 

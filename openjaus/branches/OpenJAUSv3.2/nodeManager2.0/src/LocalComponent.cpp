@@ -14,7 +14,7 @@ void LocalComponent::run()
 	}
 
 	// Lock our mutex
-	pthread_mutex_lock(&threadMutex);
+	pthread_mutex_lock(&this->threadMutex);
 
 	// prepare new timeout value.
 	// Note that we need an absolute time.
@@ -28,22 +28,29 @@ void LocalComponent::run()
 
 	while(this->running)
 	{
-		int rc = pthread_cond_timedwait(&threadConditional, &threadMutex, &timeout);
+		int rc = pthread_cond_timedwait(&this->threadConditional, &this->threadMutex, &timeout);
 		switch(rc)
 		{
 			case 0: // Conditional Signal
+				printf("Queue Signal\n");
 				// Check the send queue
 				while(!this->queue.isEmpty())
 				{
 					// Pop a packet off the queue and send it off
-					routeMessage(queue.pop());
+					processMessage(queue.pop());
+
+					// Check if we need to run our state thread!
+					gettimeofday(&now, NULL);
+					if( now.tv_sec > timeout.tv_sec || (now.tv_usec*1000) > timeout.tv_nsec)
+					{
+						break;
+					}
 				}
 				break;
 			
 			case ETIMEDOUT: // our time is up
 				// Capture time now, that way we get a constant deltaTime from beginning to beginning
 				gettimeofday(&now, NULL);
-
 				switch(cmpt->state)
 				{
 					case JAUS_INITIALIZE_STATE:
@@ -80,6 +87,19 @@ void LocalComponent::run()
 				// timespec uses nano-seconds.
 				// 1 micro-second = 1000 nano-seconds.
 				timeout.tv_nsec = (now.tv_usec * 1000) + (long)(1e9 / this->cmptRateHz);
+
+				while(!this->queue.isEmpty())
+				{
+					// Pop a packet off the queue and send it off
+					processMessage(queue.pop());
+					
+					// Check if we need to run our state thread!
+					gettimeofday(&now, NULL);
+					if( now.tv_sec > timeout.tv_sec || (now.tv_usec*1000) > timeout.tv_nsec)
+					{
+						break;
+					}
+				}
 				break;
 
 			default:
@@ -88,6 +108,6 @@ void LocalComponent::run()
 				break;
 		}
 	}
-	pthread_mutex_unlock(&threadMutex);
+	pthread_mutex_unlock(&this->threadMutex);
 	shutdownState();
 }

@@ -7,12 +7,17 @@
 
 JausComponentCommunicationManager::JausComponentCommunicationManager(FileLoader *configData, MessageRouter *msgRouter, SystemTree *systemTree)
 {
+	this->enabled = true;
 	this->msgRouter = msgRouter;
 	this->systemTree = systemTree;
 	this->configData = configData;
+	this->interfaces.empty();
+	this->interfaceMap.empty();
+
 	this->nodeManagerCmpt = new NodeManagerComponent(this->configData, this);
+	this->interfaces.push_back(nodeManagerCmpt);
 	this->communicatorCmpt = new CommunicatorComponent(this->configData, this);
-	this->enabled = true;
+	this->interfaces.push_back(communicatorCmpt);
 
 	// NOTE: These two values should exist in the properties file and should be checked 
 	// in the NodeManager class prior to constructing this object
@@ -37,19 +42,25 @@ JausComponentCommunicationManager::JausComponentCommunicationManager(FileLoader 
 	// Start component interface(s)
 	if(configData->GetConfigDataBool("Component_Communications", "JAUS_UDP"))
 	{
+		printf("Opening Component Interface:\t");
 		JausUdpInterface *udpInterface = new JausUdpInterface(configData, this);
+		printf("[DONE: %s]\n", udpInterface->toString().c_str());
 		this->interfaces.push_back(udpInterface);
 	}
 
 	if(configData->GetConfigDataBool("Component_Communications", "OpenJAUS_API"))
 	{
+		printf("Opening Component Interface:\t");
 		OjApiComponentInterface *apiCmptInf = new OjApiComponentInterface(configData, this);
+		printf("[DONE: %s]\n", apiCmptInf->toString().c_str());
 		this->interfaces.push_back(apiCmptInf);
 	}
 
 	if(configData->GetConfigDataBool("Component_Communications", "OpenJAUS_UDP"))
 	{
+		printf("Opening Component Interface:\t");
 		OjUdpComponentInterface *udpCmptInf = new OjUdpComponentInterface(configData, this);
+		printf("[DONE: %s]\n", udpCmptInf->toString().c_str());
 		this->interfaces.push_back(udpCmptInf);
 	}
 }
@@ -69,7 +80,7 @@ bool JausComponentCommunicationManager::sendJausMessage(JausMessage message)
 		// TODO: Log Error. Throw Exception
 		return false;
 	}
-	
+
 	// Check for Errors
 	if( message->source->subsystem != mySubsystemId &&
 		message->source->subsystem != JAUS_BROADCAST_SUBSYSTEM_ID )
@@ -119,7 +130,7 @@ bool JausComponentCommunicationManager::receiveJausMessage(JausMessage message, 
 		// TODO: Log Error. Throw Exception
 		return false;
 	}
-	
+
 	if(message->source->subsystem != mySubsystemId)
 	{
 		// ERROR: Received a message from a component that is not from my subsystem!
@@ -136,17 +147,20 @@ bool JausComponentCommunicationManager::receiveJausMessage(JausMessage message, 
 		return false;
 	}
 
+	// Add this source to our interface table
+	interfaceMap[jausAddressHash(message->source)] = srcInf;
+
 	if(message->destination->subsystem == mySubsystemId)
 	{
 		if(message->destination->node == myNodeId)
 		{
 			if(message->destination->component == JAUS_BROADCAST_COMPONENT_ID)
 			{
-				return sendToComponentX(message);
+				return sendToAllInterfaces(message);
 			}
 			else
 			{
-				return sendToAllInterfaces(message);
+				return sendToComponentX(message);
 			}
 		}
 		else
@@ -197,10 +211,10 @@ bool JausComponentCommunicationManager::sendToComponentX(JausMessage message)
 		return false;
 	}
 
-	JausTransportInterface *jtInf = interfaceMap[jausAddressHash(message->destination)];
-	if(jtInf)
+	HASH_MAP<int, JausTransportInterface *>::iterator iter = interfaceMap.find(jausAddressHash(message->destination));
+	if(iter != interfaceMap.end())
 	{
-		jtInf->queueJausMessage(message);
+		iter->second->queueJausMessage(message);
 		return true;
 	}
 	else
@@ -213,7 +227,7 @@ bool JausComponentCommunicationManager::sendToComponentX(JausMessage message)
 
 bool JausComponentCommunicationManager::sendToAllInterfaces(JausMessage message)
 {
-	std::vector <JausTransportInterface *>::iterator iter;
+	HASH_MAP<int, JausTransportInterface *>::iterator iter;
 
 	if(!message)
 	{
@@ -222,9 +236,12 @@ bool JausComponentCommunicationManager::sendToAllInterfaces(JausMessage message)
 		return false;
 	}
 
-	for(iter = interfaces.begin(); iter != interfaces.end(); iter++)
+	for(iter = interfaceMap.begin(); iter != interfaceMap.end(); iter++)
 	{
-		(*iter)->queueJausMessage(jausMessageDuplicate(message));
+		if(iter->second != NULL)
+		{
+			iter->second->queueJausMessage(jausMessageDuplicate(message));
+		}
 	}
 	
 	jausMessageDestroy(message);

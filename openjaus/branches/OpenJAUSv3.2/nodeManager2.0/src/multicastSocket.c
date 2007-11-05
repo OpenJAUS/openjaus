@@ -52,28 +52,44 @@ MulticastSocket multicastSocketCreate(short port, InetAddress ipAddress)
 	MulticastSocket multicastSocket;
 	struct sockaddr_in address;
 	socklen_t addressLength = sizeof(address);
+	
+#ifdef WIN32	
+	// Initialize the socket subsystem
+	WSADATA wsaData;
+	int err;
+	err = WSAStartup(MAKEWORD(2, 2), &wsaData);
+	if(err != 0)
+	{
+		printf("WSA Startup Error\n");
+		return NULL;
+	}
+#endif
 
 	multicastSocket = (MulticastSocket)malloc( sizeof(MulticastSocketStruct) );
 	if(multicastSocket == NULL)
 	{
+		printf("Malloc Error\n");
 		return NULL;
 	}
 	
 	// Open a socket with: Protocol Family (PF) IPv4, of Datagram Socket Type, and using UDP IP protocol explicitly
 	multicastSocket->descriptor = (int) socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP); 
-	if(multicastSocket->descriptor == -1)
+	if(multicastSocket->descriptor == INVALID_SOCKET)
 	{
+		int ev = WSAGetLastError();
+		printf("INVALID_SOCKET %d\n", ev);
 		return NULL;
 	}
 
-	memset(&address, 0, sizeof(address));					// Clear the data structure to zero
-	address.sin_family = AF_INET;							// Set Internet Socket (sin), Family to: Address Family (AF) IPv4 (INET)
+	memset(&address, 0, sizeof(address));			// Clear the data structure to zero
+	address.sin_family = AF_INET;					// Set Internet Socket (sin), Family to: Address Family (AF) IPv4 (INET)
 	address.sin_addr.s_addr = ipAddress->value;	// Set Internet Socket (sin), Address to: The ipAddressString argument
-	address.sin_port = htons(port);							// Set Internet Socket (sin), Port to: the port argument
+	address.sin_port = htons(port);					// Set Internet Socket (sin), Port to: the port argument
 
 	// Bind our open socket to a free port on the localhost, with our defined ipAddress
 	if(bind(multicastSocket->descriptor, (struct sockaddr *)&address, sizeof(address)))
 	{
+		printf("Error: Cannot bind to %s:%d\n", inet_ntoa(address.sin_addr), ntohs(address.sin_port));
 		CLOSE_SOCKET(multicastSocket->descriptor);
 		return NULL;
 	}
@@ -84,6 +100,7 @@ MulticastSocket multicastSocketCreate(short port, InetAddress ipAddress)
 		return NULL;
 	}
 
+	// Let the operating system decide which interface to send multicast on... DK
 #ifdef WIN32
 	if(setsockopt(multicastSocket->descriptor, IPPROTO_IP, IP_MULTICAST_IF, (char *)&ipAddress->value, sizeof(ipAddress->value)))
 	{
@@ -111,6 +128,12 @@ void multicastSocketDestroy(MulticastSocket multicastSocket)
 {
 	CLOSE_SOCKET(multicastSocket->descriptor);
 	free(multicastSocket);
+
+#ifdef WIN32	
+	// Initialize the socket subsystem
+	WSACleanup();
+#endif
+
 }
 //
 //int multicastSocketSetNetIf(MulticastSocket multicastSocket, NetworkInterface netIf)
@@ -190,6 +213,7 @@ int multicastSocketSend(MulticastSocket multicastSocket, DatagramPacket packet)
 
 int multicastSocketReceive(MulticastSocket multicastSocket, DatagramPacket packet)
 {
+	struct timeval timeout;
 	struct timeval *timeoutPtr = NULL;
 	fd_set readSet;
 	struct sockaddr_in fromAddress;
@@ -200,7 +224,8 @@ int multicastSocketReceive(MulticastSocket multicastSocket, DatagramPacket packe
 	
 	if(!multicastSocket->blocking)
 	{
-		timeoutPtr = &multicastSocket->timeout;
+		timeout = multicastSocket->timeout;
+		timeoutPtr = &timeout;
 	}
 	
 	FD_ZERO(&readSet);
@@ -273,3 +298,5 @@ int multicastSocketSetLoopback(MulticastSocket multicastSocket, unsigned int loo
 	return setsockopt(multicastSocket->descriptor, IPPROTO_IP, IP_MULTICAST_LOOP, &loop, sizeof(unsigned int)); 
 #endif
 }
+
+	

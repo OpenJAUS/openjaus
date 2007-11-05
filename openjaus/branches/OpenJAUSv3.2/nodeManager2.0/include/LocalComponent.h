@@ -17,7 +17,7 @@ protected:
 	virtual void failureState() = 0;
 	virtual void shutdownState() = 0;
 	virtual void allState() = 0;
-
+	void wakeThread();
 public:
 	void run();
 

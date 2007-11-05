@@ -38,7 +38,7 @@ public:
 	unsigned long queueSize();
 	void queueJausMessage(JausMessage message);
 
-	virtual bool routeMessage(JausMessage message);
+	virtual bool processMessage(JausMessage message);
 	virtual std::string toString();
 	virtual void run();
 
@@ -57,7 +57,6 @@ protected:
 	pthread_attr_t threadAttributes;
 	pthread_cond_t threadConditional;
 	pthread_mutex_t threadMutex;
-
 };
 
 #endif

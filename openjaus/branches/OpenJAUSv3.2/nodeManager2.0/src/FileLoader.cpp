@@ -57,6 +57,7 @@ bool FileLoader::load_cfg( string filename )
 		else if( token[0] == ';' ); // This is a comment
 		else if( token[0] == '/' ); // This is a comment
 		else if( token[0] == '*' ); // This is a comment
+		else if( token[0] == '#' ); // This is a comment
 		else if( token[0] == '[' ) // This is a label
 		{
 			if( tmp.configheader != "" ){ configFileData.push_back( tmp ); }
