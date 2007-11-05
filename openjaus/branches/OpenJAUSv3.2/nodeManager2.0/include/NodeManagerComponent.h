@@ -16,7 +16,7 @@
 class JausComponentCommunicationManager;
 class SystemTree;
 
-#define NM_RATE_HZ	20
+#define NM_RATE_HZ	10
 #define MAXIMUM_EVENT_ID	255
 
 class NodeManagerComponent : public LocalComponent

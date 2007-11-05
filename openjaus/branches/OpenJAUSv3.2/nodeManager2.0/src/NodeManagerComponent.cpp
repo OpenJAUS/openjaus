@@ -81,17 +81,22 @@ NodeManagerComponent::~NodeManagerComponent(void){}
 
 bool NodeManagerComponent::processMessage(JausMessage message)
 {
-	// First, let double check this is for me!
-	if(!jausAddressEqual(message->destination, cmpt->address))
+	// Check for loopback of message from myself
+	if(jausAddressEqual(message->source, cmpt->address))
 	{
-		// Whoa... this is wrong
-		// TODO: Throw exception? Log an Error.
+		// We sent a broadcast (*.*.255.255) message probably
+		// Just eat it.
 		jausMessageDestroy(message);
-		return false;
+		return true;
 	}
 
-	// TODO: Let's add our hack here for making every message look like a heartbeat!
+	char buf[80] = {0};
+	jausAddressToString(message->source, buf);
+	printf("Process %s from %s", jausMessageCommandCodeString(message), buf);
+	jausAddressToString(message->destination, buf);
+	printf(" to %s\n", buf);
 
+	// TODO: Let's add our hack here for making every message look like a heartbeat!
 	switch(message->commandCode)
 	{
 		case JAUS_SET_COMPONENT_AUTHORITY:
@@ -1508,8 +1513,6 @@ void NodeManagerComponent::generateHeartbeats()
 	
 	if(getTimeSeconds() >= nextSendTime)
 	{
-		printf("Sending HBs\n");
-		
 		heartbeat = reportHeartbeatPulseMessageCreate();
 		if(!heartbeat)
 		{

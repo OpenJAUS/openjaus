@@ -56,10 +56,20 @@
 #endif
 
 #include "timeLib.h"
-	
+
+static char init = 0;
+
 #ifdef WIN32
 double getTimeSeconds(void)
 {
+	TIMECAPS timerInfo;
+
+	if(!init)
+	{
+		timeGetDevCaps(&timerInfo, sizeof(TIMECAPS));
+		timeBeginPeriod(timerInfo.wPeriodMin);
+	}
+
 	return (double) (timeGetTime() / 1000.0);
 }
 #else

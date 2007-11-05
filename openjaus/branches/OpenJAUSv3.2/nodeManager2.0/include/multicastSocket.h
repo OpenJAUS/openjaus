@@ -69,6 +69,9 @@
 #include "inetAddress.h"
 #include "datagramSocket.h"
 
+#define LOOPBACK_ENABLED 1
+#define LOOPBACK_DISABLED 0
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -86,7 +89,7 @@ typedef struct
 
 typedef MulticastSocketStruct *MulticastSocket;
 
-MulticastSocket multicastSocketCreate(short, InetAddress ipAddress);
+MulticastSocket multicastSocketCreate(short, InetAddress ipAdress);
 void multicastSocketDestroy(MulticastSocket);
 //int multicastSocketSetNetIf(MulticastSocket, NetworkInterface);
 int multicastSocketJoinGroup(MulticastSocket, InetAddress);
@@ -94,6 +97,8 @@ int multicastSocketSend(MulticastSocket, DatagramPacket);
 int multicastSocketReceive(MulticastSocket multicastSocket, DatagramPacket packet);
 int multicastSocketSetTTL(MulticastSocket multicastSocket, unsigned int ttl);
 int multicastSocketSetLoopback(MulticastSocket multicastSocket, unsigned int loop);
+void multicastSocketSetTimeout(MulticastSocket multicastSocket, double timeoutSec);
+
 
 #ifdef __cplusplus
 }

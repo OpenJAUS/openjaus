@@ -53,6 +53,17 @@ DatagramSocket datagramSocketCreate(short port, InetAddress ipAddress)
 	struct sockaddr_in address;
 	socklen_t addressLength = sizeof(address);
 
+#ifdef WIN32	
+	// Initialize the socket subsystem
+	WSADATA wsaData;
+	int err;
+	err = WSAStartup(MAKEWORD(2, 2), &wsaData);
+	if(err != 0)
+	{
+		return NULL;
+	}
+#endif
+
 	datagramSocket = (DatagramSocket) malloc( sizeof(DatagramSocketStruct) );
 	if( datagramSocket == NULL )
 	{
@@ -97,6 +108,10 @@ void datagramSocketDestroy(DatagramSocket datagramSocket)
 {
 	CLOSE_SOCKET(datagramSocket->descriptor);
 	free(datagramSocket);
+#ifdef WIN32	
+	// Initialize the socket subsystem
+	WSACleanup();
+#endif
 }
 
 int datagramSocketSend(DatagramSocket datagramSocket, DatagramPacket packet)

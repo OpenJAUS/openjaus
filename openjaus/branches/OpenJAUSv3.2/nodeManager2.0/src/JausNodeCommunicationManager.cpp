@@ -28,9 +28,11 @@ JausNodeCommunicationManager::JausNodeCommunicationManager(FileLoader *configDat
 	}
 
 	// Start subsystem interface(s)
-	if(configData->GetConfigDataBool("Node_Communications", "UDP"))
+	if(configData->GetConfigDataBool("Node_Communications", "JAUS_UDP"))
 	{
+		printf("Opening Node Interface:\t");
 		JausUdpInterface *udpInterface = new JausUdpInterface(configData, this);
+		printf("[DONE: %s]\n", udpInterface->toString().c_str());
 		this->interfaces.push_back(udpInterface);
 	}
 
