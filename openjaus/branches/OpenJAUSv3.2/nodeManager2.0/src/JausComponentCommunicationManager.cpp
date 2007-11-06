@@ -16,8 +16,8 @@ JausComponentCommunicationManager::JausComponentCommunicationManager(FileLoader 
 
 	this->nodeManagerCmpt = new NodeManagerComponent(this->configData, this);
 	this->interfaces.push_back(nodeManagerCmpt);
-	//	this->communicatorCmpt = new CommunicatorComponent(this->configData, this);
-	//	this->interfaces.push_back(communicatorCmpt);
+	this->communicatorCmpt = new CommunicatorComponent(this->configData, this);
+	this->interfaces.push_back(communicatorCmpt);
 
 	// NOTE: These two values should exist in the properties file and should be checked 
 	// in the NodeManager class prior to constructing this object
@@ -82,8 +82,8 @@ bool JausComponentCommunicationManager::sendJausMessage(JausMessage message)
 	}
 
 	// Check for Errors
-	if( message->source->subsystem != mySubsystemId &&
-		message->source->subsystem != JAUS_BROADCAST_SUBSYSTEM_ID )
+	if( message->destination->subsystem != mySubsystemId &&
+		message->destination->subsystem != JAUS_BROADCAST_SUBSYSTEM_ID )
 	{
 		// ERROR: Message not for this subsystem has been routed from the MsgRouter
 		// TODO: Log Error. Throw Exception.
@@ -147,6 +147,12 @@ bool JausComponentCommunicationManager::receiveJausMessage(JausMessage message, 
 		return false;
 	}
 
+	//char buf[80] = {0};
+	//jausAddressToString(message->source, buf);
+	//printf("CmptMngr: Process %s from %s", jausMessageCommandCodeString(message), buf);
+	//jausAddressToString(message->destination, buf);
+	//printf(" to %s\n", buf);
+
 	// Add this source to our interface table
 	interfaceMap[jausAddressHash(message->source)] = srcInf;
 
@@ -165,7 +171,9 @@ bool JausComponentCommunicationManager::receiveJausMessage(JausMessage message, 
 		}
 		else
 		{
+			// Send to MsgRouter
 			msgRouter->routeComponentSourceMessage(jausMessageDuplicate(message));
+			
 			if(message->destination->component == JAUS_BROADCAST_COMPONENT_ID)
 			{
 				return sendToAllInterfaces(message);
@@ -204,6 +212,8 @@ NodeManagerComponent *JausComponentCommunicationManager::getNodeManagerComponent
 
 bool JausComponentCommunicationManager::sendToComponentX(JausMessage message)
 {
+	HASH_MAP<int, JausTransportInterface *>::iterator iter;
+
 	if(!message)
 	{
 		// Error: Invalid message
@@ -211,7 +221,23 @@ bool JausComponentCommunicationManager::sendToComponentX(JausMessage message)
 		return false;
 	}
 
-	HASH_MAP<int, JausTransportInterface *>::iterator iter = interfaceMap.find(jausAddressHash(message->destination));
+	if(	message->destination->subsystem == JAUS_BROADCAST_SUBSYSTEM_ID ||
+		message->destination->node == JAUS_BROADCAST_NODE_ID)
+	{
+		// This is ensure that the jausAddressHash works incase either the Subs or Node IDs are BROADCAST
+		// Assume if we have gotten here this message is actually for our Subs & Node
+		JausAddress lookupAddress = jausAddressClone(message->destination);
+		lookupAddress->subsystem = mySubsystemId;
+		lookupAddress->node = myNodeId;
+
+		iter = interfaceMap.find(jausAddressHash(lookupAddress));
+		jausAddressDestroy(lookupAddress);
+	}
+	else
+	{
+		iter = interfaceMap.find(jausAddressHash(message->destination));
+	}
+	
 	if(iter != interfaceMap.end())
 	{
 		iter->second->queueJausMessage(message);

@@ -18,7 +18,7 @@
 
 #define JAUS_UDP_NAME	"JAUS UDP Interface"
 #define SOCKET_TIMEOUT_SEC		0.5
-#define JAUS_DATA_PORT	3794
+#define JAUS_UDP_DATA_PORT	3794
 
 extern "C" void *UdpRecvThread(void *);
 
@@ -57,10 +57,11 @@ private:
 	pthread_t recvThread;
 	pthread_attr_t recvThreadAttr;
 
-	void sendJausMessage();
+	void sendJausMessage(UdpTransportData data, JausMessage message);
 	void setupRecvThread();
 
 	HASH_MAP <int, UdpTransportData> addressMap;
+	UdpTransportData multicastData;
 };
 
 #endif
