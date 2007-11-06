@@ -16,8 +16,8 @@ JausComponentCommunicationManager::JausComponentCommunicationManager(FileLoader 
 
 	this->nodeManagerCmpt = new NodeManagerComponent(this->configData, this);
 	this->interfaces.push_back(nodeManagerCmpt);
-	this->communicatorCmpt = new CommunicatorComponent(this->configData, this);
-	this->interfaces.push_back(communicatorCmpt);
+	//	this->communicatorCmpt = new CommunicatorComponent(this->configData, this);
+	//	this->interfaces.push_back(communicatorCmpt);
 
 	// NOTE: These two values should exist in the properties file and should be checked 
 	// in the NodeManager class prior to constructing this object
@@ -247,3 +247,4 @@ bool JausComponentCommunicationManager::sendToAllInterfaces(JausMessage message)
 	jausMessageDestroy(message);
 	return true;
 }
+

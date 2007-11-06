@@ -57,9 +57,10 @@
 
 #include "timeLib.h"
 
+#ifdef WIN32
+
 static char init = 0;
 
-#ifdef WIN32
 double getTimeSeconds(void)
 {
 	TIMECAPS timerInfo;

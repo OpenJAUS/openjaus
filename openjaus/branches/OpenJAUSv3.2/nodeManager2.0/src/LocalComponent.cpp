@@ -111,3 +111,4 @@ void LocalComponent::run()
 	pthread_mutex_unlock(&this->threadMutex);
 	shutdownState();
 }
+

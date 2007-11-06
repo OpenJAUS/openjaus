@@ -16,7 +16,7 @@ CommunicatorComponent::CommunicatorComponent(FileLoader *configData, JausCompone
 		return;
 	}
 
-	this->queue = JausTransportQueue();
+	//this->queue = JausTransportQueue();
 }
 
 CommunicatorComponent::~CommunicatorComponent(void)
