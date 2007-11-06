@@ -33,6 +33,7 @@ JausSubsystemCommunicationManager::JausSubsystemCommunicationManager(FileLoader 
 		printf("Opening Subsystem Interface:\t");
 		JausUdpInterface *udpInterface = new JausUdpInterface(configData, this);
 		printf("[DONE: %s]\n", udpInterface->toString().c_str());
+		this->interfaces.push_back(udpInterface);
 	}
 
 	if( configData->GetConfigDataBool("Subsystem_Communications", "Enabled") &&

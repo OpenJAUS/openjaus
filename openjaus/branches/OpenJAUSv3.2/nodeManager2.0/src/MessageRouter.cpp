@@ -14,7 +14,7 @@ MessageRouter::MessageRouter(FileLoader *configData, SystemTree *sysTree)
 
 	// NOTE: These two values should exist in the properties file and should be checked 
 	// in the NodeManager class prior to constructing this object
-	mySubsystemId = configData->GetConfigDataInt("JAUS", "Subsystem Id = ");
+	mySubsystemId = configData->GetConfigDataInt("JAUS", "SubsystemId");
 	if(mySubsystemId < JAUS_MINIMUM_SUBSYSTEM_ID || mySubsystemId > JAUS_MAXIMUM_SUBSYSTEM_ID)
 	{
 		// Invalid ID
@@ -23,7 +23,7 @@ MessageRouter::MessageRouter(FileLoader *configData, SystemTree *sysTree)
 		return;
 	}
 
-	myNodeId = configData->GetConfigDataInt("JAUS", "Node Id = ");
+	myNodeId = configData->GetConfigDataInt("JAUS", "NodeId");
 	if(myNodeId < JAUS_MINIMUM_NODE_ID || myNodeId > JAUS_MAXIMUM_NODE_ID)
 	{
 		// Invalid ID

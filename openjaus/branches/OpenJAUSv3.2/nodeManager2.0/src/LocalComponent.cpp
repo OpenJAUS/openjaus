@@ -32,7 +32,6 @@ void LocalComponent::run()
 		switch(rc)
 		{
 			case 0: // Conditional Signal
-				printf("Queue Signal\n");
 				// Check the send queue
 				while(!this->queue.isEmpty())
 				{

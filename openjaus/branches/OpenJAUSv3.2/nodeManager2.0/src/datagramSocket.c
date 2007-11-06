@@ -119,7 +119,9 @@ int datagramSocketSend(DatagramSocket datagramSocket, DatagramPacket packet)
 	struct sockaddr_in toAddress;
 	int bytesSent = 0;
 	struct timeval timeout;
-	
+	int err = 0;
+	fd_set writeSet;
+
 	memset(&toAddress, 0, sizeof(toAddress));
 	toAddress.sin_family = AF_INET;									// Set Internet Socket (sin), Family to: Address Family (AF) IPv4 (INET)
 	toAddress.sin_addr.s_addr = packet->address->value;				// Set Internet Socket (sin), Address to: The packet ipAddressString
@@ -129,7 +131,12 @@ int datagramSocketSend(DatagramSocket datagramSocket, DatagramPacket packet)
 	timeout.tv_usec = 1000; // Sleep at least one millisecond
 							// TODO: This select is a temporary solution to give the hardware a small amount
 							//		of time to process the data
-	if(select(datagramSocket->descriptor + 1, NULL, NULL, NULL, &timeout) > -1)
+
+	FD_ZERO(&writeSet);
+	FD_SET(datagramSocket->descriptor, &writeSet);
+
+	err = select(datagramSocket->descriptor + 1, NULL, &writeSet, NULL, &timeout);
+	if(err > -1)
 	{
 		bytesSent = sendto(datagramSocket->descriptor, (void *)packet->buffer, packet->bufferSizeBytes, 0, (struct sockaddr *)&toAddress, sizeof(toAddress));
 	}

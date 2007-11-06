@@ -174,7 +174,15 @@ bool SystemTree::hasSubsystemConfiguration(int subsId)
 	if(system[subsId])
 	{
 		// TODO: Check for config info
-		return true;
+		JausSubsystem subs = system[subsId];
+		if(subs->nodes->elementCount > 0)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 	else
 	{
@@ -230,7 +238,15 @@ bool SystemTree::hasNodeIdentification(int subsystemId, int nodeId)
 
 bool SystemTree::hasNodeConfiguration(JausAddress address)
 {
-	return true;
+	JausNode node = findNode(address);
+	if(node && node->components->elementCount > 0)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 
 bool SystemTree::hasComponentIdentification(JausAddress address)
@@ -1199,15 +1215,46 @@ bool SystemTree::replaceSubsystem(int subsystemId, JausSubsystem newSubs)
 		JausNode addNode = findNode(newNode);
 		if(addNode)
 		{
-			addNode = jausNodeClone(addNode);
+			// Compare current with new
+			if(addNode->identification)
+			{
+				newNode->identification = (char *)calloc(1, strlen(addNode->identification)+1);
+				sprintf(newNode->identification, "%s", addNode->identification);
+			}
+
+			for(int j = 0; j < newNode->components->elementCount; j++)
+			{
+				JausComponent newCmpt = (JausComponent) newNode->components->elementData[j];
+				JausComponent addCmpt = findComponent(newCmpt->address);
+				if(addCmpt)
+				{
+					if(addCmpt->identification)
+					{
+						newCmpt->identification = (char *)calloc(1, strlen(addCmpt->identification)+1);
+						sprintf(newCmpt->identification, "%s", addCmpt->identification);
+					}
+
+					jausServicesDestroy(newCmpt->services);
+					newCmpt->services = jausServicesDuplicate(addCmpt->services);
+					newCmpt->node = addNode;
+					jausArrayAdd(addNode->components, addCmpt);
+				}
+				else
+				{
+					// addCmpt doesn't exist, just add it
+					addCmpt = jausComponentClone(addCmpt);
+					addCmpt->node = addNode;
+					jausArrayAdd(addNode->components, addCmpt);
+				}
+			}
 		}
 		else
 		{
-			addNode = jausNodeCreate();
-			addNode->id = newNode->id;
+			// Doesn't exist so just add the new one
+			addNode = jausNodeClone(newNode);
+			addNode->subsystem = cloneSubs;
+			jausArrayAdd(cloneSubs->nodes, addNode);
 		}
-		addNode->subsystem = cloneSubs;
-		jausArrayAdd(cloneSubs->nodes, addNode);
 	}
 	removeSubsystem(subsystemId);
 	system[subsystemId] = cloneSubs;
@@ -1400,6 +1447,7 @@ std::string SystemTree::toString()
 		{
 			jausSubsystemTableToString(system[i], buffer);
 			output += buffer;
+			output += "\n";
 		}
 	}
 

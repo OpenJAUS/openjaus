@@ -36,7 +36,7 @@ NodeManagerComponent::NodeManagerComponent(FileLoader *configData, JausComponent
 	// NOTE: These two values should exist in the properties file and should be checked 
 	// in the NodeManager class prior to constructing this object
 	subsystemId = configData->GetConfigDataInt("JAUS", "SubsystemId");
-	if(subsystemId < 1 || subsystemId > 254)
+	if(subsystemId < JAUS_MINIMUM_SUBSYSTEM_ID || subsystemId > JAUS_MAXIMUM_SUBSYSTEM_ID)
 	{
 		// Invalid ID
 		// TODO: Throw an exception? Log an error.
@@ -44,7 +44,7 @@ NodeManagerComponent::NodeManagerComponent(FileLoader *configData, JausComponent
 	}
 
 	nodeId = configData->GetConfigDataInt("JAUS", "NodeId");
-	if(nodeId < 1 || nodeId > 254)
+	if(nodeId < JAUS_MINIMUM_NODE_ID || nodeId > JAUS_MAXIMUM_NODE_ID)
 	{
 		// Invalid ID
 		// TODO: Throw an exception? Log an error.
@@ -61,7 +61,7 @@ NodeManagerComponent::NodeManagerComponent(FileLoader *configData, JausComponent
 	this->cmpt->address->subsystem = subsystemId;
 	this->cmpt->address->node = nodeId;
 	this->cmpt->address->component = JAUS_NODE_MANAGER;
-	this->cmpt->address->instance = 1;
+	this->cmpt->address->instance = JAUS_MINIMUM_INSTANCE_ID;
 
 	if(!this->commMngr->getSystemTree()->addComponent(this->cmpt->address, this->cmpt))
 	{
@@ -90,11 +90,11 @@ bool NodeManagerComponent::processMessage(JausMessage message)
 		return true;
 	}
 
-	char buf[80] = {0};
-	jausAddressToString(message->source, buf);
-	printf("Process %s from %s", jausMessageCommandCodeString(message), buf);
-	jausAddressToString(message->destination, buf);
-	printf(" to %s\n", buf);
+	//char buf[80] = {0};
+	//jausAddressToString(message->source, buf);
+	//printf("NM Process %s from %s", jausMessageCommandCodeString(message), buf);
+	//jausAddressToString(message->destination, buf);
+	//printf(" to %s\n", buf);
 
 	// TODO: Let's add our hack here for making every message look like a heartbeat!
 	switch(message->commandCode)
@@ -107,93 +107,73 @@ bool NodeManagerComponent::processMessage(JausMessage message)
 		case JAUS_SET_EMERGENCY:
 		case JAUS_CLEAR_EMERGENCY:
 			// These messages are ignored!
-			break;
+			jausMessageDestroy(message);
+			return true;
 		
 		case JAUS_CREATE_SERVICE_CONNECTION:
-			processCreateServiceConnection(message);
-			break;
+			return processCreateServiceConnection(message);
 
 		case JAUS_ACTIVATE_SERVICE_CONNECTION:
-			processActivateServiceConnection(message);
-			break;
+			return processActivateServiceConnection(message);
 
 		case JAUS_SUSPEND_SERVICE_CONNECTION:
-			processSuspendServiceConnection(message);
-			break;
+			return processSuspendServiceConnection(message);
 
 		case JAUS_TERMINATE_SERVICE_CONNECTION:
-			processTerminateServiceConnection(message);
-			break;
+			return processTerminateServiceConnection(message);
 
 		case JAUS_REQUEST_COMPONENT_CONTROL:
-			processRequestComponentControl(message);
-			break;
+			return processRequestComponentControl(message);
 
 		case JAUS_QUERY_COMPONENT_AUTHORITY:
-			processQueryComponentAuthority(message);
-			break;
+			return processQueryComponentAuthority(message);
 
 		case JAUS_QUERY_COMPONENT_STATUS:
-			processQueryComponentStatus(message);
-			break;
+			return processQueryComponentStatus(message);
 
 		case JAUS_QUERY_HEARTBEAT_PULSE:
-			processQueryHeartbeatPulse(message);
-			break;
+			return processQueryHeartbeatPulse(message);
 
 		case JAUS_REPORT_HEARTBEAT_PULSE:
-			processReportHeartbeatPulse(message);
-			break;
+			return processReportHeartbeatPulse(message);
 
 		case JAUS_QUERY_CONFIGURATION:
-			processQueryConfiguration(message);
-			break;
+			return processQueryConfiguration(message);
 
 		case JAUS_QUERY_IDENTIFICATION:
-			processQueryIdentification(message);
-			break;
+			return processQueryIdentification(message);
 
 		case JAUS_QUERY_SERVICES:
-			processQueryServices(message);
-			break;
+			return processQueryServices(message);
 
 		case JAUS_REPORT_CONFIGURATION:
-			processReportConfiguration(message);
-			break;
+			return processReportConfiguration(message);
 
 		case JAUS_REPORT_IDENTIFICATION:
-			processReportIdentification(message);
-			break;
+			return processReportIdentification(message);
 
 		case JAUS_REPORT_SERVICES:
-			processReportServices(message);
-			break;
+			return processReportServices(message);
 
 		case JAUS_CANCEL_EVENT:
-			processCancelEvent(message);
-			break;
+			return processCancelEvent(message);
 
 		case JAUS_CONFIRM_EVENT:
-			processConfirmEvent(message);
-			break;
+			return processConfirmEvent(message);
 
 		case JAUS_CREATE_EVENT:
-			processCreateEvent(message);
-			break;
+			return processCreateEvent(message);
 
 		default:
 			// Unhandled message received by node manager component
 			jausMessageDestroy(message);
 			return false;
 	}
-	
-	jausMessageDestroy(message);
-	return true;
 }
 
 std::string NodeManagerComponent::toString()
 {
-	return "Communicator Component";
+	return "Node Manager Component";
 }
 
 JausAddress NodeManagerComponent::checkInLocalComponent(int cmptId)
@@ -361,7 +341,7 @@ bool NodeManagerComponent::processReportConfiguration(JausMessage message)
 	}
 
 	// My Subs?
-	if(!reportConf->source->subsystem == this->cmpt->address->subsystem)
+	if(reportConf->source->subsystem != this->cmpt->address->subsystem)
 	{
 		systemTree->replaceSubsystem(reportConf->source, reportConf->subsystem);
 
@@ -572,8 +552,6 @@ bool NodeManagerComponent::processReportServices(JausMessage message)
 
 bool NodeManagerComponent::processReportHeartbeatPulse(JausMessage message)
 {
-	// TODO: Forward hearbeats if needed
-
 	// This function follows the flowchart designed for NM 2.0 by D. Kent and T. Galluzzo
 
 	// Has Subs?
@@ -999,8 +977,6 @@ bool NodeManagerComponent::processRequestComponentControl(JausMessage message)
 	ConfirmComponentControlMessage confirmComponentControl = NULL;
 	JausMessage txMessage = NULL;
 
-
-
 	requestComponentControl = requestComponentControlMessageFromJausMessage(message);
 	if(!requestComponentControl)
 	{
@@ -1205,6 +1181,8 @@ bool NodeManagerComponent::processQueryConfiguration(JausMessage message)
 				if(reportConf->subsystem)
 				{
 					txMessage = reportConfigurationMessageToJausMessage(reportConf);
+					jausAddressCopy(txMessage->source, cmpt->address);
+					jausAddressCopy(txMessage->destination, reportConf->source);
 					if(txMessage)
 					{
 						this->commMngr->receiveJausMessage(txMessage, this);
@@ -1241,6 +1219,8 @@ bool NodeManagerComponent::processQueryConfiguration(JausMessage message)
 			}
 
 			txMessage = reportConfigurationMessageToJausMessage(reportConf);
+			jausAddressCopy(txMessage->source, cmpt->address);
+			jausAddressCopy(txMessage->destination, queryConf->source);
 			if(txMessage)
 			{
 				this->commMngr->receiveJausMessage(txMessage, this);
@@ -1300,6 +1280,8 @@ bool NodeManagerComponent::processQueryIdentification(JausMessage message)
 				}
 
 				reportId->queryType = JAUS_QUERY_FIELD_SS_IDENTITY;
+				jausAddressCopy(txMessage->source, cmpt->address);
+				jausAddressCopy(txMessage->destination, queryId->source);
 				txMessage = reportIdentificationMessageToJausMessage(reportId);
 				if(txMessage)
 				{
@@ -1340,6 +1322,8 @@ bool NodeManagerComponent::processQueryIdentification(JausMessage message)
 
 			reportId->queryType = JAUS_QUERY_FIELD_NODE_IDENTITY;
 			txMessage = reportIdentificationMessageToJausMessage(reportId);
+			jausAddressCopy(txMessage->source, cmpt->address);
+			jausAddressCopy(txMessage->destination, queryId->source);
 			if(txMessage)
 			{
 				this->commMngr->receiveJausMessage(txMessage, this);
@@ -1371,6 +1355,8 @@ bool NodeManagerComponent::processQueryIdentification(JausMessage message)
 
 			reportId->queryType = JAUS_QUERY_FIELD_COMPONENT_IDENTITY;
 			txMessage = reportIdentificationMessageToJausMessage(reportId);
+			jausAddressCopy(txMessage->source, cmpt->address);
+			jausAddressCopy(txMessage->destination, queryId->source);
 			if(txMessage)
 			{
 				this->commMngr->receiveJausMessage(txMessage, this);
@@ -1798,8 +1784,7 @@ bool NodeManagerComponent::sendQuerySubsystemConfiguration(JausAddress address, 
 
 		jausAddressCopy(txMessage->destination, address);
 		jausAddressCopy(txMessage->source, cmpt->address);
-		this->commMngr->receiveJausMessage(txMessage, this);
-		jausMessageDestroy(txMessage); // Send Query Node Configuration
+		this->commMngr->receiveJausMessage(txMessage, this); // Send Query Node Configuration
 
 		if(createEvent)
 		{

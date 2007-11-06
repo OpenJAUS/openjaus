@@ -56,28 +56,142 @@ InetAddress JausUdpInterface::getInetAddress(void)
 
 bool JausUdpInterface::routeMessage(JausMessage message)
 {
+	DatagramPacket packet;
+	packet = datagramPacketCreate();
+
 	switch(this->type)
 	{
 		case SUBSYSTEM_INTERFACE:
 			// if subs==BROADCAST send multicast
-
-
+			if(message->destination->subsystem == JAUS_BROADCAST_SUBSYSTEM_ID)
+			{
+				if(this->multicast)
+				{
+					// Send multicast packet
+					sendJausMessage(this->multicastData, message);
+					jausMessageDestroy(message);
+					return true;
+				}
+				else
+				{
+					// Unicast to all known subsystems
+					HASH_MAP<int, UdpTransportData>::iterator iter;
+					for(iter = addressMap.begin(); iter != addressMap.end(); iter++)
+					{
+						sendJausMessage(iter->second, message);
+					}
+					jausMessageDestroy(message);
+					return true;
+				}
+			}
+			else
+			{
+				// Unicast
+				if(addressMap.find(message->destination->subsystem) != addressMap.end())
+				{
+					sendJausMessage(addressMap.find(message->destination->subsystem)->second, message);
+					jausMessageDestroy(message);
+					return true;
+				}
+				else
+				{
+					// Don't know how to send this message
+					jausMessageDestroy(message);
+					return false;
+				}
+			}
 			break;
 
 		case NODE_INTERFACE:
 			// if node==BROADCAST send multicast
+			if(message->destination->node == JAUS_BROADCAST_NODE_ID)
+			{
+				if(this->multicast)
+				{
+					//printf("Sending Node Multicast\n");
+					// Send multicast packet
+					sendJausMessage(this->multicastData, message);
+					jausMessageDestroy(message);
+					return true;
+				}
+				else
+				{
+					// Unicast to all known subsystems
+					HASH_MAP<int, UdpTransportData>::iterator iter;
+					for(iter = addressMap.begin(); iter != addressMap.end(); iter++)
+					{
+						sendJausMessage(iter->second, message);
+					}
+					jausMessageDestroy(message);
+					return true;
+				}
+			}
+			else
+			{
+				// Unicast
+				if(addressMap.find(message->destination->node) != addressMap.end())
+				{
+					sendJausMessage(addressMap.find(message->destination->node)->second, message);
+					jausMessageDestroy(message);
+					return true;
+				}
+				else
+				{
+					// Don't know how to send this message
+					jausMessageDestroy(message);
+					return false;
+				}
+			}
 			break;
 
 		case COMPONENT_INTERFACE:
 			// if cmpt == BROADCAST || inst == BROADCAST send unicast to all components
+			if( message->destination->component == JAUS_BROADCAST_COMPONENT_ID ||
+				message->destination->instance == JAUS_BROADCAST_INSTANCE_ID )
+			{
+				if(this->multicast)
+				{
+					// Send multicast packet
+					sendJausMessage(this->multicastData, message);
+					jausMessageDestroy(message);
+					return true;
+				}
+				else
+				{
+					// Unicast to all known subsystems
+					HASH_MAP<int, UdpTransportData>::iterator iter;
+					for(iter = addressMap.begin(); iter != addressMap.end(); iter++)
+					{
+						sendJausMessage(iter->second, message);
+					}
+					jausMessageDestroy(message);
+					return true;
+				}
+			}
+			else
+			{
+				// Unicast
+				if(addressMap.find(jausAddressHash(message->destination)) != addressMap.end())
+				{
+					sendJausMessage(addressMap.find(jausAddressHash(message->destination))->second, message);
+					jausMessageDestroy(message);
+					return true;
+				}
+				else
+				{
+					// Don't know how to send this message
+					jausMessageDestroy(message);
+					return false;
+				}
+			}
 			break;
 
 		default:
 			// Unknown type
 			// No routing behavior
 			jausMessageDestroy(message);
+			return false;
 	}
-	return true;
 }
 
 void JausUdpInterface::run()
@@ -122,7 +236,7 @@ void JausUdpInterface::openSocket(void)
 			}
 
 			// Create Subsystem Socket
-			this->socket = multicastSocketCreate(JAUS_DATA_PORT, ipAddress);
+			this->socket = multicastSocketCreate(JAUS_UDP_DATA_PORT, ipAddress);
 			if(!this->socket)
 			{
 				// Error creating our socket
@@ -132,18 +246,23 @@ void JausUdpInterface::openSocket(void)
 			// Setup Multicast
 			if(this->configData->GetConfigDataBool("Subsystem_Communications", "JAUS_UDP_Multicast"))
 			{
+				this->multicast = true;
 				this->multicastGroup  = inetAddressGetByString((char *)this->configData->GetConfigDataString("Subsystem_Communications", "JAUS_UDP_Multicast_Group").c_str());
 				multicastSocketJoinGroup(this->socket, this->multicastGroup);
+
+				// Setup TTL
+				multicastSocketSetTTL(this->socket, this->configData->GetConfigDataInt("Subsystem_Communications", "JAUS_UDP_TTL"));
+
+				// Setup Timeout
+				multicastSocketSetTimeout(this->socket, this->configData->GetConfigDataInt("Subsystem_Communications", "JAUS_UDP_Timeout_Sec"));
+
+				// Setup Loopback
+				multicastSocketSetLoopback(this->socket, LOOPBACK_DISABLED);
+
+				// Setup Multicast UdpData
+				multicastData.addressValue = multicastGroup->value;
+				multicastData.port = JAUS_UDP_DATA_PORT;
 			}
-
-			// Setup TTL
-			multicastSocketSetTTL(this->socket, this->configData->GetConfigDataInt("Subsystem_Communications", "JAUS_UDP_TTL"));
-
-			// Setup Timeout
-			multicastSocketSetTimeout(this->socket, this->configData->GetConfigDataInt("Subsystem_Communications", "JAUS_UDP_Timeout_Sec"));
-
-			// Setup Loopback
-			multicastSocketSetLoopback(this->socket, LOOPBACK_DISABLED);
 			break;
 
 		case NODE_INTERFACE:
@@ -157,7 +276,7 @@ void JausUdpInterface::openSocket(void)
 			}
 
 			// Create Node Socket
-			this->socket = multicastSocketCreate(JAUS_DATA_PORT, ipAddress);
+			this->socket = multicastSocketCreate(JAUS_UDP_DATA_PORT, ipAddress);
 			if(!this->socket)
 			{
 				// Error creating our socket
@@ -167,15 +286,20 @@ void JausUdpInterface::openSocket(void)
 			// Setup Multicast
 			if(this->configData->GetConfigDataBool("Node_Communications", "JAUS_UDP_Multicast"))
 			{
+				this->multicast = true;
 				this->multicastGroup  = inetAddressGetByString((char *)this->configData->GetConfigDataString("Node_Communications", "JAUS_UDP_Multicast_Group").c_str());
 				multicastSocketJoinGroup(this->socket, this->multicastGroup);
+
+				// Setup Timeout
+				multicastSocketSetTimeout(this->socket, this->configData->GetConfigDataInt("Node_Communications", "JAUS_UDP_Timeout_Sec"));
+
+				// Setup Loopback
+				multicastSocketSetLoopback(this->socket, LOOPBACK_DISABLED);
+
+				// Setup Multicast UdpData
+				multicastData.addressValue = multicastGroup->value;
+				multicastData.port = JAUS_UDP_DATA_PORT;
 			}
-
-			// Setup Timeout
-			multicastSocketSetTimeout(this->socket, this->configData->GetConfigDataInt("Node_Communications", "JAUS_UDP_Timeout_Sec"));
-
-			// Setup Loopback
-			multicastSocketSetLoopback(this->socket, LOOPBACK_DISABLED);
 			break;
 
 		case COMPONENT_INTERFACE:
@@ -189,7 +313,7 @@ void JausUdpInterface::openSocket(void)
 			}
 
 			// Create Component Socket
-			this->socket = multicastSocketCreate(JAUS_DATA_PORT, ipAddress);
+			this->socket = multicastSocketCreate(JAUS_UDP_DATA_PORT, ipAddress);
 			if(!this->socket)
 			{
 				// Error creating our socket
@@ -199,21 +323,47 @@ void JausUdpInterface::openSocket(void)
 			// Setup Multicast
 			if(this->configData->GetConfigDataBool("Component_Communications", "JAUS_UDP_Multicast"))
 			{
+				this->multicast = true;
 				this->multicastGroup  = inetAddressGetByString((char *)this->configData->GetConfigDataString("Component_Communications", "JAUS_UDP_Multicast_Group").c_str());
 				multicastSocketJoinGroup(this->socket, this->multicastGroup);
+
+				// Setup Timeout
+				multicastSocketSetTimeout(this->socket, this->configData->GetConfigDataInt("Component_Communications", "JAUS_UDP_Timeout_Sec"));
+
+				// Setup Loopback
+				multicastSocketSetLoopback(this->socket, LOOPBACK_DISABLED);
+
+				// Setup Multicast UdpData
+				multicastData.addressValue = multicastGroup->value;
+				multicastData.port = JAUS_UDP_DATA_PORT;
 			}
-
-			// Setup Timeout
-			multicastSocketSetTimeout(this->socket, this->configData->GetConfigDataInt("Component_Communications", "JAUS_UDP_Timeout_Sec"));
-
-			// Setup Loopback
-			multicastSocketSetLoopback(this->socket, LOOPBACK_DISABLED);
 			break;
 
 		default:
 			// Unknown type
 			break;
 	}
+}
+
+void JausUdpInterface::sendJausMessage(UdpTransportData data, JausMessage message)
+{
+	DatagramPacket packet = NULL;
+	int result;
+
+	packet = datagramPacketCreate();
+	packet->bufferSizeBytes = (int) jausMessageUdpSize(message);
+	packet->buffer = (unsigned char *) calloc(packet->bufferSizeBytes, 1);
+	packet->port = data.port;
+	packet->address->value = data.addressValue;
+	memset(packet->buffer, 0, packet->bufferSizeBytes);
+	
+	if(jausMessageToUdpBuffer(message, packet->buffer, packet->bufferSizeBytes))
+	{
+		result = multicastSocketSend(this->socket, packet);
+	}
+
+	free(packet->buffer);
+	datagramPacketDestroy(packet);
 }
 
 void JausUdpInterface::closeSocket(void)
@@ -251,19 +401,19 @@ void JausUdpInterface::recvThreadRun()
 				{
 					case SUBSYSTEM_INTERFACE:
 						data.addressValue = packet->address->value;
-						data.port = packet->port;
+						data.port = JAUS_UDP_DATA_PORT;
 						this->addressMap[rxMessage->source->subsystem] = data;
 						break;
 
 					case NODE_INTERFACE:
 						data.addressValue = packet->address->value;
-						data.port = packet->port;
+						data.port = JAUS_UDP_DATA_PORT;
 						this->addressMap[rxMessage->source->node] = data;
 						break;
 
 					case COMPONENT_INTERFACE:
 						data.addressValue = packet->address->value;
-						data.port = packet->port;
+						data.port = JAUS_UDP_DATA_PORT;
 						this->addressMap[jausAddressHash(rxMessage->source)] = data;
 						break;
 

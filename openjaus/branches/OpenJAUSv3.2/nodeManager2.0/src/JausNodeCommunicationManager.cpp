@@ -70,7 +70,13 @@ bool JausNodeCommunicationManager::sendJausMessage(JausMessage message)
 		// TODO: Log Error. Throw Exception
 		return false;
 	}
-	
+
+	//char buf[80] = {0};
+	//jausAddressToString(message->source, buf);
+	//printf("NCommMngr: Process %s from %s", jausMessageCommandCodeString(message), buf);
+	//jausAddressToString(message->destination, buf);
+	//printf(" to %s\n", buf);
+
 	if(message->source->subsystem != mySubsystemId)
 	{
 		if( message->destination->subsystem == JAUS_BROADCAST_SUBSYSTEM_ID ||
