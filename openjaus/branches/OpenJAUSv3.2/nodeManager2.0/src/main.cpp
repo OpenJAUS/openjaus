@@ -1,4 +1,11 @@
-#include <windows.h>
+#if defined(WIN32)
+	#include <windows.h>
+	#define SLEEP_SEC(x) Sleep((DWORD)x*1e3)
+#elif defined(__linux) || defined(linux) || defined(__linux__)
+	#include <unistd.h>
+	#define SLEEP_SEC(x) usleep((unsigned int)(x*1e6))
+#endif
+
 #include "NodeManager.h"
 
 int main(int argc, char *args)
@@ -10,8 +17,9 @@ int main(int argc, char *args)
 
 	while(1)
 	{
-		Sleep(1000);
+		SLEEP_SEC(1);
 	}
 
 	return 0;
 }
+

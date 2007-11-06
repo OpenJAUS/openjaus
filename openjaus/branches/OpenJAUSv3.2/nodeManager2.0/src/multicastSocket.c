@@ -74,10 +74,9 @@ MulticastSocket multicastSocketCreate(short port, InetAddress ipAddress)
 	
 	// Open a socket with: Protocol Family (PF) IPv4, of Datagram Socket Type, and using UDP IP protocol explicitly
 	multicastSocket->descriptor = (int) socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP); 
-	if(multicastSocket->descriptor == INVALID_SOCKET)
+	if(multicastSocket->descriptor == -1)
 	{
-		int ev = WSAGetLastError();
-		printf("INVALID_SOCKET %d\n", ev);
+		printf("INVALID_SOCKET\n");
 		return NULL;
 	}
 
@@ -299,4 +298,3 @@ int multicastSocketSetLoopback(MulticastSocket multicastSocket, unsigned int loo
 #endif
 }
 
-	
