@@ -123,9 +123,8 @@ static JausBoolean dataFromBuffer(ReportConfigurationMessage message, unsigned c
 
 				// create component and add to node
 				tempComponent = jausComponentCreate();
-				*tempComponent->address = *tempAddress;
+				jausAddressCopy(tempComponent->address, tempAddress);
 				tempComponent->node = tempNode;
-				
 				jausArrayAdd(tempNode->components, tempComponent);
 			}
 			
