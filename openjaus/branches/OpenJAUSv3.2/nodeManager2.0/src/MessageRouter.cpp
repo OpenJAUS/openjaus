@@ -120,7 +120,8 @@ bool MessageRouter::routeNodeSourceMessage(JausMessage message)
 			}
 			else if(message->destination->subsystem == mySubsystemId)
 			{
-				if(message->destination->node == myNodeId)
+				if( message->destination->node != myNodeId &&
+					message->destination->node != JAUS_BROADCAST_NODE_ID)
 				{
 					// ERROR: Message for another node on this subsystem recv'd through NodeComms
 					// TODO: Log Error. Throw Exception.

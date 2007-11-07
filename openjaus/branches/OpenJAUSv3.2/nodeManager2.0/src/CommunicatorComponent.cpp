@@ -24,7 +24,7 @@ CommunicatorComponent::CommunicatorComponent(FileLoader *configData, JausCompone
 	this->type = COMPONENT_INTERFACE;
 	this->commMngr = cmptComms;
 	this->configData = configData;
-	this->name = "Communicator";
+	this->name = "OpenJAUS Communicator v2.0";
 	this->cmptRateHz = COMMUNICATOR_RATE_HZ;
 	this->systemTree = cmptComms->getSystemTree();
 	for(int i = 0; i < MAXIMUM_EVENT_ID; i++)
@@ -61,19 +61,16 @@ CommunicatorComponent::CommunicatorComponent(FileLoader *configData, JausCompone
 	this->cmpt->address->node = nodeId;
 	this->cmpt->address->component = JAUS_COMMUNICATOR;
 	this->cmpt->address->instance = JAUS_MINIMUM_INSTANCE_ID;
-
-	if(!this->commMngr->getSystemTree()->addComponent(this->cmpt->address, this->cmpt))
-	{
-		// TODO: Log Error, we can't add a node manager with instance 1
-	}
-
 	this->cmpt->node = systemTree->getNode(subsystemId, nodeId);
 	this->cmpt->identification = (char *)this->name.c_str();
 
-	systemTree->addComponent(this->cmpt);
+	this->startupState();
 
 	this->setupThread();
-	this->startupState();
+	if(!systemTree->addComponent(this->cmpt))
+	{
+		// TODO: Log Error, we can't add a node manager with instance 1
+	}
 }
 
 CommunicatorComponent::~CommunicatorComponent(void){}
@@ -1152,7 +1149,7 @@ bool CommunicatorComponent::processQueryConfiguration(JausMessage message)
 			{
 				txMessage = reportConfigurationMessageToJausMessage(reportConf);
 				jausAddressCopy(txMessage->source, cmpt->address);
-				jausAddressCopy(txMessage->destination, reportConf->source);
+				jausAddressCopy(txMessage->destination, queryConf->source);
 				if(txMessage)
 				{
 					this->commMngr->receiveJausMessage(txMessage, this);

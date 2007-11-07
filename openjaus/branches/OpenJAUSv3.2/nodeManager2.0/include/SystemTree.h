@@ -122,12 +122,14 @@ public:
 
 	std::string toString();
 	std::string toDetailedString();
-	void refresh(JausAddress address);
+	void refresh();
 
 private:
 	FileLoader *configData;
 	JausSubsystem system[255];
 	int subsystemCount;
+	int mySubsystemId;
+	int myNodeId;
 
 	JausNode findNode(JausNode node);
 	JausNode findNode(JausAddress address);

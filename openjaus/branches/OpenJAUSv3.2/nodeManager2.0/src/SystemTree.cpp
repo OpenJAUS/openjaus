@@ -4,6 +4,10 @@
 SystemTree::SystemTree(FileLoader *configData)
 {
 	this->configData = configData;
+
+	mySubsystemId = configData->GetConfigDataInt("JAUS", "SubsystemId");
+	myNodeId = configData->GetConfigDataInt("JAUS", "NodeId");
+
 	memset(system, 0, sizeof(system));
 	subsystemCount = 0;
 }
@@ -859,7 +863,7 @@ JausSubsystem *SystemTree::getSystem(void)
 	JausSubsystem *systemClone = (JausSubsystem *)malloc(subsystemCount*sizeof(JausSubsystem));
 	int systemCloneIndex = 0;
 	
-	for(int i = 1; i < 255; i++)
+	for(int i = JAUS_MINIMUM_SUBSYSTEM_ID; i < JAUS_MAXIMUM_SUBSYSTEM_ID; i++)
 	{
 		if(system[i])
 		{
@@ -1257,7 +1261,7 @@ bool SystemTree::replaceSubsystem(int subsystemId, JausSubsystem newSubs)
 		}
 	}
 	removeSubsystem(subsystemId);
-	system[subsystemId] = cloneSubs;
+	addSubsystem(cloneSubs);
 	return true;
 }
 
@@ -1310,22 +1314,6 @@ bool SystemTree::replaceNode(int subsystemId, int nodeId, JausNode newNode)
 	jausArrayAdd(system[subsystemId]->nodes, cloneNode);
 	return true;
 }
-
-//bool SystemTree::replaceComponent(JausAddress address, JausComponent newCmpt)
-//{
-//	JausComponent oldCmpt = findComponent(address->subsystem, address->node, address->component, address->instense);
-//	if(oldCmpt)
-//	{
-//		// Ok, this component already exists in the table
-//		// Copy data over from the old component to this new one
-//	}
-//	else
-//	{
-//		// This component isn't in the table! No need to replace, we'll just put a copy in there
-//		addComponent(jausComponentClone(newCmpt));
-//		return true;
-//	}
-//}
 
 bool SystemTree::setSubsystemIdentification(JausAddress address, char *identification)
 {
@@ -1434,14 +1422,14 @@ char *SystemTree::getNodeIdentification(int subsId, int nodeId)
 std::string SystemTree::toString()
 {
 	string output = string();
-	char buffer[4096];
+	char buffer[4096] = {0};
 
 	if(subsystemCount == 0)
 	{
 		return "System Tree Empty\n";
 	}
 
-	for(int i=0; i<255; i++)
+	for(int i = JAUS_MINIMUM_SUBSYSTEM_ID; i < JAUS_MAXIMUM_SUBSYSTEM_ID; i++)
 	{
 		if(system[i])
 		{
@@ -1454,7 +1442,86 @@ std::string SystemTree::toString()
 	return output;
 }
 	
-//std::string SystemTree::toDetailedString();
-//void SystemTree::refresh(JausAddress address);
+std::string SystemTree::toDetailedString()
+{
+	string output = string();
+	char buffer[20480] = {0};
+	unsigned int bufferSize = 0;
+
+	if(subsystemCount == 0)
+	{
+		return "System Tree Empty\n";
+	}
+
+	for(int i = JAUS_MINIMUM_SUBSYSTEM_ID; i < JAUS_MAXIMUM_SUBSYSTEM_ID; i++)
+	{
+		if(system[i])
+		{
+			jausSubsystemTableToDetailedString(system[i], buffer);
+			output += buffer;
+			output += "\n";
+		}
+	}
+
+	return output;
+}
+
+void SystemTree::refresh()
+{
+	int i = 0;
+	int j = 0;
+	int k = 0;
+
+	for(i = JAUS_MINIMUM_SUBSYSTEM_ID; i < JAUS_MAXIMUM_SUBSYSTEM_ID; i++)
+	{
+		if(system[i])
+		{
+			if(system[i]->id == mySubsystemId)
+			{
+				for(j = 0; j < system[i]->nodes->elementCount; j++)
+				{
+					JausNode node = (JausNode) system[i]->nodes->elementData[j];
+					if(node->id == myNodeId)
+					{
+						for(k = 0; k < node->components->elementCount; k++)
+						{
+							JausComponent cmpt = (JausComponent) node->components->elementData[k];
+
+							if(jausComponentIsTimedOut(cmpt))
+							{
+								char tempBuf[1024] = {0};
+								jausComponentToString(cmpt, tempBuf);
+								printf("Component TIMEOUT: %s\n", tempBuf);
+								jausArrayRemoveAt(node->components, k); k--;
+								jausComponentDestroy(cmpt);
+							}
+						}
+					}
+					else
+					{
+						if(jausNodeIsTimedOut(node))
+						{
+							char tempBuf[1024] = {0};
+							jausNodeToString(node, tempBuf);
+							printf("Node TIMEOUT: %s\n", tempBuf);
+							removeNode(node);
+						}
+					}
+				}
+			}
+			else
+			{
+				if(jausSubsystemIsTimedOut(system[i]))
+				{
+					char tempBuf[1024] = {0};
+					jausSubsystemToString(system[i], tempBuf);
+					printf("Subsystem TIMEOUT: %s\n", tempBuf);
+					removeSubsystem(system[i]->id);
+				}
+			}
+		}
+	}
+
+}
 
 

@@ -162,11 +162,6 @@ int multicastSocketJoinGroup(MulticastSocket multicastSocket, InetAddress groupI
 		return -1;
 	}
 
-	//if(multicastSocket->netIf == NULL)
-	//{
-	//	return -1;
-	//}
-
 	multicastRequest.imr_multiaddr.s_addr = groupIpAddress->value;
 	
 	//multicastRequest.imr_address.s_addr = multicastSocket->netIf->address->value;
@@ -179,42 +174,21 @@ int multicastSocketJoinGroup(MulticastSocket multicastSocket, InetAddress groupI
 #else
 	return setsockopt(multicastSocket->descriptor, IPPROTO_IP, IP_ADD_MEMBERSHIP, &multicastRequest, sizeof(multicastRequest)); 
 #endif
-
 }
 
 int multicastSocketSend(MulticastSocket multicastSocket, DatagramPacket packet)
 {
 	struct sockaddr_in toAddress;
 	int bytesSent = 0;
-	struct timeval timeout;
-	int err = 0;
-	fd_set writeSet;
 
 	memset(&toAddress, 0, sizeof(toAddress));
-	toAddress.sin_family = AF_INET;									// Set Internet Socket (sin), Family to: Address Family (AF) IPv4 (INET)
-	toAddress.sin_addr.s_addr = packet->address->value;	// Set Internet Socket (sin), Address to: The packet ipAddressString
-	toAddress.sin_port = htons(packet->port);						// Set Internet Socket (sin), Port to: the packet port
+	toAddress.sin_family = AF_INET;							// Set Internet Socket (sin), Family to: Address Family (AF) IPv4 (INET)
+	toAddress.sin_addr.s_addr = packet->address->value;		// Set Internet Socket (sin), Address to: The packet ipAddressString
+	toAddress.sin_port = htons(packet->port);				// Set Internet Socket (sin), Port to: the packet port
 	
-	timeout.tv_sec = 0;
-	timeout.tv_usec = 1000; // Sleep at least one millisecond
-							// TODO: This select is a temporary solution to give the hardware a small amount
-							//		of time to process the data
-
-	//FD_ZERO(&writeSet);
-	//FD_SET(multicastSocket->descriptor, &writeSet);
-
-	//err = select(multicastSocket->descriptor + 1, NULL, &writeSet, NULL, &timeout);
-	//if(err > -1)
-	//{
-		bytesSent = sendto(multicastSocket->descriptor, (void *)packet->buffer, packet->bufferSizeBytes, 0, (struct sockaddr *)&toAddress, sizeof(toAddress));
-		return bytesSent;
-	//}
-	//else
-	//{
-	//	return -1;
-	//}
+	bytesSent = sendto(multicastSocket->descriptor, (void *)packet->buffer, packet->bufferSizeBytes, 0, (struct sockaddr *)&toAddress, sizeof(toAddress));
+	return bytesSent;
 }
-
 
 int multicastSocketReceive(MulticastSocket multicastSocket, DatagramPacket packet)
 {
@@ -244,7 +218,6 @@ int multicastSocketReceive(MulticastSocket multicastSocket, DatagramPacket packe
 		{
 			fromAddressLength = sizeof(fromAddress);
 			bytesReceived = recvfrom(multicastSocket->descriptor, packet->buffer, packet->bufferSizeBytes, 0, (struct sockaddr*)&fromAddress, &fromAddressLength);
-			//printf("Recv'd %d bytes\n", bytesReceived);
 		}
 		else
 		{

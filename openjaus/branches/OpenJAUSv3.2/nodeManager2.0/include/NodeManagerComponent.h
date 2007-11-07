@@ -16,8 +16,9 @@
 class JausComponentCommunicationManager;
 class SystemTree;
 
-#define NM_RATE_HZ	10
+#define NM_RATE_HZ			10
 #define MAXIMUM_EVENT_ID	255
+#define REFRESH_TIME_SEC	1
 
 class NodeManagerComponent : public LocalComponent
 {
@@ -54,7 +55,8 @@ private:
 	void sendNodeChangedEvents();
 	void sendSubsystemChangedEvents();
 	void generateHeartbeats();
-	
+	bool setupJausServices();
+
 	bool sendQueryNodeIdentification(JausAddress address);
 	bool sendQuerySubsystemIdentification(JausAddress address);
 	bool sendQueryComponentIdentification(JausAddress address);

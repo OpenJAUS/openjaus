@@ -28,9 +28,14 @@ void JausTransportQueue::push(JausMessage inc)
 
 JausMessage JausTransportQueue::pop(void)
 {
-	JausMessage out = list.front();
-	list.pop();
-	return out;
+	if(!list.empty())
+	{
+		JausMessage out = list.front();
+		list.pop();
+		return out;
+	}
+	else
+		return NULL;
 }
 
 bool JausTransportQueue::isEmpty(void)
