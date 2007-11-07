@@ -25,7 +25,7 @@ NodeManagerComponent::NodeManagerComponent(FileLoader *configData, JausComponent
 	this->type = COMPONENT_INTERFACE;
 	this->commMngr = cmptComms;
 	this->configData = configData;
-	this->name = "NodeManager";
+	this->name = "OpenJAUS Node Manager v2.0";
 	this->cmptRateHz = NM_RATE_HZ;
 	this->systemTree = cmptComms->getSystemTree();
 	for(int i = 0; i < MAXIMUM_EVENT_ID; i++)
@@ -62,25 +62,32 @@ NodeManagerComponent::NodeManagerComponent(FileLoader *configData, JausComponent
 	this->cmpt->address->node = nodeId;
 	this->cmpt->address->component = JAUS_NODE_MANAGER;
 	this->cmpt->address->instance = JAUS_MINIMUM_INSTANCE_ID;
-
-	if(!this->commMngr->getSystemTree()->addComponent(this->cmpt->address, this->cmpt))
-	{
-		// TODO: Log Error, we can't add a node manager with instance 1
-	}
+	this->setupJausServices();
 
 	this->cmpt->node = systemTree->getNode(subsystemId, nodeId);
 	this->cmpt->identification = (char *)this->name.c_str();
 
-	systemTree->addComponent(this->cmpt);
-
-	this->setupThread();
 	this->startupState();
+	this->setupThread();
+
+
+	if(!systemTree->addComponent(this->cmpt->address, this->cmpt))
+	{
+		// TODO: Log Error, we can't add a node manager with instance 1
+	}
 }
 
 NodeManagerComponent::~NodeManagerComponent(void){}
 
 bool NodeManagerComponent::processMessage(JausMessage message)
 {
+	if(!message)
+	{
+		// TODO: ERROR
+		printf("How does this happen?\n");
+		return false;
+	}
+
 	// Check for loopback of message from myself
 	if(jausAddressEqual(message->source, cmpt->address))
 	{
@@ -221,62 +228,6 @@ void NodeManagerComponent::checkOutLocalComponent(JausAddress address)
 
 void NodeManagerComponent::startupState()
 {
-	JausService service;
-	service = jausServiceCreate(0);
-	if(!service) return;
-	jausServiceAddInputCommand(service, JAUS_SET_COMPONENT_AUTHORITY, NO_PRESENCE_VECTOR);
-	jausServiceAddInputCommand(service, JAUS_SHUTDOWN, NO_PRESENCE_VECTOR);
-	jausServiceAddInputCommand(service, JAUS_STANDBY, NO_PRESENCE_VECTOR);
-	jausServiceAddInputCommand(service, JAUS_RESUME, NO_PRESENCE_VECTOR);
-	jausServiceAddInputCommand(service, JAUS_RESET, NO_PRESENCE_VECTOR);
-	jausServiceAddInputCommand(service, JAUS_SET_EMERGENCY, NO_PRESENCE_VECTOR);
-	jausServiceAddInputCommand(service, JAUS_CLEAR_EMERGENCY, NO_PRESENCE_VECTOR);
-	jausServiceAddInputCommand(service, JAUS_CREATE_SERVICE_CONNECTION, NO_PRESENCE_VECTOR);
-	jausServiceAddInputCommand(service, JAUS_ACTIVATE_SERVICE_CONNECTION, NO_PRESENCE_VECTOR);
-	jausServiceAddInputCommand(service, JAUS_SUSPEND_SERVICE_CONNECTION, NO_PRESENCE_VECTOR);
-	jausServiceAddInputCommand(service, JAUS_TERMINATE_SERVICE_CONNECTION, NO_PRESENCE_VECTOR);
-	jausServiceAddInputCommand(service, JAUS_REQUEST_COMPONENT_CONTROL, NO_PRESENCE_VECTOR);
-	jausServiceAddInputCommand(service, JAUS_QUERY_COMPONENT_AUTHORITY, NO_PRESENCE_VECTOR);
-	jausServiceAddInputCommand(service, JAUS_QUERY_COMPONENT_STATUS, NO_PRESENCE_VECTOR);
-	jausServiceAddInputCommand(service, JAUS_QUERY_HEARTBEAT_PULSE, NO_PRESENCE_VECTOR);
-
-	jausServiceAddOutputCommand(service, JAUS_CREATE_SERVICE_CONNECTION, NO_PRESENCE_VECTOR);
-	jausServiceAddOutputCommand(service, JAUS_CONFIRM_SERVICE_CONNECTION, NO_PRESENCE_VECTOR);
-	jausServiceAddOutputCommand(service, JAUS_TERMINATE_SERVICE_CONNECTION, NO_PRESENCE_VECTOR);
-	jausServiceAddOutputCommand(service, JAUS_CONFIRM_COMPONENT_CONTROL, NO_PRESENCE_VECTOR);
-	jausServiceAddOutputCommand(service, JAUS_REJECT_COMPONENT_CONTROL, NO_PRESENCE_VECTOR);
-	jausServiceAddOutputCommand(service, JAUS_REPORT_COMPONENT_AUTHORITY, NO_PRESENCE_VECTOR);
-	jausServiceAddOutputCommand(service, JAUS_REPORT_COMPONENT_STATUS, NO_PRESENCE_VECTOR);
-	jausServiceAddOutputCommand(service, JAUS_REPORT_HEARTBEAT_PULSE, NO_PRESENCE_VECTOR);
-	jausServiceAddOutputCommand(service, JAUS_QUERY_COMPONENT_STATUS, NO_PRESENCE_VECTOR);
-
-	// Add Core Service
-	jausServiceAddService(cmpt->services, service);
-
-	service = jausServiceCreate(JAUS_NODE_MANAGER);
-	if(!service) return;
-	jausServiceAddInputCommand(service, JAUS_QUERY_CONFIGURATION, NO_PRESENCE_VECTOR);
-	jausServiceAddInputCommand(service, JAUS_QUERY_IDENTIFICATION, NO_PRESENCE_VECTOR);
-	jausServiceAddInputCommand(service, JAUS_QUERY_SERVICES, NO_PRESENCE_VECTOR);
-	jausServiceAddInputCommand(service, JAUS_REPORT_CONFIGURATION, NO_PRESENCE_VECTOR);
-	jausServiceAddInputCommand(service, JAUS_REPORT_IDENTIFICATION, NO_PRESENCE_VECTOR);
-	jausServiceAddInputCommand(service, JAUS_REPORT_SERVICES, NO_PRESENCE_VECTOR);
-	jausServiceAddInputCommand(service, JAUS_CANCEL_EVENT, NO_PRESENCE_VECTOR);
-	jausServiceAddInputCommand(service, JAUS_CONFIRM_EVENT, NO_PRESENCE_VECTOR);
-	jausServiceAddInputCommand(service, JAUS_CREATE_EVENT, NO_PRESENCE_VECTOR);
-
-	jausServiceAddOutputCommand(service, JAUS_QUERY_CONFIGURATION, NO_PRESENCE_VECTOR);
-	jausServiceAddOutputCommand(service, JAUS_QUERY_IDENTIFICATION, NO_PRESENCE_VECTOR);
-	jausServiceAddOutputCommand(service, JAUS_QUERY_SERVICES, NO_PRESENCE_VECTOR);
-	jausServiceAddOutputCommand(service, JAUS_REPORT_CONFIGURATION, NO_PRESENCE_VECTOR);
-	jausServiceAddOutputCommand(service, JAUS_REPORT_IDENTIFICATION, NO_PRESENCE_VECTOR);
-	jausServiceAddOutputCommand(service, JAUS_REPORT_SERVICES, NO_PRESENCE_VECTOR);
-	jausServiceAddOutputCommand(service, JAUS_CANCEL_EVENT, NO_PRESENCE_VECTOR);
-	jausServiceAddOutputCommand(service, JAUS_CONFIRM_EVENT, NO_PRESENCE_VECTOR);
-	jausServiceAddOutputCommand(service, JAUS_CREATE_EVENT, NO_PRESENCE_VECTOR);
-
-	// Add Node Manager Service
-	jausServiceAddService(cmpt->services, service);
 }
 
 void NodeManagerComponent::intializeState()
@@ -312,8 +263,15 @@ void NodeManagerComponent::shutdownState()
 
 void NodeManagerComponent::allState()
 {
+	static double refreshTime = 0;
 	generateHeartbeats();
-	// TODO: Create SystemTree refresh trigger at some rate
+	if(getTimeSeconds() >= refreshTime)
+	{
+		systemTree->updateComponentTimestamp(this->cmpt->address);
+		systemTree->refresh();
+		refreshTime = getTimeSeconds() + REFRESH_TIME_SEC;
+	}
+
 	// TODO: Check for serviceConnections
 }
 
@@ -1837,6 +1795,68 @@ int NodeManagerComponent::getNextEventId()
 		}
 	}
 	return -1;
+}
+
+bool NodeManagerComponent::setupJausServices()
+{
+	JausService service;
+	service = jausServiceCreate(0);
+	if(!service) return false;
+	jausServiceAddInputCommand(service, JAUS_SET_COMPONENT_AUTHORITY, NO_PRESENCE_VECTOR);
+	jausServiceAddInputCommand(service, JAUS_SHUTDOWN, NO_PRESENCE_VECTOR);
+	jausServiceAddInputCommand(service, JAUS_STANDBY, NO_PRESENCE_VECTOR);
+	jausServiceAddInputCommand(service, JAUS_RESUME, NO_PRESENCE_VECTOR);
+	jausServiceAddInputCommand(service, JAUS_RESET, NO_PRESENCE_VECTOR);
+	jausServiceAddInputCommand(service, JAUS_SET_EMERGENCY, NO_PRESENCE_VECTOR);
+	jausServiceAddInputCommand(service, JAUS_CLEAR_EMERGENCY, NO_PRESENCE_VECTOR);
+	jausServiceAddInputCommand(service, JAUS_CREATE_SERVICE_CONNECTION, NO_PRESENCE_VECTOR);
+	jausServiceAddInputCommand(service, JAUS_ACTIVATE_SERVICE_CONNECTION, NO_PRESENCE_VECTOR);
+	jausServiceAddInputCommand(service, JAUS_SUSPEND_SERVICE_CONNECTION, NO_PRESENCE_VECTOR);
+	jausServiceAddInputCommand(service, JAUS_TERMINATE_SERVICE_CONNECTION, NO_PRESENCE_VECTOR);
+	jausServiceAddInputCommand(service, JAUS_REQUEST_COMPONENT_CONTROL, NO_PRESENCE_VECTOR);
+	jausServiceAddInputCommand(service, JAUS_QUERY_COMPONENT_AUTHORITY, NO_PRESENCE_VECTOR);
+	jausServiceAddInputCommand(service, JAUS_QUERY_COMPONENT_STATUS, NO_PRESENCE_VECTOR);
+	jausServiceAddInputCommand(service, JAUS_QUERY_HEARTBEAT_PULSE, NO_PRESENCE_VECTOR);
+
+	jausServiceAddOutputCommand(service, JAUS_CREATE_SERVICE_CONNECTION, NO_PRESENCE_VECTOR);
+	jausServiceAddOutputCommand(service, JAUS_CONFIRM_SERVICE_CONNECTION, NO_PRESENCE_VECTOR);
+	jausServiceAddOutputCommand(service, JAUS_TERMINATE_SERVICE_CONNECTION, NO_PRESENCE_VECTOR);
+	jausServiceAddOutputCommand(service, JAUS_CONFIRM_COMPONENT_CONTROL, NO_PRESENCE_VECTOR);
+	jausServiceAddOutputCommand(service, JAUS_REJECT_COMPONENT_CONTROL, NO_PRESENCE_VECTOR);
+	jausServiceAddOutputCommand(service, JAUS_REPORT_COMPONENT_AUTHORITY, NO_PRESENCE_VECTOR);
+	jausServiceAddOutputCommand(service, JAUS_REPORT_COMPONENT_STATUS, NO_PRESENCE_VECTOR);
+	jausServiceAddOutputCommand(service, JAUS_REPORT_HEARTBEAT_PULSE, NO_PRESENCE_VECTOR);
+	jausServiceAddOutputCommand(service, JAUS_QUERY_COMPONENT_STATUS, NO_PRESENCE_VECTOR);
+
+	// Add Core Service
+	jausServiceAddService(cmpt->services, service);
+
+	service = jausServiceCreate(JAUS_NODE_MANAGER);
+	if(!service) return false;
+	jausServiceAddInputCommand(service, JAUS_QUERY_CONFIGURATION, NO_PRESENCE_VECTOR);
+	jausServiceAddInputCommand(service, JAUS_QUERY_IDENTIFICATION, NO_PRESENCE_VECTOR);
+	jausServiceAddInputCommand(service, JAUS_QUERY_SERVICES, NO_PRESENCE_VECTOR);
+	jausServiceAddInputCommand(service, JAUS_REPORT_CONFIGURATION, NO_PRESENCE_VECTOR);
+	jausServiceAddInputCommand(service, JAUS_REPORT_IDENTIFICATION, NO_PRESENCE_VECTOR);
+	jausServiceAddInputCommand(service, JAUS_REPORT_SERVICES, NO_PRESENCE_VECTOR);
+	jausServiceAddInputCommand(service, JAUS_CANCEL_EVENT, NO_PRESENCE_VECTOR);
+	jausServiceAddInputCommand(service, JAUS_CONFIRM_EVENT, NO_PRESENCE_VECTOR);
+	jausServiceAddInputCommand(service, JAUS_CREATE_EVENT, NO_PRESENCE_VECTOR);
+
+	jausServiceAddOutputCommand(service, JAUS_QUERY_CONFIGURATION, NO_PRESENCE_VECTOR);
+	jausServiceAddOutputCommand(service, JAUS_QUERY_IDENTIFICATION, NO_PRESENCE_VECTOR);
+	jausServiceAddOutputCommand(service, JAUS_QUERY_SERVICES, NO_PRESENCE_VECTOR);
+	jausServiceAddOutputCommand(service, JAUS_REPORT_CONFIGURATION, NO_PRESENCE_VECTOR);
+	jausServiceAddOutputCommand(service, JAUS_REPORT_IDENTIFICATION, NO_PRESENCE_VECTOR);
+	jausServiceAddOutputCommand(service, JAUS_REPORT_SERVICES, NO_PRESENCE_VECTOR);
+	jausServiceAddOutputCommand(service, JAUS_CANCEL_EVENT, NO_PRESENCE_VECTOR);
+	jausServiceAddOutputCommand(service, JAUS_CONFIRM_EVENT, NO_PRESENCE_VECTOR);
+	jausServiceAddOutputCommand(service, JAUS_CREATE_EVENT, NO_PRESENCE_VECTOR);
+
+	// Add Node Manager Service
+	jausServiceAddService(cmpt->services, service);
+
+	return true;
 }
 
 

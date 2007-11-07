@@ -48,11 +48,14 @@ int main(int argc, char *args)
 					}
 					else if(inputEvents[i].Event.KeyEvent.bKeyDown)
 					{
-						switch(inputEvents[i].Event.KeyEvent.wVirtualKeyCode)
+						switch(inputEvents[i].Event.KeyEvent.uChar.AsciiChar)
 						{
-							case 't':
 							case 'T':
-								printf("%s", nm->getSystemTable().c_str());
+								printf("\n\n%s", nm->systemTableToDetailedString().c_str());
+								break;
+						
+							case 't':
+								printf("\n\n%s", nm->systemTableToString().c_str());
 								break;
 							
 							case 'c':
@@ -60,6 +63,12 @@ int main(int argc, char *args)
 								system("cls");
 								break;
 
+							case '?':
+								printf("\n\nOpenJAUS Nodemanager Help\n");
+								printf("   t - Print System Tree\n");
+								printf("   T - Print Detailed System Tree\n");
+								printf("   c - Clear console window\n");
+								printf("   ? - This Help Menu\n");
 							default:
 								break;
 						}
@@ -94,4 +103,3 @@ int main(int argc, char *args)
 	return 0;
 }
 #endif
-

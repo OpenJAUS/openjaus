@@ -62,7 +62,12 @@ NodeManager::~NodeManager(void)
 	delete systemTree;
 }
 
-std::string NodeManager::getSystemTable()
+std::string NodeManager::systemTableToString()
 {
 	return systemTree->toString();
+}
+
+std::string NodeManager::systemTableToDetailedString()
+{
+	return systemTree->toDetailedString();
 }

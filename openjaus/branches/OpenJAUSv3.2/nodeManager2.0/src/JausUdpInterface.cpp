@@ -108,7 +108,7 @@ bool JausUdpInterface::routeMessage(JausMessage message)
 			{
 				if(this->multicast)
 				{
-					//printf("Sending Node Multicast\n");
+					//if(message->commandCode == JAUS_QUERY_SERVICES) printf("Sending Node Multicast JAUS_QUERY_SERVICES\n");
 					// Send multicast packet
 					sendJausMessage(this->multicastData, message);
 					jausMessageDestroy(message);

@@ -210,7 +210,7 @@ bool JausNodeCommunicationManager::receiveJausMessage(JausMessage message, JausT
 			// Put Interface data on the map
 			interfaceMap[message->source->node] = srcInf;
 
-			if(message->destination->node == myNodeId)
+			if(message->destination->node != myNodeId && message->destination->node != JAUS_BROADCAST_NODE_ID)
 			{
 				// ERROR: Message not for this node recv'd from another node
 				// TODO: Log Error. Throw Exception
