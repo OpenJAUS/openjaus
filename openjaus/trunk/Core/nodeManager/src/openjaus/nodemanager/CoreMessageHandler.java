@@ -351,7 +351,7 @@ public class CoreMessageHandler
 								queryIdMsg.setDestination(message.getSource());
 								queryIdMsg.setSource(thisComponent.getAddress());
 								
-								buffer = new byte[queryServicesMsg.size()];
+								buffer = new byte[queryIdMsg.size()];
 								queryIdMsg.toJausBuffer(buffer);
 								packet = new DatagramPacket(buffer, buffer.length, thisNode.getIpAddress(), thisComponent.getPort());
 							    outputQueue.push(packet);
