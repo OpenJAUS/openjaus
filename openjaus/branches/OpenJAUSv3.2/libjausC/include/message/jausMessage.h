@@ -290,6 +290,7 @@ JausBoolean jausMessageToBuffer(JausMessage message, unsigned char *buffer, unsi
 JausBoolean jausMessageToUdpBuffer(JausMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 JausBoolean jausMessageFromBuffer(JausMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 char *jausMessageCommandCodeString(JausMessage);
+char *jausCommandCodeString(unsigned short commandCode);
 JausMessage jausMessageDuplicate(JausMessage);
 JausBoolean jausMessageIsRejectableCommand(JausMessage message);
 

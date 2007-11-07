@@ -113,10 +113,13 @@ void jausSubsystemUpdateTimestamp(JausSubsystem subsystem)
 	time(&subsystem->timeStampSec);  
 }
 
-//JausBoolean jausSubsystemIsTimedOut(JausSubsystem subsystem)
-//{
-//	return (getTimeSeconds() - NODE_TIMEOUT_SEC) > subsystem->timestamp ? JAUS_TRUE : JAUS_FALSE;
-//}
+JausBoolean jausSubsystemIsTimedOut(JausSubsystem subsystem)
+{
+	time_t now;
+	time(&now);
+
+	return difftime(now, subsystem->timeStampSec) > SUBSYSTEM_TIMEOUT_SEC? JAUS_TRUE : JAUS_FALSE;
+}
 
 JausBoolean jausSubsystemFreeMemory(JausSubsystem subsystem)
 {
@@ -172,9 +175,11 @@ int jausSubsystemTableToString(JausSubsystem subsystem, char *buf)
 {
 	int i = 0;
 	int j = 0;
+	int k = 0;
 	char tempBuf[256] = {0};
 	JausNode node;
 	JausComponent comp;
+	JausService service;
 	
 	jausSubsystemToString(subsystem, tempBuf);
 	sprintf(buf, "%s\n", tempBuf);
@@ -185,7 +190,55 @@ int jausSubsystemTableToString(JausSubsystem subsystem, char *buf)
 
 		jausNodeToString(node, tempBuf);
 		
-		sprintf(buf, "%s\t%s\n", buf, tempBuf);
+		sprintf(buf, "%s   %s\n", buf, tempBuf);
+		
+		for(j = 0; j < node->components->elementCount; j++)
+		{
+			comp = (JausComponent)node->components->elementData[j];
+
+			memset(tempBuf, 0, 256);
+			
+			jausComponentToString(comp, tempBuf);
+			
+			sprintf(buf, "%s      %s\n", buf, tempBuf);
+		
+			memset(tempBuf, 0, 256);
+
+			sprintf(tempBuf, "         Services (%d):", comp->services->elementCount);
+			for(k = 0; k < comp->services->elementCount; k++)
+			{
+				service = (JausService) comp->services->elementData[k];
+				sprintf(tempBuf, "%s %d,", tempBuf, service->type);
+			}
+			strncat(buf, tempBuf, strlen(tempBuf)-1);
+			sprintf(buf, "%s\n", buf);
+		}
+	}
+
+	return (int)strlen(buf);
+}
+
+int jausSubsystemTableToDetailedString(JausSubsystem subsystem, char *buf)
+{
+	int i = 0;
+	int j = 0;
+	int k = 0;
+	char tempBuf[256] = {0};
+	JausNode node;
+	JausComponent comp;
+	JausService service;
+	JausCommand command;
+
+	jausSubsystemToString(subsystem, tempBuf);
+	sprintf(buf, "%s\n", tempBuf);
+	
+	for(i = 0; i < subsystem->nodes->elementCount; i++)
+	{
+		node = (JausNode)subsystem->nodes->elementData[i];
+
+		jausNodeToString(node, tempBuf);
+		
+		sprintf(buf, "%s   %s\n", buf, tempBuf);
 		
 		for(j = 0; j < node->components->elementCount; j++)
 		{
@@ -195,12 +248,30 @@ int jausSubsystemTableToString(JausSubsystem subsystem, char *buf)
 			
 			jausComponentToString(comp, tempBuf);
 			
-			sprintf(buf, "%s\t\t%s\n", buf, tempBuf);
+			sprintf(buf, "%s      %s\n", buf, tempBuf);
+			for(k = 0; k < comp->services->elementCount; k++)
+			{
+				service = (JausService) comp->services->elementData[k];
+				sprintf(buf, "%s         Service Type: %d\n", buf, service->type);
+				
+				sprintf(buf, "%s         INPUT:\n", buf);
+				command = service->inputCommandList;
+				while(command)
+				{
+					sprintf(buf, "%s            %s (0x%04X)\n", buf, jausCommandCodeString(command->commandCode), command->presenceVector);
+					command = command->next;
+				}
+				
+				sprintf(buf, "%s         OUTPUT:\n", buf);
+				command = service->outputCommandList;
+				while(command)
+				{
+					sprintf(buf, "%s            %s (0x%04X)\n", buf, jausCommandCodeString(command->commandCode), command->presenceVector);
+					command = command->next;
+				};
+			}
 		}
 	}
 	
 	return (int)strlen(buf);
 }
-
-
-

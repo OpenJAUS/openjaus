@@ -220,9 +220,14 @@ JausBoolean jausMessageIsRejectableCommand(JausMessage message)
 
 char *jausMessageCommandCodeString(JausMessage message)
 {
+	return jausCommandCodeString(message->commandCode);
+}
+
+char *jausCommandCodeString(unsigned short commandCode)
+{
 	static char string[128] = {0};
 	
-	switch(message->commandCode)
+	switch(commandCode)
 	{
 		case JAUS_SET_COMPONENT_AUTHORITY:
 			return "JAUS_SET_COMPONENT_AUTHORITY";
@@ -495,7 +500,7 @@ char *jausMessageCommandCodeString(JausMessage message)
 		case JAUS_REPORT_VKS_OBJECTS:
 			return "JAUS_REPORT_VKS_OBJECTS";
 		default:
-			sprintf(string, "UNDEFINED MESSAGE: %04X", message->commandCode); 
+			sprintf(string, "UNDEFINED MESSAGE: 0x%04", commandCode); 
 			return string;
 	}	
 }

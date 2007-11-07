@@ -204,7 +204,7 @@ char *jausComponentGetTypeString(JausComponent component)
 		case JAUS_RANGE_SENSOR:
 				return "RangeSensor";
 		default:
-				return "Experimental/UnkownComponent";
+				return "Experimental/UnknownComponent";
 	}
 }
 
@@ -239,10 +239,13 @@ JausBoolean jausComponentHasServices(JausComponent cmpt)
 }
 
 // Test if the component has not been updated in COMPONENT_TIMEOUT_SEC seconds
-//JausBoolean jausComponentIsTimedOut(JausComponent component)
-//{
-//	return (getTimeSeconds() - JAUS_COMPONENT_TIMEOUT_SEC) > component->timestamp ? JAUS_TRUE : JAUS_FALSE;
-//}
+JausBoolean jausComponentIsTimedOut(JausComponent component)
+{
+	time_t now;
+	time(&now);
+
+	return difftime(now, component->timeStampSec) > COMPONENT_TIMEOUT_SEC? JAUS_TRUE : JAUS_FALSE;
+}
 
 int jausComponentToString(JausComponent component, char *buf)
 {

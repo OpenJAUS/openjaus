@@ -66,12 +66,12 @@ JausSubsystem jausSubsystemClone(JausSubsystem);
 JausBoolean jausSubsystemFreeMemory(JausSubsystem);
 
 void jausSubsystemUpdateTimestamp(JausSubsystem);
-//JausBoolean jausSubsystemIsTimedOut(JausSubsystem);
+JausBoolean jausSubsystemIsTimedOut(JausSubsystem);
 JausBoolean jausSubsystemHasIdentification(JausSubsystem);
 JausBoolean jausSubsystemHasConfiguration(JausSubsystem);
 
 int jausSubsystemToString(JausSubsystem, char *);
 int jausSubsystemTableToString(JausSubsystem, char *);
-
+int jausSubsystemTableToDetailedString(JausSubsystem, char *);
 
 #endif
