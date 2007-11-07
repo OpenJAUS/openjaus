@@ -124,10 +124,13 @@ void jausNodeUpdateTimestamp(JausNode node)
 	time(&node->timeStampSec);  
 }
 
-//JausBoolean jausNodeHasTimedOut(JausNode node)
-//{
-//	return (getTimeSeconds() - NODE_TIMEOUT_SEC) > node->timestamp ? JAUS_TRUE : JAUS_FALSE;
-//}
+JausBoolean jausNodeIsTimedOut(JausNode node)
+{
+	time_t now;
+	time(&now);
+
+	return difftime(now, node->timeStampSec) > NODE_TIMEOUT_SEC? JAUS_TRUE : JAUS_FALSE;
+}
 
 int jausNodeToString(JausNode node, char *buf)
 {	
