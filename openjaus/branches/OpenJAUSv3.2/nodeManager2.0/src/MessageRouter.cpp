@@ -3,10 +3,11 @@
 #include "JausNodeCommunicationManager.h"
 #include "JausComponentCommunicationManager.h"
 
-MessageRouter::MessageRouter(FileLoader *configData, SystemTree *sysTree)
+MessageRouter::MessageRouter(FileLoader *configData, SystemTree *sysTree, EventHandler *handler)
 {
 	this->systemTree = sysTree;
 	this->configData = configData;
+	this->eventHandler = handler;
 
 	this->cmptComms = new JausComponentCommunicationManager(configData, this, systemTree);
 	this->nodeComms = new JausNodeCommunicationManager(configData, this, systemTree);

@@ -1,9 +1,11 @@
 #include "SystemTree.h"
 #include "timeLib.h"
+#include "NodeManagerEvent.h"
 
-SystemTree::SystemTree(FileLoader *configData)
+SystemTree::SystemTree(FileLoader *configData, EventHandler *handler)
 {
 	this->configData = configData;
+	this->eventHandler = handler;
 
 	mySubsystemId = configData->GetConfigDataInt("JAUS", "SubsystemId");
 	myNodeId = configData->GetConfigDataInt("JAUS", "NodeId");
@@ -14,6 +16,7 @@ SystemTree::SystemTree(FileLoader *configData)
 
 SystemTree::~SystemTree(void)
 {
+	// TODO: Delete all the memory I own (system)
 }
 
 bool SystemTree::updateComponentTimestamp(JausAddress address)
@@ -1488,9 +1491,11 @@ void SystemTree::refresh()
 
 							if(jausComponentIsTimedOut(cmpt))
 							{
-								char tempBuf[1024] = {0};
-								jausComponentToString(cmpt, tempBuf);
-								printf("Component TIMEOUT: %s\n", tempBuf);
+								// Create Subsystem Event and send it off
+								SystemTreeEvent *e = new SystemTreeEvent(SystemTreeEvent::ComponentTimeout, cmpt);
+								this->eventHandler->handleEvent(e);
+
+								// Remove this component
 								jausArrayRemoveAt(node->components, k); k--;
 								jausComponentDestroy(cmpt);
 							}

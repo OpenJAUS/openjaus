@@ -1,12 +1,14 @@
 #ifndef NODEMANAGER_H
 #define NODEMANAGER_H
 
+#include <list>
 #include "MessageRouter.h"
 #include "SystemTree.h"
 #include "FileLoader.h"
+#include "EventHandler.h"
 #include "jaus.h"
 
-class NodeManager
+class NodeManager : public EventHandler
 {
 public:
 	NodeManager(FileLoader *configData);
@@ -14,6 +16,8 @@ public:
 
 	std::string systemTreeToString();
 	std::string systemTreeToDetailedString();
+
+	bool registerEventHandler(EventHandler *handler);
 
 private:
 	FileLoader *configData;
@@ -23,6 +27,9 @@ private:
 	
 	JausNode node;
 	JausSubsystem subsystem;
+
+	void handleEvent(NodeManagerEvent *e);
+	std::list <EventHandler *> eventHandlers;
 };
 
 #endif

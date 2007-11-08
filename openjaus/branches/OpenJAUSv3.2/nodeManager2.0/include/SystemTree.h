@@ -2,12 +2,13 @@
 #define SYSTEM_TREE_H
 
 #include "FileLoader.h"
+#include "EventHandler.h"
 #include "jaus.h"
 
 class SystemTree
 {
 public:
-	SystemTree(FileLoader *configData);
+	SystemTree(FileLoader *configData, EventHandler *handler);
 	~SystemTree(void);
 
 	bool updateComponentTimestamp(JausAddress address);
@@ -126,6 +127,7 @@ public:
 
 private:
 	FileLoader *configData;
+	EventHandler *eventHandler;
 	JausSubsystem system[255];
 	int subsystemCount;
 	int mySubsystemId;

@@ -3,7 +3,7 @@
 NodeManager::NodeManager(FileLoader *configData)
 {
 	// Create our systemTable
-	this->systemTree = new SystemTree(configData);
+	this->systemTree = new SystemTree(configData, this);
 
 	// Create this subsystem
 	this->subsystem = jausSubsystemCreate();
@@ -49,11 +49,14 @@ NodeManager::NodeManager(FileLoader *configData)
 
 	// TODO: Check our config file parameters
 
+	// Initialize our eventHandler list
+	eventHandlers.empty();
+
 	// Add this subsystem
 	this->systemTree->addSubsystem(subsystem);
 
 	// Create our MsgRouter
-	this->msgRouter = new MessageRouter(configData, systemTree);
+	this->msgRouter = new MessageRouter(configData, systemTree, this);
 }
 
 NodeManager::~NodeManager(void)
@@ -70,4 +73,24 @@ std::string NodeManager::systemTreeToString()
 std::string NodeManager::systemTreeToDetailedString()
 {
 	return systemTree->toDetailedString();
+}
+
+bool NodeManager::registerEventHandler(EventHandler *handler)
+{
+	if(handler)
+	{
+		this->eventHandlers.push_back(handler);
+		return true;
+	}
+	return false;
+}
+
+void NodeManager::handleEvent(NodeManagerEvent *e)
+{
+	// Send to all registered handlers
+	std::list <EventHandler *>::iterator iter;
+	for(iter = eventHandlers.begin(); iter != eventHandlers.end(); iter++)
+	{
+		(*iter)->handleEvent(e);
+	}
 }
