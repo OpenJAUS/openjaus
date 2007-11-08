@@ -25,35 +25,39 @@ std::string NodeManagerEvent::toString()
 
 SystemTreeEvent::SystemTreeEvent(unsigned int type)
 {
-	this->eventType = type;
-	subs = NULL;
-	node = NULL;
-	cmpt = NULL;
+	this->type = NodeManagerEvent::SystemTreeEvent;
+	this->subType = type;
+	this->subs = NULL;
+	this->node = NULL;
+	this->cmpt = NULL;
 }
 
 SystemTreeEvent::SystemTreeEvent(unsigned int type, JausSubsystem subs)
 {
-	this->eventType = type;
-	subs = jausSubsystemClone(subs);
-	node = NULL;
-	cmpt = NULL;
+	this->type = NodeManagerEvent::SystemTreeEvent;
+	this->subType = type;
+	this->subs = jausSubsystemClone(subs);
+	this->node = NULL;
+	this->cmpt = NULL;
 }
 
 
 SystemTreeEvent::SystemTreeEvent(unsigned int type, JausNode node)
 {
-	this->eventType = type;
-	subs = NULL;
-	node = jausNodeClone(node);
-	cmpt = NULL;
+	this->type = NodeManagerEvent::SystemTreeEvent;
+	this->subType = type;
+	this->subs = NULL;
+	this->node = jausNodeClone(node);
+	this->cmpt = NULL;
 }
 
 SystemTreeEvent::SystemTreeEvent(unsigned int type, JausComponent cmpt)
 {
-	this->eventType = type;
-	subs = NULL;
-	node = NULL;
-	cmpt = jausComponentClone(cmpt);
+	this->type = NodeManagerEvent::SystemTreeEvent;
+	this->subType = type;
+	this->subs = NULL;
+	this->node = NULL;
+	this->cmpt = jausComponentClone(cmpt);
 }
 
 SystemTreeEvent::~SystemTreeEvent()
@@ -69,7 +73,7 @@ std::string SystemTreeEvent::toString()
 	std::string output = "";
 	char buf[128] = {0};
 
-	switch(this->eventType)
+	switch(this->subType)
 	{
 		case SystemTreeEvent::SubsystemAdded:
 			jausSubsystemToString(this->subs, buf);
@@ -90,21 +94,39 @@ std::string SystemTreeEvent::toString()
 			return output;
 
 		case SystemTreeEvent::NodeAdded:
+			jausNodeToString(this->node, buf);
+			output += "Node ADDED: ";
+			output += buf;
 			return output;
 
 		case SystemTreeEvent::NodeRemoved:
+			jausNodeToString(this->node, buf);
+			output += "Node REMOVED: ";
+			output += buf;
 			return output;
 		
 		case SystemTreeEvent::NodeTimeout:
+			jausNodeToString(this->node, buf);
+			output += "Node TIMEOUT: ";
+			output += buf;
 			return output;
 
 		case SystemTreeEvent::ComponentAdded:
+			jausComponentToString(this->cmpt, buf);
+			output += "Component ADDED: ";
+			output += buf;
 			return output;
 
 		case SystemTreeEvent::ComponentRemoved:
+			jausComponentToString(this->cmpt, buf);
+			output += "Component REMOVED: ";
+			output += buf;
 			return output;
 
 		case SystemTreeEvent::ComponentTimeout:
+			jausComponentToString(this->cmpt, buf);
+			output += "Component TIMEOUT: ";
+			output += buf;
 			return output;
 	
 		default:
