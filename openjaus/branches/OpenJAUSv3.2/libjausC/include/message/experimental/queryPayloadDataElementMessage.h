@@ -102,7 +102,6 @@ JausBoolean queryPayloadDataElementMessageToBuffer(QueryPayloadDataElementMessag
 QueryPayloadDataElementMessage queryPayloadDataElementMessageFromJausMessage(JausMessage jausMessage);
 JausMessage queryPayloadDataElementMessageToJausMessage(QueryPayloadDataElementMessage message);
 
-unsigned int queryPayloadDataElementMessageUdpSize(QueryPayloadDataElementMessage message);
 unsigned int queryPayloadDataElementMessageSize(QueryPayloadDataElementMessage message);
 
 #endif

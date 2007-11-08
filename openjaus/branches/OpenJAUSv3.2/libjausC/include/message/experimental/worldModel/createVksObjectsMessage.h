@@ -110,7 +110,6 @@ JausBoolean createVksObjectsMessageToBuffer(CreateVksObjectsMessage message, uns
 CreateVksObjectsMessage createVksObjectsMessageFromJausMessage(JausMessage jausMessage);
 JausMessage createVksObjectsMessageToJausMessage(CreateVksObjectsMessage message);
 
-unsigned int createVksObjectsMessageUdpSize(CreateVksObjectsMessage message);
 unsigned int createVksObjectsMessageSize(CreateVksObjectsMessage message);
 
 

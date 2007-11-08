@@ -100,7 +100,6 @@ JausBoolean queryTimeMessageToBuffer(QueryTimeMessage message, unsigned char *bu
 QueryTimeMessage queryTimeMessageFromJausMessage(JausMessage jausMessage);
 JausMessage queryTimeMessageToJausMessage(QueryTimeMessage message);
 
-unsigned int queryTimeMessageUdpSize(QueryTimeMessage message);
 unsigned int queryTimeMessageSize(QueryTimeMessage message);
 
 

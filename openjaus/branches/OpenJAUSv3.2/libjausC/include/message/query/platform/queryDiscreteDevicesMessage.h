@@ -99,7 +99,6 @@ JausBoolean queryDiscreteDevicesMessageToBuffer(QueryDiscreteDevicesMessage mess
 QueryDiscreteDevicesMessage queryDiscreteDevicesMessageFromJausMessage(JausMessage jausMessage);
 JausMessage queryDiscreteDevicesMessageToJausMessage(QueryDiscreteDevicesMessage message);
 
-unsigned int queryDiscreteDevicesMessageUdpSize(QueryDiscreteDevicesMessage message);
 unsigned int queryDiscreteDevicesMessageSize(QueryDiscreteDevicesMessage message);
 
 

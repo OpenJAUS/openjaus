@@ -146,11 +146,6 @@ JausBoolean queryPlatformOperationalDataMessageFromBuffer(QueryPlatformOperation
 {
 	int index = 0;
 	
-	if(!strncmp((char *)buffer, JAUS_UDP_HEADER, JAUS_UDP_HEADER_SIZE_BYTES)) // equals 1 if same
-	{
-		index += JAUS_UDP_HEADER_SIZE_BYTES;
-	}
-
 	if(headerFromBuffer(message, buffer+index, bufferSizeBytes-index))
 	{
 		index += JAUS_HEADER_SIZE_BYTES;
@@ -186,19 +181,6 @@ JausBoolean queryPlatformOperationalDataMessageToBuffer(QueryPlatformOperational
 		{
 			return JAUS_FALSE; // headerToQueryPlatformOperationalDataBuffer failed
 		}
-	}
-}
-
-JausBoolean queryPlatformOperationalDataMessageToUdpBuffer(QueryPlatformOperationalDataMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
-{
-	if(bufferSizeBytes < queryPlatformOperationalDataMessageUdpSize(message))
-	{
-		return JAUS_FALSE; // improper size
-	}
-	else
-	{
-		strncpy((char *)buffer, JAUS_UDP_HEADER, JAUS_UDP_HEADER_SIZE_BYTES); //copies the UDP header into the buffer
-		return queryPlatformOperationalDataMessageToBuffer(message, buffer+JAUS_UDP_HEADER_SIZE_BYTES, bufferSizeBytes - JAUS_UDP_HEADER_SIZE_BYTES);
 	}
 }
 
@@ -276,10 +258,6 @@ JausMessage queryPlatformOperationalDataMessageToJausMessage(QueryPlatformOperat
 	return jausMessage;
 }
 
-unsigned int queryPlatformOperationalDataMessageUdpSize(QueryPlatformOperationalDataMessage message)
-{
-	return (unsigned int)(message->dataSize + JAUS_HEADER_SIZE_BYTES + JAUS_UDP_HEADER_SIZE_BYTES);
-}
 
 unsigned int queryPlatformOperationalDataMessageSize(QueryPlatformOperationalDataMessage message)
 {

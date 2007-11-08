@@ -121,7 +121,6 @@ JausBoolean deleteVksObjectsMessageToBuffer(DeleteVksObjectsMessage message, uns
 DeleteVksObjectsMessage deleteVksObjectsMessageFromJausMessage(JausMessage jausMessage);
 JausMessage deleteVksObjectsMessageToJausMessage(DeleteVksObjectsMessage message);
 
-unsigned int deleteVksObjectsMessageUdpSize(DeleteVksObjectsMessage message);
 unsigned int deleteVksObjectsMessageSize(DeleteVksObjectsMessage message);
 
 

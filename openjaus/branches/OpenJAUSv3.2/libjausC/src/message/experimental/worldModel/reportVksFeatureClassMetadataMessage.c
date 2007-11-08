@@ -176,11 +176,6 @@ JausBoolean reportVksFeatureClassMetadataMessageFromBuffer(ReportVksFeatureClass
 {
 	int index = 0;
 	
-	if(!strncmp((char *)buffer, JAUS_UDP_HEADER, JAUS_UDP_HEADER_SIZE_BYTES)) // equals 1 if same
-	{
-		index += JAUS_UDP_HEADER_SIZE_BYTES;
-	}
-
 	if(headerFromBuffer(message, buffer+index, bufferSizeBytes-index))
 	{
 		index += JAUS_HEADER_SIZE_BYTES;
@@ -216,19 +211,6 @@ JausBoolean reportVksFeatureClassMetadataMessageToBuffer(ReportVksFeatureClassMe
 		{
 			return JAUS_FALSE; // headerToReportVksFeatureClassMetadataBuffer failed
 		}
-	}
-}
-
-JausBoolean reportVksFeatureClassMetadataMessageToUdpBuffer(ReportVksFeatureClassMetadataMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
-{
-	if(bufferSizeBytes < reportVksFeatureClassMetadataMessageUdpSize(message))
-	{
-		return JAUS_FALSE; // improper size
-	}
-	else
-	{
-		strncpy( (char *) buffer, JAUS_UDP_HEADER, JAUS_UDP_HEADER_SIZE_BYTES); //copies the UDP header into the buffer
-		return reportVksFeatureClassMetadataMessageToBuffer(message, buffer+JAUS_UDP_HEADER_SIZE_BYTES, bufferSizeBytes - JAUS_UDP_HEADER_SIZE_BYTES);
 	}
 }
 
@@ -306,10 +288,6 @@ JausMessage reportVksFeatureClassMetadataMessageToJausMessage(ReportVksFeatureCl
 	return jausMessage;
 }
 
-unsigned int reportVksFeatureClassMetadataMessageUdpSize(ReportVksFeatureClassMetadataMessage message)
-{
-	return (unsigned int)(message->dataSize + JAUS_HEADER_SIZE_BYTES + JAUS_UDP_HEADER_SIZE_BYTES);
-}
 
 unsigned int reportVksFeatureClassMetadataMessageSize(ReportVksFeatureClassMetadataMessage message)
 {

@@ -143,11 +143,6 @@ JausBoolean releaseComponentControlMessageFromBuffer(ReleaseComponentControlMess
 {
 	int index = 0;
 	
-	if(!strncmp((char *)buffer, JAUS_UDP_HEADER, JAUS_UDP_HEADER_SIZE_BYTES)) // equals 1 if same
-	{
-		index += JAUS_UDP_HEADER_SIZE_BYTES;
-	}
-
 	if(headerFromBuffer(message, buffer+index, bufferSizeBytes-index))
 	{
 		index += JAUS_HEADER_SIZE_BYTES;
@@ -183,19 +178,6 @@ JausBoolean releaseComponentControlMessageToBuffer(ReleaseComponentControlMessag
 		{
 			return JAUS_FALSE; // headerToReleaseComponentControlBuffer failed
 		}
-	}
-}
-
-JausBoolean releaseComponentControlMessageToUdpBuffer(ReleaseComponentControlMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
-{
-	if(bufferSizeBytes < releaseComponentControlMessageUdpSize(message))
-	{
-		return JAUS_FALSE; // improper size
-	}
-	else
-	{
-		strncpy((char *)buffer, JAUS_UDP_HEADER, JAUS_UDP_HEADER_SIZE_BYTES); //copies the UDP header into the buffer
-		return releaseComponentControlMessageToBuffer(message, buffer+JAUS_UDP_HEADER_SIZE_BYTES, bufferSizeBytes - JAUS_UDP_HEADER_SIZE_BYTES);
 	}
 }
 
@@ -273,10 +255,6 @@ JausMessage releaseComponentControlMessageToJausMessage(ReleaseComponentControlM
 	return jausMessage;
 }
 
-unsigned int releaseComponentControlMessageUdpSize(ReleaseComponentControlMessage message)
-{
-	return (unsigned int)(message->dataSize + JAUS_HEADER_SIZE_BYTES + JAUS_UDP_HEADER_SIZE_BYTES);
-}
 
 unsigned int releaseComponentControlMessageSize(ReleaseComponentControlMessage message)
 {

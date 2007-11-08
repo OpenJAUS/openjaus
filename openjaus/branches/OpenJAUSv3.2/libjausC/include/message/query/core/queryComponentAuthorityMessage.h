@@ -100,7 +100,6 @@ JausBoolean queryComponentAuthorityMessageToBuffer(QueryComponentAuthorityMessag
 QueryComponentAuthorityMessage queryComponentAuthorityMessageFromJausMessage(JausMessage jausMessage);
 JausMessage queryComponentAuthorityMessageToJausMessage(QueryComponentAuthorityMessage message);
 
-unsigned int queryComponentAuthorityMessageUdpSize(QueryComponentAuthorityMessage message);
 unsigned int queryComponentAuthorityMessageSize(QueryComponentAuthorityMessage message);
 
 

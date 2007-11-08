@@ -108,7 +108,6 @@ JausBoolean queryIdentificationMessageToBuffer(QueryIdentificationMessage messag
 QueryIdentificationMessage queryIdentificationMessageFromJausMessage(JausMessage jausMessage);
 JausMessage queryIdentificationMessageToJausMessage(QueryIdentificationMessage message);
 
-unsigned int queryIdentificationMessageUdpSize(QueryIdentificationMessage message);
 unsigned int queryIdentificationMessageSize(QueryIdentificationMessage message);
 
 

@@ -99,7 +99,6 @@ JausBoolean reportServicesMessageToBuffer(ReportServicesMessage message, unsigne
 ReportServicesMessage reportServicesMessageFromJausMessage(JausMessage jausMessage);
 JausMessage reportServicesMessageToJausMessage(ReportServicesMessage message);
 
-unsigned int reportServicesMessageUdpSize(ReportServicesMessage message);
 unsigned int reportServicesMessageSize(ReportServicesMessage message);
 
 #endif

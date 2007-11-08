@@ -265,11 +265,6 @@ JausBoolean reportServicesMessageFromBuffer(ReportServicesMessage message, unsig
 {
 	int index = 0;
 	
-	if(!strncmp((char *)buffer, JAUS_UDP_HEADER, JAUS_UDP_HEADER_SIZE_BYTES)) // equals 1 if same
-	{
-		index += JAUS_UDP_HEADER_SIZE_BYTES;
-	}
-
 	if(headerFromBuffer(message, buffer+index, bufferSizeBytes-index))
 	{
 		index += JAUS_HEADER_SIZE_BYTES;
@@ -305,19 +300,6 @@ JausBoolean reportServicesMessageToBuffer(ReportServicesMessage message, unsigne
 		{
 			return JAUS_FALSE; // headerToReportServicesBuffer failed
 		}
-	}
-}
-
-JausBoolean reportServicesMessageToUdpBuffer(ReportServicesMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
-{
-	if(bufferSizeBytes < reportServicesMessageUdpSize(message))
-	{
-		return JAUS_FALSE; // improper size
-	}
-	else
-	{
-		strncpy((char *)buffer, JAUS_UDP_HEADER, JAUS_UDP_HEADER_SIZE_BYTES); //copies the UDP header into the buffer
-		return reportServicesMessageToBuffer(message, buffer+JAUS_UDP_HEADER_SIZE_BYTES, bufferSizeBytes - JAUS_UDP_HEADER_SIZE_BYTES);
 	}
 }
 
@@ -394,11 +376,6 @@ JausMessage reportServicesMessageToJausMessage(ReportServicesMessage message)
 	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, message->dataSize);
 		
 	return jausMessage;
-}
-
-unsigned int reportServicesMessageUdpSize(ReportServicesMessage message)
-{
-	return (unsigned int)(message->dataSize + JAUS_HEADER_SIZE_BYTES + JAUS_UDP_HEADER_SIZE_BYTES);
 }
 
 unsigned int reportServicesMessageSize(ReportServicesMessage message)

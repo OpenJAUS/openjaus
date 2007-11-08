@@ -101,7 +101,6 @@ JausBoolean queryVksBoundsMessageToBuffer(QueryVksBoundsMessage message, unsigne
 QueryVksBoundsMessage queryVksBoundsMessageFromJausMessage(JausMessage jausMessage);
 JausMessage queryVksBoundsMessageToJausMessage(QueryVksBoundsMessage message);
 
-unsigned int queryVksBoundsMessageUdpSize(QueryVksBoundsMessage message);
 unsigned int queryVksBoundsMessageSize(QueryVksBoundsMessage message);
 
 

@@ -164,11 +164,6 @@ JausBoolean cancelEventMessageFromBuffer(CancelEventMessage message, unsigned ch
 {
 	int index = 0;
 	
-	if(!strncmp((char *)buffer, JAUS_UDP_HEADER, JAUS_UDP_HEADER_SIZE_BYTES)) // equals 1 if same
-	{
-		index += JAUS_UDP_HEADER_SIZE_BYTES;
-	}
-
 	if(headerFromBuffer(message, buffer+index, bufferSizeBytes-index))
 	{
 		index += JAUS_HEADER_SIZE_BYTES;
@@ -204,19 +199,6 @@ JausBoolean cancelEventMessageToBuffer(CancelEventMessage message, unsigned char
 		{
 			return JAUS_FALSE; // headerToCancelEventBuffer failed
 		}
-	}
-}
-
-JausBoolean cancelEventMessageToUdpBuffer(CancelEventMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
-{
-	if(bufferSizeBytes < cancelEventMessageUdpSize(message))
-	{
-		return JAUS_FALSE; // improper size
-	}
-	else
-	{
-		strncpy( (char *) buffer, JAUS_UDP_HEADER, JAUS_UDP_HEADER_SIZE_BYTES); //copies the UDP header into the buffer
-		return cancelEventMessageToBuffer(message, buffer+JAUS_UDP_HEADER_SIZE_BYTES, bufferSizeBytes - JAUS_UDP_HEADER_SIZE_BYTES);
 	}
 }
 
@@ -294,10 +276,6 @@ JausMessage cancelEventMessageToJausMessage(CancelEventMessage message)
 	return jausMessage;
 }
 
-unsigned int cancelEventMessageUdpSize(CancelEventMessage message)
-{
-	return (unsigned int)(message->dataSize + JAUS_HEADER_SIZE_BYTES + JAUS_UDP_HEADER_SIZE_BYTES);
-}
 
 unsigned int cancelEventMessageSize(CancelEventMessage message)
 {

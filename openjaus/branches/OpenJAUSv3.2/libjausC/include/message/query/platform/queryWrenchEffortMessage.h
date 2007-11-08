@@ -99,7 +99,6 @@ JausBoolean queryWrenchEffortMessageToBuffer(QueryWrenchEffortMessage message, u
 QueryWrenchEffortMessage queryWrenchEffortMessageFromJausMessage(JausMessage jausMessage);
 JausMessage queryWrenchEffortMessageToJausMessage(QueryWrenchEffortMessage message);
 
-unsigned int queryWrenchEffortMessageUdpSize(QueryWrenchEffortMessage message);
 unsigned int queryWrenchEffortMessageSize(QueryWrenchEffortMessage message);
 
 

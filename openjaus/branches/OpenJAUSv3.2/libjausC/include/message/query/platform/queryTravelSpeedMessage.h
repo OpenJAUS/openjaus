@@ -99,7 +99,6 @@ JausBoolean queryTravelSpeedMessageToBuffer(QueryTravelSpeedMessage message, uns
 QueryTravelSpeedMessage queryTravelSpeedMessageFromJausMessage(JausMessage jausMessage);
 JausMessage queryTravelSpeedMessageToJausMessage(QueryTravelSpeedMessage message);
 
-unsigned int queryTravelSpeedMessageUdpSize(QueryTravelSpeedMessage message);
 unsigned int queryTravelSpeedMessageSize(QueryTravelSpeedMessage message);
 
 

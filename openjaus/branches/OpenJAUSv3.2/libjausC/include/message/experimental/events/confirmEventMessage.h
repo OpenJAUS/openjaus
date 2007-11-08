@@ -123,7 +123,6 @@ JausBoolean confirmEventMessageToBuffer(ConfirmEventMessage message, unsigned ch
 ConfirmEventMessage confirmEventMessageFromJausMessage(JausMessage jausMessage);
 JausMessage confirmEventMessageToJausMessage(ConfirmEventMessage message);
 
-unsigned int confirmEventMessageUdpSize(ConfirmEventMessage message);
 unsigned int confirmEventMessageSize(ConfirmEventMessage message);
 
 

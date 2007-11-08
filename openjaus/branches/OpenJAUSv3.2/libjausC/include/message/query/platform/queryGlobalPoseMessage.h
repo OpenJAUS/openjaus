@@ -99,7 +99,6 @@ JausBoolean queryGlobalPoseMessageToBuffer(QueryGlobalPoseMessage message, unsig
 QueryGlobalPoseMessage queryGlobalPoseMessageFromJausMessage(JausMessage jausMessage);
 JausMessage queryGlobalPoseMessageToJausMessage(QueryGlobalPoseMessage message);
 
-unsigned int queryGlobalPoseMessageUdpSize(QueryGlobalPoseMessage message);
 unsigned int queryGlobalPoseMessageSize(QueryGlobalPoseMessage message);
 
 

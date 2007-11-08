@@ -113,7 +113,6 @@ JausBoolean reportGlobalVectorMessageToBuffer(ReportGlobalVectorMessage message,
 ReportGlobalVectorMessage reportGlobalVectorMessageFromJausMessage(JausMessage jausMessage);
 JausMessage reportGlobalVectorMessageToJausMessage(ReportGlobalVectorMessage message);
 
-unsigned int reportGlobalVectorMessageUdpSize(ReportGlobalVectorMessage message);
 unsigned int reportGlobalVectorMessageSize(ReportGlobalVectorMessage message);
 
 

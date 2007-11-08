@@ -102,7 +102,6 @@ JausBoolean reportPayloadDataElementMessageToBuffer(ReportPayloadDataElementMess
 ReportPayloadDataElementMessage reportPayloadDataElementMessageFromJausMessage(JausMessage jausMessage);
 JausMessage reportPayloadDataElementMessageToJausMessage(ReportPayloadDataElementMessage message);
 
-unsigned int reportPayloadDataElementMessageUdpSize(ReportPayloadDataElementMessage message);
 unsigned int reportPayloadDataElementMessageSize(ReportPayloadDataElementMessage message);
 
 #endif

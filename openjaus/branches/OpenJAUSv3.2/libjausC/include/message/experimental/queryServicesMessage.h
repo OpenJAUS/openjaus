@@ -99,7 +99,6 @@ JausBoolean queryServicesMessageToBuffer(QueryServicesMessage message, unsigned 
 QueryServicesMessage queryServicesMessageFromJausMessage(JausMessage jausMessage);
 JausMessage queryServicesMessageToJausMessage(QueryServicesMessage message);
 
-unsigned int queryServicesMessageUdpSize(QueryServicesMessage message);
 unsigned int queryServicesMessageSize(QueryServicesMessage message);
 
 

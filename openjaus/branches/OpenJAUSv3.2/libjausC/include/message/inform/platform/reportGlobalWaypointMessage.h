@@ -115,7 +115,6 @@ JausBoolean reportGlobalWaypointMessageToBuffer(ReportGlobalWaypointMessage mess
 ReportGlobalWaypointMessage reportGlobalWaypointMessageFromJausMessage(JausMessage jausMessage);
 JausMessage reportGlobalWaypointMessageToJausMessage(ReportGlobalWaypointMessage message);
 
-unsigned int reportGlobalWaypointMessageUdpSize(ReportGlobalWaypointMessage message);
 unsigned int reportGlobalWaypointMessageSize(ReportGlobalWaypointMessage message);
 
 

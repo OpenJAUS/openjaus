@@ -140,11 +140,6 @@ JausBoolean standbyMessageFromBuffer(StandbyMessage message, unsigned char* buff
 {
 	int index = 0;
 	
-	if(!strncmp((char *)buffer, JAUS_UDP_HEADER, JAUS_UDP_HEADER_SIZE_BYTES)) // equals 1 if same
-	{
-		index += JAUS_UDP_HEADER_SIZE_BYTES;
-	}
-
 	if(headerFromBuffer(message, buffer+index, bufferSizeBytes-index))
 	{
 		index += JAUS_HEADER_SIZE_BYTES;
@@ -180,19 +175,6 @@ JausBoolean standbyMessageToBuffer(StandbyMessage message, unsigned char *buffer
 		{
 			return JAUS_FALSE; // headerToStandbyBuffer failed
 		}
-	}
-}
-
-JausBoolean standbyMessageToUdpBuffer(StandbyMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
-{
-	if(bufferSizeBytes < standbyMessageUdpSize(message))
-	{
-		return JAUS_FALSE; // improper size
-	}
-	else
-	{
-		strncpy((char *)buffer, JAUS_UDP_HEADER, JAUS_UDP_HEADER_SIZE_BYTES); //copies the UDP header into the buffer
-		return standbyMessageToBuffer(message, buffer+JAUS_UDP_HEADER_SIZE_BYTES, bufferSizeBytes - JAUS_UDP_HEADER_SIZE_BYTES);
 	}
 }
 
@@ -270,10 +252,6 @@ JausMessage standbyMessageToJausMessage(StandbyMessage message)
 	return jausMessage;
 }
 
-unsigned int standbyMessageUdpSize(StandbyMessage message)
-{
-	return (unsigned int)(message->dataSize + JAUS_HEADER_SIZE_BYTES + JAUS_UDP_HEADER_SIZE_BYTES);
-}
 
 unsigned int standbyMessageSize(StandbyMessage message)
 {
