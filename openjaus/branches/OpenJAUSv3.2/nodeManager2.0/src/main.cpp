@@ -1,8 +1,19 @@
 #include "NodeManager.h"
 
 #if defined(WIN32)
+	#include <windows.h>
+	#define CLEAR_COMMAND "cls"
+#elif defined(__linux) || defined(linux) || defined(__linux__)
+	#include <unistd.h>
+	#define CLEAR_COMMAND "clear"
+#endif
 
-#include <windows.h>
+void printHelpMenu();
+void parseUserInput(char input);
+
+static NodeManager *nm;
+
+#if defined(WIN32)
 int main(int argc, char *args)
 {
 	// Console parameters
@@ -19,7 +30,9 @@ int main(int argc, char *args)
 
 	FileLoader *configData = new FileLoader("nodeManager.conf");
 	
-	NodeManager *nm = new NodeManager(configData);
+	nm = new NodeManager(configData);
+
+	printHelpMenu();
 
 	while(running)
 	{
@@ -48,30 +61,7 @@ int main(int argc, char *args)
 					}
 					else if(inputEvents[i].Event.KeyEvent.bKeyDown)
 					{
-						switch(inputEvents[i].Event.KeyEvent.uChar.AsciiChar)
-						{
-							case 'T':
-								printf("\n\n%s", nm->systemTableToDetailedString().c_str());
-								break;
-						
-							case 't':
-								printf("\n\n%s", nm->systemTableToString().c_str());
-								break;
-							
-							case 'c':
-							case 'C':
-								system("cls");
-								break;
-
-							case '?':
-								printf("\n\nOpenJAUS Nodemanager Help\n");
-								printf("   t - Print System Tree\n");
-								printf("   T - Print Detailed System Tree\n");
-								printf("   c - Clear console window\n");
-								printf("   ? - This Help Menu\n");
-							default:
-								break;
-						}
+						parseUserInput(inputEvents[i].Event.KeyEvent.uChar.AsciiChar);
 					}
 					break;
 				
@@ -84,9 +74,8 @@ int main(int argc, char *args)
 	}
 	return 0;
 }
-#elif defined(__linux) || defined(linux) || defined(__linux__)
 
-#include <unistd.h>
+#elif defined(__linux) || defined(linux) || defined(__linux__)
 
 int main(int argc, char *args)
 {
@@ -103,3 +92,39 @@ int main(int argc, char *args)
 	return 0;
 }
 #endif
+
+void parseUserInput(char input)
+{
+	switch(input)
+	{
+		case 'T':
+			printf("\n\n%s", nm->systemTableToDetailedString().c_str());
+			break;
+
+		case 't':
+			printf("\n\n%s", nm->systemTableToString().c_str());
+			break;
+		
+		case 'c':
+		case 'C':
+			system(CLEAR_COMMAND);
+			break;
+
+		case '?':
+			printHelpMenu();
+	
+		default:
+			break;
+	}
+
+}
+
+void printHelpMenu()
+{
+	printf("\n\nOpenJAUS Node Manager Help\n");
+	printf("   t - Print System Tree\n");
+	printf("   T - Print Detailed System Tree\n");
+	printf("   c - Clear console window\n");
+	printf("   ? - This Help Menu\n");
+	printf(" ESC - Exit Node Manager\n");
+}
