@@ -1,6 +1,7 @@
 #ifndef MESSAGE_ROUTER_H
 #define MESSAGE_ROUTER_H
 
+#include "EventHandler.h"
 #include "SystemTree.h"
 #include "FileLoader.h"
 #include "jaus.h"
@@ -12,7 +13,7 @@ class JausComponentCommunicationManager;
 class MessageRouter
 {
 public:
-	MessageRouter(FileLoader *configData, SystemTree *systemTree);
+	MessageRouter(FileLoader *configData, SystemTree *systemTree, EventHandler *eventHandler);
 	~MessageRouter(void);
 	bool routeSubsystemSourceMessage(JausMessage message);
 	bool routeNodeSourceMessage(JausMessage message);
@@ -28,6 +29,7 @@ private:
 	JausNodeCommunicationManager *nodeComms;
 	JausComponentCommunicationManager *cmptComms;
 	SystemTree *systemTree;
+	EventHandler *eventHandler;
 
 	unsigned short mySubsystemId;
 	unsigned short myNodeId;
