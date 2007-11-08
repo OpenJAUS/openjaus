@@ -351,13 +351,14 @@ void JausUdpInterface::sendJausMessage(UdpTransportData data, JausMessage messag
 	int result;
 
 	packet = datagramPacketCreate();
-	packet->bufferSizeBytes = (int) jausMessageUdpSize(message);
+	packet->bufferSizeBytes = (int) jausMessageSize(message) + JAUS_OPC_UDP_HEADER_SIZE_BYTES;
 	packet->buffer = (unsigned char *) calloc(packet->bufferSizeBytes, 1);
 	packet->port = data.port;
 	packet->address->value = data.addressValue;
 	memset(packet->buffer, 0, packet->bufferSizeBytes);
 	
-	if(jausMessageToUdpBuffer(message, packet->buffer, packet->bufferSizeBytes))
+	memcpy(packet->buffer, JAUS_OPC_UDP_HEADER, JAUS_OPC_UDP_HEADER_SIZE_BYTES);
+	if(jausMessageToBuffer(message, packet->buffer + JAUS_OPC_UDP_HEADER_SIZE_BYTES, packet->bufferSizeBytes - JAUS_OPC_UDP_HEADER_SIZE_BYTES))
 	{
 		result = multicastSocketSend(this->socket, packet);
 	}
@@ -384,17 +385,24 @@ void JausUdpInterface::recvThreadRun()
 	DatagramPacket packet;
 	JausMessage rxMessage;
 	UdpTransportData data;
+	int index = 0;
 
 	packet = datagramPacketCreate();
-	packet->bufferSizeBytes = JAUS_HEADER_SIZE_BYTES + JAUS_MAX_DATA_SIZE_BYTES;
+	packet->bufferSizeBytes = JAUS_HEADER_SIZE_BYTES + JAUS_MAX_DATA_SIZE_BYTES + JAUS_OPC_UDP_HEADER_SIZE_BYTES;
 	packet->buffer = (unsigned char *) calloc(packet->bufferSizeBytes, 1);
 	
 	while(this->running)
 	{
+		index = 0;
 		if(multicastSocketReceive(this->socket, packet) > 0)
 		{
+			if(!strncmp((char *)packet->buffer, JAUS_OPC_UDP_HEADER, JAUS_OPC_UDP_HEADER_SIZE_BYTES)) // equals 1 if same
+			{
+				index += JAUS_OPC_UDP_HEADER_SIZE_BYTES;
+			}
+
 			rxMessage = jausMessageCreate();
-			if(jausMessageFromBuffer(rxMessage, packet->buffer, packet->bufferSizeBytes))
+			if(jausMessageFromBuffer(rxMessage, packet->buffer + index, packet->bufferSizeBytes - index))
 			{
 				// Add to transportMap
 				switch(this->type)

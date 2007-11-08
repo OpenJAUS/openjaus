@@ -82,7 +82,7 @@ int main(int argc, char *args)
 	FileLoader *configData = new FileLoader("nodeManager.conf");
 	
 	NodeManager *nm = new NodeManager(configData);
-	printf("%s", nm->getSystemTable().c_str());
+	printf("%s", nm->systemTreeToString().c_str());
 
 	while(1)
 	{
@@ -98,11 +98,11 @@ void parseUserInput(char input)
 	switch(input)
 	{
 		case 'T':
-			printf("\n\n%s", nm->systemTableToDetailedString().c_str());
+			printf("\n\n%s", nm->systemTreeToDetailedString().c_str());
 			break;
 
 		case 't':
-			printf("\n\n%s", nm->systemTableToString().c_str());
+			printf("\n\n%s", nm->systemTreeToString().c_str());
 			break;
 		
 		case 'c':

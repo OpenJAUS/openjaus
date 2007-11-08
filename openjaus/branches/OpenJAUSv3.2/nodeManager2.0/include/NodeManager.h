@@ -12,8 +12,8 @@ public:
 	NodeManager(FileLoader *configData);
 	~NodeManager(void);
 
-	std::string systemTableToString();
-	std::string systemTableToDetailedString();
+	std::string systemTreeToString();
+	std::string systemTreeToDetailedString();
 
 private:
 	FileLoader *configData;
