@@ -139,14 +139,14 @@ bool JausNodeCommunicationManager::sendJausMessage(JausMessage message)
 				else //message->destination->node == X
 				{
 					// Route to node X
-					sendToNodeX(jausMessageDuplicate(message));
+					sendToNodeX(jausMessageClone(message));
 
 					// PREVENT DUPLICATION!
 					// If Node X is not the Communicator Node or the Primary node, sendToSubsystemGateway
 					JausAddress commAddress = systemTree->lookUpAddress(mySubsystemId, JAUS_ADDRESS_WILDCARD_OCTET, JAUS_COMMUNICATOR, JAUS_ADDRESS_WILDCARD_OCTET);
 					if(commAddress && commAddress->node != message->destination->node && message->destination->node != JAUS_PRIMARY_NODE_MANAGER_NODE)
 					{
-						sendToSubsystemGateway(jausMessageDuplicate(message));
+						sendToSubsystemGateway(jausMessageClone(message));
 					}
 					
 					jausMessageDestroy(message);
@@ -348,7 +348,7 @@ bool JausNodeCommunicationManager::sendToAllInterfaces(JausMessage message)
 
 	for(iter = interfaces.begin(); iter != interfaces.end(); iter++)
 	{
-		(*iter)->queueJausMessage(jausMessageDuplicate(message));
+		(*iter)->queueJausMessage(jausMessageClone(message));
 	}
 
 	jausMessageDestroy(message);

@@ -64,7 +64,7 @@ bool MessageRouter::routeSubsystemSourceMessage(JausMessage message)
 	if(message->destination->node == JAUS_BROADCAST_NODE_ID)
 	{
 		// Have to clone the JausMessage b/c I am sending it in two directions
-		nodeComms->sendJausMessage(jausMessageDuplicate(message));
+		nodeComms->sendJausMessage(jausMessageClone(message));
 		cmptComms->sendJausMessage(message);
 		return true;
 	}
@@ -107,8 +107,8 @@ bool MessageRouter::routeNodeSourceMessage(JausMessage message)
 					message->destination->node == myNodeId)
 				{
 					// Send to both subsComms & cmptComms
-					// Duplicate on one of them
-					subsComms->sendJausMessage(jausMessageDuplicate(message));
+					// Clone on one of them
+					subsComms->sendJausMessage(jausMessageClone(message));
 					cmptComms->sendJausMessage(message);
 					return true;
 				}
@@ -262,8 +262,8 @@ bool MessageRouter::sendToCommunicator(JausMessage message)
 			else
 			{
 				// Send to both subsComms & nodeComms
-				// Duplicate once
-				subsComms->sendJausMessage(jausMessageDuplicate(message));
+				// Clone once
+				subsComms->sendJausMessage(jausMessageClone(message));
 				nodeComms->sendJausMessage(message);
 				return true;
 			}

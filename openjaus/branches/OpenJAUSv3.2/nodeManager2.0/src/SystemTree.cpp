@@ -1239,7 +1239,7 @@ bool SystemTree::replaceSubsystem(int subsystemId, JausSubsystem newSubs)
 					}
 
 					jausServicesDestroy(newCmpt->services);
-					newCmpt->services = jausServicesDuplicate(addCmpt->services);
+					newCmpt->services = jausServicesClone(addCmpt->services);
 					newCmpt->node = addNode;
 					jausArrayAdd(addNode->components, addCmpt);
 				}
@@ -1367,7 +1367,7 @@ bool SystemTree::setComponentServices(JausAddress address, JausArray inputServic
 	{
 		// Remove current service set
 		jausServicesDestroy(cmpt->services);
-		cmpt->services = jausServicesDuplicate(inputServices);
+		cmpt->services = jausServicesClone(inputServices);
 		return true;
 	}
 	return false;
