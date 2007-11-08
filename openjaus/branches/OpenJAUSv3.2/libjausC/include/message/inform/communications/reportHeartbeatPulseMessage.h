@@ -99,7 +99,6 @@ JausBoolean reportHeartbeatPulseMessageToBuffer(ReportHeartbeatPulseMessage mess
 ReportHeartbeatPulseMessage reportHeartbeatPulseMessageFromJausMessage(JausMessage jausMessage);
 JausMessage reportHeartbeatPulseMessageToJausMessage(ReportHeartbeatPulseMessage message);
 
-unsigned int reportHeartbeatPulseMessageUdpSize(ReportHeartbeatPulseMessage message);
 unsigned int reportHeartbeatPulseMessageSize(ReportHeartbeatPulseMessage message);
 
 

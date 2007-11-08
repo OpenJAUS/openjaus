@@ -154,11 +154,6 @@ JausBoolean terminateServiceConnectionMessageFromBuffer(TerminateServiceConnecti
 {
 	int index = 0;
 	
-	if(!strncmp((char *)buffer, JAUS_UDP_HEADER, JAUS_UDP_HEADER_SIZE_BYTES)) // equals 1 if same
-	{
-		index += JAUS_UDP_HEADER_SIZE_BYTES;
-	}
-
 	if(headerFromBuffer(message, buffer+index, bufferSizeBytes-index))
 	{
 		index += JAUS_HEADER_SIZE_BYTES;
@@ -194,19 +189,6 @@ JausBoolean terminateServiceConnectionMessageToBuffer(TerminateServiceConnection
 		{
 			return JAUS_FALSE; // headerToTerminateServiceConnectionBuffer failed
 		}
-	}
-}
-
-JausBoolean terminateServiceConnectionMessageToUdpBuffer(TerminateServiceConnectionMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
-{
-	if(bufferSizeBytes < terminateServiceConnectionMessageUdpSize(message))
-	{
-		return JAUS_FALSE; // improper size
-	}
-	else
-	{
-		strncpy((char *)buffer, JAUS_UDP_HEADER, JAUS_UDP_HEADER_SIZE_BYTES); //copies the UDP header into the buffer
-		return terminateServiceConnectionMessageToBuffer(message, buffer+JAUS_UDP_HEADER_SIZE_BYTES, bufferSizeBytes - JAUS_UDP_HEADER_SIZE_BYTES);
 	}
 }
 
@@ -284,10 +266,6 @@ JausMessage terminateServiceConnectionMessageToJausMessage(TerminateServiceConne
 	return jausMessage;
 }
 
-unsigned int terminateServiceConnectionMessageUdpSize(TerminateServiceConnectionMessage message)
-{
-	return (unsigned int)(message->dataSize + JAUS_HEADER_SIZE_BYTES + JAUS_UDP_HEADER_SIZE_BYTES);
-}
 
 unsigned int terminateServiceConnectionMessageSize(TerminateServiceConnectionMessage message)
 {

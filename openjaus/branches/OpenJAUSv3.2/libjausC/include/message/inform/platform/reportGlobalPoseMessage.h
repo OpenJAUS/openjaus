@@ -121,7 +121,6 @@ JausBoolean reportGlobalPoseMessageToBuffer(ReportGlobalPoseMessage message, uns
 ReportGlobalPoseMessage reportGlobalPoseMessageFromJausMessage(JausMessage jausMessage);
 JausMessage reportGlobalPoseMessageToJausMessage(ReportGlobalPoseMessage message);
 
-unsigned int reportGlobalPoseMessageUdpSize(ReportGlobalPoseMessage message);
 unsigned int reportGlobalPoseMessageSize(ReportGlobalPoseMessage message);
 
 

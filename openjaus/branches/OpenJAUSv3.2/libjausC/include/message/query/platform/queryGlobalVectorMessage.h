@@ -99,7 +99,6 @@ JausBoolean queryGlobalVectorMessageToBuffer(QueryGlobalVectorMessage message, u
 QueryGlobalVectorMessage queryGlobalVectorMessageFromJausMessage(JausMessage jausMessage);
 JausMessage queryGlobalVectorMessageToJausMessage(QueryGlobalVectorMessage message);
 
-unsigned int queryGlobalVectorMessageUdpSize(QueryGlobalVectorMessage message);
 unsigned int queryGlobalVectorMessageSize(QueryGlobalVectorMessage message);
 
 

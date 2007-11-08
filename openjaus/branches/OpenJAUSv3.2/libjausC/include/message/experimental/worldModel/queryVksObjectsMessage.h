@@ -122,7 +122,6 @@ JausBoolean queryVksObjectsMessageToBuffer(QueryVksObjectsMessage message, unsig
 QueryVksObjectsMessage queryVksObjectsMessageFromJausMessage(JausMessage jausMessage);
 JausMessage queryVksObjectsMessageToJausMessage(QueryVksObjectsMessage message);
 
-unsigned int queryVksObjectsMessageUdpSize(QueryVksObjectsMessage message);
 unsigned int queryVksObjectsMessageSize(QueryVksObjectsMessage message);
 
 

@@ -143,11 +143,6 @@ JausBoolean queryPayloadInterfaceMessageFromBuffer(QueryPayloadInterfaceMessage 
 {
 	int index = 0;
 	
-	if(!strncmp((char *)buffer, JAUS_UDP_HEADER, JAUS_UDP_HEADER_SIZE_BYTES)) // equals 1 if same
-	{
-		index += JAUS_UDP_HEADER_SIZE_BYTES;
-	}
-
 	if(headerFromBuffer(message, buffer+index, bufferSizeBytes-index))
 	{
 		index += JAUS_HEADER_SIZE_BYTES;
@@ -183,19 +178,6 @@ JausBoolean queryPayloadInterfaceMessageToBuffer(QueryPayloadInterfaceMessage me
 		{
 			return JAUS_FALSE; // headerToQueryPayloadInterfaceBuffer failed
 		}
-	}
-}
-
-JausBoolean queryPayloadInterfaceMessageToUdpBuffer(QueryPayloadInterfaceMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
-{
-	if(bufferSizeBytes < queryPayloadInterfaceMessageUdpSize(message))
-	{
-		return JAUS_FALSE; // improper size
-	}
-	else
-	{
-		strncpy( (char *) buffer, JAUS_UDP_HEADER, JAUS_UDP_HEADER_SIZE_BYTES); //copies the UDP header into the buffer
-		return queryPayloadInterfaceMessageToBuffer(message, buffer+JAUS_UDP_HEADER_SIZE_BYTES, bufferSizeBytes - JAUS_UDP_HEADER_SIZE_BYTES);
 	}
 }
 
@@ -271,11 +253,6 @@ JausMessage queryPayloadInterfaceMessageToJausMessage(QueryPayloadInterfaceMessa
 	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, message->dataSize);
 	
 	return jausMessage;
-}
-
-unsigned int queryPayloadInterfaceMessageUdpSize(QueryPayloadInterfaceMessage message)
-{
-	return (unsigned int)(message->dataSize + JAUS_HEADER_SIZE_BYTES + JAUS_UDP_HEADER_SIZE_BYTES);
 }
 
 unsigned int queryPayloadInterfaceMessageSize(QueryPayloadInterfaceMessage message)

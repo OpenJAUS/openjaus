@@ -146,11 +146,6 @@ JausBoolean configurationChangedEventNotificationMessageFromBuffer(Configuration
 {
 	int index = 0;
 	
-	if(!strncmp((char *)buffer, JAUS_UDP_HEADER, JAUS_UDP_HEADER_SIZE_BYTES)) // equals 1 if same
-	{
-		index += JAUS_UDP_HEADER_SIZE_BYTES;
-	}
-
 	if(headerFromBuffer(message, buffer+index, bufferSizeBytes-index))
 	{
 		index += JAUS_HEADER_SIZE_BYTES;
@@ -186,19 +181,6 @@ JausBoolean configurationChangedEventNotificationMessageToBuffer(ConfigurationCh
 		{
 			return JAUS_FALSE; // headerToConfigurationChangedEventNotificationBuffer failed
 		}
-	}
-}
-
-JausBoolean configurationChangedEventNotificationMessageToUdpBuffer(ConfigurationChangedEventNotificationMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
-{
-	if(bufferSizeBytes < configurationChangedEventNotificationMessageUdpSize(message))
-	{
-		return JAUS_FALSE; // improper size
-	}
-	else
-	{
-		strncpy((char *)buffer, JAUS_UDP_HEADER, JAUS_UDP_HEADER_SIZE_BYTES); //copies the UDP header into the buffer
-		return configurationChangedEventNotificationMessageToBuffer(message, buffer+JAUS_UDP_HEADER_SIZE_BYTES, bufferSizeBytes - JAUS_UDP_HEADER_SIZE_BYTES);
 	}
 }
 
@@ -276,10 +258,6 @@ JausMessage configurationChangedEventNotificationMessageToJausMessage(Configurat
 	return jausMessage;
 }
 
-unsigned int configurationChangedEventNotificationMessageUdpSize(ConfigurationChangedEventNotificationMessage message)
-{
-	return (unsigned int)(message->dataSize + JAUS_HEADER_SIZE_BYTES + JAUS_UDP_HEADER_SIZE_BYTES);
-}
 
 unsigned int configurationChangedEventNotificationMessageSize(ConfigurationChangedEventNotificationMessage message)
 {

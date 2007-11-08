@@ -99,7 +99,6 @@ JausBoolean queryVideoFrameMessageToBuffer(QueryVideoFrameMessage message, unsig
 QueryVideoFrameMessage queryVideoFrameMessageFromJausMessage(JausMessage jausMessage);
 JausMessage queryVideoFrameMessageToJausMessage(QueryVideoFrameMessage message);
 
-unsigned int queryVideoFrameMessageUdpSize(QueryVideoFrameMessage message);
 unsigned int queryVideoFrameMessageSize(QueryVideoFrameMessage message);
 
 

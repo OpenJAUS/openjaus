@@ -143,11 +143,6 @@ JausBoolean queryComponentAuthorityMessageFromBuffer(QueryComponentAuthorityMess
 {
 	int index = 0;
 	
-	if(!strncmp((char *)buffer, JAUS_UDP_HEADER, JAUS_UDP_HEADER_SIZE_BYTES)) // equals 1 if same
-	{
-		index += JAUS_UDP_HEADER_SIZE_BYTES;
-	}
-
 	if(headerFromBuffer(message, buffer+index, bufferSizeBytes-index))
 	{
 		index += JAUS_HEADER_SIZE_BYTES;
@@ -183,19 +178,6 @@ JausBoolean queryComponentAuthorityMessageToBuffer(QueryComponentAuthorityMessag
 		{
 			return JAUS_FALSE; // headerToQueryComponentAuthorityBuffer failed
 		}
-	}
-}
-
-JausBoolean queryComponentAuthorityMessageToUdpBuffer(QueryComponentAuthorityMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
-{
-	if(bufferSizeBytes < queryComponentAuthorityMessageUdpSize(message))
-	{
-		return JAUS_FALSE; // improper size
-	}
-	else
-	{
-		strncpy((char *)buffer, JAUS_UDP_HEADER, JAUS_UDP_HEADER_SIZE_BYTES); //copies the UDP header into the buffer
-		return queryComponentAuthorityMessageToBuffer(message, buffer+JAUS_UDP_HEADER_SIZE_BYTES, bufferSizeBytes - JAUS_UDP_HEADER_SIZE_BYTES);
 	}
 }
 
@@ -273,10 +255,6 @@ JausMessage queryComponentAuthorityMessageToJausMessage(QueryComponentAuthorityM
 	return jausMessage;
 }
 
-unsigned int queryComponentAuthorityMessageUdpSize(QueryComponentAuthorityMessage message)
-{
-	return (unsigned int)(message->dataSize + JAUS_HEADER_SIZE_BYTES + JAUS_UDP_HEADER_SIZE_BYTES);
-}
 
 unsigned int queryComponentAuthorityMessageSize(QueryComponentAuthorityMessage message)
 {

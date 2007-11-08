@@ -146,11 +146,6 @@ JausBoolean clearEmergencyMessageFromBuffer(ClearEmergencyMessage message, unsig
 {
 	int index = 0;
 	
-	if(!strncmp((char *)buffer, JAUS_UDP_HEADER, JAUS_UDP_HEADER_SIZE_BYTES)) // equals 1 if same
-	{
-		index += JAUS_UDP_HEADER_SIZE_BYTES;
-	}
-
 	if(headerFromBuffer(message, buffer+index, bufferSizeBytes-index))
 	{
 		index += JAUS_HEADER_SIZE_BYTES;
@@ -186,19 +181,6 @@ JausBoolean clearEmergencyMessageToBuffer(ClearEmergencyMessage message, unsigne
 		{
 			return JAUS_FALSE; // headerToClearEmergencyBuffer failed
 		}
-	}
-}
-
-JausBoolean clearEmergencyMessageToUdpBuffer(ClearEmergencyMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
-{
-	if(bufferSizeBytes < clearEmergencyMessageUdpSize(message))
-	{
-		return JAUS_FALSE; // improper size
-	}
-	else
-	{
-		strncpy((char *)buffer, JAUS_UDP_HEADER, JAUS_UDP_HEADER_SIZE_BYTES); //copies the UDP header into the buffer
-		return clearEmergencyMessageToBuffer(message, buffer+JAUS_UDP_HEADER_SIZE_BYTES, bufferSizeBytes - JAUS_UDP_HEADER_SIZE_BYTES);
 	}
 }
 
@@ -276,10 +258,6 @@ JausMessage clearEmergencyMessageToJausMessage(ClearEmergencyMessage message)
 	return jausMessage;
 }
 
-unsigned int clearEmergencyMessageUdpSize(ClearEmergencyMessage message)
-{
-	return (unsigned int)(message->dataSize + JAUS_HEADER_SIZE_BYTES + JAUS_UDP_HEADER_SIZE_BYTES);
-}
 
 unsigned int clearEmergencyMessageSize(ClearEmergencyMessage message)
 {

@@ -105,7 +105,6 @@ JausBoolean queryConfigurationMessageToBuffer(QueryConfigurationMessage message,
 QueryConfigurationMessage queryConfigurationMessageFromJausMessage(JausMessage jausMessage);
 JausMessage queryConfigurationMessageToJausMessage(QueryConfigurationMessage message);
 
-unsigned int queryConfigurationMessageUdpSize(QueryConfigurationMessage message);
 unsigned int queryConfigurationMessageSize(QueryConfigurationMessage message);
 
 

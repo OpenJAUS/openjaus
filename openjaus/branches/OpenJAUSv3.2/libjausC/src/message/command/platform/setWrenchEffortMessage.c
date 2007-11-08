@@ -407,11 +407,6 @@ JausBoolean setWrenchEffortMessageFromBuffer(SetWrenchEffortMessage message, uns
 {
 	int index = 0;
 	
-	if(!strncmp((char *)buffer, JAUS_UDP_HEADER, JAUS_UDP_HEADER_SIZE_BYTES)) // equals 1 if same
-	{
-		index += JAUS_UDP_HEADER_SIZE_BYTES;
-	}
-
 	if(headerFromBuffer(message, buffer+index, bufferSizeBytes-index))
 	{
 		index += JAUS_HEADER_SIZE_BYTES;
@@ -447,19 +442,6 @@ JausBoolean setWrenchEffortMessageToBuffer(SetWrenchEffortMessage message, unsig
 		{
 			return JAUS_FALSE; // headerToSetWrenchEffortBuffer failed
 		}
-	}
-}
-
-JausBoolean setWrenchEffortMessageToUdpBuffer(SetWrenchEffortMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
-{
-	if(bufferSizeBytes < setWrenchEffortMessageUdpSize(message))
-	{
-		return JAUS_FALSE; // improper size
-	}
-	else
-	{
-		strncpy((char *)buffer, JAUS_UDP_HEADER, JAUS_UDP_HEADER_SIZE_BYTES); //copies the UDP header into the buffer
-		return setWrenchEffortMessageToBuffer(message, buffer+JAUS_UDP_HEADER_SIZE_BYTES, bufferSizeBytes - JAUS_UDP_HEADER_SIZE_BYTES);
 	}
 }
 
@@ -537,10 +519,6 @@ JausMessage setWrenchEffortMessageToJausMessage(SetWrenchEffortMessage message)
 	return jausMessage;
 }
 
-unsigned int setWrenchEffortMessageUdpSize(SetWrenchEffortMessage message)
-{
-	return (unsigned int)(message->dataSize + JAUS_HEADER_SIZE_BYTES + JAUS_UDP_HEADER_SIZE_BYTES);
-}
 
 unsigned int setWrenchEffortMessageSize(SetWrenchEffortMessage message)
 {

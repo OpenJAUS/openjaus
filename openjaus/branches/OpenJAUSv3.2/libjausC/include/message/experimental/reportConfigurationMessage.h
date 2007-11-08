@@ -99,7 +99,6 @@ JausBoolean reportConfigurationMessageToBuffer(ReportConfigurationMessage messag
 ReportConfigurationMessage reportConfigurationMessageFromJausMessage(JausMessage jausMessage);
 JausMessage reportConfigurationMessageToJausMessage(ReportConfigurationMessage message);
 
-unsigned int reportConfigurationMessageUdpSize(ReportConfigurationMessage message);
 unsigned int reportConfigurationMessageSize(ReportConfigurationMessage message);
 
 

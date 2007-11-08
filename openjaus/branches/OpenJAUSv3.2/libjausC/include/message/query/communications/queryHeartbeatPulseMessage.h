@@ -99,7 +99,6 @@ JausBoolean queryHeartbeatPulseMessageToBuffer(QueryHeartbeatPulseMessage messag
 QueryHeartbeatPulseMessage queryHeartbeatPulseMessageFromJausMessage(JausMessage jausMessage);
 JausMessage queryHeartbeatPulseMessageToJausMessage(QueryHeartbeatPulseMessage message);
 
-unsigned int queryHeartbeatPulseMessageUdpSize(QueryHeartbeatPulseMessage message);
 unsigned int queryHeartbeatPulseMessageSize(QueryHeartbeatPulseMessage message);
 
 

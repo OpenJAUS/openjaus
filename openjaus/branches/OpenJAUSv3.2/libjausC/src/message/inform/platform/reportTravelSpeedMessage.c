@@ -156,11 +156,6 @@ JausBoolean reportTravelSpeedMessageFromBuffer(ReportTravelSpeedMessage message,
 {
 	int index = 0;
 	
-	if(!strncmp((char *)buffer, JAUS_UDP_HEADER, JAUS_UDP_HEADER_SIZE_BYTES)) // equals 1 if same
-	{
-		index += JAUS_UDP_HEADER_SIZE_BYTES;
-	}
-
 	if(headerFromBuffer(message, buffer+index, bufferSizeBytes-index))
 	{
 		index += JAUS_HEADER_SIZE_BYTES;
@@ -196,19 +191,6 @@ JausBoolean reportTravelSpeedMessageToBuffer(ReportTravelSpeedMessage message, u
 		{
 			return JAUS_FALSE; // headerToReportTravelSpeedBuffer failed
 		}
-	}
-}
-
-JausBoolean reportTravelSpeedMessageToUdpBuffer(ReportTravelSpeedMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
-{
-	if(bufferSizeBytes < reportTravelSpeedMessageUdpSize(message))
-	{
-		return JAUS_FALSE; // improper size
-	}
-	else
-	{
-		strncpy((char *)buffer, JAUS_UDP_HEADER, JAUS_UDP_HEADER_SIZE_BYTES); //copies the UDP header into the buffer
-		return reportTravelSpeedMessageToBuffer(message, buffer+JAUS_UDP_HEADER_SIZE_BYTES, bufferSizeBytes - JAUS_UDP_HEADER_SIZE_BYTES);
 	}
 }
 
@@ -286,10 +268,6 @@ JausMessage reportTravelSpeedMessageToJausMessage(ReportTravelSpeedMessage messa
 	return jausMessage;
 }
 
-unsigned int reportTravelSpeedMessageUdpSize(ReportTravelSpeedMessage message)
-{
-	return (unsigned int)(message->dataSize + JAUS_HEADER_SIZE_BYTES + JAUS_UDP_HEADER_SIZE_BYTES);
-}
 
 unsigned int reportTravelSpeedMessageSize(ReportTravelSpeedMessage message)
 {

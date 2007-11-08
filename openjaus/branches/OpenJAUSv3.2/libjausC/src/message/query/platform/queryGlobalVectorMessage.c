@@ -146,11 +146,6 @@ JausBoolean queryGlobalVectorMessageFromBuffer(QueryGlobalVectorMessage message,
 {
 	int index = 0;
 	
-	if(!strncmp((char *)buffer, JAUS_UDP_HEADER, JAUS_UDP_HEADER_SIZE_BYTES)) // equals 1 if same
-	{
-		index += JAUS_UDP_HEADER_SIZE_BYTES;
-	}
-
 	if(headerFromBuffer(message, buffer+index, bufferSizeBytes-index))
 	{
 		index += JAUS_HEADER_SIZE_BYTES;
@@ -186,19 +181,6 @@ JausBoolean queryGlobalVectorMessageToBuffer(QueryGlobalVectorMessage message, u
 		{
 			return JAUS_FALSE; // headerToQueryGlobalVectorBuffer failed
 		}
-	}
-}
-
-JausBoolean queryGlobalVectorMessageToUdpBuffer(QueryGlobalVectorMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
-{
-	if(bufferSizeBytes < queryGlobalVectorMessageUdpSize(message))
-	{
-		return JAUS_FALSE; // improper size
-	}
-	else
-	{
-		strncpy((char *)buffer, JAUS_UDP_HEADER, JAUS_UDP_HEADER_SIZE_BYTES); //copies the UDP header into the buffer
-		return queryGlobalVectorMessageToBuffer(message, buffer+JAUS_UDP_HEADER_SIZE_BYTES, bufferSizeBytes - JAUS_UDP_HEADER_SIZE_BYTES);
 	}
 }
 
@@ -276,10 +258,6 @@ JausMessage queryGlobalVectorMessageToJausMessage(QueryGlobalVectorMessage messa
 	return jausMessage;
 }
 
-unsigned int queryGlobalVectorMessageUdpSize(QueryGlobalVectorMessage message)
-{
-	return (unsigned int)(message->dataSize + JAUS_HEADER_SIZE_BYTES + JAUS_UDP_HEADER_SIZE_BYTES);
-}
 
 unsigned int queryGlobalVectorMessageSize(QueryGlobalVectorMessage message)
 {

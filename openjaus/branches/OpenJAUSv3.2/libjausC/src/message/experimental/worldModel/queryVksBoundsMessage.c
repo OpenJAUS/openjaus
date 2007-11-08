@@ -161,11 +161,6 @@ JausBoolean queryVksBoundsMessageFromBuffer(QueryVksBoundsMessage message, unsig
 {
 	int index = 0;
 	
-	if(!strncmp((char *)buffer, JAUS_UDP_HEADER, JAUS_UDP_HEADER_SIZE_BYTES)) // equals 1 if same
-	{
-		index += JAUS_UDP_HEADER_SIZE_BYTES;
-	}
-
 	if(headerFromBuffer(message, buffer+index, bufferSizeBytes-index))
 	{
 		index += JAUS_HEADER_SIZE_BYTES;
@@ -201,19 +196,6 @@ JausBoolean queryVksBoundsMessageToBuffer(QueryVksBoundsMessage message, unsigne
 		{
 			return JAUS_FALSE; // headerToQueryVksBoundsBuffer failed
 		}
-	}
-}
-
-JausBoolean queryVksBoundsMessageToUdpBuffer(QueryVksBoundsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
-{
-	if(bufferSizeBytes < queryVksBoundsMessageUdpSize(message))
-	{
-		return JAUS_FALSE; // improper size
-	}
-	else
-	{
-		strncpy( (char *) buffer, JAUS_UDP_HEADER, JAUS_UDP_HEADER_SIZE_BYTES); //copies the UDP header into the buffer
-		return queryVksBoundsMessageToBuffer(message, buffer+JAUS_UDP_HEADER_SIZE_BYTES, bufferSizeBytes - JAUS_UDP_HEADER_SIZE_BYTES);
 	}
 }
 
@@ -291,10 +273,6 @@ JausMessage queryVksBoundsMessageToJausMessage(QueryVksBoundsMessage message)
 	return jausMessage;
 }
 
-unsigned int queryVksBoundsMessageUdpSize(QueryVksBoundsMessage message)
-{
-	return (unsigned int)(message->dataSize + JAUS_HEADER_SIZE_BYTES + JAUS_UDP_HEADER_SIZE_BYTES);
-}
 
 unsigned int queryVksBoundsMessageSize(QueryVksBoundsMessage message)
 {

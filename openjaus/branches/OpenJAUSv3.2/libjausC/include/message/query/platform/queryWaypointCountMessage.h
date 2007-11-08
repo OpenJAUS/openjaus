@@ -99,7 +99,6 @@ JausBoolean queryWaypointCountMessageToBuffer(QueryWaypointCountMessage message,
 QueryWaypointCountMessage queryWaypointCountMessageFromJausMessage(JausMessage jausMessage);
 JausMessage queryWaypointCountMessageToJausMessage(QueryWaypointCountMessage message);
 
-unsigned int queryWaypointCountMessageUdpSize(QueryWaypointCountMessage message);
 unsigned int queryWaypointCountMessageSize(QueryWaypointCountMessage message);
 
 

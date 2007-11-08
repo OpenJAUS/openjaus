@@ -263,11 +263,6 @@ JausBoolean reportGlobalWaypointMessageFromBuffer(ReportGlobalWaypointMessage me
 {
 	int index = 0;
 	
-	if(!strncmp((char *)buffer, JAUS_UDP_HEADER, JAUS_UDP_HEADER_SIZE_BYTES)) // equals 1 if same
-	{
-		index += JAUS_UDP_HEADER_SIZE_BYTES;
-	}
-
 	if(headerFromBuffer(message, buffer+index, bufferSizeBytes-index))
 	{
 		index += JAUS_HEADER_SIZE_BYTES;
@@ -303,19 +298,6 @@ JausBoolean reportGlobalWaypointMessageToBuffer(ReportGlobalWaypointMessage mess
 		{
 			return JAUS_FALSE; // headerToReportGlobalWaypointBuffer failed
 		}
-	}
-}
-
-JausBoolean reportGlobalWaypointMessageToUdpBuffer(ReportGlobalWaypointMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
-{
-	if(bufferSizeBytes < reportGlobalWaypointMessageUdpSize(message))
-	{
-		return JAUS_FALSE; // improper size
-	}
-	else
-	{
-		strncpy((char *)buffer, JAUS_UDP_HEADER, JAUS_UDP_HEADER_SIZE_BYTES); //copies the UDP header into the buffer
-		return reportGlobalWaypointMessageToBuffer(message, buffer+JAUS_UDP_HEADER_SIZE_BYTES, bufferSizeBytes - JAUS_UDP_HEADER_SIZE_BYTES);
 	}
 }
 
@@ -393,10 +375,6 @@ JausMessage reportGlobalWaypointMessageToJausMessage(ReportGlobalWaypointMessage
 	return jausMessage;
 }
 
-unsigned int reportGlobalWaypointMessageUdpSize(ReportGlobalWaypointMessage message)
-{
-	return (unsigned int)(message->dataSize + JAUS_HEADER_SIZE_BYTES + JAUS_UDP_HEADER_SIZE_BYTES);
-}
 
 unsigned int reportGlobalWaypointMessageSize(ReportGlobalWaypointMessage message)
 {

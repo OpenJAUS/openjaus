@@ -100,7 +100,6 @@ JausBoolean reportComponentAuthorityMessageToBuffer(ReportComponentAuthorityMess
 ReportComponentAuthorityMessage reportComponentAuthorityMessageFromJausMessage(JausMessage jausMessage);
 JausMessage reportComponentAuthorityMessageToJausMessage(ReportComponentAuthorityMessage message);
 
-unsigned int reportComponentAuthorityMessageUdpSize(ReportComponentAuthorityMessage message);
 unsigned int reportComponentAuthorityMessageSize(ReportComponentAuthorityMessage message);
 
 

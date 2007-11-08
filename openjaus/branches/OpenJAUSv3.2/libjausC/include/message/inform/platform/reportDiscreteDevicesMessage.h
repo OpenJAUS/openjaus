@@ -130,7 +130,6 @@ JausBoolean reportDiscreteDevicesMessageToBuffer(ReportDiscreteDevicesMessage me
 ReportDiscreteDevicesMessage reportDiscreteDevicesMessageFromJausMessage(JausMessage jausMessage);
 JausMessage reportDiscreteDevicesMessageToJausMessage(ReportDiscreteDevicesMessage message);
 
-unsigned int reportDiscreteDevicesMessageUdpSize(ReportDiscreteDevicesMessage message);
 unsigned int reportDiscreteDevicesMessageSize(ReportDiscreteDevicesMessage message);
 
 

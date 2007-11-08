@@ -99,7 +99,6 @@ JausBoolean queryVelocityStateMessageToBuffer(QueryVelocityStateMessage message,
 QueryVelocityStateMessage queryVelocityStateMessageFromJausMessage(JausMessage jausMessage);
 JausMessage queryVelocityStateMessageToJausMessage(QueryVelocityStateMessage message);
 
-unsigned int queryVelocityStateMessageUdpSize(QueryVelocityStateMessage message);
 unsigned int queryVelocityStateMessageSize(QueryVelocityStateMessage message);
 
 

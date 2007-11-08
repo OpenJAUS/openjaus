@@ -100,7 +100,6 @@ JausBoolean reportPayloadInterfaceMessageToBuffer(ReportPayloadInterfaceMessage 
 ReportPayloadInterfaceMessage reportPayloadInterfaceMessageFromJausMessage(JausMessage jausMessage);
 JausMessage reportPayloadInterfaceMessageToJausMessage(ReportPayloadInterfaceMessage message);
 
-unsigned int reportPayloadInterfaceMessageUdpSize(ReportPayloadInterfaceMessage message);
 unsigned int reportPayloadInterfaceMessageSize(ReportPayloadInterfaceMessage message);
 
 #endif

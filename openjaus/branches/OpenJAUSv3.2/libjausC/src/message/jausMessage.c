@@ -97,10 +97,6 @@ void jausMessageDestroy(JausMessage message)
 	}
 }
 
-unsigned int jausMessageUdpSize(JausMessage message)
-{
-	return (unsigned int)(message->dataSize + JAUS_HEADER_SIZE_BYTES + JAUS_UDP_HEADER_SIZE_BYTES);
-}
 
 unsigned int jausMessageSize(JausMessage message)
 {
@@ -127,27 +123,9 @@ JausBoolean jausMessageToBuffer(JausMessage message, unsigned char *buffer, unsi
 	}
 }
 
-JausBoolean jausMessageToUdpBuffer(JausMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
-{
-	if(bufferSizeBytes < jausMessageUdpSize(message))
-	{
-		return JAUS_FALSE; //improper size
-	}
-	else
-	{
-		strncpy((char *)buffer, JAUS_UDP_HEADER, JAUS_UDP_HEADER_SIZE_BYTES); //copies the UDP header into the buffer
-		return jausMessageToBuffer(message, buffer + JAUS_UDP_HEADER_SIZE_BYTES, bufferSizeBytes - JAUS_UDP_HEADER_SIZE_BYTES);
-	}
-}
-
 JausBoolean jausMessageFromBuffer(JausMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
 {
 	int index = 0;
-	
-	if(!strncmp((char *)buffer, JAUS_UDP_HEADER, JAUS_UDP_HEADER_SIZE_BYTES)) // equals 1 if same
-	{
-		index += JAUS_UDP_HEADER_SIZE_BYTES;
-	}
 	
 	if(headerFromBuffer(message, buffer + index, bufferSizeBytes - index))
 	{
@@ -500,7 +478,7 @@ char *jausCommandCodeString(unsigned short commandCode)
 		case JAUS_REPORT_VKS_OBJECTS:
 			return "JAUS_REPORT_VKS_OBJECTS";
 		default:
-			sprintf(string, "UNDEFINED MESSAGE: 0x%04", commandCode); 
+			sprintf(string, "UNDEFINED MESSAGE: 0x%04X", commandCode); 
 			return string;
 	}	
 }

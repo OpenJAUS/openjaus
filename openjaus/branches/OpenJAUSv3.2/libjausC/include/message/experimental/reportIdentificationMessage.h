@@ -111,7 +111,6 @@ JausBoolean reportIdentificationMessageToBuffer(ReportIdentificationMessage mess
 ReportIdentificationMessage reportIdentificationMessageFromJausMessage(JausMessage jausMessage);
 JausMessage reportIdentificationMessageToJausMessage(ReportIdentificationMessage message);
 
-unsigned int reportIdentificationMessageUdpSize(ReportIdentificationMessage message);
 unsigned int reportIdentificationMessageSize(ReportIdentificationMessage message);
 
 

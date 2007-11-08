@@ -99,7 +99,6 @@ JausBoolean queryGlobalWaypointMessageToBuffer(QueryGlobalWaypointMessage messag
 QueryGlobalWaypointMessage queryGlobalWaypointMessageFromJausMessage(JausMessage jausMessage);
 JausMessage queryGlobalWaypointMessageToJausMessage(QueryGlobalWaypointMessage message);
 
-unsigned int queryGlobalWaypointMessageUdpSize(QueryGlobalWaypointMessage message);
 unsigned int queryGlobalWaypointMessageSize(QueryGlobalWaypointMessage message);
 
 

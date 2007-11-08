@@ -99,7 +99,6 @@ JausBoolean queryPayloadInterfaceMessageToBuffer(QueryPayloadInterfaceMessage me
 QueryPayloadInterfaceMessage queryPayloadInterfaceMessageFromJausMessage(JausMessage jausMessage);
 JausMessage queryPayloadInterfaceMessageToJausMessage(QueryPayloadInterfaceMessage message);
 
-unsigned int queryPayloadInterfaceMessageUdpSize(QueryPayloadInterfaceMessage message);
 unsigned int queryPayloadInterfaceMessageSize(QueryPayloadInterfaceMessage message);
 
 

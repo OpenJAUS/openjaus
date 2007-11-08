@@ -106,7 +106,6 @@ JausBoolean reportComponentStatusMessageToBuffer(ReportComponentStatusMessage me
 ReportComponentStatusMessage reportComponentStatusMessageFromJausMessage(JausMessage jausMessage);
 JausMessage reportComponentStatusMessageToJausMessage(ReportComponentStatusMessage message);
 
-unsigned int reportComponentStatusMessageUdpSize(ReportComponentStatusMessage message);
 unsigned int reportComponentStatusMessageSize(ReportComponentStatusMessage message);
 
 
