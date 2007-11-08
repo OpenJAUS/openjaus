@@ -99,12 +99,12 @@ void releaseComponentControlMessageDestroy(ReleaseComponentControlMessage);
 
 JausBoolean releaseComponentControlMessageFromBuffer(ReleaseComponentControlMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean releaseComponentControlMessageToBuffer(ReleaseComponentControlMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean releaseComponentControlMessageToUdpBuffer(ReleaseComponentControlMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+
 
 ReleaseComponentControlMessage releaseComponentControlMessageFromJausMessage(JausMessage jausMessage);
 JausMessage releaseComponentControlMessageToJausMessage(ReleaseComponentControlMessage message);
 
-unsigned int releaseComponentControlMessageUdpSize(ReleaseComponentControlMessage message);
+
 unsigned int releaseComponentControlMessageSize(ReleaseComponentControlMessage message);
 
 

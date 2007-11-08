@@ -94,12 +94,12 @@ void reportVksFeatureClassMetadataMessageDestroy(ReportVksFeatureClassMetadataMe
 
 JausBoolean reportVksFeatureClassMetadataMessageFromBuffer(ReportVksFeatureClassMetadataMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean reportVksFeatureClassMetadataMessageToBuffer(ReportVksFeatureClassMetadataMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean reportVksFeatureClassMetadataMessageToUdpBuffer(ReportVksFeatureClassMetadataMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+
 
 ReportVksFeatureClassMetadataMessage reportVksFeatureClassMetadataMessageFromJausMessage(JausMessage jausMessage);
 JausMessage reportVksFeatureClassMetadataMessageToJausMessage(ReportVksFeatureClassMetadataMessage message);
 
-unsigned int reportVksFeatureClassMetadataMessageUdpSize(ReportVksFeatureClassMetadataMessage message);
+
 unsigned int reportVksFeatureClassMetadataMessageSize(ReportVksFeatureClassMetadataMessage message);
 
 

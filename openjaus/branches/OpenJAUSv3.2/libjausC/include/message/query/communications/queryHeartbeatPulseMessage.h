@@ -95,7 +95,6 @@ void queryHeartbeatPulseMessageDestroy(QueryHeartbeatPulseMessage);
 
 JausBoolean queryHeartbeatPulseMessageFromBuffer(QueryHeartbeatPulseMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean queryHeartbeatPulseMessageToBuffer(QueryHeartbeatPulseMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean queryHeartbeatPulseMessageToUdpBuffer(QueryHeartbeatPulseMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
 QueryHeartbeatPulseMessage queryHeartbeatPulseMessageFromJausMessage(JausMessage jausMessage);
 JausMessage queryHeartbeatPulseMessageToJausMessage(QueryHeartbeatPulseMessage message);

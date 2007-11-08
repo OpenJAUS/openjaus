@@ -118,7 +118,6 @@ void queryVksObjectsMessageDestroy(QueryVksObjectsMessage);
 
 JausBoolean queryVksObjectsMessageFromBuffer(QueryVksObjectsMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean queryVksObjectsMessageToBuffer(QueryVksObjectsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean queryVksObjectsMessageToUdpBuffer(QueryVksObjectsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
 QueryVksObjectsMessage queryVksObjectsMessageFromJausMessage(JausMessage jausMessage);
 JausMessage queryVksObjectsMessageToJausMessage(QueryVksObjectsMessage message);

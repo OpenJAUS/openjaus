@@ -505,7 +505,7 @@ char *jausCommandCodeString(unsigned short commandCode)
 	}	
 }
 
-JausMessage jausMessageDuplicate(JausMessage inputMessage)
+JausMessage jausMessageClone(JausMessage inputMessage)
 {
 	JausMessage outputMessage;
 

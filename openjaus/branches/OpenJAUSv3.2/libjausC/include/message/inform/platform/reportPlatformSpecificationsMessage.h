@@ -143,7 +143,6 @@ void reportPlatformSpecificationsMessageDestroy(ReportPlatformSpecificationsMess
 
 JausBoolean reportPlatformSpecificationsMessageFromBuffer(ReportPlatformSpecificationsMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean reportPlatformSpecificationsMessageToBuffer(ReportPlatformSpecificationsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean reportPlatformSpecificationsMessageToUdpBuffer(ReportPlatformSpecificationsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
 ReportPlatformSpecificationsMessage reportPlatformSpecificationsMessageFromJausMessage(JausMessage jausMessage);
 JausMessage reportPlatformSpecificationsMessageToJausMessage(ReportPlatformSpecificationsMessage message);

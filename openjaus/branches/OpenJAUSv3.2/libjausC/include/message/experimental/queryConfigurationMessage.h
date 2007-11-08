@@ -101,7 +101,6 @@ void queryConfigurationMessageDestroy(QueryConfigurationMessage);
 
 JausBoolean queryConfigurationMessageFromBuffer(QueryConfigurationMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean queryConfigurationMessageToBuffer(QueryConfigurationMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean queryConfigurationMessageToUdpBuffer(QueryConfigurationMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
 QueryConfigurationMessage queryConfigurationMessageFromJausMessage(JausMessage jausMessage);
 JausMessage queryConfigurationMessageToJausMessage(QueryConfigurationMessage message);

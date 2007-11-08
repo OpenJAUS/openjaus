@@ -96,7 +96,6 @@ void queryComponentAuthorityMessageDestroy(QueryComponentAuthorityMessage);
 
 JausBoolean queryComponentAuthorityMessageFromBuffer(QueryComponentAuthorityMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean queryComponentAuthorityMessageToBuffer(QueryComponentAuthorityMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean queryComponentAuthorityMessageToUdpBuffer(QueryComponentAuthorityMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
 QueryComponentAuthorityMessage queryComponentAuthorityMessageFromJausMessage(JausMessage jausMessage);
 JausMessage queryComponentAuthorityMessageToJausMessage(QueryComponentAuthorityMessage message);

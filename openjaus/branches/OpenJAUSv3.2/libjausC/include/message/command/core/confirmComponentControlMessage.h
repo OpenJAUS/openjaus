@@ -99,12 +99,12 @@ void confirmComponentControlMessageDestroy(ConfirmComponentControlMessage);
 
 JausBoolean confirmComponentControlMessageFromBuffer(ConfirmComponentControlMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean confirmComponentControlMessageToBuffer(ConfirmComponentControlMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean confirmComponentControlMessageToUdpBuffer(ConfirmComponentControlMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+
 
 ConfirmComponentControlMessage confirmComponentControlMessageFromJausMessage(JausMessage jausMessage);
 JausMessage confirmComponentControlMessageToJausMessage(ConfirmComponentControlMessage message);
 
-unsigned int confirmComponentControlMessageUdpSize(ConfirmComponentControlMessage message);
+
 unsigned int confirmComponentControlMessageSize(ConfirmComponentControlMessage message);
 
 

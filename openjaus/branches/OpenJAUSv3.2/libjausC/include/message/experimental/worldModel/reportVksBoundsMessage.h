@@ -101,12 +101,12 @@ void reportVksBoundsMessageDestroy(ReportVksBoundsMessage);
 
 JausBoolean reportVksBoundsMessageFromBuffer(ReportVksBoundsMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean reportVksBoundsMessageToBuffer(ReportVksBoundsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean reportVksBoundsMessageToUdpBuffer(ReportVksBoundsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+
 
 ReportVksBoundsMessage reportVksBoundsMessageFromJausMessage(JausMessage jausMessage);
 JausMessage reportVksBoundsMessageToJausMessage(ReportVksBoundsMessage message);
 
-unsigned int reportVksBoundsMessageUdpSize(ReportVksBoundsMessage message);
+
 unsigned int reportVksBoundsMessageSize(ReportVksBoundsMessage message);
 
 

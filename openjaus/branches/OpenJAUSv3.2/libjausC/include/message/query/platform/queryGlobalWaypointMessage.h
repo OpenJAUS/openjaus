@@ -95,7 +95,6 @@ void queryGlobalWaypointMessageDestroy(QueryGlobalWaypointMessage);
 
 JausBoolean queryGlobalWaypointMessageFromBuffer(QueryGlobalWaypointMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean queryGlobalWaypointMessageToBuffer(QueryGlobalWaypointMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean queryGlobalWaypointMessageToUdpBuffer(QueryGlobalWaypointMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
 QueryGlobalWaypointMessage queryGlobalWaypointMessageFromJausMessage(JausMessage jausMessage);
 JausMessage queryGlobalWaypointMessageToJausMessage(QueryGlobalWaypointMessage message);

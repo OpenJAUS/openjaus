@@ -106,12 +106,12 @@ void confirmServiceConnectionMessageDestroy(ConfirmServiceConnectionMessage);
 
 JausBoolean confirmServiceConnectionMessageFromBuffer(ConfirmServiceConnectionMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean confirmServiceConnectionMessageToBuffer(ConfirmServiceConnectionMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean confirmServiceConnectionMessageToUdpBuffer(ConfirmServiceConnectionMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+
 
 ConfirmServiceConnectionMessage confirmServiceConnectionMessageFromJausMessage(JausMessage jausMessage);
 JausMessage confirmServiceConnectionMessageToJausMessage(ConfirmServiceConnectionMessage message);
 
-unsigned int confirmServiceConnectionMessageUdpSize(ConfirmServiceConnectionMessage message);
+
 unsigned int confirmServiceConnectionMessageSize(ConfirmServiceConnectionMessage message);
 
 

@@ -126,7 +126,6 @@ void reportDiscreteDevicesMessageDestroy(ReportDiscreteDevicesMessage);
 
 JausBoolean reportDiscreteDevicesMessageFromBuffer(ReportDiscreteDevicesMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean reportDiscreteDevicesMessageToBuffer(ReportDiscreteDevicesMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean reportDiscreteDevicesMessageToUdpBuffer(ReportDiscreteDevicesMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
 ReportDiscreteDevicesMessage reportDiscreteDevicesMessageFromJausMessage(JausMessage jausMessage);
 JausMessage reportDiscreteDevicesMessageToJausMessage(ReportDiscreteDevicesMessage message);

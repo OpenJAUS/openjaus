@@ -119,7 +119,6 @@ void confirmEventMessageDestroy(ConfirmEventMessage);
 
 JausBoolean confirmEventMessageFromBuffer(ConfirmEventMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean confirmEventMessageToBuffer(ConfirmEventMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean confirmEventMessageToUdpBuffer(ConfirmEventMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
 ConfirmEventMessage confirmEventMessageFromJausMessage(JausMessage jausMessage);
 JausMessage confirmEventMessageToJausMessage(ConfirmEventMessage message);

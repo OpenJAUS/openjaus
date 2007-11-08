@@ -95,12 +95,12 @@ void resumeMessageDestroy(ResumeMessage);
 
 JausBoolean resumeMessageFromBuffer(ResumeMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean resumeMessageToBuffer(ResumeMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean resumeMessageToUdpBuffer(ResumeMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+
 
 ResumeMessage resumeMessageFromJausMessage(JausMessage jausMessage);
 JausMessage resumeMessageToJausMessage(ResumeMessage message);
 
-unsigned int resumeMessageUdpSize(ResumeMessage message);
+
 unsigned int resumeMessageSize(ResumeMessage message);
 
 

@@ -104,7 +104,6 @@ void queryIdentificationMessageDestroy(QueryIdentificationMessage);
 
 JausBoolean queryIdentificationMessageFromBuffer(QueryIdentificationMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean queryIdentificationMessageToBuffer(QueryIdentificationMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean queryIdentificationMessageToUdpBuffer(QueryIdentificationMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
 QueryIdentificationMessage queryIdentificationMessageFromJausMessage(JausMessage jausMessage);
 JausMessage queryIdentificationMessageToJausMessage(QueryIdentificationMessage message);

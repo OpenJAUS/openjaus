@@ -138,7 +138,7 @@ JausComponent jausComponentClone(JausComponent component)
 	clone->controller.address = jausAddressCreate();
 	jausAddressCopy(clone->controller.address, component->controller.address);
 
-	clone->services = jausServicesDuplicate(component->services);
+	clone->services = jausServicesClone(component->services);
 	
 	jausComponentUpdateTimestamp(clone);
 

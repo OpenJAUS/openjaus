@@ -95,7 +95,6 @@ void queryGlobalVectorMessageDestroy(QueryGlobalVectorMessage);
 
 JausBoolean queryGlobalVectorMessageFromBuffer(QueryGlobalVectorMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean queryGlobalVectorMessageToBuffer(QueryGlobalVectorMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean queryGlobalVectorMessageToUdpBuffer(QueryGlobalVectorMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
 QueryGlobalVectorMessage queryGlobalVectorMessageFromJausMessage(JausMessage jausMessage);
 JausMessage queryGlobalVectorMessageToJausMessage(QueryGlobalVectorMessage message);

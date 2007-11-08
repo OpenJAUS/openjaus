@@ -95,7 +95,6 @@ void queryGlobalPoseMessageDestroy(QueryGlobalPoseMessage);
 
 JausBoolean queryGlobalPoseMessageFromBuffer(QueryGlobalPoseMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean queryGlobalPoseMessageToBuffer(QueryGlobalPoseMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean queryGlobalPoseMessageToUdpBuffer(QueryGlobalPoseMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
 QueryGlobalPoseMessage queryGlobalPoseMessageFromJausMessage(JausMessage jausMessage);
 JausMessage queryGlobalPoseMessageToJausMessage(QueryGlobalPoseMessage message);

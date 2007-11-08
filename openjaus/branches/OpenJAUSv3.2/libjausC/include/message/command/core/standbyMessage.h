@@ -95,12 +95,12 @@ void standbyMessageDestroy(StandbyMessage);
 
 JausBoolean standbyMessageFromBuffer(StandbyMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean standbyMessageToBuffer(StandbyMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean standbyMessageToUdpBuffer(StandbyMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+
 
 StandbyMessage standbyMessageFromJausMessage(JausMessage jausMessage);
 JausMessage standbyMessageToJausMessage(StandbyMessage message);
 
-unsigned int standbyMessageUdpSize(StandbyMessage message);
+
 unsigned int standbyMessageSize(StandbyMessage message);
 
 

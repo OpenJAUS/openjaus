@@ -107,7 +107,6 @@ void reportIdentificationMessageDestroy(ReportIdentificationMessage);
 
 JausBoolean reportIdentificationMessageFromBuffer(ReportIdentificationMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean reportIdentificationMessageToBuffer(ReportIdentificationMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean reportIdentificationMessageToUdpBuffer(ReportIdentificationMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
 ReportIdentificationMessage reportIdentificationMessageFromJausMessage(JausMessage jausMessage);
 JausMessage reportIdentificationMessageToJausMessage(ReportIdentificationMessage message);

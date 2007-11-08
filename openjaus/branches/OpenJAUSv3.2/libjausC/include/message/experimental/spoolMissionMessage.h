@@ -95,12 +95,12 @@ void spoolMissionMessageDestroy(SpoolMissionMessage);
 
 JausBoolean spoolMissionMessageFromBuffer(SpoolMissionMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean spoolMissionMessageToBuffer(SpoolMissionMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean spoolMissionMessageToUdpBuffer(SpoolMissionMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+
 
 SpoolMissionMessage spoolMissionMessageFromJausMessage(JausMessage jausMessage);
 JausMessage spoolMissionMessageToJausMessage(SpoolMissionMessage message);
 
-unsigned int spoolMissionMessageUdpSize(SpoolMissionMessage message);
+
 unsigned int spoolMissionMessageSize(SpoolMissionMessage message);
 
 

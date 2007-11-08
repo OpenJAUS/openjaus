@@ -106,7 +106,6 @@ void createVksObjectsMessageDestroy(CreateVksObjectsMessage);
 
 JausBoolean createVksObjectsMessageFromBuffer(CreateVksObjectsMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean createVksObjectsMessageToBuffer(CreateVksObjectsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean createVksObjectsMessageToUdpBuffer(CreateVksObjectsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
 CreateVksObjectsMessage createVksObjectsMessageFromJausMessage(JausMessage jausMessage);
 JausMessage createVksObjectsMessageToJausMessage(CreateVksObjectsMessage message);

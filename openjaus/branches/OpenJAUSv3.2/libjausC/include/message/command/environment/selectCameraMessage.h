@@ -97,12 +97,12 @@ void selectCameraMessageDestroy(SelectCameraMessage);
 
 JausBoolean selectCameraMessageFromBuffer(SelectCameraMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean selectCameraMessageToBuffer(SelectCameraMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean selectCameraMessageToUdpBuffer(SelectCameraMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+
 
 SelectCameraMessage selectCameraMessageFromJausMessage(JausMessage jausMessage);
 JausMessage selectCameraMessageToJausMessage(SelectCameraMessage message);
 
-unsigned int selectCameraMessageUdpSize(SelectCameraMessage message);
+
 unsigned int selectCameraMessageSize(SelectCameraMessage message);
 
 

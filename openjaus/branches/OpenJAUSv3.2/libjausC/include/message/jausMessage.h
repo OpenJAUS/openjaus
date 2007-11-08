@@ -46,9 +46,6 @@
 
 #include "jaus.h"
 
-#define JAUS_UDP_HEADER 			"JAUS01.0"
-#define JAUS_UDP_HEADER_SIZE_BYTES	8
-
 #define JAUS_HEADER_SIZE_BYTES		16
 
 #define JAUS_LOW_PRIORITY			0
@@ -283,15 +280,13 @@ typedef struct JausMessageStruct *JausMessage;
 JausMessage jausMessageCreate(void);
 void jausMessageDestroy(JausMessage);
 
-unsigned int jausMessageUdpSize(JausMessage);
 unsigned int jausMessageSize(JausMessage);
 
 JausBoolean jausMessageToBuffer(JausMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean jausMessageToUdpBuffer(JausMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 JausBoolean jausMessageFromBuffer(JausMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 char *jausMessageCommandCodeString(JausMessage);
 char *jausCommandCodeString(unsigned short commandCode);
-JausMessage jausMessageDuplicate(JausMessage);
+JausMessage jausMessageClone(JausMessage);
 JausBoolean jausMessageIsRejectableCommand(JausMessage message);
 
 #endif // JAUS_MESSAGE_H

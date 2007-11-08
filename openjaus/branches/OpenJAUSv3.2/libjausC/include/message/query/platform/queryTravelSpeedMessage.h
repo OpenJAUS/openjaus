@@ -95,7 +95,6 @@ void queryTravelSpeedMessageDestroy(QueryTravelSpeedMessage);
 
 JausBoolean queryTravelSpeedMessageFromBuffer(QueryTravelSpeedMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean queryTravelSpeedMessageToBuffer(QueryTravelSpeedMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean queryTravelSpeedMessageToUdpBuffer(QueryTravelSpeedMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
 QueryTravelSpeedMessage queryTravelSpeedMessageFromJausMessage(JausMessage jausMessage);
 JausMessage queryTravelSpeedMessageToJausMessage(QueryTravelSpeedMessage message);

@@ -95,12 +95,12 @@ void resetMessageDestroy(ResetMessage);
 
 JausBoolean resetMessageFromBuffer(ResetMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean resetMessageToBuffer(ResetMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean resetMessageToUdpBuffer(ResetMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+
 
 ResetMessage resetMessageFromJausMessage(JausMessage jausMessage);
 JausMessage resetMessageToJausMessage(ResetMessage message);
 
-unsigned int resetMessageUdpSize(ResetMessage message);
+
 unsigned int resetMessageSize(ResetMessage message);
 
 

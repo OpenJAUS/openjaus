@@ -109,7 +109,6 @@ void reportGlobalVectorMessageDestroy(ReportGlobalVectorMessage);
 
 JausBoolean reportGlobalVectorMessageFromBuffer(ReportGlobalVectorMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean reportGlobalVectorMessageToBuffer(ReportGlobalVectorMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean reportGlobalVectorMessageToUdpBuffer(ReportGlobalVectorMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
 ReportGlobalVectorMessage reportGlobalVectorMessageFromJausMessage(JausMessage jausMessage);
 JausMessage reportGlobalVectorMessageToJausMessage(ReportGlobalVectorMessage message);

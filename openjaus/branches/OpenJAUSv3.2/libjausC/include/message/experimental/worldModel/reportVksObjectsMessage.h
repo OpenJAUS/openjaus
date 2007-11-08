@@ -104,12 +104,12 @@ void reportVksObjectsMessageDestroy(ReportVksObjectsMessage);
 
 JausBoolean reportVksObjectsMessageFromBuffer(ReportVksObjectsMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean reportVksObjectsMessageToBuffer(ReportVksObjectsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean reportVksObjectsMessageToUdpBuffer(ReportVksObjectsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+
 
 ReportVksObjectsMessage reportVksObjectsMessageFromJausMessage(JausMessage jausMessage);
 JausMessage reportVksObjectsMessageToJausMessage(ReportVksObjectsMessage message);
 
-unsigned int reportVksObjectsMessageUdpSize(ReportVksObjectsMessage message);
+
 unsigned int reportVksObjectsMessageSize(ReportVksObjectsMessage message);
 
 

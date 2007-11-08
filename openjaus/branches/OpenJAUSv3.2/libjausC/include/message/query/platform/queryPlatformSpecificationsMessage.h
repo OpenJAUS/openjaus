@@ -120,7 +120,6 @@ void queryPlatformSpecificationsMessageDestroy(QueryPlatformSpecificationsMessag
 
 JausBoolean queryPlatformSpecificationsMessageFromBuffer(QueryPlatformSpecificationsMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean queryPlatformSpecificationsMessageToBuffer(QueryPlatformSpecificationsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean queryPlatformSpecificationsMessageToUdpBuffer(QueryPlatformSpecificationsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
 QueryPlatformSpecificationsMessage queryPlatformSpecificationsMessageFromJausMessage(JausMessage jausMessage);
 JausMessage queryPlatformSpecificationsMessageToJausMessage(QueryPlatformSpecificationsMessage message);

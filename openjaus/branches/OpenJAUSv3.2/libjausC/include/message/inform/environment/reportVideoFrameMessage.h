@@ -100,12 +100,12 @@ void reportVideoFrameMessageDestroy(ReportVideoFrameMessage);
 
 JausBoolean reportVideoFrameMessageFromBuffer(ReportVideoFrameMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean reportVideoFrameMessageToBuffer(ReportVideoFrameMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean reportVideoFrameMessageToUdpBuffer(ReportVideoFrameMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+
 
 ReportVideoFrameMessage reportVideoFrameMessageFromJausMessage(JausMessage jausMessage);
 JausMessage reportVideoFrameMessageToJausMessage(ReportVideoFrameMessage message);
 
-unsigned int reportVideoFrameMessageUdpSize(ReportVideoFrameMessage message);
+
 unsigned int reportVideoFrameMessageSize(ReportVideoFrameMessage message);
 
 
