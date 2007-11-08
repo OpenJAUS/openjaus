@@ -187,7 +187,7 @@ bool JausSubsystemCommunicationManager::sendToAllInterfaces(JausMessage message)
 
 	for(iter = interfaces.begin(); iter != interfaces.end(); iter++)
 	{
-		(*iter)->queueJausMessage(jausMessageDuplicate(message));
+		(*iter)->queueJausMessage(jausMessageClone(message));
 	}
 	jausMessageDestroy(message);
 	return true;

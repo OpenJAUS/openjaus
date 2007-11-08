@@ -172,7 +172,7 @@ bool JausComponentCommunicationManager::receiveJausMessage(JausMessage message, 
 		else
 		{
 			// Send to MsgRouter
-			msgRouter->routeComponentSourceMessage(jausMessageDuplicate(message));
+			msgRouter->routeComponentSourceMessage(jausMessageClone(message));
 			
 			if(message->destination->component == JAUS_BROADCAST_COMPONENT_ID)
 			{
@@ -186,7 +186,7 @@ bool JausComponentCommunicationManager::receiveJausMessage(JausMessage message, 
 	}
 	else if(message->destination->subsystem == JAUS_BROADCAST_SUBSYSTEM_ID)
 	{
-		msgRouter->routeComponentSourceMessage(jausMessageDuplicate(message));
+		msgRouter->routeComponentSourceMessage(jausMessageClone(message));
 
 		if(message->destination->component == JAUS_BROADCAST_COMPONENT_ID)
 		{
@@ -266,7 +266,7 @@ bool JausComponentCommunicationManager::sendToAllInterfaces(JausMessage message)
 	{
 		if(iter->second != NULL)
 		{
-			iter->second->queueJausMessage(jausMessageDuplicate(message));
+			iter->second->queueJausMessage(jausMessageClone(message));
 		}
 	}
 	

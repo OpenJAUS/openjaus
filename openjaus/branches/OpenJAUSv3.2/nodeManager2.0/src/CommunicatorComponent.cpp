@@ -728,7 +728,7 @@ void CommunicatorComponent::sendNodeChangedEvents()
 	for(iterator = nodeChangeList.begin(); iterator != nodeChangeList.end(); iterator++)
 	{
 		jausAddressCopy(txMessage->destination, iterator->second);
-		this->commMngr->receiveJausMessage(jausMessageDuplicate(txMessage), this);
+		this->commMngr->receiveJausMessage(jausMessageClone(txMessage), this);
 	}
 	
 	jausMessageDestroy(txMessage);
@@ -765,7 +765,7 @@ void CommunicatorComponent::sendSubsystemChangedEvents()
 	for(iterator = subsystemChangeList.begin(); iterator != subsystemChangeList.end(); iterator++)
 	{
 		jausAddressCopy(txMessage->destination, iterator->second);
-		this->commMngr->receiveJausMessage(jausMessageDuplicate(txMessage), this);
+		this->commMngr->receiveJausMessage(jausMessageClone(txMessage), this);
 	}
 
 	jausMessageDestroy(txMessage);
@@ -1347,7 +1347,7 @@ bool CommunicatorComponent::processQueryServices(JausMessage message)
 	jausAddressCopy(reportServices->destination, message->source);
 	jausAddressCopy(reportServices->source, cmpt->address);
 	jausServicesDestroy(reportServices->jausServices);
-	reportServices->jausServices = jausServicesDuplicate(cmpt->services);
+	reportServices->jausServices = jausServicesClone(cmpt->services);
 
 	txMessage = reportServicesMessageToJausMessage(reportServices);
 	if(txMessage)
