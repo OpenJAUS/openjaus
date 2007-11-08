@@ -81,7 +81,7 @@ NodeManagerComponent::~NodeManagerComponent(void){}
 
 bool NodeManagerComponent::processMessage(JausMessage message)
 {
-	if(!message)
+	if(!message || !message->destination)
 	{
 		// TODO: ERROR
 		printf("How does this happen?\n");

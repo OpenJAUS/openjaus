@@ -180,7 +180,6 @@ bool SystemTree::hasSubsystemConfiguration(int subsId)
 {
 	if(system[subsId])
 	{
-		// TODO: Check for config info
 		JausSubsystem subs = system[subsId];
 		if(subs->nodes->elementCount > 0)
 		{
@@ -1034,6 +1033,8 @@ bool SystemTree::addComponent(int subsystemId, int nodeId, int componentId, int 
 			cmpt->node = node;
 
 			jausArrayAdd(node->components, cmpt);
+			SystemTreeEvent *e = new SystemTreeEvent(SystemTreeEvent::ComponentAdded, cmpt);
+			this->eventHandler->handleEvent(e);
 			return true;
 		}
 	}
@@ -1071,6 +1072,10 @@ bool SystemTree::addNode(int subsystemId, int nodeId, JausNode node)
 			node->subsystem = subs;
 			
 			jausArrayAdd(subs->nodes, node);
+
+			SystemTreeEvent *e = new SystemTreeEvent(SystemTreeEvent::NodeAdded, node);
+			this->eventHandler->handleEvent(e);
+
 			return true;
 		}
 	}
@@ -1106,6 +1111,10 @@ bool SystemTree::addSubsystem(int subsystemId, JausSubsystem subs)
 			
 			system[subs->id] = subs;
 			subsystemCount++;
+
+			SystemTreeEvent *e = new SystemTreeEvent(SystemTreeEvent::SubsystemAdded, subs);
+			this->eventHandler->handleEvent(e);
+
 			return true;
 		}
 	}
@@ -1505,9 +1514,8 @@ void SystemTree::refresh()
 					{
 						if(jausNodeIsTimedOut(node))
 						{
-							char tempBuf[1024] = {0};
-							jausNodeToString(node, tempBuf);
-							printf("Node TIMEOUT: %s\n", tempBuf);
+							SystemTreeEvent *e = new SystemTreeEvent(SystemTreeEvent::NodeTimeout, node);
+							this->eventHandler->handleEvent(e);
 							removeNode(node);
 						}
 					}
@@ -1517,9 +1525,8 @@ void SystemTree::refresh()
 			{
 				if(jausSubsystemIsTimedOut(system[i]))
 				{
-					char tempBuf[1024] = {0};
-					jausSubsystemToString(system[i], tempBuf);
-					printf("Subsystem TIMEOUT: %s\n", tempBuf);
+					SystemTreeEvent *e = new SystemTreeEvent(SystemTreeEvent::SubsystemTimeout, system[i]);
+					this->eventHandler->handleEvent(e);
 					removeSubsystem(system[i]->id);
 				}
 			}

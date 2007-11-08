@@ -13,6 +13,30 @@ void parseUserInput(char input);
 
 static NodeManager *nm;
 
+class MyHandler : public EventHandler
+{
+	void handleEvent(NodeManagerEvent *e)
+	{
+		SystemTreeEvent *treeEvent;
+
+		switch(e->getType())
+		{
+			case NodeManagerEvent::SystemTreeEvent:
+				treeEvent = (SystemTreeEvent *)e;
+				printf("%s\n", treeEvent->toString().c_str());
+				delete e;
+				break;
+
+			default:
+				delete e;
+				break;
+		}
+	}
+};
+
+
+
+
 #if defined(WIN32)
 int main(int argc, char *args)
 {
@@ -29,8 +53,10 @@ int main(int argc, char *args)
 	handleStdin = GetStdHandle(STD_INPUT_HANDLE); 
 
 	FileLoader *configData = new FileLoader("nodeManager.conf");
-	
+	MyHandler *handler = new MyHandler();
+
 	nm = new NodeManager(configData);
+	nm->registerEventHandler(handler);
 
 	printHelpMenu();
 

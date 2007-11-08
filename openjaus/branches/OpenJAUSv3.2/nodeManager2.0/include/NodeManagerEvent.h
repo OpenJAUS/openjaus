@@ -35,8 +35,7 @@ public:
 			ComponentAdded, ComponentRemoved, ComponentTimeout};
 
 private:
-	static const unsigned int type = NodeManagerEvent::SystemTreeEvent;
-	unsigned int eventType;
+	unsigned int subType;
 	JausSubsystem subs;
 	JausNode node;
 	JausComponent cmpt;
