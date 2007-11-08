@@ -96,12 +96,10 @@ void activateServiceConnectionMessageDestroy(ActivateServiceConnectionMessage);
 
 JausBoolean activateServiceConnectionMessageFromBuffer(ActivateServiceConnectionMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean activateServiceConnectionMessageToBuffer(ActivateServiceConnectionMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean activateServiceConnectionMessageToUdpBuffer(ActivateServiceConnectionMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
 ActivateServiceConnectionMessage activateServiceConnectionMessageFromJausMessage(JausMessage jausMessage);
 JausMessage activateServiceConnectionMessageToJausMessage(ActivateServiceConnectionMessage message);
 
-unsigned int activateServiceConnectionMessageUdpSize(ActivateServiceConnectionMessage message);
 unsigned int activateServiceConnectionMessageSize(ActivateServiceConnectionMessage message);
 
 

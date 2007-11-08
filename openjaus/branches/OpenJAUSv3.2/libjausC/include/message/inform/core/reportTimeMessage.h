@@ -104,12 +104,12 @@ void reportTimeMessageDestroy(ReportTimeMessage);
 
 JausBoolean reportTimeMessageFromBuffer(ReportTimeMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean reportTimeMessageToBuffer(ReportTimeMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean reportTimeMessageToUdpBuffer(ReportTimeMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+
 
 ReportTimeMessage reportTimeMessageFromJausMessage(JausMessage jausMessage);
 JausMessage reportTimeMessageToJausMessage(ReportTimeMessage message);
 
-unsigned int reportTimeMessageUdpSize(ReportTimeMessage message);
+
 unsigned int reportTimeMessageSize(ReportTimeMessage message);
 
 

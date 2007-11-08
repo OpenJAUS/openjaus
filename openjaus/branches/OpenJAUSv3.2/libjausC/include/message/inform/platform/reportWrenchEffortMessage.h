@@ -124,12 +124,12 @@ void reportWrenchEffortMessageDestroy(ReportWrenchEffortMessage);
 
 JausBoolean reportWrenchEffortMessageFromBuffer(ReportWrenchEffortMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean reportWrenchEffortMessageToBuffer(ReportWrenchEffortMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean reportWrenchEffortMessageToUdpBuffer(ReportWrenchEffortMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+
 
 ReportWrenchEffortMessage reportWrenchEffortMessageFromJausMessage(JausMessage jausMessage);
 JausMessage reportWrenchEffortMessageToJausMessage(ReportWrenchEffortMessage message);
 
-unsigned int reportWrenchEffortMessageUdpSize(ReportWrenchEffortMessage message);
+
 unsigned int reportWrenchEffortMessageSize(ReportWrenchEffortMessage message);
 
 

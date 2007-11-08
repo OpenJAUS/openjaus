@@ -70,7 +70,7 @@ void jausServicesDestroy(JausArray jausServices)
 	jausArrayDestroy(jausServices, (void *)jausServiceDestroy);
 }
 
-JausArray jausServicesDuplicate(JausArray sourceServices)
+JausArray jausServicesClone(JausArray sourceServices)
 {
 	JausArray destinationServices;
 	JausService sourceService, destinationService;

@@ -110,12 +110,12 @@ void setGlobalWaypointMessageDestroy(SetGlobalWaypointMessage);
 
 JausBoolean setGlobalWaypointMessageFromBuffer(SetGlobalWaypointMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean setGlobalWaypointMessageToBuffer(SetGlobalWaypointMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean setGlobalWaypointMessageToUdpBuffer(SetGlobalWaypointMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+
 
 SetGlobalWaypointMessage setGlobalWaypointMessageFromJausMessage(JausMessage jausMessage);
 JausMessage setGlobalWaypointMessageToJausMessage(SetGlobalWaypointMessage message);
 
-unsigned int setGlobalWaypointMessageUdpSize(SetGlobalWaypointMessage message);
+
 unsigned int setGlobalWaypointMessageSize(SetGlobalWaypointMessage message);
 
 

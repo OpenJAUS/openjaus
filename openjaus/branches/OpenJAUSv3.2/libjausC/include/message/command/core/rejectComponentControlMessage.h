@@ -95,12 +95,12 @@ void rejectComponentControlMessageDestroy(RejectComponentControlMessage);
 
 JausBoolean rejectComponentControlMessageFromBuffer(RejectComponentControlMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean rejectComponentControlMessageToBuffer(RejectComponentControlMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean rejectComponentControlMessageToUdpBuffer(RejectComponentControlMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+
 
 RejectComponentControlMessage rejectComponentControlMessageFromJausMessage(JausMessage jausMessage);
 JausMessage rejectComponentControlMessageToJausMessage(RejectComponentControlMessage message);
 
-unsigned int rejectComponentControlMessageUdpSize(RejectComponentControlMessage message);
+
 unsigned int rejectComponentControlMessageSize(RejectComponentControlMessage message);
 
 

@@ -96,7 +96,6 @@ void reportPayloadInterfaceMessageDestroy(ReportPayloadInterfaceMessage);
 
 JausBoolean reportPayloadInterfaceMessageFromBuffer(ReportPayloadInterfaceMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean reportPayloadInterfaceMessageToBuffer(ReportPayloadInterfaceMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean reportPayloadInterfaceMessageToUdpBuffer(ReportPayloadInterfaceMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
 ReportPayloadInterfaceMessage reportPayloadInterfaceMessageFromJausMessage(JausMessage jausMessage);
 JausMessage reportPayloadInterfaceMessageToJausMessage(ReportPayloadInterfaceMessage message);

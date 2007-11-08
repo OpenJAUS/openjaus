@@ -102,7 +102,6 @@ void reportComponentStatusMessageDestroy(ReportComponentStatusMessage);
 
 JausBoolean reportComponentStatusMessageFromBuffer(ReportComponentStatusMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean reportComponentStatusMessageToBuffer(ReportComponentStatusMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean reportComponentStatusMessageToUdpBuffer(ReportComponentStatusMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
 ReportComponentStatusMessage reportComponentStatusMessageFromJausMessage(JausMessage jausMessage);
 JausMessage reportComponentStatusMessageToJausMessage(ReportComponentStatusMessage message);

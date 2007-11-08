@@ -96,7 +96,6 @@ void queryTimeMessageDestroy(QueryTimeMessage);
 
 JausBoolean queryTimeMessageFromBuffer(QueryTimeMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean queryTimeMessageToBuffer(QueryTimeMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean queryTimeMessageToUdpBuffer(QueryTimeMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
 QueryTimeMessage queryTimeMessageFromJausMessage(JausMessage jausMessage);
 JausMessage queryTimeMessageToJausMessage(QueryTimeMessage message);

@@ -145,12 +145,12 @@ void createEventMessageDestroy(CreateEventMessage);
 
 JausBoolean createEventMessageFromBuffer(CreateEventMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean createEventMessageToBuffer(CreateEventMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean createEventMessageToUdpBuffer(CreateEventMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+
 
 CreateEventMessage createEventMessageFromJausMessage(JausMessage jausMessage);
 JausMessage createEventMessageToJausMessage(CreateEventMessage message);
 
-unsigned int createEventMessageUdpSize(CreateEventMessage message);
+
 unsigned int createEventMessageSize(CreateEventMessage message);
 
 

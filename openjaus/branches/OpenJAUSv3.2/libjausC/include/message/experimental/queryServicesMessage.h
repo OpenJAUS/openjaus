@@ -95,7 +95,6 @@ void queryServicesMessageDestroy(QueryServicesMessage);
 
 JausBoolean queryServicesMessageFromBuffer(QueryServicesMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean queryServicesMessageToBuffer(QueryServicesMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean queryServicesMessageToUdpBuffer(QueryServicesMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
 QueryServicesMessage queryServicesMessageFromJausMessage(JausMessage jausMessage);
 JausMessage queryServicesMessageToJausMessage(QueryServicesMessage message);

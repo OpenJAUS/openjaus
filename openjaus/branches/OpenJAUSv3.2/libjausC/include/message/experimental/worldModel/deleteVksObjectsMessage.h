@@ -117,7 +117,6 @@ void deleteVksObjectsMessageDestroy(DeleteVksObjectsMessage);
 
 JausBoolean deleteVksObjectsMessageFromBuffer(DeleteVksObjectsMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean deleteVksObjectsMessageToBuffer(DeleteVksObjectsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean deleteVksObjectsMessageToUdpBuffer(DeleteVksObjectsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
 DeleteVksObjectsMessage deleteVksObjectsMessageFromJausMessage(JausMessage jausMessage);
 JausMessage deleteVksObjectsMessageToJausMessage(DeleteVksObjectsMessage message);

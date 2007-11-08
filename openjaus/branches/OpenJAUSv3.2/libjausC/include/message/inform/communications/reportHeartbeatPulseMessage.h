@@ -95,7 +95,6 @@ void reportHeartbeatPulseMessageDestroy(ReportHeartbeatPulseMessage);
 
 JausBoolean reportHeartbeatPulseMessageFromBuffer(ReportHeartbeatPulseMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean reportHeartbeatPulseMessageToBuffer(ReportHeartbeatPulseMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean reportHeartbeatPulseMessageToUdpBuffer(ReportHeartbeatPulseMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
 ReportHeartbeatPulseMessage reportHeartbeatPulseMessageFromJausMessage(JausMessage jausMessage);
 JausMessage reportHeartbeatPulseMessageToJausMessage(ReportHeartbeatPulseMessage message);

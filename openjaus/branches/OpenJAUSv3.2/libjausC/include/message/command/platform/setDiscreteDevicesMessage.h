@@ -125,12 +125,12 @@ void setDiscreteDevicesMessageDestroy(SetDiscreteDevicesMessage);
 
 JausBoolean setDiscreteDevicesMessageFromBuffer(SetDiscreteDevicesMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean setDiscreteDevicesMessageToBuffer(SetDiscreteDevicesMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean setDiscreteDevicesMessageToUdpBuffer(SetDiscreteDevicesMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+
 
 SetDiscreteDevicesMessage setDiscreteDevicesMessageFromJausMessage(JausMessage jausMessage);
 JausMessage setDiscreteDevicesMessageToJausMessage(SetDiscreteDevicesMessage message);
 
-unsigned int setDiscreteDevicesMessageUdpSize(SetDiscreteDevicesMessage message);
+
 unsigned int setDiscreteDevicesMessageSize(SetDiscreteDevicesMessage message);
 
 

@@ -95,12 +95,12 @@ void reportWaypointCountMessageDestroy(ReportWaypointCountMessage);
 
 JausBoolean reportWaypointCountMessageFromBuffer(ReportWaypointCountMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean reportWaypointCountMessageToBuffer(ReportWaypointCountMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean reportWaypointCountMessageToUdpBuffer(ReportWaypointCountMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+
 
 ReportWaypointCountMessage reportWaypointCountMessageFromJausMessage(JausMessage jausMessage);
 JausMessage reportWaypointCountMessageToJausMessage(ReportWaypointCountMessage message);
 
-unsigned int reportWaypointCountMessageUdpSize(ReportWaypointCountMessage message);
+
 unsigned int reportWaypointCountMessageSize(ReportWaypointCountMessage message);
 
 

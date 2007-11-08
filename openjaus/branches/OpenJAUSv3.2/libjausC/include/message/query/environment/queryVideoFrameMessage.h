@@ -95,7 +95,6 @@ void queryVideoFrameMessageDestroy(QueryVideoFrameMessage);
 
 JausBoolean queryVideoFrameMessageFromBuffer(QueryVideoFrameMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean queryVideoFrameMessageToBuffer(QueryVideoFrameMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean queryVideoFrameMessageToUdpBuffer(QueryVideoFrameMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
 QueryVideoFrameMessage queryVideoFrameMessageFromJausMessage(JausMessage jausMessage);
 JausMessage queryVideoFrameMessageToJausMessage(QueryVideoFrameMessage message);

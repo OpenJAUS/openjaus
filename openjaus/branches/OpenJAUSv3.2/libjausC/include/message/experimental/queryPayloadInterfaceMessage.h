@@ -95,7 +95,6 @@ void queryPayloadInterfaceMessageDestroy(QueryPayloadInterfaceMessage);
 
 JausBoolean queryPayloadInterfaceMessageFromBuffer(QueryPayloadInterfaceMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean queryPayloadInterfaceMessageToBuffer(QueryPayloadInterfaceMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean queryPayloadInterfaceMessageToUdpBuffer(QueryPayloadInterfaceMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
 QueryPayloadInterfaceMessage queryPayloadInterfaceMessageFromJausMessage(JausMessage jausMessage);
 JausMessage queryPayloadInterfaceMessageToJausMessage(QueryPayloadInterfaceMessage message);

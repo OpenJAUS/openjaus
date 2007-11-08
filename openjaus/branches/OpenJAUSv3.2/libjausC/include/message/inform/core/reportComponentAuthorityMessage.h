@@ -96,7 +96,6 @@ void reportComponentAuthorityMessageDestroy(ReportComponentAuthorityMessage);
 
 JausBoolean reportComponentAuthorityMessageFromBuffer(ReportComponentAuthorityMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean reportComponentAuthorityMessageToBuffer(ReportComponentAuthorityMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean reportComponentAuthorityMessageToUdpBuffer(ReportComponentAuthorityMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
 ReportComponentAuthorityMessage reportComponentAuthorityMessageFromJausMessage(JausMessage jausMessage);
 JausMessage reportComponentAuthorityMessageToJausMessage(ReportComponentAuthorityMessage message);

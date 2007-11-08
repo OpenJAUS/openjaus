@@ -117,12 +117,12 @@ void setVelocityStateMessageDestroy(SetVelocityStateMessage);
 
 JausBoolean setVelocityStateMessageFromBuffer(SetVelocityStateMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean setVelocityStateMessageToBuffer(SetVelocityStateMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean setVelocityStateMessageToUdpBuffer(SetVelocityStateMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+
 
 SetVelocityStateMessage setVelocityStateMessageFromJausMessage(JausMessage jausMessage);
 JausMessage setVelocityStateMessageToJausMessage(SetVelocityStateMessage message);
 
-unsigned int setVelocityStateMessageUdpSize(SetVelocityStateMessage message);
+
 unsigned int setVelocityStateMessageSize(SetVelocityStateMessage message);
 
 

@@ -108,12 +108,12 @@ void xXXXMessageDestroy(XxXxMessage);
 
 JausBoolean xXXXMessageFromBuffer(XxXxMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean xXXXMessageToBuffer(XxXxMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean xXXXMessageToUdpBuffer(XxXxMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+
 
 XxXxMessage xXXXMessageFromJausMessage(JausMessage jausMessage);
 JausMessage xXXXMessageToJausMessage(XxXxMessage message);
 
-unsigned int xXXXMessageUdpSize(XxXxMessage message);
+
 unsigned int xXXXMessageSize(XxXxMessage message);
 
 

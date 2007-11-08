@@ -99,12 +99,12 @@ void cancelEventMessageDestroy(CancelEventMessage);
 
 JausBoolean cancelEventMessageFromBuffer(CancelEventMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean cancelEventMessageToBuffer(CancelEventMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean cancelEventMessageToUdpBuffer(CancelEventMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+
 
 CancelEventMessage cancelEventMessageFromJausMessage(JausMessage jausMessage);
 JausMessage cancelEventMessageToJausMessage(CancelEventMessage message);
 
-unsigned int cancelEventMessageUdpSize(CancelEventMessage message);
+
 unsigned int cancelEventMessageSize(CancelEventMessage message);
 
 

@@ -95,12 +95,12 @@ void setComponentAuthorityMessageDestroy(SetComponentAuthorityMessage);
 
 JausBoolean setComponentAuthorityMessageFromBuffer(SetComponentAuthorityMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean setComponentAuthorityMessageToBuffer(SetComponentAuthorityMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean setComponentAuthorityMessageToUdpBuffer(SetComponentAuthorityMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+
 
 SetComponentAuthorityMessage setComponentAuthorityMessageFromJausMessage(JausMessage jausMessage);
 JausMessage setComponentAuthorityMessageToJausMessage(SetComponentAuthorityMessage message);
 
-unsigned int setComponentAuthorityMessageUdpSize(SetComponentAuthorityMessage message);
+
 unsigned int setComponentAuthorityMessageSize(SetComponentAuthorityMessage message);
 
 

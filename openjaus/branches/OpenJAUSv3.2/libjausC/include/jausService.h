@@ -85,7 +85,7 @@ JausArray jausServicesCreate(void);
 void jausServicesDestroy(JausArray jausServices);
 
 // Services Duplication
-JausArray jausServicesDuplicate(JausArray sourceServices);
+JausArray jausServicesClone(JausArray sourceServices);
 
 // Service Constructor
 JausService jausServiceCreate(JausUnsignedShort type);

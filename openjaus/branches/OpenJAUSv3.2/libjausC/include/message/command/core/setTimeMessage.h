@@ -103,12 +103,12 @@ void setTimeMessageDestroy(SetTimeMessage);
 
 JausBoolean setTimeMessageFromBuffer(SetTimeMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean setTimeMessageToBuffer(SetTimeMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean setTimeMessageToUdpBuffer(SetTimeMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+
 
 SetTimeMessage setTimeMessageFromJausMessage(JausMessage jausMessage);
 JausMessage setTimeMessageToJausMessage(SetTimeMessage message);
 
-unsigned int setTimeMessageUdpSize(SetTimeMessage message);
+
 unsigned int setTimeMessageSize(SetTimeMessage message);
 
 

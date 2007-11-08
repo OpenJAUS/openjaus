@@ -96,12 +96,12 @@ void terminateServiceConnectionMessageDestroy(TerminateServiceConnectionMessage)
 
 JausBoolean terminateServiceConnectionMessageFromBuffer(TerminateServiceConnectionMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean terminateServiceConnectionMessageToBuffer(TerminateServiceConnectionMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean terminateServiceConnectionMessageToUdpBuffer(TerminateServiceConnectionMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+
 
 TerminateServiceConnectionMessage terminateServiceConnectionMessageFromJausMessage(JausMessage jausMessage);
 JausMessage terminateServiceConnectionMessageToJausMessage(TerminateServiceConnectionMessage message);
 
-unsigned int terminateServiceConnectionMessageUdpSize(TerminateServiceConnectionMessage message);
+
 unsigned int terminateServiceConnectionMessageSize(TerminateServiceConnectionMessage message);
 
 

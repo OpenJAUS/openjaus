@@ -95,7 +95,6 @@ void queryWrenchEffortMessageDestroy(QueryWrenchEffortMessage);
 
 JausBoolean queryWrenchEffortMessageFromBuffer(QueryWrenchEffortMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean queryWrenchEffortMessageToBuffer(QueryWrenchEffortMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean queryWrenchEffortMessageToUdpBuffer(QueryWrenchEffortMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
 QueryWrenchEffortMessage queryWrenchEffortMessageFromJausMessage(JausMessage jausMessage);
 JausMessage queryWrenchEffortMessageToJausMessage(QueryWrenchEffortMessage message);

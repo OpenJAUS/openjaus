@@ -98,12 +98,12 @@ void setPayloadDataElementMessageDestroy(SetPayloadDataElementMessage);
 
 JausBoolean setPayloadDataElementMessageFromBuffer(SetPayloadDataElementMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean setPayloadDataElementMessageToBuffer(SetPayloadDataElementMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean setPayloadDataElementMessageToUdpBuffer(SetPayloadDataElementMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+
 
 SetPayloadDataElementMessage setPayloadDataElementMessageFromJausMessage(JausMessage jausMessage, JausPayloadInterface pI);
 JausMessage setPayloadDataElementMessageToJausMessage(SetPayloadDataElementMessage message);
 
-unsigned int setPayloadDataElementMessageUdpSize(SetPayloadDataElementMessage message);
+
 unsigned int setPayloadDataElementMessageSize(SetPayloadDataElementMessage message);
 
 #endif

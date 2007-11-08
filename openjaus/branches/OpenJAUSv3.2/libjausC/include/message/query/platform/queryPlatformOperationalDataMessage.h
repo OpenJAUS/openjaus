@@ -95,7 +95,6 @@ void queryPlatformOperationalDataMessageDestroy(QueryPlatformOperationalDataMess
 
 JausBoolean queryPlatformOperationalDataMessageFromBuffer(QueryPlatformOperationalDataMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean queryPlatformOperationalDataMessageToBuffer(QueryPlatformOperationalDataMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean queryPlatformOperationalDataMessageToUdpBuffer(QueryPlatformOperationalDataMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
 QueryPlatformOperationalDataMessage queryPlatformOperationalDataMessageFromJausMessage(JausMessage jausMessage);
 JausMessage queryPlatformOperationalDataMessageToJausMessage(QueryPlatformOperationalDataMessage message);

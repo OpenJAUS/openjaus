@@ -95,7 +95,6 @@ void queryVelocityStateMessageDestroy(QueryVelocityStateMessage);
 
 JausBoolean queryVelocityStateMessageFromBuffer(QueryVelocityStateMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean queryVelocityStateMessageToBuffer(QueryVelocityStateMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean queryVelocityStateMessageToUdpBuffer(QueryVelocityStateMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
 QueryVelocityStateMessage queryVelocityStateMessageFromJausMessage(JausMessage jausMessage);
 JausMessage queryVelocityStateMessageToJausMessage(QueryVelocityStateMessage message);

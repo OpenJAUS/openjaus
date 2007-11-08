@@ -109,12 +109,12 @@ void setGlobalVectorMessageDestroy(SetGlobalVectorMessage);
 
 JausBoolean setGlobalVectorMessageFromBuffer(SetGlobalVectorMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean setGlobalVectorMessageToBuffer(SetGlobalVectorMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean setGlobalVectorMessageToUdpBuffer(SetGlobalVectorMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+
 
 SetGlobalVectorMessage setGlobalVectorMessageFromJausMessage(JausMessage jausMessage);
 JausMessage setGlobalVectorMessageToJausMessage(SetGlobalVectorMessage message);
 
-unsigned int setGlobalVectorMessageUdpSize(SetGlobalVectorMessage message);
+
 unsigned int setGlobalVectorMessageSize(SetGlobalVectorMessage message);
 
 

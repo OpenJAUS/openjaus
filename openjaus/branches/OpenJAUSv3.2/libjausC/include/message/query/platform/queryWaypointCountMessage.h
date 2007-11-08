@@ -95,7 +95,6 @@ void queryWaypointCountMessageDestroy(QueryWaypointCountMessage);
 
 JausBoolean queryWaypointCountMessageFromBuffer(QueryWaypointCountMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean queryWaypointCountMessageToBuffer(QueryWaypointCountMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean queryWaypointCountMessageToUdpBuffer(QueryWaypointCountMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
 QueryWaypointCountMessage queryWaypointCountMessageFromJausMessage(JausMessage jausMessage);
 JausMessage queryWaypointCountMessageToJausMessage(QueryWaypointCountMessage message);

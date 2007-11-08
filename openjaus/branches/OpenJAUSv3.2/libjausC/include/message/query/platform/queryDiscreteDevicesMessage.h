@@ -95,7 +95,6 @@ void queryDiscreteDevicesMessageDestroy(QueryDiscreteDevicesMessage);
 
 JausBoolean queryDiscreteDevicesMessageFromBuffer(QueryDiscreteDevicesMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean queryDiscreteDevicesMessageToBuffer(QueryDiscreteDevicesMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean queryDiscreteDevicesMessageToUdpBuffer(QueryDiscreteDevicesMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
 QueryDiscreteDevicesMessage queryDiscreteDevicesMessageFromJausMessage(JausMessage jausMessage);
 JausMessage queryDiscreteDevicesMessageToJausMessage(QueryDiscreteDevicesMessage message);

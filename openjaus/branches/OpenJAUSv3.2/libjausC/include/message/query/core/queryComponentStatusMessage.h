@@ -96,12 +96,12 @@ void queryComponentStatusMessageDestroy(QueryComponentStatusMessage);
 
 JausBoolean queryComponentStatusMessageFromBuffer(QueryComponentStatusMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean queryComponentStatusMessageToBuffer(QueryComponentStatusMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean queryComponentStatusMessageToUdpBuffer(QueryComponentStatusMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+
 
 QueryComponentStatusMessage queryComponentStatusMessageFromJausMessage(JausMessage jausMessage);
 JausMessage queryComponentStatusMessageToJausMessage(QueryComponentStatusMessage message);
 
-unsigned int queryComponentStatusMessageUdpSize(QueryComponentStatusMessage message);
+
 unsigned int queryComponentStatusMessageSize(QueryComponentStatusMessage message);
 
 

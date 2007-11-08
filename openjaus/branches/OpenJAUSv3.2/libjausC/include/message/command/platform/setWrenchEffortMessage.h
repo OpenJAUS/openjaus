@@ -124,12 +124,12 @@ void setWrenchEffortMessageDestroy(SetWrenchEffortMessage);
 
 JausBoolean setWrenchEffortMessageFromBuffer(SetWrenchEffortMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean setWrenchEffortMessageToBuffer(SetWrenchEffortMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean setWrenchEffortMessageToUdpBuffer(SetWrenchEffortMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+
 
 SetWrenchEffortMessage setWrenchEffortMessageFromJausMessage(JausMessage jausMessage);
 JausMessage setWrenchEffortMessageToJausMessage(SetWrenchEffortMessage message);
 
-unsigned int setWrenchEffortMessageUdpSize(SetWrenchEffortMessage message);
+
 unsigned int setWrenchEffortMessageSize(SetWrenchEffortMessage message);
 
 

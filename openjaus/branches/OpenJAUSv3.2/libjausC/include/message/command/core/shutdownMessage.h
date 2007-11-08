@@ -95,12 +95,12 @@ void shutdownMessageDestroy(ShutdownMessage);
 
 JausBoolean shutdownMessageFromBuffer(ShutdownMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean shutdownMessageToBuffer(ShutdownMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean shutdownMessageToUdpBuffer(ShutdownMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+
 
 ShutdownMessage shutdownMessageFromJausMessage(JausMessage jausMessage);
 JausMessage shutdownMessageToJausMessage(ShutdownMessage message);
 
-unsigned int shutdownMessageUdpSize(ShutdownMessage message);
+
 unsigned int shutdownMessageSize(ShutdownMessage message);
 
 

@@ -96,7 +96,6 @@ void queryVksFeatureClassMetadataMessageDestroy(QueryVksFeatureClassMetadataMess
 
 JausBoolean queryVksFeatureClassMetadataMessageFromBuffer(QueryVksFeatureClassMetadataMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean queryVksFeatureClassMetadataMessageToBuffer(QueryVksFeatureClassMetadataMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean queryVksFeatureClassMetadataMessageToUdpBuffer(QueryVksFeatureClassMetadataMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
 QueryVksFeatureClassMetadataMessage queryVksFeatureClassMetadataMessageFromJausMessage(JausMessage jausMessage);
 JausMessage queryVksFeatureClassMetadataMessageToJausMessage(QueryVksFeatureClassMetadataMessage message);

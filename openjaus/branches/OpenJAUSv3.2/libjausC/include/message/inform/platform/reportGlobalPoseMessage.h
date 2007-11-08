@@ -117,7 +117,6 @@ void reportGlobalPoseMessageDestroy(ReportGlobalPoseMessage);
 
 JausBoolean reportGlobalPoseMessageFromBuffer(ReportGlobalPoseMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean reportGlobalPoseMessageToBuffer(ReportGlobalPoseMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean reportGlobalPoseMessageToUdpBuffer(ReportGlobalPoseMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
 ReportGlobalPoseMessage reportGlobalPoseMessageFromJausMessage(JausMessage jausMessage);
 JausMessage reportGlobalPoseMessageToJausMessage(ReportGlobalPoseMessage message);

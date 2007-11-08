@@ -95,12 +95,12 @@ void setTravelSpeedMessageDestroy(SetTravelSpeedMessage);
 
 JausBoolean setTravelSpeedMessageFromBuffer(SetTravelSpeedMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean setTravelSpeedMessageToBuffer(SetTravelSpeedMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean setTravelSpeedMessageToUdpBuffer(SetTravelSpeedMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+
 
 SetTravelSpeedMessage setTravelSpeedMessageFromJausMessage(JausMessage jausMessage);
 JausMessage setTravelSpeedMessageToJausMessage(SetTravelSpeedMessage message);
 
-unsigned int setTravelSpeedMessageUdpSize(SetTravelSpeedMessage message);
+
 unsigned int setTravelSpeedMessageSize(SetTravelSpeedMessage message);
 
 

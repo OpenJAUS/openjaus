@@ -96,12 +96,12 @@ void setEmergencyMessageDestroy(SetEmergencyMessage);
 
 JausBoolean setEmergencyMessageFromBuffer(SetEmergencyMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean setEmergencyMessageToBuffer(SetEmergencyMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean setEmergencyMessageToUdpBuffer(SetEmergencyMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+
 
 SetEmergencyMessage setEmergencyMessageFromJausMessage(JausMessage jausMessage);
 JausMessage setEmergencyMessageToJausMessage(SetEmergencyMessage message);
 
-unsigned int setEmergencyMessageUdpSize(SetEmergencyMessage message);
+
 unsigned int setEmergencyMessageSize(SetEmergencyMessage message);
 
 

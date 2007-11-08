@@ -95,7 +95,6 @@ void reportConfigurationMessageDestroy(ReportConfigurationMessage);
 
 JausBoolean reportConfigurationMessageFromBuffer(ReportConfigurationMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean reportConfigurationMessageToBuffer(ReportConfigurationMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean reportConfigurationMessageToUdpBuffer(ReportConfigurationMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
 ReportConfigurationMessage reportConfigurationMessageFromJausMessage(JausMessage jausMessage);
 JausMessage reportConfigurationMessageToJausMessage(ReportConfigurationMessage message);

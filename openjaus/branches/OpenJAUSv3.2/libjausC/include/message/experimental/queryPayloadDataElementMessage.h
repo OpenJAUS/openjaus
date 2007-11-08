@@ -98,7 +98,6 @@ void queryPayloadDataElementMessageDestroy(QueryPayloadDataElementMessage);
 
 JausBoolean queryPayloadDataElementMessageFromBuffer(QueryPayloadDataElementMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean queryPayloadDataElementMessageToBuffer(QueryPayloadDataElementMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean queryPayloadDataElementMessageToUdpBuffer(QueryPayloadDataElementMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
 QueryPayloadDataElementMessage queryPayloadDataElementMessageFromJausMessage(JausMessage jausMessage);
 JausMessage queryPayloadDataElementMessageToJausMessage(QueryPayloadDataElementMessage message);

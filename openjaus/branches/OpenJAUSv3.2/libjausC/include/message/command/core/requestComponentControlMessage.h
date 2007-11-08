@@ -95,12 +95,12 @@ void requestComponentControlMessageDestroy(RequestComponentControlMessage);
 
 JausBoolean requestComponentControlMessageFromBuffer(RequestComponentControlMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean requestComponentControlMessageToBuffer(RequestComponentControlMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean requestComponentControlMessageToUdpBuffer(RequestComponentControlMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+
 
 RequestComponentControlMessage requestComponentControlMessageFromJausMessage(JausMessage jausMessage);
 JausMessage requestComponentControlMessageToJausMessage(RequestComponentControlMessage message);
 
-unsigned int requestComponentControlMessageUdpSize(RequestComponentControlMessage message);
+
 unsigned int requestComponentControlMessageSize(RequestComponentControlMessage message);
 
 

@@ -98,7 +98,6 @@ void reportPayloadDataElementMessageDestroy(ReportPayloadDataElementMessage);
 
 JausBoolean reportPayloadDataElementMessageFromBuffer(ReportPayloadDataElementMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean reportPayloadDataElementMessageToBuffer(ReportPayloadDataElementMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean reportPayloadDataElementMessageToUdpBuffer(ReportPayloadDataElementMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
 ReportPayloadDataElementMessage reportPayloadDataElementMessageFromJausMessage(JausMessage jausMessage);
 JausMessage reportPayloadDataElementMessageToJausMessage(ReportPayloadDataElementMessage message);

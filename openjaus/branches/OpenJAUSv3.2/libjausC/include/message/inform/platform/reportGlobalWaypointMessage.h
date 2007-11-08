@@ -111,7 +111,6 @@ void reportGlobalWaypointMessageDestroy(ReportGlobalWaypointMessage);
 
 JausBoolean reportGlobalWaypointMessageFromBuffer(ReportGlobalWaypointMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
 JausBoolean reportGlobalWaypointMessageToBuffer(ReportGlobalWaypointMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean reportGlobalWaypointMessageToUdpBuffer(ReportGlobalWaypointMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
 ReportGlobalWaypointMessage reportGlobalWaypointMessageFromJausMessage(JausMessage jausMessage);
 JausMessage reportGlobalWaypointMessageToJausMessage(ReportGlobalWaypointMessage message);
