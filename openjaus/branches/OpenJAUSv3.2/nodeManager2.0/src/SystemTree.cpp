@@ -1446,7 +1446,6 @@ std::string SystemTree::toDetailedString()
 {
 	string output = string();
 	char buffer[20480] = {0};
-	unsigned int bufferSize = 0;
 
 	if(subsystemCount == 0)
 	{

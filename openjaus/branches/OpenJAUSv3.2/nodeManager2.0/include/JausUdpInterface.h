@@ -16,9 +16,11 @@
 #include "datagramPacket.h"
 #include "FileLoader.h"
 
-#define JAUS_UDP_NAME	"JAUS UDP Interface"
-#define SOCKET_TIMEOUT_SEC		0.5
-#define JAUS_UDP_DATA_PORT	3794
+#define JAUS_UDP_NAME					"JAUS UDP Interface"
+#define SOCKET_TIMEOUT_SEC				0.5
+#define JAUS_UDP_DATA_PORT				3794
+#define JAUS_OPC_UDP_HEADER				"JAUS01.0"
+#define JAUS_OPC_UDP_HEADER_SIZE_BYTES	8 
 
 extern "C" void *UdpRecvThread(void *);
 
