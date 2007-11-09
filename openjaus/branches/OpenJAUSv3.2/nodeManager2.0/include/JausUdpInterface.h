@@ -34,7 +34,7 @@ typedef struct
 class JausUdpInterface : public JausTransportInterface
 {
 public:
-	JausUdpInterface(FileLoader *configData, JausCommunicationManager *commMngr);
+	JausUdpInterface(FileLoader *configData, EventHandler *handler, JausCommunicationManager *commMngr);
 	~JausUdpInterface(void);
 
 	InetAddress getInetAddress(void);

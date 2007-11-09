@@ -3,9 +3,10 @@
 #include "NodeManagerComponent.h"
 #include "jaus.h"
 
-OjApiComponentInterface::OjApiComponentInterface(FileLoader *configData, JausComponentCommunicationManager *cmptComms)
+OjApiComponentInterface::OjApiComponentInterface(FileLoader *configData, EventHandler *handler, JausComponentCommunicationManager *cmptComms)
 {
 	this->type = COMPONENT_INTERFACE;
+	this->handler = handler;
 	this->commMngr = cmptComms;
 	this->name = OJ_API_NAME;
 	

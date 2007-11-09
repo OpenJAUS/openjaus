@@ -1,6 +1,6 @@
 #include "OjUdpComponentInterface.h"
 
-OjUdpComponentInterface::OjUdpComponentInterface(FileLoader *configData, JausCommunicationManager *commMngr)
+OjUdpComponentInterface::OjUdpComponentInterface(FileLoader *configData, EventHandler *handler, JausCommunicationManager *commMngr)
 {
 
 }

@@ -6,7 +6,7 @@
 class JausSubsystemCommunicationManager : public JausCommunicationManager
 {
 public:
-	JausSubsystemCommunicationManager(FileLoader *configData, MessageRouter *msgRouter, SystemTree *systemTree);
+	JausSubsystemCommunicationManager(FileLoader *configData, MessageRouter *msgRouter, SystemTree *systemTree, EventHandler *handler);
 	~JausSubsystemCommunicationManager(void);
 	bool sendJausMessage(JausMessage message);
 	bool receiveJausMessage(JausMessage message, JausTransportInterface *srcInf);

@@ -8,13 +8,13 @@ class ErrorEvent : public NodeManagerEvent
 {
 public:
 	ErrorEvent(unsigned int subType);
-	ErrorEvent::ErrorEvent(unsigned int subType, const char *file, const char *function, int line, std::string userString);
+	ErrorEvent::ErrorEvent(unsigned int subType, char *function, int line, std::string userString);
 	~ErrorEvent();
 
 	std::string toString();
 	std::string getUserString();
 	
-	enum {Routing, Memory, NullPointer, Configuration};
+	enum {Routing, Memory, NullPointer, Configuration, Message, Warning};
 
 private:
 	unsigned int subType;

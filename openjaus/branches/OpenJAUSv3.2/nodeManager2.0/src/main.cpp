@@ -30,7 +30,7 @@ class MyHandler : public EventHandler
 
 			case NodeManagerEvent::ErrorEvent:
 				errorEvent = (ErrorEvent *)e;
-				printf("%s\n", e->toString());
+				printf("%s\n", errorEvent->toString().c_str());
 				delete e;
 				break;
 
@@ -59,11 +59,10 @@ int main(int argc, char *args)
 	// Setup the console window's input handle
 	handleStdin = GetStdHandle(STD_INPUT_HANDLE); 
 
-	FileLoader *configData = new FileLoader("nodeManager.conf");
 	MyHandler *handler = new MyHandler();
+	FileLoader *configData = new FileLoader("nodeManager.conf");
 
-	nm = new NodeManager(configData);
-	nm->registerEventHandler(handler);
+	nm = new NodeManager(configData, handler);
 
 	printHelpMenu();
 

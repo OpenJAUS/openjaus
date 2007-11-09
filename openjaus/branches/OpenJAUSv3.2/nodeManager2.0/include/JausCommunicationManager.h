@@ -15,6 +15,7 @@
 #include "FileLoader.h"
 #include "MessageRouter.h"
 #include "SystemTree.h"
+#include "EventHandler.h"
 
 class JausCommunicationManager
 {
@@ -40,6 +41,7 @@ protected:
 	HASH_MAP<int, JausTransportInterface *> interfaceMap;
 	FileLoader *configData;
 	SystemTree *systemTree;
+	EventHandler *handler;
 	int mySubsystemId;
 	int myNodeId;
 	bool enabled;

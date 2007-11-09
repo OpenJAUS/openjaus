@@ -26,7 +26,7 @@ typedef OjApiComponentTransportDataStruct *OjApiComponentTransportData;
 class OjApiComponentInterface : public JausTransportInterface
 {
 public:
-	OjApiComponentInterface(FileLoader *configData, JausComponentCommunicationManager *cmptMngr);
+	OjApiComponentInterface(FileLoader *configData, EventHandler *handler, JausComponentCommunicationManager *cmptMngr);
 	~OjApiComponentInterface(void);
 
 	bool routeMessage(JausMessage message);
