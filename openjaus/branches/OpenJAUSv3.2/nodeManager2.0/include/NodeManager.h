@@ -6,6 +6,9 @@
 #include "SystemTree.h"
 #include "FileLoader.h"
 #include "EventHandler.h"
+#include "NodeManagerEvent.h"
+#include "SystemTreeEvent.h"
+#include "ErrorEvent.h"
 #include "jaus.h"
 
 class NodeManager : public EventHandler
