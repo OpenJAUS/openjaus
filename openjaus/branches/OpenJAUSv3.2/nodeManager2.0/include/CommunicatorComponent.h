@@ -21,7 +21,7 @@ class JausComponentCommunicationManager;
 class CommunicatorComponent : public LocalComponent
 {
 public:
-	CommunicatorComponent(FileLoader *configData, JausComponentCommunicationManager *cmptComms);
+	CommunicatorComponent(FileLoader *configData, EventHandler *handler, JausComponentCommunicationManager *cmptComms);
 	~CommunicatorComponent(void);
 
 	bool processMessage(JausMessage message);

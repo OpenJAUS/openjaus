@@ -1,24 +1,30 @@
 #include "NodeManagerComponent.h"
 #include "JausComponentCommunicationManager.h"
+#include "ErrorEvent.h"
+#include "EventHandler.h"
 #include "SystemTree.h"
 #include "jaus.h"
 #include "timeLib.h"
 
-NodeManagerComponent::NodeManagerComponent(FileLoader *configData, JausComponentCommunicationManager *cmptComms)
+NodeManagerComponent::NodeManagerComponent(FileLoader *configData, EventHandler *handler, JausComponentCommunicationManager *cmptComms)
 {
 	int subsystemId, nodeId;
+
+	this->handler = handler;
 
 	if(configData == NULL)
 	{
 		// OK, don't do this. This is bad.
-		// TODO: Throw an exception? Log an error.
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::NullPointer, __FUNCTION__, __LINE__, "configData is NULL");
+		this->handler->handleEvent(e);
 		return;
 	}
 
 	if(cmptComms == NULL)
 	{
 		// OK, don't do this. This is bad.
-		// TODO: Throw an exception? Log an error.
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::NullPointer, __FUNCTION__, __LINE__, "cmptComms is NULL");
+		this->handler->handleEvent(e);
 		return;
 	}
 
@@ -39,7 +45,8 @@ NodeManagerComponent::NodeManagerComponent(FileLoader *configData, JausComponent
 	if(subsystemId < JAUS_MINIMUM_SUBSYSTEM_ID || subsystemId > JAUS_MAXIMUM_SUBSYSTEM_ID)
 	{
 		// Invalid ID
-		// TODO: Throw an exception? Log an error.
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::Configuration, __FUNCTION__, __LINE__, "Invalid SubsystemId");
+		this->handler->handleEvent(e);
 		return;
 	}
 
@@ -47,14 +54,16 @@ NodeManagerComponent::NodeManagerComponent(FileLoader *configData, JausComponent
 	if(nodeId < JAUS_MINIMUM_NODE_ID || nodeId > JAUS_MAXIMUM_NODE_ID)
 	{
 		// Invalid ID
-		// TODO: Throw an exception? Log an error.
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::Configuration, __FUNCTION__, __LINE__, "Invalid NodeId");
+		this->handler->handleEvent(e);
 		return;
 	}
 
 	this->cmpt = jausComponentCreate();
 	if(!this->cmpt)
 	{
-		// TODO: Throw exception? Log error.
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::Memory, __FUNCTION__, __LINE__, "Cannot create component");
+		this->handler->handleEvent(e);
 		return;
 	}
 
@@ -73,7 +82,8 @@ NodeManagerComponent::NodeManagerComponent(FileLoader *configData, JausComponent
 
 	if(!systemTree->addComponent(this->cmpt->address, this->cmpt))
 	{
-		// TODO: Log Error, we can't add a node manager with instance 1
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::Configuration, __FUNCTION__, __LINE__, "Cannot add Node Manager component");
+		this->handler->handleEvent(e);
 	}
 }
 
@@ -83,19 +93,19 @@ bool NodeManagerComponent::processMessage(JausMessage message)
 {
 	if(!message || !message->destination)
 	{
-		// TODO: ERROR
-		printf("How does this happen?\n");
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::NullPointer, __FUNCTION__, __LINE__, "Invalid JausMessage.");
+		this->handler->handleEvent(e);
 		return false;
 	}
 
-	// Check for loopback of message from myself
-	if(jausAddressEqual(message->source, cmpt->address))
-	{
-		// We sent a broadcast (*.*.255.255) message probably
-		// Just eat it.
-		jausMessageDestroy(message);
-		return true;
-	}
+	//// Check for loopback of message from myself
+	//if(jausAddressEqual(message->source, cmpt->address))
+	//{
+	//	// We sent a broadcast (*.*.255.255) message probably
+	//	// Just eat it.
+	//	jausMessageDestroy(message);
+	//	return true;
+	//}
 
 	//char buf[80] = {0};
 	//jausAddressToString(message->source, buf);
@@ -267,7 +277,6 @@ void NodeManagerComponent::allState()
 	generateHeartbeats();
 	if(getTimeSeconds() >= refreshTime)
 	{
-		systemTree->updateComponentTimestamp(this->cmpt->address);
 		systemTree->refresh();
 		refreshTime = getTimeSeconds() + REFRESH_TIME_SEC;
 	}
@@ -284,7 +293,8 @@ bool NodeManagerComponent::processReportConfiguration(JausMessage message)
 	if(!reportConf)
 	{
 		// Error unpacking the reportConf
-		// TODO: Log Error
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::Memory, __FUNCTION__, __LINE__, "Cannot unpack ReportConf");
+		this->handler->handleEvent(e);
 		jausMessageDestroy(message);
 		return false;
 	}
@@ -314,7 +324,8 @@ bool NodeManagerComponent::processReportConfiguration(JausMessage message)
 				JausAddress address = jausAddressCreate();
 				if(!address)
 				{
-					// TODO: Throw Exception. Log Error.
+					ErrorEvent *e = new ErrorEvent(ErrorEvent::Memory, __FUNCTION__, __LINE__, "Cannot create address");
+					this->handler->handleEvent(e);
 					reportConfigurationMessageDestroy(reportConf);
 					jausMessageDestroy(message);
 					return false;
@@ -353,7 +364,8 @@ bool NodeManagerComponent::processReportConfiguration(JausMessage message)
 	if(!systemTree->hasNode(reportConf->source))
 	{
 		// Report Conf from unknown node! This is an unsolicited report
-		// TODO: Throw Exception? Log error?
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::Message, __FUNCTION__, __LINE__, "Report Conf from unknown node! This is an unsolicited report");
+		this->handler->handleEvent(e);
 		reportConfigurationMessageDestroy(reportConf);
 		jausMessageDestroy(message);
 		return true;
@@ -363,7 +375,9 @@ bool NodeManagerComponent::processReportConfiguration(JausMessage message)
 	// Should only have 1 node attached!
 	if(reportConf->subsystem->nodes->elementCount > 1)
 	{
-		// TODO: Log Error? Throw Exception?
+		// Warning
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::Warning, __FUNCTION__, __LINE__, "Node-level Report Conf with more than 1 node included. Ignoring other nodes.");
+		this->handler->handleEvent(e);
 	}
 
 	JausNode node = (JausNode) reportConf->subsystem->nodes->elementData[0];

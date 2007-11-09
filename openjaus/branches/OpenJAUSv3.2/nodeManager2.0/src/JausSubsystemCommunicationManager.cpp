@@ -1,11 +1,12 @@
 #include "JausSubsystemCommunicationManager.h"
 #include "JausUdpInterface.h"
 
-JausSubsystemCommunicationManager::JausSubsystemCommunicationManager(FileLoader *configData, MessageRouter *msgRouter, SystemTree *systemTree)
+JausSubsystemCommunicationManager::JausSubsystemCommunicationManager(FileLoader *configData, MessageRouter *msgRouter, SystemTree *systemTree, EventHandler *handler)
 {
 	this->systemTree = systemTree;
 	this->msgRouter = msgRouter;
 	this->configData = configData;
+	this->handler = handler;
 
 	// NOTE: These two values should exist in the properties file and should be checked 
 	// in the NodeManager class prior to constructing this object
@@ -31,7 +32,7 @@ JausSubsystemCommunicationManager::JausSubsystemCommunicationManager(FileLoader 
 	if(configData->GetConfigDataBool("Subsystem_Communications", "JAUS_UDP"))
 	{
 		printf("Opening Subsystem Interface:\t");
-		JausUdpInterface *udpInterface = new JausUdpInterface(configData, this);
+		JausUdpInterface *udpInterface = new JausUdpInterface(configData, handler, this);
 		printf("[DONE: %s]\n", udpInterface->toString().c_str());
 		this->interfaces.push_back(udpInterface);
 	}

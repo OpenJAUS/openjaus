@@ -10,17 +10,13 @@ MessageRouter::MessageRouter(FileLoader *configData, SystemTree *sysTree, EventH
 	this->configData = configData;
 	this->eventHandler = handler;
 
-	this->cmptComms = new JausComponentCommunicationManager(configData, this, systemTree);
-	this->nodeComms = new JausNodeCommunicationManager(configData, this, systemTree);
-	this->subsComms = new JausSubsystemCommunicationManager(configData, this, systemTree);
-
 	// NOTE: These two values should exist in the properties file and should be checked 
 	// in the NodeManager class prior to constructing this object
 	mySubsystemId = configData->GetConfigDataInt("JAUS", "SubsystemId");
 	if(mySubsystemId < JAUS_MINIMUM_SUBSYSTEM_ID || mySubsystemId > JAUS_MAXIMUM_SUBSYSTEM_ID)
 	{
 		// Invalid ID
-		ErrorEvent *e = new ErrorEvent(ErrorEvent::Configuration, __FILE__, __FUNCTION__, __LINE__, "Invalid Subsystem Id");
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::Configuration, __FUNCTION__, __LINE__, "Invalid Subsystem Id");
 		this->eventHandler->handleEvent(e);
 		mySubsystemId = JAUS_INVALID_SUBSYSTEM_ID;
 		return;
@@ -30,11 +26,15 @@ MessageRouter::MessageRouter(FileLoader *configData, SystemTree *sysTree, EventH
 	if(myNodeId < JAUS_MINIMUM_NODE_ID || myNodeId > JAUS_MAXIMUM_NODE_ID)
 	{
 		// Invalid ID
-		ErrorEvent *e = new ErrorEvent(ErrorEvent::Configuration, __FILE__, __FUNCTION__, __LINE__, "Invalid Node Id");
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::Configuration,  __FUNCTION__, __LINE__, "Invalid Node Id");
 		this->eventHandler->handleEvent(e);
 		myNodeId= JAUS_INVALID_NODE_ID;
 		return;
 	}
+
+	this->subsComms = new JausSubsystemCommunicationManager(configData, this, systemTree, handler);
+	this->nodeComms = new JausNodeCommunicationManager(configData, this, systemTree, handler);
+	this->cmptComms = new JausComponentCommunicationManager(configData, this, systemTree, handler);
 }
 
 MessageRouter::~MessageRouter(void){}
@@ -44,7 +44,7 @@ bool MessageRouter::routeSubsystemSourceMessage(JausMessage message)
 	// This complies with the MessageRouter Subsystem Source Table v2.0
 	if(!message)
 	{
-		ErrorEvent *e = new ErrorEvent(ErrorEvent::NullPointer, __FILE__, __FUNCTION__, __LINE__, "Invalid JausMessage");
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::NullPointer,  __FUNCTION__, __LINE__, "Invalid JausMessage");
 		this->eventHandler->handleEvent(e);
 		return false;
 	}
@@ -52,7 +52,7 @@ bool MessageRouter::routeSubsystemSourceMessage(JausMessage message)
 	if(message->source->subsystem == mySubsystemId)
 	{
 		// ERROR: Message from this subsystem has entered the subsystemSource method
-		ErrorEvent *e = new ErrorEvent(ErrorEvent::Routing, __FILE__, __FUNCTION__, __LINE__, "Message from this Subsystem has entered the SubsystemSource method.");
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::Routing,  __FUNCTION__, __LINE__, "Message from this Subsystem has entered the SubsystemSource method.");
 		this->eventHandler->handleEvent(e);
 
 		jausMessageDestroy(message);
@@ -63,7 +63,7 @@ bool MessageRouter::routeSubsystemSourceMessage(JausMessage message)
 		message->destination->subsystem != JAUS_BROADCAST_SUBSYSTEM_ID)
 	{
 		// ERROR: Message not for this Subsystem has entered the subsystemSource method
-		ErrorEvent *e = new ErrorEvent(ErrorEvent::Routing, __FILE__, __FUNCTION__, __LINE__, "Message not for this Subsystem has entered the SubsystemSource method.");
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::Routing,  __FUNCTION__, __LINE__, "Message not for this Subsystem has entered the SubsystemSource method.");
 		this->eventHandler->handleEvent(e);
 		jausMessageDestroy(message);
 		return false;
@@ -94,7 +94,7 @@ bool MessageRouter::routeNodeSourceMessage(JausMessage message)
 	// This complies with the MessageRouter Node Source Table v2.0
 	if(!message)
 	{
-		ErrorEvent *e = new ErrorEvent(ErrorEvent::NullPointer, __FILE__, __FUNCTION__, __LINE__, "Invalid JausMessage");
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::NullPointer,  __FUNCTION__, __LINE__, "Invalid JausMessage");
 		this->eventHandler->handleEvent(e);
 		return false;
 	}
@@ -104,7 +104,7 @@ bool MessageRouter::routeNodeSourceMessage(JausMessage message)
 		if(message->source->node == myNodeId)
 		{
 			// ERROR: Message from a local component has entered through the nodeSource method
-			ErrorEvent *e = new ErrorEvent(ErrorEvent::Routing, __FILE__, __FUNCTION__, __LINE__, "Message from a local component has entered through the NodeSource method");
+			ErrorEvent *e = new ErrorEvent(ErrorEvent::Routing,  __FUNCTION__, __LINE__, "Message from a local component has entered through the NodeSource method");
 			this->eventHandler->handleEvent(e);
 			jausMessageDestroy(message);
 			return false;
@@ -134,7 +134,7 @@ bool MessageRouter::routeNodeSourceMessage(JausMessage message)
 					message->destination->node != JAUS_BROADCAST_NODE_ID)
 				{
 					// ERROR: Message for another node on this subsystem recv'd through NodeComms
-					ErrorEvent *e = new ErrorEvent(ErrorEvent::Routing, __FILE__, __FUNCTION__, __LINE__, "Message for another Node on this Subsystem recv'd through NodeComms");
+					ErrorEvent *e = new ErrorEvent(ErrorEvent::Routing,  __FUNCTION__, __LINE__, "Message for another Node on this Subsystem recv'd through NodeComms");
 					this->eventHandler->handleEvent(e);
 					jausMessageDestroy(message);
 					return false;
@@ -166,7 +166,7 @@ bool MessageRouter::routeNodeSourceMessage(JausMessage message)
 			else
 			{
 				// ERROR: Message not for this Node recv'd through nodeComms
-				ErrorEvent *e = new ErrorEvent(ErrorEvent::Routing, __FILE__, __FUNCTION__, __LINE__, "Message not for this Node recv'd through NodeComms");
+				ErrorEvent *e = new ErrorEvent(ErrorEvent::Routing,  __FUNCTION__, __LINE__, "Message not for this Node recv'd through NodeComms");
 				this->eventHandler->handleEvent(e);
 				jausMessageDestroy(message);
 				return false;
@@ -175,7 +175,7 @@ bool MessageRouter::routeNodeSourceMessage(JausMessage message)
 		else
 		{
 			// ERROR: Message not for this Subs recv'd through nodeComms
-			ErrorEvent *e = new ErrorEvent(ErrorEvent::Routing, __FILE__, __FUNCTION__, __LINE__, "Message not for this Subs recv'd through NodeComms");
+			ErrorEvent *e = new ErrorEvent(ErrorEvent::Routing,  __FUNCTION__, __LINE__, "Message not for this Subs recv'd through NodeComms");
 			this->eventHandler->handleEvent(e);
 			jausMessageDestroy(message);
 			return false;
@@ -189,7 +189,7 @@ bool MessageRouter::routeComponentSourceMessage(JausMessage message)
 	// This complies with the MessageRouter Component Source Table v2.0
 	if(!message)
 	{
-		ErrorEvent *e = new ErrorEvent(ErrorEvent::NullPointer, __FILE__, __FUNCTION__, __LINE__, "Invalid JausMessage");
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::NullPointer,  __FUNCTION__, __LINE__, "Invalid JausMessage");
 		this->eventHandler->handleEvent(e);
 		return false;
 	}
@@ -204,7 +204,7 @@ bool MessageRouter::routeComponentSourceMessage(JausMessage message)
 	if(message->source->subsystem != mySubsystemId)
 	{
 		// ERROR: Message with a different source subsystem has come in through cmptComms
-		ErrorEvent *e = new ErrorEvent(ErrorEvent::Routing, __FILE__, __FUNCTION__, __LINE__, "Message with a different source subsystem has come in through cmptComms");
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::Routing,  __FUNCTION__, __LINE__, "Message with a different source subsystem has come in through cmptComms");
 		this->eventHandler->handleEvent(e);
 		jausMessageDestroy(message);
 		return false;
@@ -213,7 +213,7 @@ bool MessageRouter::routeComponentSourceMessage(JausMessage message)
 	if(message->source->node != myNodeId)
 	{
 		// ERROR: Message with a different source node has come in through cmptComms
-		ErrorEvent *e = new ErrorEvent(ErrorEvent::Routing, __FILE__, __FUNCTION__, __LINE__, "Message with a different source node has come in through cmptComms");
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::Routing,  __FUNCTION__, __LINE__, "Message with a different source node has come in through cmptComms");
 		this->eventHandler->handleEvent(e);
 		jausMessageDestroy(message);
 		return false;
@@ -224,7 +224,7 @@ bool MessageRouter::routeComponentSourceMessage(JausMessage message)
 		if(message->destination->node == myNodeId)
 		{
 			// ERROR: Message for this node has escaped the cmptComms! Should not happen!
-			ErrorEvent *e = new ErrorEvent(ErrorEvent::Routing, __FILE__, __FUNCTION__, __LINE__, "Message for this node has escaped cmptComms");
+			ErrorEvent *e = new ErrorEvent(ErrorEvent::Routing,  __FUNCTION__, __LINE__, "Message for this node has escaped cmptComms");
 			this->eventHandler->handleEvent(e);
 			jausMessageDestroy(message);
 			return false;
@@ -247,7 +247,7 @@ bool MessageRouter::sendToCommunicator(JausMessage message)
 	// This conforms to the routing table in MsgRouter Routing Tables SendToCommunicator v2.0
 	if(!message)
 	{
-		ErrorEvent *e = new ErrorEvent(ErrorEvent::NullPointer, __FILE__, __FUNCTION__, __LINE__, "Invalid JausMessage");
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::NullPointer,  __FUNCTION__, __LINE__, "Invalid JausMessage");
 		this->eventHandler->handleEvent(e);
 		return false;
 	}
@@ -255,7 +255,7 @@ bool MessageRouter::sendToCommunicator(JausMessage message)
 	if(message->source->subsystem != mySubsystemId)
 	{
 		// ERROR: Messages not from mySubs should not go through this method!
-		ErrorEvent *e = new ErrorEvent(ErrorEvent::Routing, __FILE__, __FUNCTION__, __LINE__, "Messages not from mySubs should not go through this method!");
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::Routing,  __FUNCTION__, __LINE__, "Messages not from mySubs should not go through this method!");
 		this->eventHandler->handleEvent(e);
 		jausMessageDestroy(message);
 		return false;
@@ -264,7 +264,7 @@ bool MessageRouter::sendToCommunicator(JausMessage message)
 	if(message->destination->subsystem == mySubsystemId)
 	{
 		// ERROR: Messages for mySubs should not go through this method!
-		ErrorEvent *e = new ErrorEvent(ErrorEvent::Routing, __FILE__, __FUNCTION__, __LINE__, "Messages for mySubs should not go through this method!");
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::Routing,  __FUNCTION__, __LINE__, "Messages for mySubs should not go through this method!");
 		this->eventHandler->handleEvent(e);
 		jausMessageDestroy(message);
 		return false;
@@ -304,7 +304,7 @@ bool MessageRouter::sendToCommunicator(JausMessage message)
 			// We can't route this subsystem level message to a communicator or primary node
 			// Either there is no communicator, we're it and our subsInf is turned off
 			// Just destroy this message
-			ErrorEvent *e = new ErrorEvent(ErrorEvent::Routing, __FILE__, __FUNCTION__, __LINE__, "Either there is no communicator, we're it and our subsInf is turned off");
+			ErrorEvent *e = new ErrorEvent(ErrorEvent::Routing,  __FUNCTION__, __LINE__, "Either there is no communicator, we're it and our subsInf is turned off");
 			this->eventHandler->handleEvent(e);
 			jausMessageDestroy(message);
 			return false;

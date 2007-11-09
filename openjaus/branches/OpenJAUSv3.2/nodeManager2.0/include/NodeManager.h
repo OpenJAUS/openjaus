@@ -14,7 +14,7 @@
 class NodeManager : public EventHandler
 {
 public:
-	NodeManager(FileLoader *configData);
+	NodeManager(FileLoader *configData, EventHandler *handler);
 	~NodeManager(void);
 
 	std::string systemTreeToString();

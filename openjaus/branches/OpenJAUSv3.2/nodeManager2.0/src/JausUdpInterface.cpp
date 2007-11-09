@@ -3,9 +3,10 @@
 #include "JausNodeCommunicationManager.h"
 #include "JausComponentCommunicationManager.h"
 
-JausUdpInterface::JausUdpInterface(FileLoader *configData, JausCommunicationManager *commMngr)
+JausUdpInterface::JausUdpInterface(FileLoader *configData, EventHandler *handler, JausCommunicationManager *commMngr)
 {
 	this->commMngr = commMngr;
+	this->handler = handler;
 	this->name = JAUS_UDP_NAME;
 	this->configData = configData;
 	this->multicast = false;

@@ -1,7 +1,9 @@
 #include "NodeManager.h"
 
-NodeManager::NodeManager(FileLoader *configData)
+NodeManager::NodeManager(FileLoader *configData, EventHandler *handler)
 {
+	this->registerEventHandler(handler);
+	
 	// Create our systemTable
 	this->systemTree = new SystemTree(configData, this);
 

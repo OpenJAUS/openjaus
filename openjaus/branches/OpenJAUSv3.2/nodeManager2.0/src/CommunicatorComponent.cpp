@@ -3,7 +3,7 @@
 #include "timeLib.h"
 #include "jaus.h"
 
-CommunicatorComponent::CommunicatorComponent(FileLoader *configData, JausComponentCommunicationManager *cmptComms)
+CommunicatorComponent::CommunicatorComponent(FileLoader *configData, EventHandler *handler, JausComponentCommunicationManager *cmptComms)
 {
 	int subsystemId, nodeId;
 
@@ -13,6 +13,8 @@ CommunicatorComponent::CommunicatorComponent(FileLoader *configData, JausCompone
 		// TODO: Throw an exception? Log an error.
 		return;
 	}
+
+	this->handler = handler;
 
 	if(cmptComms == NULL)
 	{

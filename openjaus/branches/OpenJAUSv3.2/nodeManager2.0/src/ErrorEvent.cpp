@@ -11,12 +11,11 @@ ErrorEvent::ErrorEvent(unsigned int subType)
 	this->function = "";
 }
 
-ErrorEvent::ErrorEvent(unsigned int subType, const char *file, const char *function, int line, std::string userString)
+ErrorEvent::ErrorEvent(unsigned int subType, char *function, int line, std::string userString)
 {
 	this->type = NodeManagerEvent::ErrorEvent;
 	this->subType = subType;
 	this->userString = userString;
-	this->file = file;
 	this->function = function;
 	this->line = line;
 }
@@ -35,7 +34,14 @@ std::string ErrorEvent::toString()
 {
 	char buf[256] = {0};
 
-	sprintf(buf, "ERROR (%s:%s:%d): %s\n", file, function, line, this->userString.c_str());
+	if(subType != ErrorEvent::Warning)
+	{
+		sprintf(buf, "ERROR (%s:%d): %s\n", function.c_str(), line, this->userString.c_str());
+	}
+	else
+	{
+		sprintf(buf, "WARN (%s:%d): %s\n", function.c_str(), line, this->userString.c_str());
+	}
 
 	return buf;
 }

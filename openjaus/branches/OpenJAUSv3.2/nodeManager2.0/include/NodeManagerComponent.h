@@ -23,7 +23,7 @@ class SystemTree;
 class NodeManagerComponent : public LocalComponent
 {
 public:
-	NodeManagerComponent(FileLoader *configData, JausComponentCommunicationManager *cmptComms);
+	NodeManagerComponent(FileLoader *configData, EventHandler *handler, JausComponentCommunicationManager *cmptComms);
 	~NodeManagerComponent(void);
 
 	bool processMessage(JausMessage message);

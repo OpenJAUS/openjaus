@@ -10,6 +10,7 @@
 
 #include <string>
 #include "JausTransportQueue.h"
+#include "EventHandler.h"
 #include "SystemTree.h"
 #include "FileLoader.h"
 #include "jaus.h"
@@ -46,6 +47,7 @@ protected:
 	void setupThread();
 	void wakeThread();
 
+	EventHandler *handler;
 	std::string name;
 	JausTransportType type;
 	JausTransportQueue queue;

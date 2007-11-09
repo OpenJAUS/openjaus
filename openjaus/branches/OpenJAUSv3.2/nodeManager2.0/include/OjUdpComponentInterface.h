@@ -17,7 +17,7 @@ typedef OjUdpComponentTransportDataStruct *OjUdpComponentTransportData;
 class OjUdpComponentInterface : public JausTransportInterface
 {
 public:
-	OjUdpComponentInterface(FileLoader *configData, JausCommunicationManager *commMngr);
+	OjUdpComponentInterface(FileLoader *configData, EventHandler *handler, JausCommunicationManager *commMngr);
 	~OjUdpComponentInterface(void);
 
 	unsigned int getPort(void);

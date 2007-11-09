@@ -5,19 +5,15 @@
 #include "OjApiComponentInterface.h"
 #include "OjUdpComponentInterface.h"
 
-JausComponentCommunicationManager::JausComponentCommunicationManager(FileLoader *configData, MessageRouter *msgRouter, SystemTree *systemTree)
+JausComponentCommunicationManager::JausComponentCommunicationManager(FileLoader *configData, MessageRouter *msgRouter, SystemTree *systemTree, EventHandler *handler)
 {
 	this->enabled = true;
 	this->msgRouter = msgRouter;
 	this->systemTree = systemTree;
 	this->configData = configData;
+	this->handler = handler;
 	this->interfaces.empty();
 	this->interfaceMap.empty();
-
-	this->nodeManagerCmpt = new NodeManagerComponent(this->configData, this);
-	this->interfaces.push_back(nodeManagerCmpt);
-	this->communicatorCmpt = new CommunicatorComponent(this->configData, this);
-	this->interfaces.push_back(communicatorCmpt);
 
 	// NOTE: These two values should exist in the properties file and should be checked 
 	// in the NodeManager class prior to constructing this object
@@ -43,7 +39,7 @@ JausComponentCommunicationManager::JausComponentCommunicationManager(FileLoader 
 	if(configData->GetConfigDataBool("Component_Communications", "JAUS_UDP"))
 	{
 		printf("Opening Component Interface:\t");
-		JausUdpInterface *udpInterface = new JausUdpInterface(configData, this);
+		JausUdpInterface *udpInterface = new JausUdpInterface(configData, this->handler, this);
 		printf("[DONE: %s]\n", udpInterface->toString().c_str());
 		this->interfaces.push_back(udpInterface);
 	}
@@ -51,7 +47,7 @@ JausComponentCommunicationManager::JausComponentCommunicationManager(FileLoader 
 	if(configData->GetConfigDataBool("Component_Communications", "OpenJAUS_API"))
 	{
 		printf("Opening Component Interface:\t");
-		OjApiComponentInterface *apiCmptInf = new OjApiComponentInterface(configData, this);
+		OjApiComponentInterface *apiCmptInf = new OjApiComponentInterface(configData, this->handler, this);
 		printf("[DONE: %s]\n", apiCmptInf->toString().c_str());
 		this->interfaces.push_back(apiCmptInf);
 	}
@@ -59,10 +55,17 @@ JausComponentCommunicationManager::JausComponentCommunicationManager(FileLoader 
 	if(configData->GetConfigDataBool("Component_Communications", "OpenJAUS_UDP"))
 	{
 		printf("Opening Component Interface:\t");
-		OjUdpComponentInterface *udpCmptInf = new OjUdpComponentInterface(configData, this);
+		OjUdpComponentInterface *udpCmptInf = new OjUdpComponentInterface(configData, this->handler, this);
 		printf("[DONE: %s]\n", udpCmptInf->toString().c_str());
 		this->interfaces.push_back(udpCmptInf);
 	}
+
+	// Start Local Components
+	this->nodeManagerCmpt = new NodeManagerComponent(this->configData, this->handler, this);
+	this->interfaces.push_back(nodeManagerCmpt);
+	this->communicatorCmpt = new CommunicatorComponent(this->configData, this->handler, this);
+	this->interfaces.push_back(communicatorCmpt);
+
 }
 
 JausComponentCommunicationManager::~JausComponentCommunicationManager(void)
