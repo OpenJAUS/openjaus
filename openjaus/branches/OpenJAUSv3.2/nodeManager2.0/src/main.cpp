@@ -18,12 +18,19 @@ class MyHandler : public EventHandler
 	void handleEvent(NodeManagerEvent *e)
 	{
 		SystemTreeEvent *treeEvent;
+		ErrorEvent *errorEvent;
 
 		switch(e->getType())
 		{
 			case NodeManagerEvent::SystemTreeEvent:
 				treeEvent = (SystemTreeEvent *)e;
 				printf("%s\n", treeEvent->toString().c_str());
+				delete e;
+				break;
+
+			case NodeManagerEvent::ErrorEvent:
+				errorEvent = (ErrorEvent *)e;
+				printf("%s\n", e->toString());
 				delete e;
 				break;
 

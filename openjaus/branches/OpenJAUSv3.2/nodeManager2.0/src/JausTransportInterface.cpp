@@ -57,8 +57,7 @@ bool JausTransportInterface::processMessage(JausMessage message)
 	// TODO: Throw exception. Log Error.
 
 	// Force Segfault
-	int *ptr = NULL;
-	ptr[1] = 1;
+	abort();
 
 	return false;
 }
@@ -80,8 +79,7 @@ void JausTransportInterface::run()
 	printf("JausTransportInterface::run should never be used\n");
 	
 	// Force Segfault
-	int *ptr = NULL;
-	ptr[1] = 1;
+	abort();
 }
 
 std::string JausTransportInterface::toString()
