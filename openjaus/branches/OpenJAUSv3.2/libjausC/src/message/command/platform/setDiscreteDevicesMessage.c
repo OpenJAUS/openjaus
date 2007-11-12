@@ -164,6 +164,35 @@ static int dataToBuffer(SetDiscreteDevicesMessage message, unsigned char *buffer
 	return index;
 }
 
+static int dataSize(SetDiscreteDevicesMessage message)
+{
+	int index = 0;
+
+	index += JAUS_BYTE_PRESENCE_VECTOR_SIZE_BYTES;
+	
+	if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_DEVICES_PV_PROPULSION_BIT))
+	{
+		index += JAUS_BYTE_SIZE_BYTES;
+	}
+	
+	if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_DEVICES_PV_PARKING_BIT))
+	{
+		index += JAUS_BYTE_SIZE_BYTES;
+	}
+
+	if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_DEVICES_PV_GEAR_BIT))
+	{
+		index += JAUS_BYTE_SIZE_BYTES;
+	}
+
+	if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_DEVICES_PV_TRANSFER_BIT))
+	{
+		index += JAUS_BYTE_SIZE_BYTES;
+	}
+
+	return index;
+}
+
 // ************************************************************************************************************** //
 //                                    NON-USER CONFIGURED FUNCTIONS
 // ************************************************************************************************************** //
@@ -193,6 +222,7 @@ SetDiscreteDevicesMessage setDiscreteDevicesMessageCreate(void)
 	message->sequenceNumber = 0;
 	
 	dataInitialize(message);
+	message->dataSize = dataSize(message);
 	
 	return message;	
 }
@@ -314,8 +344,8 @@ JausMessage setDiscreteDevicesMessageToJausMessage(SetDiscreteDevicesMessage mes
 	jausMessage->dataFlag = message->dataFlag;
 	jausMessage->sequenceNumber = message->sequenceNumber;
 	
-	jausMessage->data = (unsigned char *)malloc(message->dataSize);
-	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, message->dataSize);
+	jausMessage->data = (unsigned char *)malloc(dataSize(message));
+	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, dataSize(message));
 	
 	return jausMessage;
 }
@@ -323,7 +353,7 @@ JausMessage setDiscreteDevicesMessageToJausMessage(SetDiscreteDevicesMessage mes
 
 unsigned int setDiscreteDevicesMessageSize(SetDiscreteDevicesMessage message)
 {
-	return (unsigned int)(message->dataSize + JAUS_HEADER_SIZE_BYTES);
+	return (unsigned int)(dataSize(message) + JAUS_HEADER_SIZE_BYTES);
 }
 
 //********************* PRIVATE HEADER FUNCTIONS **********************//
