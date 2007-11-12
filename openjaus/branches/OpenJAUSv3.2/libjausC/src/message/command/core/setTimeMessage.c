@@ -131,6 +131,25 @@ static int dataToBuffer(SetTimeMessage message, unsigned char *buffer, unsigned 
 	return index;
 }
 
+static int dataSize(SetTimeMessage message)
+{
+	int index = 0;
+
+	index += JAUS_BYTE_PRESENCE_VECTOR_SIZE_BYTES;
+		
+	if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_TIME_PV_TIME_STAMP_BIT))
+	{
+		index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
+	}
+
+	if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_TIME_PV_DATE_STAMP_BIT))
+	{
+		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+	}
+
+	return index;	
+}
+
 // ************************************************************************************************************** //
 //                                    NON-USER CONFIGURED FUNCTIONS
 // ************************************************************************************************************** //
@@ -281,8 +300,8 @@ JausMessage setTimeMessageToJausMessage(SetTimeMessage message)
 	jausMessage->dataFlag = message->dataFlag;
 	jausMessage->sequenceNumber = message->sequenceNumber;
 	
-	jausMessage->data = (unsigned char *)malloc(message->dataSize);
-	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, message->dataSize);
+	jausMessage->data = (unsigned char *)malloc(dataSize(message));
+	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, dataSize(message));
 	
 	return jausMessage;
 }
@@ -290,7 +309,7 @@ JausMessage setTimeMessageToJausMessage(SetTimeMessage message)
 
 unsigned int setTimeMessageSize(SetTimeMessage message)
 {
-	return (unsigned int)(message->dataSize + JAUS_HEADER_SIZE_BYTES);
+	return (unsigned int)(dataSize(message) + JAUS_HEADER_SIZE_BYTES);
 }
 
 //********************* PRIVATE HEADER FUNCTIONS **********************//
