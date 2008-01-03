@@ -39,7 +39,6 @@
 
 #include <stdio.h>
 #include <string.h>
-#include <cimar/jaus.h>
 
 #include "nodeManager.h"
 
@@ -87,7 +86,7 @@ void defaultJausMessageProcessor(JausMessage message, NodeManagerInterface nmi, 
 		return;
 	}
 	
-	if(cmpt->controller.active && message->source->id != cmpt->controller.address->id && jausMessageIsRejectableCommand(message) )
+	if(cmpt->controller.active && !jausAddressEqual(message->source, cmpt->controller.address) && jausMessageIsRejectableCommand(message) )
 	{
 		jausAddressToString(message->source, string);
 		cError("DefaultMessageProcessor: Command %s, from non-controlling source: %s\n", jausMessageCommandCodeString(message));
@@ -157,23 +156,23 @@ void defaultJausMessageProcessor(JausMessage message, NodeManagerInterface nmi, 
 					{	
 						// Terminate control of current component
 						rejectComponentControl = rejectComponentControlMessageCreate();
-						rejectComponentControl->source->id = cmpt->address->id;
-						rejectComponentControl->destination->id = cmpt->controller.address->id;
+						jausAddressCopy(rejectComponentControl->source, cmpt->address);
+						jausAddressCopy(rejectComponentControl->destination, cmpt->controller.address);
 						txMessage = rejectComponentControlMessageToJausMessage(rejectComponentControl); 
 						nodeManagerSend(nmi, txMessage);
 						jausMessageDestroy(txMessage);
 						
 						// Accept control of new component
 						confirmComponentControl = confirmComponentControlMessageCreate();
-						confirmComponentControl->source->id = cmpt->address->id;
-						confirmComponentControl->destination->id = message->source->id;
+						jausAddressCopy(confirmComponentControl->source, cmpt->address);
+						jausAddressCopy(confirmComponentControl->destination, message->source);
 						confirmComponentControl->responseCode = JAUS_RESPONSE_CODE_CONTROL_ACCEPTED;
 						txMessage = confirmComponentControlMessageToJausMessage(confirmComponentControl); 
 						nodeManagerSend(nmi, txMessage);
 						jausMessageDestroy(txMessage);
 						
 						// Update cmpt controller information
-						cmpt->controller.address->id = message->source->id;
+						jausAddressCopy(cmpt->controller.address, message->source);
 						cmpt->controller.authority = requestComponentControl->authorityCode;
 					
 						rejectComponentControlMessageDestroy(rejectComponentControl);
@@ -181,11 +180,11 @@ void defaultJausMessageProcessor(JausMessage message, NodeManagerInterface nmi, 
 					}	
 					else
 					{
-						if(	message->source->id != cmpt->controller.address->id)
+						if(	!jausAddressEqual(message->source, cmpt->controller.address))
 						{
 							rejectComponentControl = rejectComponentControlMessageCreate();
-							rejectComponentControl->source->id = cmpt->address->id;
-							rejectComponentControl->destination->id = message->source->id;
+							jausAddressCopy(rejectComponentControl->source, cmpt->address);
+							jausAddressCopy(rejectComponentControl->destination, message->source);
 							txMessage = rejectComponentControlMessageToJausMessage(rejectComponentControl); 
 							nodeManagerSend(nmi, txMessage);
 							jausMessageDestroy(txMessage);
@@ -196,8 +195,8 @@ void defaultJausMessageProcessor(JausMessage message, NodeManagerInterface nmi, 
 						{
 							// Reaccept control of new component
 							confirmComponentControl = confirmComponentControlMessageCreate();
-							confirmComponentControl->source->id = cmpt->address->id;
-							confirmComponentControl->destination->id = message->source->id;
+							jausAddressCopy(confirmComponentControl->source, cmpt->address);
+							jausAddressCopy(confirmComponentControl->destination, message->source);
 							confirmComponentControl->responseCode = JAUS_RESPONSE_CODE_CONTROL_ACCEPTED;
 							txMessage = confirmComponentControlMessageToJausMessage(confirmComponentControl); 
 							nodeManagerSend(nmi, txMessage);
@@ -210,14 +209,14 @@ void defaultJausMessageProcessor(JausMessage message, NodeManagerInterface nmi, 
 				else // Not currently under component control, so give control
 				{
 					confirmComponentControl = confirmComponentControlMessageCreate();
-					confirmComponentControl->source->id = cmpt->address->id;
-					confirmComponentControl->destination->id = message->source->id;
+					jausAddressCopy(confirmComponentControl->source, cmpt->address);
+					jausAddressCopy(confirmComponentControl->destination, message->source);
 					confirmComponentControl->responseCode = JAUS_RESPONSE_CODE_CONTROL_ACCEPTED;
 					txMessage = confirmComponentControlMessageToJausMessage(confirmComponentControl); 
 					nodeManagerSend(nmi, txMessage);
 					jausMessageDestroy(txMessage);
 	
-					cmpt->controller.address->id = message->source->id;
+					jausAddressCopy(cmpt->controller.address, message->source);
 					cmpt->controller.authority = requestComponentControl->authorityCode;
 					cmpt->controller.active = JAUS_TRUE;
 
@@ -238,7 +237,10 @@ void defaultJausMessageProcessor(JausMessage message, NodeManagerInterface nmi, 
 			if(releaseComponentControl)
 			{
 				cmpt->controller.active = JAUS_FALSE;
-				cmpt->controller.address->id = 0;
+				cmpt->controller.address->subsystem = 0;
+				cmpt->controller.address->node = 0;
+				cmpt->controller.address->component = 0;
+				cmpt->controller.address->instance = 0;
 				cmpt->controller.authority = 0;
 				cmpt->controller.state = JAUS_UNDEFINED_STATE;
 				releaseComponentControlMessageDestroy(releaseComponentControl);
@@ -322,8 +324,8 @@ void defaultJausMessageProcessor(JausMessage message, NodeManagerInterface nmi, 
 					
 		case JAUS_QUERY_COMPONENT_AUTHORITY:
 			reportComponentAuthority = reportComponentAuthorityMessageCreate();
-			reportComponentAuthority->source->id = cmpt->address->id;
-			reportComponentAuthority->destination->id = message->source->id;
+			jausAddressCopy(reportComponentAuthority->source, cmpt->address);
+			jausAddressCopy(reportComponentAuthority->destination, message->source);
 			reportComponentAuthority->authorityCode = cmpt->authority;
 			txMessage = reportComponentAuthorityMessageToJausMessage(reportComponentAuthority);	
 			nodeManagerSend(nmi, txMessage);
@@ -335,8 +337,8 @@ void defaultJausMessageProcessor(JausMessage message, NodeManagerInterface nmi, 
 			
 		case JAUS_QUERY_COMPONENT_STATUS:
 			reportComponentStatus = reportComponentStatusMessageCreate();
-			reportComponentStatus->source->id = cmpt->address->id;
-			reportComponentStatus->destination->id = message->source->id;
+			jausAddressCopy(reportComponentStatus->source, cmpt->address);
+			jausAddressCopy(reportComponentStatus->destination, message->source);
 			reportComponentStatus->primaryStatusCode = cmpt->state;
 			
 			txMessage = reportComponentStatusMessageToJausMessage(reportComponentStatus);	
@@ -360,8 +362,8 @@ void defaultJausMessageProcessor(JausMessage message, NodeManagerInterface nmi, 
 					
 		case JAUS_QUERY_IDENTIFICATION:
 			reportIdentification = reportIdentificationMessageCreate();
-			reportIdentification->source->id = cmpt->address->id;
-			reportIdentification->destination->id = message->source->id;
+			jausAddressCopy(reportIdentification->source, cmpt->address);
+			jausAddressCopy(reportIdentification->destination, message->source);
 			sprintf(reportIdentification->identification, "%s", cmpt->identification);
 			reportIdentification->queryType = JAUS_QUERY_FIELD_COMPONENT_IDENTITY; // A component can only respond with its identification
 			txMessage = reportIdentificationMessageToJausMessage(reportIdentification);	
@@ -379,8 +381,8 @@ void defaultJausMessageProcessor(JausMessage message, NodeManagerInterface nmi, 
 		        	{
 		        		// Only query config from local node manager
 						queryConfMsg = queryConfigurationMessageCreate();
-						queryConfMsg->source->id = cmpt->address->id;
-						queryConfMsg->destination->id = message->source->id;
+						jausAddressCopy(queryConfMsg->source, cmpt->address);
+						jausAddressCopy(queryConfMsg->destination, message->source);
 		        		queryConfMsg->queryField = JAUS_SUBSYSTEM_CONFIGURATION;		        	    
 		        	}
 		        	else
@@ -410,8 +412,8 @@ void defaultJausMessageProcessor(JausMessage message, NodeManagerInterface nmi, 
 			    //printf("%s", string);
 			    
 				confChangeSetupMsg = configurationChangedEventSetupMessageCreate();
-				confChangeSetupMsg->source->id = cmpt->address->id;
-				confChangeSetupMsg->destination->id = message->source->id;
+				jausAddressCopy(confChangeSetupMsg->source, cmpt->address);
+				jausAddressCopy(confChangeSetupMsg->destination, message->source);
 				confChangeSetupMsg->notificationType = JAUS_NOTIFICATION_ALWAYS;
 				// The node manager is designed to send us a notification whenever the subsystem changes
 				txMessage = configurationChangedEventSetupMessageToJausMessage(confChangeSetupMsg);	
@@ -431,7 +433,10 @@ void defaultJausMessageProcessor(JausMessage message, NodeManagerInterface nmi, 
 
 					// Disable Controller
 					cmpt->controller.active = JAUS_FALSE;
-					cmpt->controller.address->id = 0;
+					cmpt->controller.address->subsystem = 0;
+					cmpt->controller.address->node = 0;
+					cmpt->controller.address->component = 0;
+					cmpt->controller.address->instance = 0;
 					cmpt->controller.state = JAUS_UNDEFINED_STATE;
 					cmpt->controller.authority = 0;
 				}
@@ -445,8 +450,8 @@ void defaultJausMessageProcessor(JausMessage message, NodeManagerInterface nmi, 
 
 		case JAUS_CONFIGURATION_CHANGED_EVENT_NOTIFICATION:
 			queryConfMsg = queryConfigurationMessageCreate();
-			queryConfMsg->source->id = cmpt->address->id;
-			queryConfMsg->destination->id = message->source->id;
+			jausAddressCopy(queryConfMsg->source, cmpt->address);
+			jausAddressCopy(queryConfMsg->destination, message->source);
 			
 		    switch(message->source->component)
 		    {
@@ -489,8 +494,8 @@ void defaultJausMessageProcessor(JausMessage message, NodeManagerInterface nmi, 
 					confirmEvent = confirmEventMessageCreate();
 					if(confirmEvent)
 					{
-						confirmEvent->source->id = cmpt->address->id;
-						confirmEvent->destination->id = message->source->id;
+						jausAddressCopy(confirmEvent->source, cmpt->address);
+						jausAddressCopy(confirmEvent->destination, message->source);
 						
 						confirmEvent->messageCode = createEvent->messageCode;
 						confirmEvent->eventId = 0;
@@ -552,10 +557,10 @@ void defaultJausMessageProcessor(JausMessage message, NodeManagerInterface nmi, 
 				// Respond with our services
 				reportServices = reportServicesMessageCreate();
 
-				reportServices->destination->id = message->source->id;
-				reportServices->source->id = nmi->cmpt->address->id;
+				jausAddressCopy(reportServices->destination, message->source);
+				jausAddressCopy(reportServices->source, nmi->cmpt->address);
 				jausServicesDestroy(reportServices->jausServices);
-				reportServices->jausServices = jausServicesDuplicate(nmi->cmpt->services);
+				reportServices->jausServices = jausServicesClone(nmi->cmpt->services);
 
 				txMessage = reportServicesMessageToJausMessage(reportServices);
 				reportServicesMessageDestroy(reportServices);

@@ -39,8 +39,6 @@
 //				use by the system. It will queue sets of messages until an end message is
 //				recieved and then create a single Jaus Message from that collection
 
-#include <cimar.h>
-#include <cimar/jaus.h>
 #include <stdlib.h>
 #include "nodeManager.h"
 
@@ -118,7 +116,7 @@ void lmHandlerReceiveLargeMessage(NodeManagerInterface nmi, JausMessage message)
 				
 			// add message to LargeMessageList at first position
 			msgList->commandCode = message->commandCode;
-			msgList->source->id = message->source->id;
+			jausAddressCopy(msgList->source, message->source);
 			vectorAdd(msgList->messages, message);
 			break;
 		
@@ -171,7 +169,7 @@ void lmHandlerReceiveLargeMessage(NodeManagerInterface nmi, JausMessage message)
 		case JAUS_LAST_DATA_PACKET:
 			// Check if LargeMessageList exists, error if not
 			msgList = lmHandlerGetMessageList(nmi->lmh, message);
-			if(msgList)
+			if(msgList && msgList->messages->elementCount > 0)
 			{
 				// insert message to end of list
 				vectorAdd(msgList->messages, message);
@@ -181,6 +179,8 @@ void lmHandlerReceiveLargeMessage(NodeManagerInterface nmi, JausMessage message)
 
 				// Calculate new message size
 				newDataSize = 0;
+				tempMessage = NULL;
+				
 				for(i = 0; i < msgList->messages->elementCount; i++)
 				{
 					tempMessage = (JausMessage)msgList->messages->elementData[i];
@@ -190,9 +190,10 @@ void lmHandlerReceiveLargeMessage(NodeManagerInterface nmi, JausMessage message)
 				// Setup Header and Data Buffer
 				outMessage->properties = tempMessage->properties;
 				outMessage->commandCode = tempMessage->commandCode;
-				outMessage->destination->id = tempMessage->destination->id;
-				outMessage->source->id = tempMessage->source->id;
-				outMessage->dataControl = tempMessage->dataControl;
+				jausAddressCopy(outMessage->destination, tempMessage->destination);
+				jausAddressCopy(outMessage->source, tempMessage->source);
+				outMessage->dataSize = tempMessage->dataSize;
+				outMessage->dataFlag = tempMessage->dataFlag;
 				outMessage->sequenceNumber = tempMessage->sequenceNumber;
 				outMessage->data = (unsigned char *) malloc(newDataSize);
 				
@@ -234,7 +235,7 @@ void lmHandlerReceiveLargeMessage(NodeManagerInterface nmi, JausMessage message)
 				outMessage->dataSize = newDataSize;
 				outMessage->dataFlag = JAUS_SINGLE_DATA_PACKET;
 
-				if(outMessage->scFlag)
+				if(outMessage->properties.scFlag)
 				{
 					scManagerReceiveMessage(nmi, outMessage);
 				}
@@ -264,7 +265,7 @@ void lmHandlerReceiveLargeMessage(NodeManagerInterface nmi, JausMessage message)
 
 int lmHandlerMessageListEqual(LargeMessageList listOne, LargeMessageList listTwo)
 {
-	if(listOne->commandCode == listTwo->commandCode && listOne->source->id == listTwo->source->id)
+	if(listOne->commandCode == listTwo->commandCode && jausAddressEqual(listOne->source, listTwo->source))
 	{
 		return 1;
 	}
@@ -285,7 +286,7 @@ LargeMessageList lmHandlerGetMessageList(LargeMessageHandler lmh, JausMessage me
 		msgList = (LargeMessageList) lmh->messageLists->elementData[i];
 
 		// Command Code and Source uniquely identify a message list
-		if(msgList->commandCode == message->commandCode && msgList->source->id == message->source->id)
+		if(msgList->commandCode == message->commandCode && jausAddressEqual(msgList->source, message->source))
 			return msgList;
 	}
 	return NULL;
@@ -296,7 +297,7 @@ int lmHandlerLargeMessageCheck(JausMessage messageOne, JausMessage messageTwo)
 	// Check if two messages are equal for LargeMessageSet purposes
 	// This only applies to large message set tests
 	if(messageOne->commandCode == messageTwo->commandCode && 
-	   messageOne->source->id == messageTwo->source->id &&
+	   jausAddressEqual(messageOne->source, messageTwo->source) &&
 	   messageOne->sequenceNumber == messageTwo->sequenceNumber)
 	{
 		return JAUS_TRUE;
@@ -325,9 +326,10 @@ int lmHandlerSendLargeMessage(NodeManagerInterface nmi, JausMessage inMessage)
 			// Copy Header
 			outMessage->properties = inMessage->properties;
 			outMessage->commandCode = inMessage->commandCode;
-			outMessage->destination->id = inMessage->destination->id;
-			outMessage->source->id = inMessage->source->id;
-			outMessage->dataControl = inMessage->dataControl;
+			jausAddressCopy(outMessage->destination, inMessage->destination);
+			jausAddressCopy(outMessage->source, inMessage->source);
+			outMessage->dataSize = inMessage->dataSize;
+			outMessage->dataFlag = inMessage->dataFlag;
 			outMessage->sequenceNumber = messageCount++;
 
 			if(messageCount == 1)
@@ -359,9 +361,10 @@ int lmHandlerSendLargeMessage(NodeManagerInterface nmi, JausMessage inMessage)
 		// Copy Header
 		outMessage->properties = inMessage->properties;
 		outMessage->commandCode = inMessage->commandCode;
-		outMessage->destination->id = inMessage->destination->id;
-		outMessage->source->id = inMessage->source->id;
-		outMessage->dataControl = inMessage->dataControl;
+		jausAddressCopy(outMessage->destination, inMessage->destination);
+		jausAddressCopy(outMessage->source, inMessage->source);
+		outMessage->dataSize = inMessage->dataSize;
+		outMessage->dataFlag = inMessage->dataFlag;
 		outMessage->sequenceNumber = messageCount++;
 		
 		outMessage->dataFlag = JAUS_LAST_DATA_PACKET;

@@ -38,8 +38,6 @@
 // Date:		08/04/06
 // Description:	Provides the core service connection management routines
 
-#include <cimar.h>
-#include <cimar/jaus.h>
 #include <stdlib.h>
 #include "nodeManager.h"
 
@@ -136,7 +134,7 @@ void scManagerProcessConfirmScMessage(NodeManagerInterface nmi, ConfirmServiceCo
 	
 	while(sc)
 	{
-		if(	sc->commandCode == message->serviceConnectionCommandCode && sc->address->id == message->source->id )
+		if(	sc->commandCode == message->serviceConnectionCommandCode && jausAddressEqual(sc->address, message->source) )
 		{
 			if( message->responseCode == JAUS_SC_SUCCESSFUL )
 			{
@@ -174,8 +172,8 @@ void scManagerProcessConfirmScMessage(NodeManagerInterface nmi, ConfirmServiceCo
 	if( message->responseCode == JAUS_SC_SUCCESSFUL )
 	{
 		terminateSc = terminateServiceConnectionMessageCreate();
-		terminateSc->source->id = nmi->cmpt->address->id;
-		terminateSc->destination->id = message->source->id;
+		jausAddressCopy(terminateSc->source, nmi->cmpt->address);
+		jausAddressCopy(terminateSc->destination, message->source);
 		terminateSc->serviceConnectionCommandCode = message->serviceConnectionCommandCode;
 		terminateSc->instanceId = message->instanceId;
 		
@@ -199,8 +197,8 @@ void scManagerProcessCreateScMessage(NodeManagerInterface nmi, CreateServiceConn
 	if(supportedScMsg == NULL)
 	{
 		confScMsg = confirmServiceConnectionMessageCreate();
-		confScMsg->source->id = nmi->cmpt->address->id;
-		confScMsg->destination->id = message->source->id;
+		jausAddressCopy(confScMsg->source, nmi->cmpt->address);
+		jausAddressCopy(confScMsg->destination, message->source);
 		confScMsg->serviceConnectionCommandCode = message->serviceConnectionCommandCode;
 		confScMsg->instanceId = 0;
 		confScMsg->confirmedPeriodicUpdateRateHertz = 0;
@@ -219,9 +217,9 @@ void scManagerProcessCreateScMessage(NodeManagerInterface nmi, CreateServiceConn
 	{
 		// Send negative conf (could not create sc)
 		confScMsg = confirmServiceConnectionMessageCreate();
-		confScMsg->source->id = nmi->cmpt->address->id;
-		confScMsg->destination->id = message->source->id;
-		confScMsg->serviceConnectionCommandCode = sc->commandCode;
+		jausAddressCopy(confScMsg->source, nmi->cmpt->address);
+		jausAddressCopy(confScMsg->destination, message->source);
+		confScMsg->serviceConnectionCommandCode = message->serviceConnectionCommandCode;
 		confScMsg->instanceId = 0;
 		confScMsg->confirmedPeriodicUpdateRateHertz = 0;
 		confScMsg->responseCode = JAUS_SC_CONNECTION_REFUSED;
@@ -238,15 +236,15 @@ void scManagerProcessCreateScMessage(NodeManagerInterface nmi, CreateServiceConn
 	newSc->commandCode = message->serviceConnectionCommandCode;
 	newSc->presenceVector = message->presenceVector;
 	newSc->address = jausAddressCreate();
-	newSc->address->id = message->source->id;
+	jausAddressCopy(newSc->address, message->source);
 	newSc->instanceId = scGetAvailableInstanceId(supportedScMsg->scList, newSc);
 	if(newSc->instanceId == -1)
 	{
 		// Send negative conf (could not create sc)
 		confScMsg = confirmServiceConnectionMessageCreate();
-		confScMsg->source->id = nmi->cmpt->address->id;
-		confScMsg->destination->id = message->source->id;
-		confScMsg->serviceConnectionCommandCode = sc->commandCode;
+		jausAddressCopy(confScMsg->source, nmi->cmpt->address);
+		jausAddressCopy(confScMsg->destination, message->source);
+		confScMsg->serviceConnectionCommandCode = message->serviceConnectionCommandCode;
 		confScMsg->instanceId = 0;
 		confScMsg->confirmedPeriodicUpdateRateHertz = 0;
 		confScMsg->responseCode = JAUS_SC_CONNECTION_REFUSED;
@@ -286,8 +284,8 @@ void scManagerProcessCreateScMessage(NodeManagerInterface nmi, CreateServiceConn
 	sc->confirmedUpdateRateHz = message->requestedPeriodicUpdateRateHertz;	// TODO: calculate confirmedUpdateRateHz
 	
 	confScMsg = confirmServiceConnectionMessageCreate();
-	confScMsg->source->id = nmi->cmpt->address->id;
-	confScMsg->destination->id = message->source->id;
+	jausAddressCopy(confScMsg->source, nmi->cmpt->address);
+	jausAddressCopy(confScMsg->destination, message->source);
 	confScMsg->serviceConnectionCommandCode = sc->commandCode;
 	confScMsg->instanceId = (JausByte)sc->instanceId;
 	confScMsg->confirmedPeriodicUpdateRateHertz = sc->confirmedUpdateRateHz;
@@ -319,7 +317,7 @@ void scManagerProcessActivateScMessage(NodeManagerInterface nmi, ActivateService
 	}
 
 	messageSc->address = jausAddressCreate();
-	messageSc->address->id = message->source->id;
+	jausAddressCopy(messageSc->address, message->source);
 	messageSc->instanceId = message->instanceId;
 
 	sc = scFindScInList(supportedScMsg->scList, messageSc);
@@ -351,7 +349,7 @@ void scManagerProcessSuspendScMessage(NodeManagerInterface nmi, SuspendServiceCo
 	}
 
 	messageSc->address = jausAddressCreate();
-	messageSc->address->id = message->source->id;
+	jausAddressCopy(messageSc->address, message->source);
 	messageSc->instanceId = message->instanceId;
 
 	sc = scFindScInList(supportedScMsg->scList, messageSc);
@@ -383,7 +381,7 @@ void scManagerProcessTerminateScMessage(NodeManagerInterface nmi, TerminateServi
 
 	sc = supportedScMsg->scList;
 	
-	if(	sc->address->id == message->source->id &&
+	if(	jausAddressEqual(sc->address, message->source) &&
 		sc->commandCode == message->serviceConnectionCommandCode &&
 		sc->instanceId == message->instanceId )
 	{
@@ -398,7 +396,7 @@ void scManagerProcessTerminateScMessage(NodeManagerInterface nmi, TerminateServi
 	sc = prevSc->nextSc;
 	while(sc)
 	{
-		if(	sc->address->id == message->source->id &&
+		if(	jausAddressEqual(sc->address, message->source) &&
 			sc->commandCode == message->serviceConnectionCommandCode &&
 			sc->instanceId == message->instanceId )
 		{
@@ -548,8 +546,8 @@ void scManagerRemoveSupportedMessage(NodeManagerInterface nmi, unsigned short co
 				if(sc->serviceConnectionType == SC_EVENT_TYPE)
 				{
 					cancelEvent = cancelEventMessageCreate();
-					cancelEvent->source->id = nmi->cmpt->address->id;
-					cancelEvent->destination->id = sc->address->id;
+					jausAddressCopy(cancelEvent->source, nmi->cmpt->address);
+					jausAddressCopy(cancelEvent->destination, sc->address);
 					cancelEvent->messageCode = sc->commandCode;
 					cancelEvent->eventId = sc->instanceId;
 
@@ -563,8 +561,8 @@ void scManagerRemoveSupportedMessage(NodeManagerInterface nmi, unsigned short co
 				else
 				{
 					terminateSc = terminateServiceConnectionMessageCreate();
-					terminateSc->source->id = nmi->cmpt->address->id;
-					terminateSc->destination->id = sc->address->id;
+					jausAddressCopy(terminateSc->source, nmi->cmpt->address);
+					jausAddressCopy(terminateSc->destination, sc->address);
 					terminateSc->serviceConnectionCommandCode = sc->commandCode;
 					terminateSc->instanceId = sc->instanceId;
 		
@@ -682,7 +680,7 @@ ServiceConnection scFindScInList(ServiceConnection sc, ServiceConnection newSc)
 	
 	while(sc)
 	{
-		if(	sc->address->id == newSc->address->id && sc->instanceId == newSc->instanceId )
+		if(	jausAddressEqual(sc->address, newSc->address) && sc->instanceId == newSc->instanceId )
 		{
 			return sc;
 		}		
@@ -701,7 +699,7 @@ int scGetAvailableInstanceId(ServiceConnection sc, ServiceConnection newSc)
 	
 	while(sc)
 	{
-		if(sc->address->id == newSc->address->id)
+		if(jausAddressEqual(sc->address, newSc->address))
 		{
 			if(sc->presenceVector == newSc->presenceVector)
 			{
@@ -767,14 +765,14 @@ JausBoolean scManagerCreateServiceConnection(NodeManagerInterface nmi, ServiceCo
 	sc->nextSc = NULL;
 
 	createSc = createServiceConnectionMessageCreate();
-	createSc->source->id = nmi->cmpt->address->id;
+	jausAddressCopy(createSc->source, nmi->cmpt->address);
 	createSc->serviceConnectionCommandCode = sc->commandCode;
 	createSc->requestedPeriodicUpdateRateHertz = sc->requestedUpdateRateHz;
 	createSc->presenceVector = sc->presenceVector;
 	
 	if(sc->address && sc->address->subsystem != 0)
 	{
-		createSc->destination->id = sc->address->id;
+		jausAddressCopy(createSc->destination, sc->address);
 			
 		txMessage = createServiceConnectionMessageToJausMessage(createSc);
 		nodeManagerSend(nmi, txMessage);
@@ -798,8 +796,8 @@ JausBoolean scManagerCreateServiceConnection(NodeManagerInterface nmi, ServiceCo
 		// Tests if the target component exists or not
 		if(nodeManagerLookupAddress(nmi, localAddress))
 		{
-			createSc->destination->id = localAddress->id;
-			sc->address->id = localAddress->id;
+			jausAddressCopy(createSc->destination, localAddress);
+			jausAddressCopy(sc->address, localAddress);
 				
 			txMessage = createServiceConnectionMessageToJausMessage(createSc);
 			nodeManagerSend(nmi, txMessage);
@@ -831,13 +829,13 @@ JausBoolean scManagerTerminateServiceConnection(NodeManagerInterface nmi, Servic
 
 	while(sc)
 	{
-		if(sc->commandCode == deadSc->commandCode && sc->address->id == deadSc->address->id )
+		if(sc->commandCode == deadSc->commandCode && jausAddressEqual(sc->address, deadSc->address) )
 		{
 			if(sc->instanceId > -1)
 			{
 				terminateSc = terminateServiceConnectionMessageCreate();
-				terminateSc->source->id = nmi->cmpt->address->id;
-				terminateSc->destination->id = deadSc->address->id;
+				jausAddressCopy(terminateSc->source, nmi->cmpt->address);
+				jausAddressCopy(terminateSc->destination, deadSc->address);
 				terminateSc->serviceConnectionCommandCode = deadSc->commandCode;
 				terminateSc->instanceId = deadSc->instanceId;
 	
@@ -889,7 +887,7 @@ JausBoolean scManagerReceiveServiceConnection(NodeManagerInterface nmi, ServiceC
 	prevSc = NULL;
 	while(sc)
 	{
-		if(sc->commandCode == requestSc->commandCode && sc->address->id == requestSc->address->id )
+		if(sc->commandCode == requestSc->commandCode && jausAddressEqual(sc->address, requestSc->address) )
 		{
 			if(getTimeSeconds() > (sc->lastSentTime + sc->timeoutSec))
 			{
@@ -943,7 +941,7 @@ void scManagerReceiveMessage(NodeManagerInterface nmi, JausMessage message)
 	
 	while(sc)
 	{
-		if(sc->commandCode == message->commandCode && sc->address->id == message->source->id )
+		if(sc->commandCode == message->commandCode && jausAddressEqual(sc->address, message->source) )
 		{
 			if(sc->isActive)
 			{
@@ -1024,8 +1022,8 @@ void scManagerProccessCreateEvent(NodeManagerInterface nmi, CreateEventMessage m
 		confirmEvent = confirmEventMessageCreate();
 		if(confirmEvent)
 		{
-			confirmEvent->source->id = nmi->cmpt->address->id;
-			confirmEvent->destination->id = message->source->id;
+			jausAddressCopy(confirmEvent->source, nmi->cmpt->address);
+			jausAddressCopy(confirmEvent->destination, message->source);
 			
 			confirmEvent->messageCode = message->messageCode;
 			confirmEvent->eventId = 0;
@@ -1052,8 +1050,8 @@ void scManagerProccessCreateEvent(NodeManagerInterface nmi, CreateEventMessage m
 		confirmEvent = confirmEventMessageCreate();
 		if(confirmEvent)
 		{
-			confirmEvent->source->id = nmi->cmpt->address->id;
-			confirmEvent->destination->id = message->source->id;
+			jausAddressCopy(confirmEvent->source, nmi->cmpt->address);
+			jausAddressCopy(confirmEvent->destination, message->source);
 			
 			confirmEvent->messageCode = message->messageCode;
 			confirmEvent->eventId = 0;
@@ -1073,7 +1071,7 @@ void scManagerProccessCreateEvent(NodeManagerInterface nmi, CreateEventMessage m
 	}
 	
 	// Create a copy of the QueryMessage
-	newSc->queryMessage = jausMessageDuplicate(message->queryMessage);
+	newSc->queryMessage = jausMessageClone(message->queryMessage);
 	if(!newSc->queryMessage)
 	{
 		// error creating message
@@ -1084,7 +1082,7 @@ void scManagerProccessCreateEvent(NodeManagerInterface nmi, CreateEventMessage m
 	newSc->commandCode = message->messageCode;
 	newSc->presenceVector = 0;	
 	newSc->address = jausAddressCreate();
-	newSc->address->id = message->source->id;
+	jausAddressCopy(newSc->address, message->source);
 
 	// Get Instance / Event Id value
 	newSc->instanceId = scGetAvailableInstanceId(supportedScMsg->scList, newSc);
@@ -1094,8 +1092,8 @@ void scManagerProccessCreateEvent(NodeManagerInterface nmi, CreateEventMessage m
 		confirmEvent = confirmEventMessageCreate();
 		if(confirmEvent)
 		{
-			confirmEvent->source->id = nmi->cmpt->address->id;
-			confirmEvent->destination->id = message->source->id;
+			jausAddressCopy(confirmEvent->source, nmi->cmpt->address);
+			jausAddressCopy(confirmEvent->destination, message->source);
 			
 			confirmEvent->messageCode = message->messageCode;
 			confirmEvent->eventId = 0;
@@ -1146,8 +1144,8 @@ void scManagerProccessCreateEvent(NodeManagerInterface nmi, CreateEventMessage m
 	confirmEvent = confirmEventMessageCreate();
 	if(confirmEvent)
 	{
-		confirmEvent->source->id = nmi->cmpt->address->id;
-		confirmEvent->destination->id = message->source->id;
+		jausAddressCopy(confirmEvent->source, nmi->cmpt->address);
+		jausAddressCopy(confirmEvent->destination, message->source);
 		
 		confirmEvent->messageCode = message->messageCode;
 		confirmEvent->eventId = sc->instanceId;
@@ -1176,7 +1174,7 @@ void scManagerProcessConfirmEvent(NodeManagerInterface nmi, ConfirmEventMessage 
 	while(sc)
 	{
 		// Test if this incoming SC matches the one replied to
-		if(	sc->commandCode == message->messageCode && sc->address->id == message->source->id )
+		if(	sc->commandCode == message->messageCode && jausAddressEqual(sc->address, message->source) )
 		{
 			// Success
 			if( message->responseCode == SUCCESSFUL_RESPONSE )
@@ -1215,8 +1213,8 @@ void scManagerProcessConfirmEvent(NodeManagerInterface nmi, ConfirmEventMessage 
 	if( message->responseCode == SUCCESSFUL_RESPONSE )
 	{
 		cancelEvent = cancelEventMessageCreate();
-		cancelEvent->source->id = nmi->cmpt->address->id;
-		cancelEvent->destination->id = message->source->id;
+		jausAddressCopy(cancelEvent->source, nmi->cmpt->address);
+		jausAddressCopy(cancelEvent->destination, message->source);
 		cancelEvent->messageCode = message->messageCode;
 		cancelEvent->eventId = message->eventId;
 		
@@ -1249,7 +1247,7 @@ void scManagerProcessCancelEvent(NodeManagerInterface nmi, CancelEventMessage me
 	}
 	sc = supportedScMsg->scList;
 	
-	if(	sc->address->id == message->source->id &&
+	if(	jausAddressEqual(sc->address, message->source) &&
 		sc->commandCode == message->messageCode &&
 		sc->instanceId == message->eventId )
 	{
@@ -1264,7 +1262,7 @@ void scManagerProcessCancelEvent(NodeManagerInterface nmi, CancelEventMessage me
 	sc = prevSc->nextSc;
 	while(sc)
 	{
-		if(	sc->address->id == message->source->id &&
+		if(	jausAddressEqual(sc->address, message->source) &&
 			sc->commandCode == message->messageCode &&
 			sc->instanceId == message->eventId )
 		{
@@ -1320,7 +1318,7 @@ JausBoolean scManagerCreatePeriodicEvent(NodeManagerInterface nmi, ServiceConnec
 
 	// Setup the Create Event Message
 	createEvent = createEventMessageCreate();
-	createEvent->source->id = nmi->cmpt->address->id;
+	jausAddressCopy(createEvent->source, nmi->cmpt->address);
 	jausBytePresenceVectorSetBit(&createEvent->presenceVector, CREATE_EVENT_PV_REQUESTED_RATE_BIT); // Set for Periodic Event, Specify the Requested Rate
 	jausBytePresenceVectorSetBit(&createEvent->presenceVector, CREATE_EVENT_PV_MINIMUM_RATE_BIT); // Set for Periodic Event, Specify the Requested Rate
 	createEvent->messageCode = sc->commandCode;
@@ -1328,7 +1326,7 @@ JausBoolean scManagerCreatePeriodicEvent(NodeManagerInterface nmi, ServiceConnec
 	createEvent->requestedMinimumRate = sc->requestedUpdateRateHz;
 	createEvent->requestedUpdateRate = sc->requestedUpdateRateHz;
 	jausMessageDestroy(createEvent->queryMessage);
-	createEvent->queryMessage = jausMessageDuplicate(sc->queryMessage);
+	createEvent->queryMessage = jausMessageClone(sc->queryMessage);
 
 	localAddress = jausAddressCreate();
 	localAddress->subsystem = nmi->cmpt->address->subsystem;
@@ -1340,8 +1338,8 @@ JausBoolean scManagerCreatePeriodicEvent(NodeManagerInterface nmi, ServiceConnec
 	// Tests if the target component exists or not
 	if(localAddress)
 	{
-		createEvent->destination->id = localAddress->id;
-		sc->address->id = localAddress->id;
+		jausAddressCopy(createEvent->destination, localAddress);
+		jausAddressCopy(sc->address, localAddress);
 	
 		txMessage = createEventMessageToJausMessage(createEvent);
 		nodeManagerSend(nmi, txMessage);
@@ -1372,13 +1370,13 @@ JausBoolean scManagerCancelPeriodicEvent(NodeManagerInterface nmi, ServiceConnec
 		
 	while(sc)
 	{
-		if(sc->commandCode == deadSc->commandCode && sc->address->id == deadSc->address->id )
+		if(sc->commandCode == deadSc->commandCode && jausAddressEqual(sc->address, deadSc->address) )
 		{
 			if(sc->instanceId > -1)
 			{
 				cancelEvent = cancelEventMessageCreate();
-				cancelEvent->source->id = nmi->cmpt->address->id;
-				cancelEvent->destination->id = deadSc->address->id;
+				jausAddressCopy(cancelEvent->source, nmi->cmpt->address);
+				jausAddressCopy(cancelEvent->destination, deadSc->address);
 				cancelEvent->messageCode = deadSc->commandCode;
 				cancelEvent->eventId = deadSc->instanceId;
 	

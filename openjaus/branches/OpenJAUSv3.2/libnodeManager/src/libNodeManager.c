@@ -43,8 +43,6 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/time.h>
-#include <cimar.h>
-#include <cimar/jaus.h>
 #include "nodeManager.h"
 
 #define NODE_MANAGER_INTERFACE_PORT 24627
@@ -357,7 +355,7 @@ void *heartbeatThread(void *threadArgument)
 	nmi->heartbeatThreadRunning = 1;
 	nmi->heartbeatCount = 0;
 	
-	heartbeat->source->id = nmi->cmpt->address->id;
+	jausAddressCopy(heartbeat->source, nmi->cmpt->address);
 	heartbeat->destination->subsystem = nmi->cmpt->address->subsystem;
 	heartbeat->destination->node = nmi->cmpt->address->node;
 	heartbeat->destination->component = JAUS_NODE_MANAGER_COMPONENT;
@@ -417,7 +415,7 @@ void *receiveThread(void *threadArgument)
 				}
 				else
 				{
-					if(message->scFlag)
+					if(message->properties.scFlag)
 					{
 						if(	(message->commandCode >= JAUS_CREATE_SERVICE_CONNECTION && 
 							message->commandCode <= JAUS_TERMINATE_SERVICE_CONNECTION) ||
@@ -426,7 +424,7 @@ void *receiveThread(void *threadArgument)
 							message->commandCode == JAUS_CANCEL_EVENT)
 						{
 							// This is to take Service Connection Control messages and send them on through
-							// to the regular receiveQueue. JAUS 3.2 RA says to set the scFlag bit if it is
+							// to the regular receiveQueue. JAUS 3.2 RA says to set the properties.scFlag bit if it is
 							// a Service Connection Control message, but logically they do not need to go
 							// to the scManager and instead to the component
 							queuePush(nmi->receiveQueue, (void *)message);
@@ -814,14 +812,14 @@ void nodeManagerSendCoreServiceConnections(NodeManagerInterface nmi)
 	if(scList)
 	{
 		reportStatus = reportComponentStatusMessageCreate();
-		reportStatus->source->id = nmi->cmpt->address->id;
-		reportStatus->scFlag = JAUS_SERVICE_CONNECTION_MESSAGE;
+		jausAddressCopy(reportStatus->source, nmi->cmpt->address);
+		reportStatus->properties.scFlag = JAUS_SERVICE_CONNECTION_MESSAGE;
 		reportStatus->primaryStatusCode = nmi->cmpt->state;
 
 		sc = scList;
 		while(sc)
 		{
-				reportStatus->destination->id = sc->address->id;
+				jausAddressCopy(reportStatus->destination, sc->address);
 				reportStatus->sequenceNumber = sc->sequenceNumber;
 
 				message = reportComponentStatusMessageToJausMessage(reportStatus);
@@ -840,14 +838,14 @@ void nodeManagerSendCoreServiceConnections(NodeManagerInterface nmi)
 	if(scList)
 	{
 		reportAuthority = reportComponentAuthorityMessageCreate();
-		reportAuthority->source->id = nmi->cmpt->address->id;
-		reportAuthority->scFlag = JAUS_SERVICE_CONNECTION_MESSAGE;
+		jausAddressCopy(reportAuthority->source, nmi->cmpt->address);
+		reportAuthority->properties.scFlag = JAUS_SERVICE_CONNECTION_MESSAGE;
 		reportAuthority->authorityCode = nmi->cmpt->authority;
 
 		sc = scList;
 		while(sc)
 		{
-				reportAuthority->destination->id = sc->address->id;
+				jausAddressCopy(reportAuthority->destination, sc->address);
 				reportAuthority->sequenceNumber = sc->sequenceNumber;
 
 				message = reportComponentAuthorityMessageToJausMessage(reportAuthority);
