@@ -34,8 +34,8 @@
 #ifndef NODE_MANAGER_H
 #define NODE_MANAGER_H
 
-#include <cimar.h>
-#include <cimar/jaus.h>
+#include "cimar.h"
+#include "jaus.h"
 #include <pthread.h>
 #include <string.h>
 
