@@ -5,6 +5,7 @@
 	#define CLEAR_COMMAND "cls"
 #elif defined(__linux) || defined(linux) || defined(__linux__)
 	#include <unistd.h>
+	#include <termios.h>
 	#define CLEAR_COMMAND "clear"
 #endif
 
@@ -112,17 +113,40 @@ int main(int argc, char *args)
 
 int main(int argc, char *args)
 {
+	struct termios newTermio;
+	struct termios storedTermio;
+	bool running = true;
+	
+	tcgetattr(0,&storedTermio);
+	memcpy(&newTermio,&storedTermio,sizeof(struct termios));
+	
+	// Disable canonical mode, and set buffer size to 0 byte(s)
+	newTermio.c_lflag &= (~ICANON);
+	newTermio.c_lflag &= (~ECHO);
+	newTermio.c_cc[VTIME] = 0;
+	newTermio.c_cc[VMIN] = 0;
+	tcsetattr(0,TCSANOW,&newTermio);
+
 	FileLoader *configData = new FileLoader("nodeManager.conf");
 	MyHandler *handler = new MyHandler();
 
 	nm = new NodeManager(configData, handler);
-	//printHelpMenu();
-
-	while(1)
+	printHelpMenu();
+	
+	while(running)
 	{
+		if(getc(stdin) == 27) // ESC
+		{
+			running = false;
+		}
+		else
+		{
+			parseUserInput(getc(stdin));
+		}
 		usleep((unsigned int)(1*1e6));
 	}
 
+	tcsetattr(0, TCSANOW, &storedTermio);
 	return 0;
 }
 #endif

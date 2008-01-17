@@ -1,4 +1,3 @@
-#include "SafeStrings.h"
 #include "ErrorEvent.h"
 
 
@@ -37,11 +36,11 @@ std::string ErrorEvent::toString()
 
 	if(subType != ErrorEvent::Warning)
 	{
-		SAFE_SPRINTF(buf, 256, "ERROR (%s:%ld): %s\n", function.c_str(), line, this->userString.c_str());
+		sprintf(buf, "ERROR (%s:%ld): %s\n", function.c_str(), line, this->userString.c_str());
 	}
 	else
 	{
-		SAFE_SPRINTF(buf, 256, "WARN (%s:%ld): %s\n", function.c_str(), line, this->userString.c_str());
+		sprintf(buf, "WARN (%s:%ld): %s\n", function.c_str(), line, this->userString.c_str());
 	}
 
 	return buf;

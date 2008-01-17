@@ -1,4 +1,3 @@
-#include "SafeStrings.h"
 #include "OjUdpComponentInterface.h"
 #include "ErrorEvent.h"
 
@@ -98,7 +97,7 @@ void OjUdpComponentInterface::run()
 					componentId = (packet->buffer[1] & 0xFF);
 					if(componentId < JAUS_MINIMUM_COMPONENT_ID || componentId > JAUS_MAXIMUM_COMPONENT_ID)
 					{
-						SAFE_SPRINTF(buf, 256, "Invalid Component Id (%d) trying to check in.", componentId);
+						sprintf(buf, "Invalid Component Id (%d) trying to check in.", componentId);
 						ErrorEvent *e = new ErrorEvent(ErrorEvent::Configuration, __FUNCTION__, __LINE__, buf);
 						this->handler->handleEvent(e);
 						return;
@@ -107,7 +106,7 @@ void OjUdpComponentInterface::run()
 					address = this->nodeManager->checkInLocalComponent(componentId);
 					if(!address || !jausAddressIsValid(address))
 					{
-						SAFE_SPRINTF(buf, 256, "Cannot add local component with Id: %d.", componentId);
+						sprintf(buf, "Cannot add local component with Id: %d.", componentId);
 						ErrorEvent *e = new ErrorEvent(ErrorEvent::Warning, __FUNCTION__, __LINE__, buf);
 						this->handler->handleEvent(e);
 						

@@ -2,7 +2,6 @@
 #include "JausComponentCommunicationManager.h"
 #include "timeLib.h"
 #include "jaus.h"
-#include "SafeStrings.h"
 
 CommunicatorComponent::CommunicatorComponent(FileLoader *configData, EventHandler *handler, JausComponentCommunicationManager *cmptComms)
 {
@@ -1230,7 +1229,7 @@ bool CommunicatorComponent::processQueryIdentification(JausMessage message)
 			identification = systemTree->getSubsystemIdentification(cmpt->address);
 			if(strlen(identification) < JAUS_IDENTIFICATION_LENGTH_BYTES)
 			{
-				SAFE_SPRINTF(reportId->identification, JAUS_IDENTIFICATION_LENGTH_BYTES, "%s", identification);
+				sprintf(reportId->identification, "%s", identification);
 			}
 			else
 			{
@@ -1265,7 +1264,7 @@ bool CommunicatorComponent::processQueryIdentification(JausMessage message)
 			identification = systemTree->getNodeIdentification(cmpt->address);
 			if(strlen(identification) < JAUS_IDENTIFICATION_LENGTH_BYTES)
 			{
-				SAFE_SPRINTF(reportId->identification, JAUS_IDENTIFICATION_LENGTH_BYTES, "%s", identification);
+				sprintf(reportId->identification, "%s", identification);
 			}
 			else
 			{
@@ -1298,7 +1297,7 @@ bool CommunicatorComponent::processQueryIdentification(JausMessage message)
 			identification = cmpt->identification;
 			if(strlen(identification) < JAUS_IDENTIFICATION_LENGTH_BYTES)
 			{
-				SAFE_SPRINTF(reportId->identification, JAUS_IDENTIFICATION_LENGTH_BYTES, "%s", identification);
+				sprintf(reportId->identification, "%s", identification);
 			}
 			else
 			{
