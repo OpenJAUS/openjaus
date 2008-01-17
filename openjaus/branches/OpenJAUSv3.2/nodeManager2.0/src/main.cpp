@@ -116,6 +116,7 @@ int main(int argc, char *args)
 	struct termios newTermio;
 	struct termios storedTermio;
 	bool running = true;
+	char choice = 0;
 	
 	tcgetattr(0,&storedTermio);
 	memcpy(&newTermio,&storedTermio,sizeof(struct termios));
@@ -135,15 +136,16 @@ int main(int argc, char *args)
 	
 	while(running)
 	{
-		if(getc(stdin) == 27) // ESC
+		choice = getc(stdin);
+		if(choice == 27) // ESC
 		{
 			running = false;
 		}
 		else
 		{
-			parseUserInput(getc(stdin));
+			parseUserInput(choice);
 		}
-		usleep((unsigned int)(1*1e6));
+		usleep((unsigned int)(0.2*1e6));
 	}
 
 	tcsetattr(0, TCSANOW, &storedTermio);
