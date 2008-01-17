@@ -104,18 +104,15 @@ typedef struct
 
 typedef SetGlobalVectorMessageStruct* SetGlobalVectorMessage;
 
-SetGlobalVectorMessage setGlobalVectorMessageCreate(void);
-void setGlobalVectorMessageDestroy(SetGlobalVectorMessage);
+JAUS_EXPORT SetGlobalVectorMessage setGlobalVectorMessageCreate(void);
+JAUS_EXPORT void setGlobalVectorMessageDestroy(SetGlobalVectorMessage);
 
-JausBoolean setGlobalVectorMessageFromBuffer(SetGlobalVectorMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean setGlobalVectorMessageToBuffer(SetGlobalVectorMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean setGlobalVectorMessageFromBuffer(SetGlobalVectorMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean setGlobalVectorMessageToBuffer(SetGlobalVectorMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
+JAUS_EXPORT SetGlobalVectorMessage setGlobalVectorMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage setGlobalVectorMessageToJausMessage(SetGlobalVectorMessage message);
 
-SetGlobalVectorMessage setGlobalVectorMessageFromJausMessage(JausMessage jausMessage);
-JausMessage setGlobalVectorMessageToJausMessage(SetGlobalVectorMessage message);
-
-
-unsigned int setGlobalVectorMessageSize(SetGlobalVectorMessage message);
-
+JAUS_EXPORT unsigned int setGlobalVectorMessageSize(SetGlobalVectorMessage message);
 
 #endif // SET_GLOBAL_VECTOR_MESSAGE_H

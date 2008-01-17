@@ -119,18 +119,15 @@ typedef struct
 
 typedef ReportWrenchEffortMessageStruct* ReportWrenchEffortMessage;
 
-ReportWrenchEffortMessage reportWrenchEffortMessageCreate(void);
-void reportWrenchEffortMessageDestroy(ReportWrenchEffortMessage);
+JAUS_EXPORT ReportWrenchEffortMessage reportWrenchEffortMessageCreate(void);
+JAUS_EXPORT void reportWrenchEffortMessageDestroy(ReportWrenchEffortMessage);
 
-JausBoolean reportWrenchEffortMessageFromBuffer(ReportWrenchEffortMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean reportWrenchEffortMessageToBuffer(ReportWrenchEffortMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean reportWrenchEffortMessageFromBuffer(ReportWrenchEffortMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean reportWrenchEffortMessageToBuffer(ReportWrenchEffortMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
+JAUS_EXPORT ReportWrenchEffortMessage reportWrenchEffortMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage reportWrenchEffortMessageToJausMessage(ReportWrenchEffortMessage message);
 
-ReportWrenchEffortMessage reportWrenchEffortMessageFromJausMessage(JausMessage jausMessage);
-JausMessage reportWrenchEffortMessageToJausMessage(ReportWrenchEffortMessage message);
-
-
-unsigned int reportWrenchEffortMessageSize(ReportWrenchEffortMessage message);
-
+JAUS_EXPORT unsigned int reportWrenchEffortMessageSize(ReportWrenchEffortMessage message);
 
 #endif // REPORT_WRENCH_EFFORT_MESSAGE_H

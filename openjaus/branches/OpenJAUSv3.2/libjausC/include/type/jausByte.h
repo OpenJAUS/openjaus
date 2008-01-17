@@ -55,16 +55,16 @@
 
 typedef unsigned char JausByte;
 
-JausByte newJausByte(unsigned char val);
+JAUS_EXPORT JausByte newJausByte(unsigned char val);
 
-JausBoolean jausByteFromBuffer(JausByte *jByte, unsigned char *buf, unsigned int bufferSizeBytes);
-JausBoolean jausByteToBuffer(JausByte input, unsigned char *buf, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean jausByteFromBuffer(JausByte *jByte, unsigned char *buf, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean jausByteToBuffer(JausByte input, unsigned char *buf, unsigned int bufferSizeBytes);
 
-JausByte jausByteFromDouble(double val, double min, double max);
-double jausByteToDouble(JausByte input, double min, double max);
+JAUS_EXPORT JausByte jausByteFromDouble(double val, double min, double max);
+JAUS_EXPORT double jausByteToDouble(JausByte input, double min, double max);
 
-JausBoolean jausByteIsBitSet(JausByte byte, int bit);
-JausBoolean jausByteSetBit(JausByte *byte, int bit);
-JausBoolean jausByteClearBit(JausByte *byte, int bit);
+JAUS_EXPORT JausBoolean jausByteIsBitSet(JausByte byte, int bit);
+JAUS_EXPORT JausBoolean jausByteSetBit(JausByte *byte, int bit);
+JAUS_EXPORT JausBoolean jausByteClearBit(JausByte *byte, int bit);
 
 #endif //JAUS_BYTE_H

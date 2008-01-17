@@ -140,18 +140,15 @@ typedef struct
 
 typedef CreateEventMessageStruct* CreateEventMessage;
 
-CreateEventMessage createEventMessageCreate(void);
-void createEventMessageDestroy(CreateEventMessage);
+JAUS_EXPORT CreateEventMessage createEventMessageCreate(void);
+JAUS_EXPORT void createEventMessageDestroy(CreateEventMessage);
 
-JausBoolean createEventMessageFromBuffer(CreateEventMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean createEventMessageToBuffer(CreateEventMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean createEventMessageFromBuffer(CreateEventMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean createEventMessageToBuffer(CreateEventMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
+JAUS_EXPORT CreateEventMessage createEventMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage createEventMessageToJausMessage(CreateEventMessage message);
 
-CreateEventMessage createEventMessageFromJausMessage(JausMessage jausMessage);
-JausMessage createEventMessageToJausMessage(CreateEventMessage message);
-
-
-unsigned int createEventMessageSize(CreateEventMessage message);
-
+JAUS_EXPORT unsigned int createEventMessageSize(CreateEventMessage message);
 
 #endif // CREATE_EVENT_MESSAGE_H

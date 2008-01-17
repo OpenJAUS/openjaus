@@ -90,18 +90,16 @@ typedef struct
 
 typedef ClearEmergencyMessageStruct* ClearEmergencyMessage;
 
-ClearEmergencyMessage clearEmergencyMessageCreate(void);
-void clearEmergencyMessageDestroy(ClearEmergencyMessage);
+JAUS_EXPORT ClearEmergencyMessage clearEmergencyMessageCreate(void);
+JAUS_EXPORT void clearEmergencyMessageDestroy(ClearEmergencyMessage);
 
-JausBoolean clearEmergencyMessageFromBuffer(ClearEmergencyMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean clearEmergencyMessageToBuffer(ClearEmergencyMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean clearEmergencyMessageFromBuffer(ClearEmergencyMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean clearEmergencyMessageToBuffer(ClearEmergencyMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
+JAUS_EXPORT ClearEmergencyMessage clearEmergencyMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage clearEmergencyMessageToJausMessage(ClearEmergencyMessage message);
 
-ClearEmergencyMessage clearEmergencyMessageFromJausMessage(JausMessage jausMessage);
-JausMessage clearEmergencyMessageToJausMessage(ClearEmergencyMessage message);
-
-
-unsigned int clearEmergencyMessageSize(ClearEmergencyMessage message);
+JAUS_EXPORT unsigned int clearEmergencyMessageSize(ClearEmergencyMessage message);
 
 
 #endif // CLEAR_EMERGENCY_MESSAGE_H

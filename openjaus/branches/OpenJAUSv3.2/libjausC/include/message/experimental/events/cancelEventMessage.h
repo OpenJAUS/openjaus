@@ -94,16 +94,14 @@ typedef struct
 
 typedef CancelEventMessageStruct* CancelEventMessage;
 
-CancelEventMessage cancelEventMessageCreate(void);
-void cancelEventMessageDestroy(CancelEventMessage);
+JAUS_EXPORT CancelEventMessage cancelEventMessageCreate(void);
+JAUS_EXPORT void cancelEventMessageDestroy(CancelEventMessage);
 
-JausBoolean cancelEventMessageFromBuffer(CancelEventMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean cancelEventMessageToBuffer(CancelEventMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean cancelEventMessageFromBuffer(CancelEventMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean cancelEventMessageToBuffer(CancelEventMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
-
-CancelEventMessage cancelEventMessageFromJausMessage(JausMessage jausMessage);
-JausMessage cancelEventMessageToJausMessage(CancelEventMessage message);
-
+JAUS_EXPORT CancelEventMessage cancelEventMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage cancelEventMessageToJausMessage(CancelEventMessage message);
 
 unsigned int cancelEventMessageSize(CancelEventMessage message);
 

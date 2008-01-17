@@ -101,18 +101,15 @@ typedef struct
 
 typedef ConfirmServiceConnectionMessageStruct* ConfirmServiceConnectionMessage;
 
-ConfirmServiceConnectionMessage confirmServiceConnectionMessageCreate(void);
-void confirmServiceConnectionMessageDestroy(ConfirmServiceConnectionMessage);
+JAUS_EXPORT ConfirmServiceConnectionMessage confirmServiceConnectionMessageCreate(void);
+JAUS_EXPORT void confirmServiceConnectionMessageDestroy(ConfirmServiceConnectionMessage);
 
-JausBoolean confirmServiceConnectionMessageFromBuffer(ConfirmServiceConnectionMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean confirmServiceConnectionMessageToBuffer(ConfirmServiceConnectionMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean confirmServiceConnectionMessageFromBuffer(ConfirmServiceConnectionMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean confirmServiceConnectionMessageToBuffer(ConfirmServiceConnectionMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
+JAUS_EXPORT ConfirmServiceConnectionMessage confirmServiceConnectionMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage confirmServiceConnectionMessageToJausMessage(ConfirmServiceConnectionMessage message);
 
-ConfirmServiceConnectionMessage confirmServiceConnectionMessageFromJausMessage(JausMessage jausMessage);
-JausMessage confirmServiceConnectionMessageToJausMessage(ConfirmServiceConnectionMessage message);
-
-
-unsigned int confirmServiceConnectionMessageSize(ConfirmServiceConnectionMessage message);
-
+JAUS_EXPORT unsigned int confirmServiceConnectionMessageSize(ConfirmServiceConnectionMessage message);
 
 #endif // CONFIRM_SERVICE_CONNECTION_MESSAGE_H

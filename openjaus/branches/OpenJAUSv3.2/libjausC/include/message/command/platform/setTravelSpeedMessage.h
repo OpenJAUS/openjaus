@@ -90,18 +90,15 @@ typedef struct
 
 typedef SetTravelSpeedMessageStruct* SetTravelSpeedMessage;
 
-SetTravelSpeedMessage setTravelSpeedMessageCreate(void);
-void setTravelSpeedMessageDestroy(SetTravelSpeedMessage);
+JAUS_EXPORT SetTravelSpeedMessage setTravelSpeedMessageCreate(void);
+JAUS_EXPORT void setTravelSpeedMessageDestroy(SetTravelSpeedMessage);
 
-JausBoolean setTravelSpeedMessageFromBuffer(SetTravelSpeedMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean setTravelSpeedMessageToBuffer(SetTravelSpeedMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean setTravelSpeedMessageFromBuffer(SetTravelSpeedMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean setTravelSpeedMessageToBuffer(SetTravelSpeedMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
+JAUS_EXPORT SetTravelSpeedMessage setTravelSpeedMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage setTravelSpeedMessageToJausMessage(SetTravelSpeedMessage message);
 
-SetTravelSpeedMessage setTravelSpeedMessageFromJausMessage(JausMessage jausMessage);
-JausMessage setTravelSpeedMessageToJausMessage(SetTravelSpeedMessage message);
-
-
-unsigned int setTravelSpeedMessageSize(SetTravelSpeedMessage message);
-
+JAUS_EXPORT unsigned int setTravelSpeedMessageSize(SetTravelSpeedMessage message);
 
 #endif // SET_TRAVEL_SPEED_MESSAGE_H

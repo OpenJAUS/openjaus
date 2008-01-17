@@ -93,16 +93,16 @@ typedef struct
 
 typedef ReportPayloadDataElementMessageStruct* ReportPayloadDataElementMessage;
 
-ReportPayloadDataElementMessage reportPayloadDataElementMessageCreate(void);
-void reportPayloadDataElementMessageDestroy(ReportPayloadDataElementMessage);
+JAUS_EXPORT ReportPayloadDataElementMessage reportPayloadDataElementMessageCreate(void);
+JAUS_EXPORT void reportPayloadDataElementMessageDestroy(ReportPayloadDataElementMessage);
 
-JausBoolean reportPayloadDataElementMessageFromBuffer(ReportPayloadDataElementMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean reportPayloadDataElementMessageToBuffer(ReportPayloadDataElementMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean reportPayloadDataElementMessageFromBuffer(ReportPayloadDataElementMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean reportPayloadDataElementMessageToBuffer(ReportPayloadDataElementMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
-ReportPayloadDataElementMessage reportPayloadDataElementMessageFromJausMessage(JausMessage jausMessage);
-JausMessage reportPayloadDataElementMessageToJausMessage(ReportPayloadDataElementMessage message);
+JAUS_EXPORT ReportPayloadDataElementMessage reportPayloadDataElementMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage reportPayloadDataElementMessageToJausMessage(ReportPayloadDataElementMessage message);
 
-unsigned int reportPayloadDataElementMessageSize(ReportPayloadDataElementMessage message);
+JAUS_EXPORT unsigned int reportPayloadDataElementMessageSize(ReportPayloadDataElementMessage message);
 
 #endif
 

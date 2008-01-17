@@ -321,18 +321,18 @@ unsigned int vectorObjectSizeBytes(JausWorldModelVectorObject object, JausBoolea
 }
 
 // JausWorldModelVectorObject Type To String
-int vectorObjectTypeToString(JausWorldModelVectorObject object, char *string)
+int vectorObjectTypeToString(JausWorldModelVectorObject object, char *string, size_t stringLength)
 {
 	switch(object->type)
 	{
 		case JAUS_WM_POINT_TYPE:
-			return sprintf(string, "Point");					
+			return SAFE_SPRINTF(string, stringLength, "Point");					
 		case JAUS_WM_LINE_TYPE:
-			return sprintf(string, "Line");
+			return SAFE_SPRINTF(string, stringLength, "Line");
 		case JAUS_WM_POLYGON_TYPE:
-			return sprintf(string, "Polygon");
+			return SAFE_SPRINTF(string, stringLength, "Polygon");
 		default:
-			return sprintf(string, "Unknown");
+			return SAFE_SPRINTF(string, stringLength, "Unknown");
 	}
 }
 

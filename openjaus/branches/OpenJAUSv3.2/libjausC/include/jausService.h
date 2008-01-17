@@ -79,41 +79,41 @@ struct JausServiceStruct
 typedef struct JausServiceStruct *JausService;
 
 // Services JausArray Constructor
-JausArray jausServicesCreate(void);
+JAUS_EXPORT JausArray jausServicesCreate(void);
 
 // Services JausArray Destructor
-void jausServicesDestroy(JausArray jausServices);
+JAUS_EXPORT void jausServicesDestroy(JausArray jausServices);
 
 // Services Duplication
-JausArray jausServicesClone(JausArray sourceServices);
+JAUS_EXPORT JausArray jausServicesClone(JausArray sourceServices);
 
 // Service Constructor
-JausService jausServiceCreate(JausUnsignedShort type);
+JAUS_EXPORT JausService jausServiceCreate(JausUnsignedShort type);
 
 // Command Constructor
-JausCommand jausCommandCreate(void);
+JAUS_EXPORT JausCommand jausCommandCreate(void);
 
 // Service Destructor
-void jausServiceDestroy(JausService service);
+JAUS_EXPORT void jausServiceDestroy(JausService service);
 
 // Command Destructor
-void jausCommandDestroy(JausCommand command);
+JAUS_EXPORT void jausCommandDestroy(JausCommand command);
 
 // ************************************************************************************************************************************
 //			Report Services End User Functions
 // ************************************************************************************************************************************
 
-JausBoolean jausServiceAddCoreServices(JausArray jausServices);
+JAUS_EXPORT JausBoolean jausServiceAddCoreServices(JausArray jausServices);
 
-JausService jausServiceCreateService(JausUnsignedShort serviceType);
+JAUS_EXPORT JausService jausServiceCreateService(JausUnsignedShort serviceType);
 
-JausBoolean jausServiceAddInputCommand(JausService service, JausUnsignedShort commandCode, JausIntegerPresenceVector presenceVector);
+JAUS_EXPORT JausBoolean jausServiceAddInputCommand(JausService service, JausUnsignedShort commandCode, JausIntegerPresenceVector presenceVector);
 
-JausBoolean jausServiceAddOutputCommand(JausService service, JausUnsignedShort commandCode, JausIntegerPresenceVector presenceVector);
+JAUS_EXPORT JausBoolean jausServiceAddOutputCommand(JausService service, JausUnsignedShort commandCode, JausIntegerPresenceVector presenceVector);
 
-JausBoolean jausServiceAddService(JausArray jausServices, JausService service);
+JAUS_EXPORT JausBoolean jausServiceAddService(JausArray jausServices, JausService service);
 
-JausService jausServiceRetrieveService(JausArray jausServices, JausUnsignedShort serviceType);
+JAUS_EXPORT JausService jausServiceRetrieveService(JausArray jausServices, JausUnsignedShort serviceType);
 
 #endif
 

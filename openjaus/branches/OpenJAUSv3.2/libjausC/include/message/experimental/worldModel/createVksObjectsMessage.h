@@ -101,16 +101,15 @@ typedef struct
 
 typedef CreateVksObjectsMessageStruct* CreateVksObjectsMessage;
 
-CreateVksObjectsMessage createVksObjectsMessageCreate(void);
-void createVksObjectsMessageDestroy(CreateVksObjectsMessage);
+JAUS_EXPORT CreateVksObjectsMessage createVksObjectsMessageCreate(void);
+JAUS_EXPORT void createVksObjectsMessageDestroy(CreateVksObjectsMessage);
 
-JausBoolean createVksObjectsMessageFromBuffer(CreateVksObjectsMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean createVksObjectsMessageToBuffer(CreateVksObjectsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean createVksObjectsMessageFromBuffer(CreateVksObjectsMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean createVksObjectsMessageToBuffer(CreateVksObjectsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
-CreateVksObjectsMessage createVksObjectsMessageFromJausMessage(JausMessage jausMessage);
-JausMessage createVksObjectsMessageToJausMessage(CreateVksObjectsMessage message);
+JAUS_EXPORT CreateVksObjectsMessage createVksObjectsMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage createVksObjectsMessageToJausMessage(CreateVksObjectsMessage message);
 
-unsigned int createVksObjectsMessageSize(CreateVksObjectsMessage message);
-
+JAUS_EXPORT unsigned int createVksObjectsMessageSize(CreateVksObjectsMessage message);
 
 #endif // CREATE_VKS_OBJECTS_MESSAGE_H

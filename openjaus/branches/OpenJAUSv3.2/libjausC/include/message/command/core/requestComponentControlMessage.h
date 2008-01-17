@@ -90,18 +90,15 @@ typedef struct
 
 typedef RequestComponentControlMessageStruct* RequestComponentControlMessage;
 
-RequestComponentControlMessage requestComponentControlMessageCreate(void);
-void requestComponentControlMessageDestroy(RequestComponentControlMessage);
+JAUS_EXPORT RequestComponentControlMessage requestComponentControlMessageCreate(void);
+JAUS_EXPORT void requestComponentControlMessageDestroy(RequestComponentControlMessage);
 
-JausBoolean requestComponentControlMessageFromBuffer(RequestComponentControlMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean requestComponentControlMessageToBuffer(RequestComponentControlMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean requestComponentControlMessageFromBuffer(RequestComponentControlMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean requestComponentControlMessageToBuffer(RequestComponentControlMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
+JAUS_EXPORT RequestComponentControlMessage requestComponentControlMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage requestComponentControlMessageToJausMessage(RequestComponentControlMessage message);
 
-RequestComponentControlMessage requestComponentControlMessageFromJausMessage(JausMessage jausMessage);
-JausMessage requestComponentControlMessageToJausMessage(RequestComponentControlMessage message);
-
-
-unsigned int requestComponentControlMessageSize(RequestComponentControlMessage message);
-
+JAUS_EXPORT unsigned int requestComponentControlMessageSize(RequestComponentControlMessage message);
 
 #endif // REQUEST_COMPONENT_CONTROL_MESSAGE_H

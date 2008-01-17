@@ -98,18 +98,15 @@ typedef struct
 
 typedef SetTimeMessageStruct* SetTimeMessage;
 
-SetTimeMessage setTimeMessageCreate(void);
-void setTimeMessageDestroy(SetTimeMessage);
+JAUS_EXPORT SetTimeMessage setTimeMessageCreate(void);
+JAUS_EXPORT void setTimeMessageDestroy(SetTimeMessage);
 
-JausBoolean setTimeMessageFromBuffer(SetTimeMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean setTimeMessageToBuffer(SetTimeMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean setTimeMessageFromBuffer(SetTimeMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean setTimeMessageToBuffer(SetTimeMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
+JAUS_EXPORT SetTimeMessage setTimeMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage setTimeMessageToJausMessage(SetTimeMessage message);
 
-SetTimeMessage setTimeMessageFromJausMessage(JausMessage jausMessage);
-JausMessage setTimeMessageToJausMessage(SetTimeMessage message);
-
-
-unsigned int setTimeMessageSize(SetTimeMessage message);
-
+JAUS_EXPORT unsigned int setTimeMessageSize(SetTimeMessage message);
 
 #endif // SET_TIME_MESSAGE_H

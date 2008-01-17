@@ -54,7 +54,6 @@
 #define JAUS_WAYPOINT_PV_YAW_BIT		3
 #endif
 
-
 typedef struct
 {
 	// Include all parameters from a JausMessage structure:
@@ -106,16 +105,15 @@ typedef struct
 
 typedef ReportGlobalWaypointMessageStruct* ReportGlobalWaypointMessage;
 
-ReportGlobalWaypointMessage reportGlobalWaypointMessageCreate(void);
-void reportGlobalWaypointMessageDestroy(ReportGlobalWaypointMessage);
+JAUS_EXPORT ReportGlobalWaypointMessage reportGlobalWaypointMessageCreate(void);
+JAUS_EXPORT void reportGlobalWaypointMessageDestroy(ReportGlobalWaypointMessage);
 
-JausBoolean reportGlobalWaypointMessageFromBuffer(ReportGlobalWaypointMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean reportGlobalWaypointMessageToBuffer(ReportGlobalWaypointMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean reportGlobalWaypointMessageFromBuffer(ReportGlobalWaypointMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean reportGlobalWaypointMessageToBuffer(ReportGlobalWaypointMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
-ReportGlobalWaypointMessage reportGlobalWaypointMessageFromJausMessage(JausMessage jausMessage);
-JausMessage reportGlobalWaypointMessageToJausMessage(ReportGlobalWaypointMessage message);
+JAUS_EXPORT ReportGlobalWaypointMessage reportGlobalWaypointMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage reportGlobalWaypointMessageToJausMessage(ReportGlobalWaypointMessage message);
 
-unsigned int reportGlobalWaypointMessageSize(ReportGlobalWaypointMessage message);
-
+JAUS_EXPORT unsigned int reportGlobalWaypointMessageSize(ReportGlobalWaypointMessage message);
 
 #endif // REPORT_GLOBAL_WAYPOINT_MESSAGE_H

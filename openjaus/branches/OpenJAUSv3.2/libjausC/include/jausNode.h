@@ -61,15 +61,15 @@ typedef struct
 
 typedef JausNodeStruct *JausNode;
 
-JausNode jausNodeCreate(void);
-void jausNodeDestroy(JausNode);
-JausNode jausNodeClone(JausNode);
-JausBoolean jausNodeHasIdentification(JausNode node);
-JausBoolean jausNodeHasConfiguration(JausNode node);
+JAUS_EXPORT JausNode jausNodeCreate(void);
+JAUS_EXPORT void jausNodeDestroy(JausNode node);
+JAUS_EXPORT JausNode jausNodeClone(JausNode node);
+JAUS_EXPORT JausBoolean jausNodeHasIdentification(JausNode node);
+JAUS_EXPORT JausBoolean jausNodeHasConfiguration(JausNode node);
 
-JausBoolean jausNodeFreeMemory(JausNode);
-void jausNodeUpdateTimestamp(JausNode);
-JausBoolean jausNodeIsTimedOut(JausNode);
-int jausNodeToString(JausNode, char *);
+JAUS_EXPORT JausBoolean jausNodeFreeMemory(JausNode node);
+JAUS_EXPORT void jausNodeUpdateTimestamp(JausNode node);
+JAUS_EXPORT JausBoolean jausNodeIsTimedOut(JausNode node);
+JAUS_EXPORT int jausNodeToString(JausNode node, char *buf, size_t buffSize);
 
 #endif //JAUS_NODE_H

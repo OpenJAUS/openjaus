@@ -91,20 +91,20 @@ typedef struct JausEventListStruct
 typedef JausEventStruct *JausEvent;
 
 // JausEventLimit Constructor
-JausEventLimit jausEventLimitCreate();
+JAUS_EXPORT JausEventLimit jausEventLimitCreate();
 
 // JausEventLimit Destructor
-void jausEventLimitDestroy(JausEventLimit limit);
+JAUS_EXPORT void jausEventLimitDestroy(JausEventLimit limit);
 
 // JausEventLimit Constructor (from Buffer)
-JausEventLimit jausEventLimitFromBuffer(unsigned char *buffer, unsigned int bufferSizeBytes, JausByte dataType);
+JAUS_EXPORT JausEventLimit jausEventLimitFromBuffer(unsigned char *buffer, unsigned int bufferSizeBytes, JausByte dataType);
 
 // JausEventLimit To Buffer
-JausBoolean jausEventLimitToBuffer(JausEventLimit limit, unsigned char *buffer, unsigned int bufferSizeBytes, JausByte dataType);
+JAUS_EXPORT JausBoolean jausEventLimitToBuffer(JausEventLimit limit, unsigned char *buffer, unsigned int bufferSizeBytes, JausByte dataType);
 
-unsigned int jausEventLimitByteSize(JausByte dataType);
+JAUS_EXPORT unsigned int jausEventLimitByteSize(JausByte dataType);
 
-JausEvent jausEventCreate();
-void jausEventDestroy(JausEvent event);
+JAUS_EXPORT JausEvent jausEventCreate();
+JAUS_EXPORT void jausEventDestroy(JausEvent event);
 
 #endif

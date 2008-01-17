@@ -90,16 +90,15 @@ typedef struct
 
 typedef QueryWrenchEffortMessageStruct* QueryWrenchEffortMessage;
 
-QueryWrenchEffortMessage queryWrenchEffortMessageCreate(void);
-void queryWrenchEffortMessageDestroy(QueryWrenchEffortMessage);
+JAUS_EXPORT QueryWrenchEffortMessage queryWrenchEffortMessageCreate(void);
+JAUS_EXPORT void queryWrenchEffortMessageDestroy(QueryWrenchEffortMessage);
 
-JausBoolean queryWrenchEffortMessageFromBuffer(QueryWrenchEffortMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean queryWrenchEffortMessageToBuffer(QueryWrenchEffortMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean queryWrenchEffortMessageFromBuffer(QueryWrenchEffortMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean queryWrenchEffortMessageToBuffer(QueryWrenchEffortMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
-QueryWrenchEffortMessage queryWrenchEffortMessageFromJausMessage(JausMessage jausMessage);
-JausMessage queryWrenchEffortMessageToJausMessage(QueryWrenchEffortMessage message);
+JAUS_EXPORT QueryWrenchEffortMessage queryWrenchEffortMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage queryWrenchEffortMessageToJausMessage(QueryWrenchEffortMessage message);
 
-unsigned int queryWrenchEffortMessageSize(QueryWrenchEffortMessage message);
-
+JAUS_EXPORT unsigned int queryWrenchEffortMessageSize(QueryWrenchEffortMessage message);
 
 #endif // QUERY_WRENCH_EFFORT_MESSAGE_H

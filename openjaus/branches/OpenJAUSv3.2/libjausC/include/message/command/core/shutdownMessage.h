@@ -90,18 +90,15 @@ typedef struct
 
 typedef ShutdownMessageStruct* ShutdownMessage;
 
-ShutdownMessage shutdownMessageCreate(void);
-void shutdownMessageDestroy(ShutdownMessage);
+JAUS_EXPORT ShutdownMessage shutdownMessageCreate(void);
+JAUS_EXPORT void shutdownMessageDestroy(ShutdownMessage);
 
-JausBoolean shutdownMessageFromBuffer(ShutdownMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean shutdownMessageToBuffer(ShutdownMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean shutdownMessageFromBuffer(ShutdownMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean shutdownMessageToBuffer(ShutdownMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
+JAUS_EXPORT ShutdownMessage shutdownMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage shutdownMessageToJausMessage(ShutdownMessage message);
 
-ShutdownMessage shutdownMessageFromJausMessage(JausMessage jausMessage);
-JausMessage shutdownMessageToJausMessage(ShutdownMessage message);
-
-
-unsigned int shutdownMessageSize(ShutdownMessage message);
-
+JAUS_EXPORT unsigned int shutdownMessageSize(ShutdownMessage message);
 
 #endif // SHUTDOWN_MESSAGE_H

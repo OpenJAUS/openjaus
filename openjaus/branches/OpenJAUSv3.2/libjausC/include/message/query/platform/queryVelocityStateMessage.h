@@ -90,16 +90,15 @@ typedef struct
 
 typedef QueryVelocityStateMessageStruct* QueryVelocityStateMessage;
 
-QueryVelocityStateMessage queryVelocityStateMessageCreate(void);
-void queryVelocityStateMessageDestroy(QueryVelocityStateMessage);
+JAUS_EXPORT QueryVelocityStateMessage queryVelocityStateMessageCreate(void);
+JAUS_EXPORT void queryVelocityStateMessageDestroy(QueryVelocityStateMessage);
 
-JausBoolean queryVelocityStateMessageFromBuffer(QueryVelocityStateMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean queryVelocityStateMessageToBuffer(QueryVelocityStateMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean queryVelocityStateMessageFromBuffer(QueryVelocityStateMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean queryVelocityStateMessageToBuffer(QueryVelocityStateMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
-QueryVelocityStateMessage queryVelocityStateMessageFromJausMessage(JausMessage jausMessage);
-JausMessage queryVelocityStateMessageToJausMessage(QueryVelocityStateMessage message);
+JAUS_EXPORT QueryVelocityStateMessage queryVelocityStateMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage queryVelocityStateMessageToJausMessage(QueryVelocityStateMessage message);
 
-unsigned int queryVelocityStateMessageSize(QueryVelocityStateMessage message);
-
+JAUS_EXPORT unsigned int queryVelocityStateMessageSize(QueryVelocityStateMessage message);
 
 #endif // QUERY_VELOCITY_STATE_MESSAGE_H

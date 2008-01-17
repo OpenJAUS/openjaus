@@ -90,16 +90,15 @@ typedef struct
 
 typedef QueryDiscreteDevicesMessageStruct* QueryDiscreteDevicesMessage;
 
-QueryDiscreteDevicesMessage queryDiscreteDevicesMessageCreate(void);
-void queryDiscreteDevicesMessageDestroy(QueryDiscreteDevicesMessage);
+JAUS_EXPORT QueryDiscreteDevicesMessage queryDiscreteDevicesMessageCreate(void);
+JAUS_EXPORT void queryDiscreteDevicesMessageDestroy(QueryDiscreteDevicesMessage);
 
-JausBoolean queryDiscreteDevicesMessageFromBuffer(QueryDiscreteDevicesMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean queryDiscreteDevicesMessageToBuffer(QueryDiscreteDevicesMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean queryDiscreteDevicesMessageFromBuffer(QueryDiscreteDevicesMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean queryDiscreteDevicesMessageToBuffer(QueryDiscreteDevicesMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
-QueryDiscreteDevicesMessage queryDiscreteDevicesMessageFromJausMessage(JausMessage jausMessage);
-JausMessage queryDiscreteDevicesMessageToJausMessage(QueryDiscreteDevicesMessage message);
+JAUS_EXPORT QueryDiscreteDevicesMessage queryDiscreteDevicesMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage queryDiscreteDevicesMessageToJausMessage(QueryDiscreteDevicesMessage message);
 
-unsigned int queryDiscreteDevicesMessageSize(QueryDiscreteDevicesMessage message);
-
+JAUS_EXPORT unsigned int queryDiscreteDevicesMessageSize(QueryDiscreteDevicesMessage message);
 
 #endif // QUERY_DISCRETE_DEVICES_MESSAGE_H

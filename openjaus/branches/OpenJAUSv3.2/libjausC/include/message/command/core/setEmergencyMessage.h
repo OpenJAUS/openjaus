@@ -91,18 +91,15 @@ typedef struct
 
 typedef SetEmergencyMessageStruct* SetEmergencyMessage;
 
-SetEmergencyMessage setEmergencyMessageCreate(void);
-void setEmergencyMessageDestroy(SetEmergencyMessage);
+JAUS_EXPORT SetEmergencyMessage setEmergencyMessageCreate(void);
+JAUS_EXPORT void setEmergencyMessageDestroy(SetEmergencyMessage);
 
-JausBoolean setEmergencyMessageFromBuffer(SetEmergencyMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean setEmergencyMessageToBuffer(SetEmergencyMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean setEmergencyMessageFromBuffer(SetEmergencyMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean setEmergencyMessageToBuffer(SetEmergencyMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
+JAUS_EXPORT SetEmergencyMessage setEmergencyMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage setEmergencyMessageToJausMessage(SetEmergencyMessage message);
 
-SetEmergencyMessage setEmergencyMessageFromJausMessage(JausMessage jausMessage);
-JausMessage setEmergencyMessageToJausMessage(SetEmergencyMessage message);
-
-
-unsigned int setEmergencyMessageSize(SetEmergencyMessage message);
-
+JAUS_EXPORT unsigned int setEmergencyMessageSize(SetEmergencyMessage message);
 
 #endif // SET_EMERGENCY_MESSAGE_H

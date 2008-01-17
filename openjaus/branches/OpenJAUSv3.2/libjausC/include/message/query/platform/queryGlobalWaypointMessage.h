@@ -90,16 +90,15 @@ typedef struct
 
 typedef QueryGlobalWaypointMessageStruct* QueryGlobalWaypointMessage;
 
-QueryGlobalWaypointMessage queryGlobalWaypointMessageCreate(void);
-void queryGlobalWaypointMessageDestroy(QueryGlobalWaypointMessage);
+JAUS_EXPORT QueryGlobalWaypointMessage queryGlobalWaypointMessageCreate(void);
+JAUS_EXPORT void queryGlobalWaypointMessageDestroy(QueryGlobalWaypointMessage);
 
-JausBoolean queryGlobalWaypointMessageFromBuffer(QueryGlobalWaypointMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean queryGlobalWaypointMessageToBuffer(QueryGlobalWaypointMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean queryGlobalWaypointMessageFromBuffer(QueryGlobalWaypointMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean queryGlobalWaypointMessageToBuffer(QueryGlobalWaypointMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
-QueryGlobalWaypointMessage queryGlobalWaypointMessageFromJausMessage(JausMessage jausMessage);
-JausMessage queryGlobalWaypointMessageToJausMessage(QueryGlobalWaypointMessage message);
+JAUS_EXPORT QueryGlobalWaypointMessage queryGlobalWaypointMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage queryGlobalWaypointMessageToJausMessage(QueryGlobalWaypointMessage message);
 
-unsigned int queryGlobalWaypointMessageSize(QueryGlobalWaypointMessage message);
-
+JAUS_EXPORT unsigned int queryGlobalWaypointMessageSize(QueryGlobalWaypointMessage message);
 
 #endif // QUERY_GLOBAL_WAYPOINT_MESSAGE_H

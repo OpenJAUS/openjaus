@@ -99,18 +99,15 @@ typedef struct
 
 typedef ReportVksObjectsMessageStruct* ReportVksObjectsMessage;
 
-ReportVksObjectsMessage reportVksObjectsMessageCreate(void);
-void reportVksObjectsMessageDestroy(ReportVksObjectsMessage);
+JAUS_EXPORT ReportVksObjectsMessage reportVksObjectsMessageCreate(void);
+JAUS_EXPORT void reportVksObjectsMessageDestroy(ReportVksObjectsMessage);
 
-JausBoolean reportVksObjectsMessageFromBuffer(ReportVksObjectsMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean reportVksObjectsMessageToBuffer(ReportVksObjectsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean reportVksObjectsMessageFromBuffer(ReportVksObjectsMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean reportVksObjectsMessageToBuffer(ReportVksObjectsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
+JAUS_EXPORT ReportVksObjectsMessage reportVksObjectsMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage reportVksObjectsMessageToJausMessage(ReportVksObjectsMessage message);
 
-ReportVksObjectsMessage reportVksObjectsMessageFromJausMessage(JausMessage jausMessage);
-JausMessage reportVksObjectsMessageToJausMessage(ReportVksObjectsMessage message);
-
-
-unsigned int reportVksObjectsMessageSize(ReportVksObjectsMessage message);
-
+JAUS_EXPORT unsigned int reportVksObjectsMessageSize(ReportVksObjectsMessage message);
 
 #endif // REPORT_VKS_OBJECTS_MESSAGE_H

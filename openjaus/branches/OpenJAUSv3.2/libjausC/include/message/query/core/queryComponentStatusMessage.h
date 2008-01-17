@@ -91,18 +91,15 @@ typedef struct
 
 typedef QueryComponentStatusMessageStruct* QueryComponentStatusMessage;
 
-QueryComponentStatusMessage queryComponentStatusMessageCreate(void);
-void queryComponentStatusMessageDestroy(QueryComponentStatusMessage);
+JAUS_EXPORT QueryComponentStatusMessage queryComponentStatusMessageCreate(void);
+JAUS_EXPORT void queryComponentStatusMessageDestroy(QueryComponentStatusMessage);
 
-JausBoolean queryComponentStatusMessageFromBuffer(QueryComponentStatusMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean queryComponentStatusMessageToBuffer(QueryComponentStatusMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean queryComponentStatusMessageFromBuffer(QueryComponentStatusMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean queryComponentStatusMessageToBuffer(QueryComponentStatusMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
+JAUS_EXPORT QueryComponentStatusMessage queryComponentStatusMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage queryComponentStatusMessageToJausMessage(QueryComponentStatusMessage message);
 
-QueryComponentStatusMessage queryComponentStatusMessageFromJausMessage(JausMessage jausMessage);
-JausMessage queryComponentStatusMessageToJausMessage(QueryComponentStatusMessage message);
-
-
-unsigned int queryComponentStatusMessageSize(QueryComponentStatusMessage message);
-
+JAUS_EXPORT unsigned int queryComponentStatusMessageSize(QueryComponentStatusMessage message);
 
 #endif // QUERY_COMPONENT_STATUS_MESSAGE_H

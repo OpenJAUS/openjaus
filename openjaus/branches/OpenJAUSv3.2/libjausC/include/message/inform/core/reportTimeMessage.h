@@ -99,18 +99,15 @@ typedef struct
 
 typedef ReportTimeMessageStruct* ReportTimeMessage;
 
-ReportTimeMessage reportTimeMessageCreate(void);
-void reportTimeMessageDestroy(ReportTimeMessage);
+JAUS_EXPORT ReportTimeMessage reportTimeMessageCreate(void);
+JAUS_EXPORT void reportTimeMessageDestroy(ReportTimeMessage);
 
-JausBoolean reportTimeMessageFromBuffer(ReportTimeMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean reportTimeMessageToBuffer(ReportTimeMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean reportTimeMessageFromBuffer(ReportTimeMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean reportTimeMessageToBuffer(ReportTimeMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
+JAUS_EXPORT ReportTimeMessage reportTimeMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage reportTimeMessageToJausMessage(ReportTimeMessage message);
 
-ReportTimeMessage reportTimeMessageFromJausMessage(JausMessage jausMessage);
-JausMessage reportTimeMessageToJausMessage(ReportTimeMessage message);
-
-
-unsigned int reportTimeMessageSize(ReportTimeMessage message);
-
+JAUS_EXPORT unsigned int reportTimeMessageSize(ReportTimeMessage message);
 
 #endif // REPORT_TIME_MESSAGE_H

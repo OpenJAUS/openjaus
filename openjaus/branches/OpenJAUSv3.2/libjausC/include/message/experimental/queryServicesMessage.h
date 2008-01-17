@@ -90,16 +90,15 @@ typedef struct
 
 typedef QueryServicesMessageStruct* QueryServicesMessage;
 
-QueryServicesMessage queryServicesMessageCreate(void);
-void queryServicesMessageDestroy(QueryServicesMessage);
+JAUS_EXPORT QueryServicesMessage queryServicesMessageCreate(void);
+JAUS_EXPORT void queryServicesMessageDestroy(QueryServicesMessage);
 
-JausBoolean queryServicesMessageFromBuffer(QueryServicesMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean queryServicesMessageToBuffer(QueryServicesMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean queryServicesMessageFromBuffer(QueryServicesMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean queryServicesMessageToBuffer(QueryServicesMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
-QueryServicesMessage queryServicesMessageFromJausMessage(JausMessage jausMessage);
-JausMessage queryServicesMessageToJausMessage(QueryServicesMessage message);
+JAUS_EXPORT QueryServicesMessage queryServicesMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage queryServicesMessageToJausMessage(QueryServicesMessage message);
 
-unsigned int queryServicesMessageSize(QueryServicesMessage message);
-
+JAUS_EXPORT unsigned int queryServicesMessageSize(QueryServicesMessage message);
 
 #endif // QUERY_SERVICES_MESSAGE_H

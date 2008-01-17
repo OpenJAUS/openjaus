@@ -90,16 +90,15 @@ typedef struct
 
 typedef QueryWaypointCountMessageStruct* QueryWaypointCountMessage;
 
-QueryWaypointCountMessage queryWaypointCountMessageCreate(void);
-void queryWaypointCountMessageDestroy(QueryWaypointCountMessage);
+JAUS_EXPORT QueryWaypointCountMessage queryWaypointCountMessageCreate(void);
+JAUS_EXPORT void queryWaypointCountMessageDestroy(QueryWaypointCountMessage);
 
-JausBoolean queryWaypointCountMessageFromBuffer(QueryWaypointCountMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean queryWaypointCountMessageToBuffer(QueryWaypointCountMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean queryWaypointCountMessageFromBuffer(QueryWaypointCountMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean queryWaypointCountMessageToBuffer(QueryWaypointCountMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
-QueryWaypointCountMessage queryWaypointCountMessageFromJausMessage(JausMessage jausMessage);
-JausMessage queryWaypointCountMessageToJausMessage(QueryWaypointCountMessage message);
+JAUS_EXPORT QueryWaypointCountMessage queryWaypointCountMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage queryWaypointCountMessageToJausMessage(QueryWaypointCountMessage message);
 
-unsigned int queryWaypointCountMessageSize(QueryWaypointCountMessage message);
-
+JAUS_EXPORT unsigned int queryWaypointCountMessageSize(QueryWaypointCountMessage message);
 
 #endif // QUERY_WAYPOINT_COUNT_MESSAGE_H

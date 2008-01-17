@@ -51,9 +51,9 @@
 
 typedef	double JausDouble;
 
-JausDouble newJausDouble(double val);
+JAUS_EXPORT JausDouble newJausDouble(double val);
 
-JausBoolean jausDoubleFromBuffer(JausDouble *jDouble, unsigned char *buf, unsigned int bufferSizeBytes);
-JausBoolean jausDoubleToBuffer(JausDouble input, unsigned char *buf, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean jausDoubleFromBuffer(JausDouble *jDouble, unsigned char *buf, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean jausDoubleToBuffer(JausDouble input, unsigned char *buf, unsigned int bufferSizeBytes);
 
 #endif // JAUS_DOUBLE_H

@@ -90,18 +90,15 @@ typedef struct
 
 typedef StandbyMessageStruct* StandbyMessage;
 
-StandbyMessage standbyMessageCreate(void);
-void standbyMessageDestroy(StandbyMessage);
+JAUS_EXPORT StandbyMessage standbyMessageCreate(void);
+JAUS_EXPORT void standbyMessageDestroy(StandbyMessage);
 
-JausBoolean standbyMessageFromBuffer(StandbyMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean standbyMessageToBuffer(StandbyMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean standbyMessageFromBuffer(StandbyMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean standbyMessageToBuffer(StandbyMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
+JAUS_EXPORT StandbyMessage standbyMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage standbyMessageToJausMessage(StandbyMessage message);
 
-StandbyMessage standbyMessageFromJausMessage(JausMessage jausMessage);
-JausMessage standbyMessageToJausMessage(StandbyMessage message);
-
-
-unsigned int standbyMessageSize(StandbyMessage message);
-
+JAUS_EXPORT unsigned int standbyMessageSize(StandbyMessage message);
 
 #endif // STANDBY_MESSAGE_H

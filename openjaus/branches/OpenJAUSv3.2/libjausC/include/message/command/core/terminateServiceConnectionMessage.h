@@ -91,18 +91,15 @@ typedef struct
 
 typedef TerminateServiceConnectionMessageStruct* TerminateServiceConnectionMessage;
 
-TerminateServiceConnectionMessage terminateServiceConnectionMessageCreate(void);
-void terminateServiceConnectionMessageDestroy(TerminateServiceConnectionMessage);
+JAUS_EXPORT TerminateServiceConnectionMessage terminateServiceConnectionMessageCreate(void);
+JAUS_EXPORT void terminateServiceConnectionMessageDestroy(TerminateServiceConnectionMessage);
 
-JausBoolean terminateServiceConnectionMessageFromBuffer(TerminateServiceConnectionMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean terminateServiceConnectionMessageToBuffer(TerminateServiceConnectionMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean terminateServiceConnectionMessageFromBuffer(TerminateServiceConnectionMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean terminateServiceConnectionMessageToBuffer(TerminateServiceConnectionMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
+JAUS_EXPORT TerminateServiceConnectionMessage terminateServiceConnectionMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage terminateServiceConnectionMessageToJausMessage(TerminateServiceConnectionMessage message);
 
-TerminateServiceConnectionMessage terminateServiceConnectionMessageFromJausMessage(JausMessage jausMessage);
-JausMessage terminateServiceConnectionMessageToJausMessage(TerminateServiceConnectionMessage message);
-
-
-unsigned int terminateServiceConnectionMessageSize(TerminateServiceConnectionMessage message);
-
+JAUS_EXPORT unsigned int terminateServiceConnectionMessageSize(TerminateServiceConnectionMessage message);
 
 #endif // TERMINATE_SERVICE_CONNECTION_MESSAGE_H

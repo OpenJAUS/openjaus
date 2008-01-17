@@ -112,7 +112,7 @@ static JausBoolean dataFromBuffer(ReportPayloadInterfaceMessage message, unsigne
 			// unpack command identifier
 			len = (int)strlen((char *)(buffer+index));
 			identifierString = malloc(len + 1);
-			strncpy(identifierString, (char *)(buffer+index), bufferSizeBytes-index);
+			SAFE_STRNCPY(identifierString, len + 1, (char *)(buffer+index), bufferSizeBytes-index);
 			index += len + 1;
 			
 			// unpack payloadInterface type
@@ -153,7 +153,7 @@ static JausBoolean dataFromBuffer(ReportPayloadInterfaceMessage message, unsigne
 			if(tempUShort != 0)
 			{
 				tempString = malloc(tempUShort);
-				strcpy(tempString, (char *)(buffer+index));
+				SAFE_STRCPY(tempString, tempUShort, (char *)(buffer+index));
 				index += tempUShort;
 				jausSetCommandInterfaceEnumeration(message->jausPayloadInterface, identifierString, tempString);
 			}
@@ -198,8 +198,8 @@ static JausBoolean dataFromBuffer(ReportPayloadInterfaceMessage message, unsigne
 		{			
 			// unpack command identifier
 			len = (int)strlen((char *)(buffer+index));
-			identifierString = malloc(len +1);
-			strncpy(identifierString, (char *)(buffer+index), bufferSizeBytes-index);
+			identifierString = malloc(len + 1);
+			SAFE_STRNCPY(identifierString, len + 1, (char *)(buffer+index), bufferSizeBytes-index);
 			index += len + 1;
 			
 			// unpack command association
@@ -242,7 +242,7 @@ static JausBoolean dataFromBuffer(ReportPayloadInterfaceMessage message, unsigne
 			if(tempUShort != 0)
 			{
 				tempString = malloc(tempUShort);
-				strcpy(tempString, (char *)(buffer+index));
+				SAFE_STRCPY(tempString, tempUShort, (char *)(buffer+index));
 				index += tempUShort;
 				jausSetInformationInterfaceEnumeration(message->jausPayloadInterface, identifierString, tempString);
 			}
@@ -329,7 +329,7 @@ static int dataToBuffer(ReportPayloadInterfaceMessage message, unsigned char *bu
 			if (successFlag)
 			{
 				len = (int)strlen(identifierString);
-				strncpy((char *)(buffer+index), identifierString, bufferSizeBytes-index);
+				SAFE_STRNCPY((char *)(buffer+index), bufferSizeBytes-index, identifierString, bufferSizeBytes-index);
 				index += len + 1;
 			}
 			
@@ -402,7 +402,7 @@ static int dataToBuffer(ReportPayloadInterfaceMessage message, unsigned char *bu
 			if(tempUShort != 0)
 			{
 				tempString = jausGetCommandInterfaceEnumeration(message->jausPayloadInterface, identifierString, &successFlag);
-				strcpy((char *)(buffer+index), tempString);
+				SAFE_STRCPY((char *)(buffer+index), bufferSizeBytes-index, tempString);
 				index += tempUShort;
 			}
 
@@ -467,7 +467,7 @@ static int dataToBuffer(ReportPayloadInterfaceMessage message, unsigned char *bu
 			if (successFlag)
 			{
 				len = (int)strlen(identifierString);
-				strncpy((char *)(buffer+index), identifierString, bufferSizeBytes-index);
+				SAFE_STRNCPY((char *)(buffer+index), bufferSizeBytes-index, identifierString, bufferSizeBytes-index);
 				index += len + 1;
 			}
 			
@@ -536,7 +536,7 @@ static int dataToBuffer(ReportPayloadInterfaceMessage message, unsigned char *bu
 			if(tempUShort != 0)
 			{
 				tempString = jausGetInformationInterfaceEnumeration(message->jausPayloadInterface, identifierString, &successFlag);
-				strcpy((char *)(buffer+index), tempString);
+				SAFE_STRCPY((char *)(buffer+index), bufferSizeBytes-index, tempString);
 				index += tempUShort;
 			}
 

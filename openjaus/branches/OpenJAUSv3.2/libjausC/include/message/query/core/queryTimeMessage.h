@@ -91,16 +91,15 @@ typedef struct
 
 typedef QueryTimeMessageStruct* QueryTimeMessage;
 
-QueryTimeMessage queryTimeMessageCreate(void);
-void queryTimeMessageDestroy(QueryTimeMessage);
+JAUS_EXPORT QueryTimeMessage queryTimeMessageCreate(void);
+JAUS_EXPORT void queryTimeMessageDestroy(QueryTimeMessage);
 
-JausBoolean queryTimeMessageFromBuffer(QueryTimeMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean queryTimeMessageToBuffer(QueryTimeMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean queryTimeMessageFromBuffer(QueryTimeMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean queryTimeMessageToBuffer(QueryTimeMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
-QueryTimeMessage queryTimeMessageFromJausMessage(JausMessage jausMessage);
-JausMessage queryTimeMessageToJausMessage(QueryTimeMessage message);
+JAUS_EXPORT QueryTimeMessage queryTimeMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage queryTimeMessageToJausMessage(QueryTimeMessage message);
 
-unsigned int queryTimeMessageSize(QueryTimeMessage message);
-
+JAUS_EXPORT unsigned int queryTimeMessageSize(QueryTimeMessage message);
 
 #endif // QUERY_TIME_MESSAGE_H

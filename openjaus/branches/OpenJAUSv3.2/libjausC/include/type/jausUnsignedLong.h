@@ -55,12 +55,12 @@
 
 typedef unsigned long long JausUnsignedLong;
 
-JausUnsignedLong newJausUnsignedLong(unsigned long long val);
+JAUS_EXPORT JausUnsignedLong newJausUnsignedLong(unsigned long long val);
 
-JausBoolean jausUnsignedLongFromBuffer(JausUnsignedLong *jULong, unsigned char *buf, unsigned int bufferSizeBytes);
-JausBoolean jausUnsignedLongToBuffer(JausUnsignedLong input, unsigned char *buf, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean jausUnsignedLongFromBuffer(JausUnsignedLong *jULong, unsigned char *buf, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean jausUnsignedLongToBuffer(JausUnsignedLong input, unsigned char *buf, unsigned int bufferSizeBytes);
 
-double jausUnsignedLongToDouble(JausUnsignedLong input, double min, double max);
-JausUnsignedLong jausUnsignedLongFromDouble(double value, double min, double max);
+JAUS_EXPORT double jausUnsignedLongToDouble(JausUnsignedLong input, double min, double max);
+JAUS_EXPORT JausUnsignedLong jausUnsignedLongFromDouble(double value, double min, double max);
 
 #endif // JAUS_UNSIGNED_LONG_H

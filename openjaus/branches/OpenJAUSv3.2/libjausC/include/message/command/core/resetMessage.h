@@ -90,18 +90,15 @@ typedef struct
 
 typedef ResetMessageStruct* ResetMessage;
 
-ResetMessage resetMessageCreate(void);
-void resetMessageDestroy(ResetMessage);
+JAUS_EXPORT ResetMessage resetMessageCreate(void);
+JAUS_EXPORT void resetMessageDestroy(ResetMessage);
 
-JausBoolean resetMessageFromBuffer(ResetMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean resetMessageToBuffer(ResetMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean resetMessageFromBuffer(ResetMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean resetMessageToBuffer(ResetMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
+JAUS_EXPORT ResetMessage resetMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage resetMessageToJausMessage(ResetMessage message);
 
-ResetMessage resetMessageFromJausMessage(JausMessage jausMessage);
-JausMessage resetMessageToJausMessage(ResetMessage message);
-
-
-unsigned int resetMessageSize(ResetMessage message);
-
+JAUS_EXPORT unsigned int resetMessageSize(ResetMessage message);
 
 #endif // RESET_MESSAGE_H

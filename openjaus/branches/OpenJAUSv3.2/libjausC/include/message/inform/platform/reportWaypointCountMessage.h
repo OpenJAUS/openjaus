@@ -90,18 +90,15 @@ typedef struct
 
 typedef ReportWaypointCountMessageStruct* ReportWaypointCountMessage;
 
-ReportWaypointCountMessage reportWaypointCountMessageCreate(void);
-void reportWaypointCountMessageDestroy(ReportWaypointCountMessage);
+JAUS_EXPORT ReportWaypointCountMessage reportWaypointCountMessageCreate(void);
+JAUS_EXPORT void reportWaypointCountMessageDestroy(ReportWaypointCountMessage);
 
-JausBoolean reportWaypointCountMessageFromBuffer(ReportWaypointCountMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean reportWaypointCountMessageToBuffer(ReportWaypointCountMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean reportWaypointCountMessageFromBuffer(ReportWaypointCountMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean reportWaypointCountMessageToBuffer(ReportWaypointCountMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
+JAUS_EXPORT ReportWaypointCountMessage reportWaypointCountMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage reportWaypointCountMessageToJausMessage(ReportWaypointCountMessage message);
 
-ReportWaypointCountMessage reportWaypointCountMessageFromJausMessage(JausMessage jausMessage);
-JausMessage reportWaypointCountMessageToJausMessage(ReportWaypointCountMessage message);
-
-
-unsigned int reportWaypointCountMessageSize(ReportWaypointCountMessage message);
-
+JAUS_EXPORT unsigned int reportWaypointCountMessageSize(ReportWaypointCountMessage message);
 
 #endif // REPORT_WAYPOINT_COUNT_MESSAGE_H

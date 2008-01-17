@@ -112,18 +112,15 @@ typedef struct
 
 typedef SetVelocityStateMessageStruct* SetVelocityStateMessage;
 
-SetVelocityStateMessage setVelocityStateMessageCreate(void);
-void setVelocityStateMessageDestroy(SetVelocityStateMessage);
+JAUS_EXPORT SetVelocityStateMessage setVelocityStateMessageCreate(void);
+JAUS_EXPORT void setVelocityStateMessageDestroy(SetVelocityStateMessage);
 
-JausBoolean setVelocityStateMessageFromBuffer(SetVelocityStateMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean setVelocityStateMessageToBuffer(SetVelocityStateMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean setVelocityStateMessageFromBuffer(SetVelocityStateMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean setVelocityStateMessageToBuffer(SetVelocityStateMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
+JAUS_EXPORT SetVelocityStateMessage setVelocityStateMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage setVelocityStateMessageToJausMessage(SetVelocityStateMessage message);
 
-SetVelocityStateMessage setVelocityStateMessageFromJausMessage(JausMessage jausMessage);
-JausMessage setVelocityStateMessageToJausMessage(SetVelocityStateMessage message);
-
-
-unsigned int setVelocityStateMessageSize(SetVelocityStateMessage message);
-
+JAUS_EXPORT unsigned int setVelocityStateMessageSize(SetVelocityStateMessage message);
 
 #endif // SET_VELOCITY_STATE_MESSAGE_H

@@ -120,18 +120,15 @@ typedef struct
 
 typedef SetDiscreteDevicesMessageStruct* SetDiscreteDevicesMessage;
 
-SetDiscreteDevicesMessage setDiscreteDevicesMessageCreate(void);
-void setDiscreteDevicesMessageDestroy(SetDiscreteDevicesMessage);
+JAUS_EXPORT SetDiscreteDevicesMessage setDiscreteDevicesMessageCreate(void);
+JAUS_EXPORT void setDiscreteDevicesMessageDestroy(SetDiscreteDevicesMessage);
 
-JausBoolean setDiscreteDevicesMessageFromBuffer(SetDiscreteDevicesMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean setDiscreteDevicesMessageToBuffer(SetDiscreteDevicesMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean setDiscreteDevicesMessageFromBuffer(SetDiscreteDevicesMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean setDiscreteDevicesMessageToBuffer(SetDiscreteDevicesMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
+JAUS_EXPORT SetDiscreteDevicesMessage setDiscreteDevicesMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage setDiscreteDevicesMessageToJausMessage(SetDiscreteDevicesMessage message);
 
-SetDiscreteDevicesMessage setDiscreteDevicesMessageFromJausMessage(JausMessage jausMessage);
-JausMessage setDiscreteDevicesMessageToJausMessage(SetDiscreteDevicesMessage message);
-
-
-unsigned int setDiscreteDevicesMessageSize(SetDiscreteDevicesMessage message);
-
+JAUS_EXPORT unsigned int setDiscreteDevicesMessageSize(SetDiscreteDevicesMessage message);
 
 #endif // SET_DISCRETE_DEVICES_MESSAGE_H

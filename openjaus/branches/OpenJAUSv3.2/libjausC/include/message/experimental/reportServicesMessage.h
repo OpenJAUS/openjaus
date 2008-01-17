@@ -90,19 +90,15 @@ typedef struct
 
 typedef ReportServicesMessageStruct* ReportServicesMessage;
 
-ReportServicesMessage reportServicesMessageCreate(void);
-void reportServicesMessageDestroy(ReportServicesMessage);
+JAUS_EXPORT ReportServicesMessage reportServicesMessageCreate(void);
+JAUS_EXPORT void reportServicesMessageDestroy(ReportServicesMessage);
 
-JausBoolean reportServicesMessageFromBuffer(ReportServicesMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean reportServicesMessageToBuffer(ReportServicesMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean reportServicesMessageFromBuffer(ReportServicesMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean reportServicesMessageToBuffer(ReportServicesMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
-ReportServicesMessage reportServicesMessageFromJausMessage(JausMessage jausMessage);
-JausMessage reportServicesMessageToJausMessage(ReportServicesMessage message);
+JAUS_EXPORT ReportServicesMessage reportServicesMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage reportServicesMessageToJausMessage(ReportServicesMessage message);
 
-unsigned int reportServicesMessageSize(ReportServicesMessage message);
+JAUS_EXPORT unsigned int reportServicesMessageSize(ReportServicesMessage message);
 
 #endif
-
-
-
-

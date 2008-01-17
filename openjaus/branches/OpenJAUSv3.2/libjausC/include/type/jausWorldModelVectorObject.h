@@ -46,6 +46,7 @@
 #define JAUS_WM_VECTOR_OBJECT_H
 
 #include "jaus.h"
+#include "string.h"
 
 // Vector Object types as defined in WMVKS Document v1.3
 #ifndef JAUS_WM_OBJECT_TYPES
@@ -86,24 +87,24 @@ typedef struct
 typedef JausWorldModelVectorObjectStruct *JausWorldModelVectorObject;
 
 // JausWorldModelVectorObject Constructor
-JausWorldModelVectorObject vectorObjectCreate(void);
+JAUS_EXPORT JausWorldModelVectorObject vectorObjectCreate(void);
 
 // JausWorldModelVectorObject Constructor (from Buffer)
-JausWorldModelVectorObject vectorObjectFromBuffer(unsigned char *buffer, unsigned int bufferSizeBytes, JausBoolean objectBuffered);
+JAUS_EXPORT JausWorldModelVectorObject vectorObjectFromBuffer(unsigned char *buffer, unsigned int bufferSizeBytes, JausBoolean objectBuffered);
 
 // JausWorldModelVectorObject To Buffer
-JausBoolean vectorObjectToBuffer(JausWorldModelVectorObject object, unsigned char *buffer, unsigned int bufferSizeBytes, JausBoolean objectBuffered);
+JAUS_EXPORT JausBoolean vectorObjectToBuffer(JausWorldModelVectorObject object, unsigned char *buffer, unsigned int bufferSizeBytes, JausBoolean objectBuffered);
 
 // JausWorldModelVectorObject Destructor
-void vectorObjectDestroy(JausWorldModelVectorObject object);
+JAUS_EXPORT void vectorObjectDestroy(JausWorldModelVectorObject object);
 
 // JausWorldModelVectorObject Buffer Size
-unsigned int vectorObjectSizeBytes(JausWorldModelVectorObject object, JausBoolean objectBuffered);
+JAUS_EXPORT unsigned int vectorObjectSizeBytes(JausWorldModelVectorObject object, JausBoolean objectBuffered);
 
 // JausWorldModelVectorObject To String
-int vectorObjectTypeToString(JausWorldModelVectorObject object, char *string);
+JAUS_EXPORT int vectorObjectTypeToString(JausWorldModelVectorObject object, char *string, size_t stringLength);
 
 // JausWorldModelVectorObject Copy
-JausWorldModelVectorObject vectorObjectCopy(JausWorldModelVectorObject input);
+JAUS_EXPORT JausWorldModelVectorObject vectorObjectCopy(JausWorldModelVectorObject input);
 
 #endif // VECTOROBJECT_H

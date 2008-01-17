@@ -112,16 +112,15 @@ typedef struct
 
 typedef DeleteVksObjectsMessageStruct* DeleteVksObjectsMessage;
 
-DeleteVksObjectsMessage deleteVksObjectsMessageCreate(void);
-void deleteVksObjectsMessageDestroy(DeleteVksObjectsMessage);
+JAUS_EXPORT DeleteVksObjectsMessage deleteVksObjectsMessageCreate(void);
+JAUS_EXPORT void deleteVksObjectsMessageDestroy(DeleteVksObjectsMessage);
 
-JausBoolean deleteVksObjectsMessageFromBuffer(DeleteVksObjectsMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean deleteVksObjectsMessageToBuffer(DeleteVksObjectsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean deleteVksObjectsMessageFromBuffer(DeleteVksObjectsMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean deleteVksObjectsMessageToBuffer(DeleteVksObjectsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
-DeleteVksObjectsMessage deleteVksObjectsMessageFromJausMessage(JausMessage jausMessage);
-JausMessage deleteVksObjectsMessageToJausMessage(DeleteVksObjectsMessage message);
+JAUS_EXPORT DeleteVksObjectsMessage deleteVksObjectsMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage deleteVksObjectsMessageToJausMessage(DeleteVksObjectsMessage message);
 
-unsigned int deleteVksObjectsMessageSize(DeleteVksObjectsMessage message);
-
+JAUS_EXPORT unsigned int deleteVksObjectsMessageSize(DeleteVksObjectsMessage message);
 
 #endif // DELETE_VKS_OBJECTS_MESSAGE_H

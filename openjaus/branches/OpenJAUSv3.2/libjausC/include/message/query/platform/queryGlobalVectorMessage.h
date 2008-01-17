@@ -90,16 +90,15 @@ typedef struct
 
 typedef QueryGlobalVectorMessageStruct* QueryGlobalVectorMessage;
 
-QueryGlobalVectorMessage queryGlobalVectorMessageCreate(void);
-void queryGlobalVectorMessageDestroy(QueryGlobalVectorMessage);
+JAUS_EXPORT QueryGlobalVectorMessage queryGlobalVectorMessageCreate(void);
+JAUS_EXPORT void queryGlobalVectorMessageDestroy(QueryGlobalVectorMessage);
 
-JausBoolean queryGlobalVectorMessageFromBuffer(QueryGlobalVectorMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean queryGlobalVectorMessageToBuffer(QueryGlobalVectorMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean queryGlobalVectorMessageFromBuffer(QueryGlobalVectorMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean queryGlobalVectorMessageToBuffer(QueryGlobalVectorMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
-QueryGlobalVectorMessage queryGlobalVectorMessageFromJausMessage(JausMessage jausMessage);
-JausMessage queryGlobalVectorMessageToJausMessage(QueryGlobalVectorMessage message);
+JAUS_EXPORT QueryGlobalVectorMessage queryGlobalVectorMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage queryGlobalVectorMessageToJausMessage(QueryGlobalVectorMessage message);
 
-unsigned int queryGlobalVectorMessageSize(QueryGlobalVectorMessage message);
-
+JAUS_EXPORT unsigned int queryGlobalVectorMessageSize(QueryGlobalVectorMessage message);
 
 #endif // QUERY_GLOBAL_VECTOR_MESSAGE_H

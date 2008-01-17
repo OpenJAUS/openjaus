@@ -99,13 +99,13 @@ JausBoolean jausTimeSetCurrentTime(JausTime jausTime)
 	return JAUS_TRUE;
 }
 
-JausBoolean jausTimeToString(JausTime time, char *buffer)
+JausBoolean jausTimeToString(JausTime time, char *buffer, size_t buffSize)
 {
 	const char *months[] = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
 
 	if(time)
 	{		
-		sprintf(buffer, "%s %02d, %04d  %02d:%02d:%02d.%d\n", months[time->month], time->day, time->year, time->hour, time->minute, time->second, time->millisec);
+		SAFE_SPRINTF(buffer, buffSize, "%s %02d, %04d  %02d:%02d:%02d.%d\n", months[time->month], time->day, time->year, time->hour, time->minute, time->second, time->millisec);
 		return JAUS_TRUE;
 	}
 	else

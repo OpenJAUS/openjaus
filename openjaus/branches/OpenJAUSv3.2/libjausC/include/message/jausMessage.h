@@ -277,16 +277,16 @@ struct JausMessageStruct
 
 typedef struct JausMessageStruct *JausMessage;
 
-JausMessage jausMessageCreate(void);
-void jausMessageDestroy(JausMessage);
+JAUS_EXPORT JausMessage jausMessageCreate(void);
+JAUS_EXPORT void jausMessageDestroy(JausMessage);
 
-unsigned int jausMessageSize(JausMessage);
+JAUS_EXPORT unsigned int jausMessageSize(JausMessage);
 
-JausBoolean jausMessageToBuffer(JausMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-JausBoolean jausMessageFromBuffer(JausMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-char *jausMessageCommandCodeString(JausMessage);
-char *jausCommandCodeString(unsigned short commandCode);
-JausMessage jausMessageClone(JausMessage);
-JausBoolean jausMessageIsRejectableCommand(JausMessage message);
+JAUS_EXPORT JausBoolean jausMessageToBuffer(JausMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean jausMessageFromBuffer(JausMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT char *jausMessageCommandCodeString(JausMessage);
+JAUS_EXPORT char *jausCommandCodeString(unsigned short commandCode);
+JAUS_EXPORT JausMessage jausMessageClone(JausMessage);
+JAUS_EXPORT JausBoolean jausMessageIsRejectableCommand(JausMessage message);
 
 #endif // JAUS_MESSAGE_H

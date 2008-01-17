@@ -90,18 +90,15 @@ typedef struct
 
 typedef RejectComponentControlMessageStruct* RejectComponentControlMessage;
 
-RejectComponentControlMessage rejectComponentControlMessageCreate(void);
-void rejectComponentControlMessageDestroy(RejectComponentControlMessage);
+JAUS_EXPORT RejectComponentControlMessage rejectComponentControlMessageCreate(void);
+JAUS_EXPORT void rejectComponentControlMessageDestroy(RejectComponentControlMessage);
 
-JausBoolean rejectComponentControlMessageFromBuffer(RejectComponentControlMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean rejectComponentControlMessageToBuffer(RejectComponentControlMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean rejectComponentControlMessageFromBuffer(RejectComponentControlMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean rejectComponentControlMessageToBuffer(RejectComponentControlMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
+JAUS_EXPORT RejectComponentControlMessage rejectComponentControlMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage rejectComponentControlMessageToJausMessage(RejectComponentControlMessage message);
 
-RejectComponentControlMessage rejectComponentControlMessageFromJausMessage(JausMessage jausMessage);
-JausMessage rejectComponentControlMessageToJausMessage(RejectComponentControlMessage message);
-
-
-unsigned int rejectComponentControlMessageSize(RejectComponentControlMessage message);
-
+JAUS_EXPORT unsigned int rejectComponentControlMessageSize(RejectComponentControlMessage message);
 
 #endif // REJECT_COMPONENT_CONTROL_MESSAGE_H

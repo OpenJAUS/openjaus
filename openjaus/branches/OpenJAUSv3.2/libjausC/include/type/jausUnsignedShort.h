@@ -55,12 +55,12 @@
 
 typedef unsigned short JausUnsignedShort;
 
-JausUnsignedShort newJausUnsignedShort(unsigned short val);
+JAUS_EXPORT JausUnsignedShort newJausUnsignedShort(unsigned short val);
 
-JausBoolean jausUnsignedShortFromBuffer(JausUnsignedShort *jUShort, unsigned char *buf, unsigned int bufferSizeBytes);
-JausBoolean jausUnsignedShortToBuffer(JausUnsignedShort input, unsigned char *buf, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean jausUnsignedShortFromBuffer(JausUnsignedShort *jUShort, unsigned char *buf, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean jausUnsignedShortToBuffer(JausUnsignedShort input, unsigned char *buf, unsigned int bufferSizeBytes);
 
-double jausUnsignedShortToDouble(JausUnsignedShort input, double min, double max);
-JausUnsignedShort jausUnsignedShortFromDouble(double value, double min, double max);
+JAUS_EXPORT double jausUnsignedShortToDouble(JausUnsignedShort input, double min, double max);
+JAUS_EXPORT JausUnsignedShort jausUnsignedShortFromDouble(double value, double min, double max);
 
 #endif // JAUS_UNSIGNED_SHORT_H

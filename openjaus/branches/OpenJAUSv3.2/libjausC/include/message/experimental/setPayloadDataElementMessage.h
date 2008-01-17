@@ -93,18 +93,16 @@ typedef struct
 
 typedef SetPayloadDataElementMessageStruct* SetPayloadDataElementMessage;
 
-SetPayloadDataElementMessage setPayloadDataElementMessageCreate(void);
-void setPayloadDataElementMessageDestroy(SetPayloadDataElementMessage);
+JAUS_EXPORT SetPayloadDataElementMessage setPayloadDataElementMessageCreate(void);
+JAUS_EXPORT void setPayloadDataElementMessageDestroy(SetPayloadDataElementMessage);
 
-JausBoolean setPayloadDataElementMessageFromBuffer(SetPayloadDataElementMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean setPayloadDataElementMessageToBuffer(SetPayloadDataElementMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean setPayloadDataElementMessageFromBuffer(SetPayloadDataElementMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean setPayloadDataElementMessageToBuffer(SetPayloadDataElementMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
+JAUS_EXPORT SetPayloadDataElementMessage setPayloadDataElementMessageFromJausMessage(JausMessage jausMessage, JausPayloadInterface pI);
+JAUS_EXPORT JausMessage setPayloadDataElementMessageToJausMessage(SetPayloadDataElementMessage message);
 
-SetPayloadDataElementMessage setPayloadDataElementMessageFromJausMessage(JausMessage jausMessage, JausPayloadInterface pI);
-JausMessage setPayloadDataElementMessageToJausMessage(SetPayloadDataElementMessage message);
-
-
-unsigned int setPayloadDataElementMessageSize(SetPayloadDataElementMessage message);
+JAUS_EXPORT unsigned int setPayloadDataElementMessageSize(SetPayloadDataElementMessage message);
 
 #endif
 

@@ -116,15 +116,15 @@ JausBoolean jausAddressEqual(JausAddress first, JausAddress second)
 }
 
 
-int jausAddressToString(JausAddress address, char *buf)
+int jausAddressToString(JausAddress address, char *buf, size_t buffSize)
 {
 	if(address)
 	{
-		return sprintf(buf, "%d.%d.%d.%d", address->subsystem, address->node, address->component, address->instance);
+		return SAFE_SPRINTF(buf, buffSize, "%d.%d.%d.%d", address->subsystem, address->node, address->component, address->instance);
 	}
 	else
 	{
-		return sprintf(buf, "Invalid JAUS Address");
+		return SAFE_SPRINTF(buf, buffSize, "Invalid JAUS Address");
 	}
 }
 
