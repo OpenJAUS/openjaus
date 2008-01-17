@@ -8,7 +8,7 @@ class ErrorEvent : public NodeManagerEvent
 {
 public:
 	ErrorEvent(unsigned int subType);
-	ErrorEvent::ErrorEvent(unsigned int subType, char *function, int line, std::string userString);
+	ErrorEvent(unsigned int subType, const char *function, long line, std::string userString);
 	~ErrorEvent();
 
 	std::string toString();
@@ -25,3 +25,4 @@ private:
 };
 
 #endif
+

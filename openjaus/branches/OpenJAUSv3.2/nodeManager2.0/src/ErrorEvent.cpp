@@ -1,3 +1,4 @@
+#include "SafeStrings.h"
 #include "ErrorEvent.h"
 
 
@@ -11,7 +12,7 @@ ErrorEvent::ErrorEvent(unsigned int subType)
 	this->function = "";
 }
 
-ErrorEvent::ErrorEvent(unsigned int subType, char *function, int line, std::string userString)
+ErrorEvent::ErrorEvent(unsigned int subType, const char *function, long line, std::string userString)
 {
 	this->type = NodeManagerEvent::ErrorEvent;
 	this->subType = subType;
@@ -36,11 +37,11 @@ std::string ErrorEvent::toString()
 
 	if(subType != ErrorEvent::Warning)
 	{
-		sprintf(buf, "ERROR (%s:%d): %s\n", function.c_str(), line, this->userString.c_str());
+		SAFE_SPRINTF(buf, 256, "ERROR (%s:%ld): %s\n", function.c_str(), line, this->userString.c_str());
 	}
 	else
 	{
-		sprintf(buf, "WARN (%s:%d): %s\n", function.c_str(), line, this->userString.c_str());
+		SAFE_SPRINTF(buf, 256, "WARN (%s:%ld): %s\n", function.c_str(), line, this->userString.c_str());
 	}
 
 	return buf;

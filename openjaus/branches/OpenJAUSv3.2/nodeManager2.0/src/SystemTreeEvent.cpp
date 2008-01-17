@@ -53,55 +53,55 @@ std::string SystemTreeEvent::toString()
 	switch(this->subType)
 	{
 		case SystemTreeEvent::SubsystemAdded:
-			jausSubsystemToString(this->subs, buf);
+			jausSubsystemToString(this->subs, buf, 128);
 			output += "Subsystem ADDED: ";
 			output += buf;
 			return output;
 
 		case SystemTreeEvent::SubsystemRemoved:
-			jausSubsystemToString(this->subs, buf);
+			jausSubsystemToString(this->subs, buf, 128);
 			output += "Subsystem REMOVED: ";
 			output += buf;
 			return output;
 
 		case SystemTreeEvent::SubsystemTimeout:
-			jausSubsystemToString(this->subs, buf);
+			jausSubsystemToString(this->subs, buf, 128);
 			output += "Subsystem TIMEOUT: ";
 			output += buf;
 			return output;
 
 		case SystemTreeEvent::NodeAdded:
-			jausNodeToString(this->node, buf);
+			jausNodeToString(this->node, buf, 128);
 			output += "Node ADDED: ";
 			output += buf;
 			return output;
 
 		case SystemTreeEvent::NodeRemoved:
-			jausNodeToString(this->node, buf);
+			jausNodeToString(this->node, buf, 128);
 			output += "Node REMOVED: ";
 			output += buf;
 			return output;
 		
 		case SystemTreeEvent::NodeTimeout:
-			jausNodeToString(this->node, buf);
+			jausNodeToString(this->node, buf, 128);
 			output += "Node TIMEOUT: ";
 			output += buf;
 			return output;
 
 		case SystemTreeEvent::ComponentAdded:
-			jausComponentToString(this->cmpt, buf);
+			jausComponentToString(this->cmpt, buf, 128);
 			output += "Component ADDED: ";
 			output += buf;
 			return output;
 
 		case SystemTreeEvent::ComponentRemoved:
-			jausComponentToString(this->cmpt, buf);
+			jausComponentToString(this->cmpt, buf, 128);
 			output += "Component REMOVED: ";
 			output += buf;
 			return output;
 
 		case SystemTreeEvent::ComponentTimeout:
-			jausComponentToString(this->cmpt, buf);
+			jausComponentToString(this->cmpt, buf, 128);
 			output += "Component TIMEOUT: ";
 			output += buf;
 			return output;
@@ -111,3 +111,4 @@ std::string SystemTreeEvent::toString()
 			return output;
 	}
 }
+

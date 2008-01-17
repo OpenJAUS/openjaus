@@ -1,3 +1,4 @@
+#include "SafeStrings.h"
 #include "NodeManagerComponent.h"
 #include "JausComponentCommunicationManager.h"
 #include "ErrorEvent.h"
@@ -233,7 +234,15 @@ JausAddress NodeManagerComponent::checkInLocalComponent(int cmptId)
 
 void NodeManagerComponent::checkOutLocalComponent(JausAddress address)
 {
-	//sendNodeChangedEvents();
+	return checkOutLocalComponent(address->subsystem, address->node, address->component, address->instance);
+}
+
+void NodeManagerComponent::checkOutLocalComponent(int subsId, int nodeId, int cmptId, int instId)
+{
+	if(systemTree->removeComponent(subsId, nodeId, cmptId, instId))
+	{
+		sendNodeChangedEvents();
+	}
 }
 
 void NodeManagerComponent::startupState()
@@ -1243,7 +1252,7 @@ bool NodeManagerComponent::processQueryIdentification(JausMessage message)
 				identification = systemTree->getSubsystemIdentification(cmpt->address);
 				if(strlen(identification) < JAUS_IDENTIFICATION_LENGTH_BYTES)
 				{
-					sprintf(reportId->identification, "%s", identification);
+					SAFE_SPRINTF(reportId->identification, JAUS_IDENTIFICATION_LENGTH_BYTES, "%s", identification);
 				}
 				else
 				{
@@ -1284,7 +1293,7 @@ bool NodeManagerComponent::processQueryIdentification(JausMessage message)
 			identification = systemTree->getNodeIdentification(cmpt->address);
 			if(strlen(identification) < JAUS_IDENTIFICATION_LENGTH_BYTES)
 			{
-				sprintf(reportId->identification, "%s", identification);
+				SAFE_SPRINTF(reportId->identification, JAUS_IDENTIFICATION_LENGTH_BYTES, "%s", identification);
 			}
 			else
 			{
@@ -1317,7 +1326,7 @@ bool NodeManagerComponent::processQueryIdentification(JausMessage message)
 			identification = cmpt->identification;
 			if(strlen(identification) < JAUS_IDENTIFICATION_LENGTH_BYTES)
 			{
-				sprintf(reportId->identification, "%s", identification);
+				SAFE_SPRINTF(reportId->identification, JAUS_IDENTIFICATION_LENGTH_BYTES, "%s", identification);
 			}
 			else
 			{

@@ -118,6 +118,7 @@ public:
 	JausAddress lookUpServiceInSubsystem(int subsId, int nodeId, int commandCode, int serviceType);
 	JausAddress lookUpServiceInSubsystem(JausSubsystem subs, int commandCode, int serviceType);
 	JausAddress lookUpServiceInSystem(int commandCode, int serviceType);
+	JausAddress lookUpService(JausAddress address, int commandCode, int serviceType);
 
 	unsigned char getNextInstanceId(JausAddress address);
 

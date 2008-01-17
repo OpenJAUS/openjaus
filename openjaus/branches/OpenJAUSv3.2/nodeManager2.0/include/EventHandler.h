@@ -7,6 +7,8 @@ class EventHandler
 {
 public:
 	virtual void handleEvent(NodeManagerEvent *e) = 0;
+	virtual ~EventHandler() {};
 };
 
 #endif
+
