@@ -92,7 +92,7 @@ JausNode jausNodeClone(JausNode node)
 	{
 		stringLength = strlen(node->identification) + 1;
 		clone->identification = (char *) malloc(stringLength);
-		SAFE_SPRINTF(clone->identification, stringLength, "%s", node->identification);
+		sprintf(clone->identification, "%s", node->identification);
 	}
 	else
 	{
@@ -139,11 +139,11 @@ int jausNodeToString(JausNode node, char *buf, size_t buffSize)
 {	
 	if(node->identification)
 	{
-		return SAFE_SPRINTF(buf, buffSize, "%s-%d", node->identification, node->id);
+		return sprintf(buf, "%s-%d", node->identification, node->id);
 	}
 	else
 	{
-		return SAFE_SPRINTF(buf, buffSize, "JausNode-%d", node->id);
+		return sprintf(buf, "JausNode-%d", node->id);
 	}
 }
 

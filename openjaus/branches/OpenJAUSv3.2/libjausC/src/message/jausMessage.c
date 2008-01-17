@@ -478,7 +478,7 @@ char *jausCommandCodeString(unsigned short commandCode)
 		case JAUS_REPORT_VKS_OBJECTS:
 			return "JAUS_REPORT_VKS_OBJECTS";
 		default:
-			SAFE_SPRINTF(string, 128, "UNDEFINED MESSAGE: 0x%04X", commandCode); 
+			sprintf(string, "UNDEFINED MESSAGE: 0x%04X", commandCode); 
 			return string;
 	}	
 }

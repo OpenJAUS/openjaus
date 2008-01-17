@@ -326,13 +326,13 @@ int vectorObjectTypeToString(JausWorldModelVectorObject object, char *string, si
 	switch(object->type)
 	{
 		case JAUS_WM_POINT_TYPE:
-			return SAFE_SPRINTF(string, stringLength, "Point");					
+			return sprintf(string, "Point");					
 		case JAUS_WM_LINE_TYPE:
-			return SAFE_SPRINTF(string, stringLength, "Line");
+			return sprintf(string, "Line");
 		case JAUS_WM_POLYGON_TYPE:
-			return SAFE_SPRINTF(string, stringLength, "Polygon");
+			return sprintf(string, "Polygon");
 		default:
-			return SAFE_SPRINTF(string, stringLength, "Unknown");
+			return sprintf(string, "Unknown");
 	}
 }
 

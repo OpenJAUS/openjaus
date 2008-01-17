@@ -46,7 +46,7 @@
 
 int jausStateToString(JausState state, char *buf, size_t buffSize)
 {
-	return SAFE_SPRINTF(buf, buffSize, "%s", jausStateGetString(state));
+	return sprintf(buf, "%s", jausStateGetString(state));
 }
 
 char *jausStateGetString(JausState state)
