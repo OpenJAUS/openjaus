@@ -47,7 +47,6 @@
 #include <string.h>
 
 #include "inetAddress.h"
-#include "SafeStrings.h"
 
 InetAddress inetAddressCreate(void)
 {
@@ -169,5 +168,5 @@ int inetAddressToString(InetAddress address, char *string, unsigned int stringLe
 	memset(&inAddress, 0, sizeof(inAddress));
 	inAddress.s_addr = address->value;
 	
-	return SAFE_SPRINTF(string, stringLength, "%s", inet_ntoa(inAddress));
+	return sprintf(string, "%s", inet_ntoa(inAddress));
 }

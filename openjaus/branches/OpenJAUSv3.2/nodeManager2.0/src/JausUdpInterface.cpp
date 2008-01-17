@@ -1,4 +1,3 @@
-#include "SafeStrings.h"
 #include "JausUdpInterface.h"
 #include "JausSubsystemCommunicationManager.h"
 #include "JausNodeCommunicationManager.h"
@@ -219,7 +218,7 @@ std::string JausUdpInterface::toString()
 	char ret[256] = {0};
 	char buf[80] = {0};
 	inetAddressToString(this->socket->address, buf, 80);
-	SAFE_SPRINTF(ret, 256, "%s %s:%d", JAUS_UDP_NAME, buf, this->socket->port);
+	sprintf(ret, "%s %s:%d", JAUS_UDP_NAME, buf, this->socket->port);
 	return ret;
 }
 
