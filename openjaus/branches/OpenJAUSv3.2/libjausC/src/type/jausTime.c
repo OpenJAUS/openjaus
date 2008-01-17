@@ -105,7 +105,7 @@ JausBoolean jausTimeToString(JausTime time, char *buffer, size_t buffSize)
 
 	if(time)
 	{		
-		SAFE_SPRINTF(buffer, buffSize, "%s %02d, %04d  %02d:%02d:%02d.%d\n", months[time->month], time->day, time->year, time->hour, time->minute, time->second, time->millisec);
+		sprintf(buffer, "%s %02d, %04d  %02d:%02d:%02d.%d\n", months[time->month], time->day, time->year, time->hour, time->minute, time->second, time->millisec);
 		return JAUS_TRUE;
 	}
 	else

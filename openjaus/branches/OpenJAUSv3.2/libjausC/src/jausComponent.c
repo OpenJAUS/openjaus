@@ -121,7 +121,7 @@ JausComponent jausComponentClone(JausComponent component)
 	{ 
 		stringLength = strlen(component->identification) + 1;
 		clone->identification = malloc(stringLength);
-		SAFE_SPRINTF(clone->identification, stringLength, "%s", component->identification);
+		sprintf(clone->identification, "%s", component->identification);
 	}
 	else
 	{
@@ -253,14 +253,14 @@ int jausComponentToString(JausComponent component, char *buf, size_t buffSize)
 {
 	if(component->identification)
 	{
-		return SAFE_SPRINTF(buf, buffSize, "%s (%s)-%d.%d", component->identification, 
+		return sprintf(buf, "%s (%s)-%d.%d", component->identification, 
 											 jausComponentGetTypeString(component), 
 											 component->address->component, 
 											 component->address->instance);
 	}
 	else
 	{
-		return SAFE_SPRINTF(buf, buffSize, "%s-%d.%d", jausComponentGetTypeString(component), 
+		return sprintf(buf, "%s-%d.%d", jausComponentGetTypeString(component), 
 										component->address->component, 
 										component->address->instance);
 	}

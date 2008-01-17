@@ -56,22 +56,6 @@ extern "C"
 	#define JAUS_EXPORT
 #endif
 
-#if defined(_MSC_VER)
-	#define SAFE_SPRINTF sprintf_s
-	#define SAFE_STRTOK strtok_s
-	#define SAFE_STRNCAT strncat_s
-	#define SAFE_STRCPY strcpy_s
-	#define SAFE_STRNCPY strncpy_s
-#elif defined(__GNUC__) || defined(__MINGW32__)
-	#define SAFE_SPRINTF snprintf
-	#define SAFE_STRTOK strtok_r
-	#define SAFE_STRNCAT(a, b, c, d) strncat(a, c, d)
-	#define SAFE_STRCPY(a, b, c) strncpy(a, c, b)
-	#define SAFE_STRNCPY(a, b, c, d) strncpy(a, c, d)
-#else
-	#error "No Known Thread-Safe Functions!"
-#endif
-
 typedef enum
 {
 	JAUS_FALSE	= 0,

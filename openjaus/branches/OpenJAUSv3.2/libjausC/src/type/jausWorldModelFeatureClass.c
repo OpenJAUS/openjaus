@@ -475,43 +475,43 @@ int featureClassAttributeToString(JausWorldModelFeatureClassAttribute attribute,
 	switch(attribute->dataType)
 	{
 		case JAUS_WM_OBJECT_BYTE_DATA:
-			retVal = SAFE_SPRINTF(string, stringLength, "Byte Attribute (%d)", attribute->data.byteValue);
+			retVal = sprintf(string, "Byte Attribute (%d)", attribute->data.byteValue);
 			return retVal;
 						
 		case JAUS_WM_OBJECT_SHORT_DATA:
-			retVal = SAFE_SPRINTF(string, stringLength, "Short Attribute (%d)", attribute->data.shortValue);
+			retVal = sprintf(string, "Short Attribute (%d)", attribute->data.shortValue);
 			return retVal;
 
 		case JAUS_WM_OBJECT_INTEGER_DATA:
-			retVal = SAFE_SPRINTF(string, stringLength, "Integer Attribute (%d)", attribute->data.integerValue);
+			retVal = sprintf(string, "Integer Attribute (%d)", attribute->data.integerValue);
 			return retVal;
 
 		case JAUS_WM_OBJECT_LONG_DATA:
-			retVal = SAFE_SPRINTF(string, stringLength, "Long Attribute (%lld)", attribute->data.longValue);
+			retVal = sprintf(string, "Long Attribute (%lld)", attribute->data.longValue);
 			return retVal;
 
 		case JAUS_WM_OBJECT_UNSIGNED_SHORT_DATA:
-			retVal = SAFE_SPRINTF(string, stringLength, "Unsigned Short Attribute (%d)", attribute->data.unsignedShortValue);
+			retVal = sprintf(string, "Unsigned Short Attribute (%d)", attribute->data.unsignedShortValue);
 			return retVal;
 
 		case JAUS_WM_OBJECT_UNSIGNED_INTEGER_DATA:
-			retVal = SAFE_SPRINTF(string, stringLength, "Unsigned Integer Attribute (%d)", attribute->data.unsignedIntegerValue);
+			retVal = sprintf(string, "Unsigned Integer Attribute (%d)", attribute->data.unsignedIntegerValue);
 			return retVal;
 
 		case JAUS_WM_OBJECT_UNSIGNED_LONG_DATA:
-			retVal = SAFE_SPRINTF(string, stringLength, "Unsigned Long Attribute (%lld)", attribute->data.unsignedLongValue);
+			retVal = sprintf(string, "Unsigned Long Attribute (%lld)", attribute->data.unsignedLongValue);
 			return retVal;
 
 		case JAUS_WM_OBJECT_FLOAT_DATA:
-			retVal = SAFE_SPRINTF(string, stringLength, "Float Attribute (%f)", attribute->data.floatValue);
+			retVal = sprintf(string, "Float Attribute (%f)", attribute->data.floatValue);
 			return retVal;
 
 		case JAUS_WM_OBJECT_DOUBLE_DATA:
-			retVal = SAFE_SPRINTF(string, stringLength, "Double Attribute (%lf)", attribute->data.doubleValue);
+			retVal = sprintf(string, "Double Attribute (%lf)", attribute->data.doubleValue);
 			return retVal;
 
 		case JAUS_WM_OBJECT_RGB_DATA:
-			retVal = SAFE_SPRINTF(string, stringLength, "RGB Attribute Red(%d) Green(%d) Blue(%d)", attribute->data.rgb.redValue, attribute->data.rgb.greenValue, attribute->data.rgb.blueValue);
+			retVal = sprintf(string, "RGB Attribute Red(%d) Green(%d) Blue(%d)", attribute->data.rgb.redValue, attribute->data.rgb.greenValue, attribute->data.rgb.blueValue);
 			return retVal;
 
 		default:

@@ -120,11 +120,11 @@ int jausAddressToString(JausAddress address, char *buf, size_t buffSize)
 {
 	if(address)
 	{
-		return SAFE_SPRINTF(buf, buffSize, "%d.%d.%d.%d", address->subsystem, address->node, address->component, address->instance);
+		return sprintf(buf, "%d.%d.%d.%d", address->subsystem, address->node, address->component, address->instance);
 	}
 	else
 	{
-		return SAFE_SPRINTF(buf, buffSize, "Invalid JAUS Address");
+		return sprintf(buf, "Invalid JAUS Address");
 	}
 }
 
