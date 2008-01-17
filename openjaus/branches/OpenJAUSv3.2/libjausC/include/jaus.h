@@ -56,7 +56,7 @@ extern "C"
 	#define JAUS_EXPORT
 #endif
 
-#if defined(__MSC_VER)
+#if defined(_MSC_VER)
 	#define SAFE_SPRINTF sprintf_s
 	#define SAFE_STRTOK strtok_s
 	#define SAFE_STRNCAT strncat_s
