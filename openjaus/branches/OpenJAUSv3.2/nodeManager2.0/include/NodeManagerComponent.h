@@ -30,6 +30,7 @@ public:
 	std::string toString();
 
 	JausAddress checkInLocalComponent(int cmptId);
+	void checkOutLocalComponent(int subsId, int nodeId, int cmptId, int instId);
 	void checkOutLocalComponent(JausAddress address);
 
 private:

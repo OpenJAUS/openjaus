@@ -15,6 +15,10 @@ static NodeManager *nm;
 
 class MyHandler : public EventHandler
 {
+	~MyHandler()
+	{
+
+	}
 	void handleEvent(NodeManagerEvent *e)
 	{
 		SystemTreeEvent *treeEvent;
@@ -40,9 +44,6 @@ class MyHandler : public EventHandler
 		}
 	}
 };
-
-
-
 
 #if defined(WIN32)
 int main(int argc, char *args)
@@ -112,9 +113,10 @@ int main(int argc, char *args)
 int main(int argc, char *args)
 {
 	FileLoader *configData = new FileLoader("nodeManager.conf");
-	
-	NodeManager *nm = new NodeManager(configData);
-	printf("%s", nm->systemTreeToString().c_str());
+	MyHandler *handler = new MyHandler();
+
+	nm = new NodeManager(configData, handler);
+	//printHelpMenu();
 
 	while(1)
 	{

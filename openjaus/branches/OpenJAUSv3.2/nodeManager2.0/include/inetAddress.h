@@ -83,7 +83,7 @@ void inetAddressDestroy(InetAddress);
 InetAddress inetAddressGetLocalHost(void);
 InetAddress inetAddressGetByName(char *);
 InetAddress inetAddressGetByString(char *);
-int inetAddressToString(InetAddress, char *);
+int inetAddressToString(InetAddress, char *, unsigned int);
 
 #ifdef __cplusplus
 }

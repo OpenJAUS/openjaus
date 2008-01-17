@@ -9,11 +9,12 @@ public:
 	enum {SystemTreeEvent, ErrorEvent, TransportEvent};
 	unsigned int getType();
 	virtual std::string toString();
+	virtual ~NodeManagerEvent() = 0;
 
 protected:
 	unsigned int type;
 
 };
 
-
 #endif
+

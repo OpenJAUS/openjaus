@@ -1,5 +1,10 @@
 #include "NodeManagerEvent.h"
 
+NodeManagerEvent::~NodeManagerEvent()
+{
+
+}
+
 unsigned int NodeManagerEvent::getType()
 {
 	return this->type;

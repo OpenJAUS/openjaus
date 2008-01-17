@@ -1,6 +1,8 @@
+#include "SafeStrings.h"
 #include "SystemTree.h"
 #include "timeLib.h"
 #include "SystemTreeEvent.h"
+#include "SafeStrings.h"
 
 SystemTree::SystemTree(FileLoader *configData, EventHandler *handler)
 {
@@ -1222,8 +1224,10 @@ bool SystemTree::replaceSubsystem(int subsystemId, JausSubsystem newSubs)
 		return false;
 	}
 	cloneSubs->id = currentSubs->id;
-	cloneSubs->identification = (char *) realloc(cloneSubs->identification, strlen(currentSubs->identification)+1);
-	sprintf(cloneSubs->identification, "%s", currentSubs->identification);
+	
+	size_t stringLength = strlen(currentSubs->identification) + 1;
+	cloneSubs->identification = (char *) realloc(cloneSubs->identification, stringLength);
+	SAFE_SPRINTF(cloneSubs->identification, stringLength, "%s", currentSubs->identification);
 	
 	for(int i = 0; i < newSubs->nodes->elementCount; i++)
 	{
@@ -1234,8 +1238,9 @@ bool SystemTree::replaceSubsystem(int subsystemId, JausSubsystem newSubs)
 			// Compare current with new
 			if(addNode->identification)
 			{
-				newNode->identification = (char *)calloc(1, strlen(addNode->identification)+1);
-				sprintf(newNode->identification, "%s", addNode->identification);
+				size_t stringLength = strlen(addNode->identification) + 1;
+				newNode->identification = (char *)malloc(stringLength);
+				SAFE_SPRINTF(newNode->identification, stringLength, "%s", addNode->identification);
 			}
 
 			for(int j = 0; j < newNode->components->elementCount; j++)
@@ -1246,8 +1251,9 @@ bool SystemTree::replaceSubsystem(int subsystemId, JausSubsystem newSubs)
 				{
 					if(addCmpt->identification)
 					{
-						newCmpt->identification = (char *)calloc(1, strlen(addCmpt->identification)+1);
-						sprintf(newCmpt->identification, "%s", addCmpt->identification);
+						size_t stringLength = strlen(addCmpt->identification) + 1;
+						newCmpt->identification = (char *)malloc(stringLength);
+						SAFE_SPRINTF(newCmpt->identification, stringLength, "%s", addCmpt->identification);
 					}
 
 					jausServicesDestroy(newCmpt->services);
@@ -1298,8 +1304,9 @@ bool SystemTree::replaceNode(int subsystemId, int nodeId, JausNode newNode)
 		return false;
 	}
 	cloneNode->id = currentNode->id;
-	cloneNode->identification = (char *) realloc(cloneNode->identification, strlen(currentNode->identification)+1);
-	sprintf(cloneNode->identification, "%s", currentNode->identification);
+	size_t stringLength = strlen(currentNode->identification) + 1;
+	cloneNode->identification = (char *) realloc(cloneNode->identification, stringLength);
+	SAFE_SPRINTF(cloneNode->identification, stringLength, "%s", currentNode->identification);
 	cloneNode->subsystem = currentNode->subsystem;
 	
 	for(int i = 0; i < newNode->components->elementCount; i++)
@@ -1332,10 +1339,11 @@ bool SystemTree::setSubsystemIdentification(JausAddress address, char *identific
 	JausSubsystem subs = system[address->subsystem];
 	if(subs)
 	{
-		subs->identification = (char *) realloc(subs->identification, strlen(identification) + 1);
+		size_t stringLength = strlen(identification) + 1;
+		subs->identification = (char *) realloc(subs->identification, stringLength);
 		if(subs->identification)
 		{
-			sprintf(subs->identification, "%s", identification);
+			SAFE_SPRINTF(subs->identification, stringLength, "%s", identification);
 			return true;
 		}
 	}
@@ -1347,10 +1355,11 @@ bool SystemTree::setNodeIdentification(JausAddress address, char *identification
 	JausNode node = findNode(address);
 	if(node)
 	{
-		node->identification = (char *) realloc(node->identification, strlen(identification) + 1);
+		size_t stringLength = strlen(identification) + 1;
+		node->identification = (char *) realloc(node->identification, stringLength);
 		if(node->identification)
 		{
-			sprintf(node->identification, "%s", identification);
+			SAFE_SPRINTF(node->identification, stringLength, "%s", identification);
 			return true;
 		}
 	}
@@ -1362,10 +1371,11 @@ bool SystemTree::setComponentIdentification(JausAddress address, char *identific
 	JausComponent cmpt = findComponent(address);
 	if(cmpt)
 	{
-		cmpt->identification = (char *) realloc(cmpt->identification, strlen(identification) + 1);
+		size_t stringLength = strlen(identification) + 1;
+		cmpt->identification = (char *) realloc(cmpt->identification, stringLength);
 		if(cmpt->identification)
 		{
-			sprintf(cmpt->identification, "%s", identification);
+			SAFE_SPRINTF(cmpt->identification, stringLength, "%s", identification);
 			return true;
 		}
 	}
@@ -1445,7 +1455,7 @@ std::string SystemTree::toString()
 	{
 		if(system[i])
 		{
-			jausSubsystemTableToString(system[i], buffer);
+			jausSubsystemTableToString(system[i], buffer, 4096);
 			output += buffer;
 			output += "\n";
 		}
@@ -1468,7 +1478,7 @@ std::string SystemTree::toDetailedString()
 	{
 		if(system[i])
 		{
-			jausSubsystemTableToDetailedString(system[i], buffer);
+			jausSubsystemTableToDetailedString(system[i], buffer, 20480);
 			output += buffer;
 			output += "\n";
 		}

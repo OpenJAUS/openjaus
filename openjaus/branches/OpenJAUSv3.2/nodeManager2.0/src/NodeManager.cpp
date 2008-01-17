@@ -1,3 +1,5 @@
+
+#include "SafeStrings.h"
 #include "NodeManager.h"
 
 NodeManager::NodeManager(FileLoader *configData, EventHandler *handler)
@@ -25,8 +27,9 @@ NodeManager::NodeManager(FileLoader *configData, EventHandler *handler)
 	}
 	this->subsystem->id = subsystemId;
 	
-	this->subsystem->identification = (char *) malloc(strlen(configData->GetConfigDataString("JAUS", "Subsystem_Identification").c_str())+1);
-	sprintf(this->subsystem->identification, configData->GetConfigDataString("JAUS", "Subsystem_Identification").c_str());
+	size_t identificationLength = strlen(configData->GetConfigDataString("JAUS", "Subsystem_Identification").c_str()) + 1;
+	this->subsystem->identification = (char *) malloc(identificationLength);
+	SAFE_SPRINTF(this->subsystem->identification, identificationLength, configData->GetConfigDataString("JAUS", "Subsystem_Identification").c_str());
 	
 	// Create this node
 	this->node = jausNodeCreate();
@@ -45,8 +48,9 @@ NodeManager::NodeManager(FileLoader *configData, EventHandler *handler)
 		return;
 	}
 	this->node->id = nodeId;
-	this->node->identification = (char *) malloc(strlen(configData->GetConfigDataString("JAUS", "Node_Identification").c_str())+1);
-	sprintf(this->node->identification, configData->GetConfigDataString("JAUS", "Node_Identification").c_str());
+	identificationLength = strlen(configData->GetConfigDataString("JAUS", "Node_Identification").c_str()) + 1;
+	this->node->identification = (char *) malloc(identificationLength);
+	SAFE_SPRINTF(this->node->identification, identificationLength, configData->GetConfigDataString("JAUS", "Node_Identification").c_str());
 	jausArrayAdd(this->subsystem->nodes, this->node);
 
 	// TODO: Check our config file parameters
@@ -96,3 +100,4 @@ void NodeManager::handleEvent(NodeManagerEvent *e)
 		(*iter)->handleEvent(e);
 	}
 }
+
