@@ -48,6 +48,7 @@
 #define JAUS_WM_FC_METADATA_STRING_LENGTH 65535
 
 #include "jaus.h"
+#include "string.h"
 
 // ************************************************************************************************************************************
 //			JausWorldModelFeatureClassAttribute
@@ -77,28 +78,28 @@ typedef struct
 typedef JausWorldModelFeatureClassAttributeStruct *JausWorldModelFeatureClassAttribute;
 
 // JausWorldModelFeatureClassAttribute Constructor
-JausWorldModelFeatureClassAttribute featureClassAttributeCreate(void);
+JAUS_EXPORT JausWorldModelFeatureClassAttribute featureClassAttributeCreate(void);
 
 // JausWorldModelFeatureClassAttribute Constructor (from Buffer)
-JausWorldModelFeatureClassAttribute featureClassAttributeFromBuffer(unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausWorldModelFeatureClassAttribute featureClassAttributeFromBuffer(unsigned char *buffer, unsigned int bufferSizeBytes);
 
 // JausWorldModelFeatureClassAttribute Destructor
-void featureClassAttributeDestroy(JausWorldModelFeatureClassAttribute attribute);
+JAUS_EXPORT void featureClassAttributeDestroy(JausWorldModelFeatureClassAttribute attribute);
 
 // JausWorldModelFeatureClassAttribute To Buffer
-JausBoolean featureClassAttributeToBuffer(JausWorldModelFeatureClassAttribute attribute, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean featureClassAttributeToBuffer(JausWorldModelFeatureClassAttribute attribute, unsigned char *buffer, unsigned int bufferSizeBytes);
 
 // JausWorldModelFeatureClassAttribute Buffer Size
-unsigned int featureClassAttributeSizeBytes(JausWorldModelFeatureClassAttribute attribute);
+JAUS_EXPORT unsigned int featureClassAttributeSizeBytes(JausWorldModelFeatureClassAttribute attribute);
 
 // JausWorldModelFeatureClassAttribute Copy
-JausWorldModelFeatureClassAttribute featureClassAttributeCopy(JausWorldModelFeatureClassAttribute attribute);
+JAUS_EXPORT JausWorldModelFeatureClassAttribute featureClassAttributeCopy(JausWorldModelFeatureClassAttribute attribute);
 
 // JausWorldModelFeatureClassAttribute ToString
-int featureClassAttributeToString(JausWorldModelFeatureClassAttribute attribute, char *string);
+JAUS_EXPORT int featureClassAttributeToString(JausWorldModelFeatureClassAttribute attribute, char *string, size_t stringLength);
 
 // JausWorldModelFeatureClassAttribute GetValue
-JausUnsignedLong featureClassAttributeGetValue(JausWorldModelFeatureClassAttribute attribute);
+JAUS_EXPORT JausUnsignedLong featureClassAttributeGetValue(JausWorldModelFeatureClassAttribute attribute);
 
 // ************************************************************************************************************************************
 //			FeatureClass
@@ -112,21 +113,21 @@ typedef struct
 typedef JausWorldModelFeatureClassStruct *JausWorldModelFeatureClass;
 
 // JausWorldModelFeatureClass Constructor
-JausWorldModelFeatureClass featureClassCreate(void);
+JAUS_EXPORT JausWorldModelFeatureClass featureClassCreate(void);
 
 // JausWorldModelFeatureClass Constructor (from Buffer)
-JausWorldModelFeatureClass featureClassFromBuffer(unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausWorldModelFeatureClass featureClassFromBuffer(unsigned char *buffer, unsigned int bufferSizeBytes);
 
 // JausWorldModelFeatureClass Destructor
-void featureClassDestroy(JausWorldModelFeatureClass fcClass);
+JAUS_EXPORT void featureClassDestroy(JausWorldModelFeatureClass fcClass);
 
 // JausWorldModelFeatureClass To Buffer
-JausBoolean featureClassToBuffer(JausWorldModelFeatureClass fcClass, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean featureClassToBuffer(JausWorldModelFeatureClass fcClass, unsigned char *buffer, unsigned int bufferSizeBytes);
 
 // JausWorldModelFeatureClass Buffer Size
-unsigned int featureClassSizeBytes(JausWorldModelFeatureClass fcClass);
+JAUS_EXPORT unsigned int featureClassSizeBytes(JausWorldModelFeatureClass fcClass);
 
 // JausWorldModelFeatureClass Copy
-JausWorldModelFeatureClass featureClassCopy(JausWorldModelFeatureClass fcClass);
+JAUS_EXPORT JausWorldModelFeatureClass featureClassCopy(JausWorldModelFeatureClass fcClass);
 
 #endif

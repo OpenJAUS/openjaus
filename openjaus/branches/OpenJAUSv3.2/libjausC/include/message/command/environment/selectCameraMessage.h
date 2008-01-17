@@ -92,18 +92,15 @@ typedef struct
 
 typedef SelectCameraMessageStruct* SelectCameraMessage;
 
-SelectCameraMessage selectCameraMessageCreate(void);
-void selectCameraMessageDestroy(SelectCameraMessage);
+JAUS_EXPORT SelectCameraMessage selectCameraMessageCreate(void);
+JAUS_EXPORT void selectCameraMessageDestroy(SelectCameraMessage);
 
-JausBoolean selectCameraMessageFromBuffer(SelectCameraMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean selectCameraMessageToBuffer(SelectCameraMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean selectCameraMessageFromBuffer(SelectCameraMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean selectCameraMessageToBuffer(SelectCameraMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
+JAUS_EXPORT SelectCameraMessage selectCameraMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage selectCameraMessageToJausMessage(SelectCameraMessage message);
 
-SelectCameraMessage selectCameraMessageFromJausMessage(JausMessage jausMessage);
-JausMessage selectCameraMessageToJausMessage(SelectCameraMessage message);
-
-
-unsigned int selectCameraMessageSize(SelectCameraMessage message);
-
+JAUS_EXPORT unsigned int selectCameraMessageSize(SelectCameraMessage message);
 
 #endif // SELECT_CAMERA_MESSAGE_H

@@ -86,19 +86,19 @@ typedef struct
 
 typedef JausTimeStruct *JausTime;
 
-JausTime jausTimeCreate(void);
-void jausTimeDestroy(JausTime time);
+JAUS_EXPORT JausTime jausTimeCreate(void);
+JAUS_EXPORT void jausTimeDestroy(JausTime time);
 
-JausBoolean jausTimeSetCurrentTime(JausTime time);
-JausBoolean jausTimeToString(JausTime time, char *buffer);
+JAUS_EXPORT JausBoolean jausTimeSetCurrentTime(JausTime time);
+JAUS_EXPORT JausBoolean jausTimeToString(JausTime time, char *buffer, size_t buffSize);
 
-JausBoolean jausTimeStampFromBuffer(JausTime input, unsigned char *buf, unsigned int bufferSizeBytes);
-JausBoolean jausTimeStampToBuffer(JausTime input, unsigned char *buf, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean jausTimeStampFromBuffer(JausTime input, unsigned char *buf, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean jausTimeStampToBuffer(JausTime input, unsigned char *buf, unsigned int bufferSizeBytes);
 
-JausBoolean jausDataStampFromBuffer(JausTime input, unsigned char *buf, unsigned int bufferSizeBytes);
-JausBoolean jausDataStampToBuffer(JausTime input, unsigned char *buf, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean jausDataStampFromBuffer(JausTime input, unsigned char *buf, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean jausDataStampToBuffer(JausTime input, unsigned char *buf, unsigned int bufferSizeBytes);
 
-JausUnsignedInteger jausTimeGetTimeStamp(JausTime time);
-JausUnsignedShort jausTimeGetDateStamp(JausTime time);
+JAUS_EXPORT JausUnsignedInteger jausTimeGetTimeStamp(JausTime time);
+JAUS_EXPORT JausUnsignedShort jausTimeGetDateStamp(JausTime time);
 
 #endif

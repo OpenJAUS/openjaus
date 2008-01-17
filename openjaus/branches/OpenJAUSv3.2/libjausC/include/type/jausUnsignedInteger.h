@@ -55,12 +55,12 @@
 
 typedef unsigned int JausUnsignedInteger;
 
-JausUnsignedInteger newJausUnsignedInteger(unsigned int val);
+JAUS_EXPORT JausUnsignedInteger newJausUnsignedInteger(unsigned int val);
 
-JausBoolean jausUnsignedIntegerFromBuffer(JausUnsignedInteger *jUint, unsigned char *buf, unsigned int bufferSizeBytes);
-JausBoolean jausUnsignedIntegerToBuffer(JausUnsignedInteger input, unsigned char *buf, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean jausUnsignedIntegerFromBuffer(JausUnsignedInteger *jUint, unsigned char *buf, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean jausUnsignedIntegerToBuffer(JausUnsignedInteger input, unsigned char *buf, unsigned int bufferSizeBytes);
 
-double jausUnsignedIntegerToDouble(JausUnsignedInteger input, double min, double max);
-JausUnsignedInteger jausUnsignedIntegerFromDouble(double value, double min, double max);
+JAUS_EXPORT double jausUnsignedIntegerToDouble(JausUnsignedInteger input, double min, double max);
+JAUS_EXPORT JausUnsignedInteger jausUnsignedIntegerFromDouble(double value, double min, double max);
 
 #endif // JAUS_UNSIGNED_INTEGER_H

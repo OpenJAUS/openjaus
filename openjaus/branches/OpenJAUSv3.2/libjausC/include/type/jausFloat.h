@@ -51,9 +51,9 @@
 
 typedef float JausFloat;
 
-JausFloat newJausFloat(float val);
+JAUS_EXPORT JausFloat newJausFloat(float val);
 
-JausBoolean jausFloatFromBuffer(JausFloat *jFloat, unsigned char *buf, unsigned int bufferSizeBytes);
-JausBoolean jausFloatToBuffer(JausFloat input, unsigned char *buf, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean jausFloatFromBuffer(JausFloat *jFloat, unsigned char *buf, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean jausFloatToBuffer(JausFloat input, unsigned char *buf, unsigned int bufferSizeBytes);
 
 #endif // JAUS_FLOAT_H

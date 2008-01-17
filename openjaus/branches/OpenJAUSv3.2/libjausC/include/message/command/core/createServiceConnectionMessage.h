@@ -92,18 +92,15 @@ typedef struct
 
 typedef CreateServiceConnectionMessageStruct* CreateServiceConnectionMessage;
 
-CreateServiceConnectionMessage createServiceConnectionMessageCreate(void);
-void createServiceConnectionMessageDestroy(CreateServiceConnectionMessage);
+JAUS_EXPORT CreateServiceConnectionMessage createServiceConnectionMessageCreate(void);
+JAUS_EXPORT void createServiceConnectionMessageDestroy(CreateServiceConnectionMessage);
 
-JausBoolean createServiceConnectionMessageFromBuffer(CreateServiceConnectionMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean createServiceConnectionMessageToBuffer(CreateServiceConnectionMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean createServiceConnectionMessageFromBuffer(CreateServiceConnectionMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean createServiceConnectionMessageToBuffer(CreateServiceConnectionMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
+JAUS_EXPORT CreateServiceConnectionMessage createServiceConnectionMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage createServiceConnectionMessageToJausMessage(CreateServiceConnectionMessage message);
 
-CreateServiceConnectionMessage createServiceConnectionMessageFromJausMessage(JausMessage jausMessage);
-JausMessage createServiceConnectionMessageToJausMessage(CreateServiceConnectionMessage message);
-
-
-unsigned int createServiceConnectionMessageSize(CreateServiceConnectionMessage message);
-
+JAUS_EXPORT unsigned int createServiceConnectionMessageSize(CreateServiceConnectionMessage message);
 
 #endif // CREATE_SERVICE_CONNECTION_MESSAGE_H

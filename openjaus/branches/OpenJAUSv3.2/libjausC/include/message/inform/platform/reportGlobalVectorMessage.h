@@ -104,16 +104,15 @@ typedef struct
 
 typedef ReportGlobalVectorMessageStruct* ReportGlobalVectorMessage;
 
-ReportGlobalVectorMessage reportGlobalVectorMessageCreate(void);
-void reportGlobalVectorMessageDestroy(ReportGlobalVectorMessage);
+JAUS_EXPORT ReportGlobalVectorMessage reportGlobalVectorMessageCreate(void);
+JAUS_EXPORT void reportGlobalVectorMessageDestroy(ReportGlobalVectorMessage);
 
-JausBoolean reportGlobalVectorMessageFromBuffer(ReportGlobalVectorMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean reportGlobalVectorMessageToBuffer(ReportGlobalVectorMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean reportGlobalVectorMessageFromBuffer(ReportGlobalVectorMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean reportGlobalVectorMessageToBuffer(ReportGlobalVectorMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
-ReportGlobalVectorMessage reportGlobalVectorMessageFromJausMessage(JausMessage jausMessage);
-JausMessage reportGlobalVectorMessageToJausMessage(ReportGlobalVectorMessage message);
+JAUS_EXPORT ReportGlobalVectorMessage reportGlobalVectorMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage reportGlobalVectorMessageToJausMessage(ReportGlobalVectorMessage message);
 
-unsigned int reportGlobalVectorMessageSize(ReportGlobalVectorMessage message);
-
+JAUS_EXPORT unsigned int reportGlobalVectorMessageSize(ReportGlobalVectorMessage message);
 
 #endif // REPORT_GLOBAL_VECTOR_MESSAGE_H

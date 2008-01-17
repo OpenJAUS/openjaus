@@ -94,18 +94,15 @@ typedef struct
 
 typedef ConfirmComponentControlMessageStruct* ConfirmComponentControlMessage;
 
-ConfirmComponentControlMessage confirmComponentControlMessageCreate(void);
-void confirmComponentControlMessageDestroy(ConfirmComponentControlMessage);
+JAUS_EXPORT ConfirmComponentControlMessage confirmComponentControlMessageCreate(void);
+JAUS_EXPORT void confirmComponentControlMessageDestroy(ConfirmComponentControlMessage);
 
-JausBoolean confirmComponentControlMessageFromBuffer(ConfirmComponentControlMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean confirmComponentControlMessageToBuffer(ConfirmComponentControlMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean confirmComponentControlMessageFromBuffer(ConfirmComponentControlMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean confirmComponentControlMessageToBuffer(ConfirmComponentControlMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
+JAUS_EXPORT ConfirmComponentControlMessage confirmComponentControlMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage confirmComponentControlMessageToJausMessage(ConfirmComponentControlMessage message);
 
-ConfirmComponentControlMessage confirmComponentControlMessageFromJausMessage(JausMessage jausMessage);
-JausMessage confirmComponentControlMessageToJausMessage(ConfirmComponentControlMessage message);
-
-
-unsigned int confirmComponentControlMessageSize(ConfirmComponentControlMessage message);
-
+JAUS_EXPORT unsigned int confirmComponentControlMessageSize(ConfirmComponentControlMessage message);
 
 #endif // CONFIRM_COMPONENT_CONTROL_MESSAGE_H

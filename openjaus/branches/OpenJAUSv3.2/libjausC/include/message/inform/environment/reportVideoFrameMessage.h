@@ -95,18 +95,15 @@ typedef struct
 
 typedef ReportVideoFrameMessageStruct* ReportVideoFrameMessage;
 
-ReportVideoFrameMessage reportVideoFrameMessageCreate(void);
-void reportVideoFrameMessageDestroy(ReportVideoFrameMessage);
+JAUS_EXPORT ReportVideoFrameMessage reportVideoFrameMessageCreate(void);
+JAUS_EXPORT void reportVideoFrameMessageDestroy(ReportVideoFrameMessage);
 
-JausBoolean reportVideoFrameMessageFromBuffer(ReportVideoFrameMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean reportVideoFrameMessageToBuffer(ReportVideoFrameMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean reportVideoFrameMessageFromBuffer(ReportVideoFrameMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean reportVideoFrameMessageToBuffer(ReportVideoFrameMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
+JAUS_EXPORT ReportVideoFrameMessage reportVideoFrameMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage reportVideoFrameMessageToJausMessage(ReportVideoFrameMessage message);
 
-ReportVideoFrameMessage reportVideoFrameMessageFromJausMessage(JausMessage jausMessage);
-JausMessage reportVideoFrameMessageToJausMessage(ReportVideoFrameMessage message);
-
-
-unsigned int reportVideoFrameMessageSize(ReportVideoFrameMessage message);
-
+JAUS_EXPORT unsigned int reportVideoFrameMessageSize(ReportVideoFrameMessage message);
 
 #endif // REPORT_VIDEO_FRAME_MESSAGE_H

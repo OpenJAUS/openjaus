@@ -90,16 +90,15 @@ typedef struct
 
 typedef QueryVideoFrameMessageStruct* QueryVideoFrameMessage;
 
-QueryVideoFrameMessage queryVideoFrameMessageCreate(void);
-void queryVideoFrameMessageDestroy(QueryVideoFrameMessage);
+JAUS_EXPORT QueryVideoFrameMessage queryVideoFrameMessageCreate(void);
+JAUS_EXPORT void queryVideoFrameMessageDestroy(QueryVideoFrameMessage);
 
-JausBoolean queryVideoFrameMessageFromBuffer(QueryVideoFrameMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean queryVideoFrameMessageToBuffer(QueryVideoFrameMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean queryVideoFrameMessageFromBuffer(QueryVideoFrameMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean queryVideoFrameMessageToBuffer(QueryVideoFrameMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
-QueryVideoFrameMessage queryVideoFrameMessageFromJausMessage(JausMessage jausMessage);
-JausMessage queryVideoFrameMessageToJausMessage(QueryVideoFrameMessage message);
+JAUS_EXPORT QueryVideoFrameMessage queryVideoFrameMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage queryVideoFrameMessageToJausMessage(QueryVideoFrameMessage message);
 
-unsigned int queryVideoFrameMessageSize(QueryVideoFrameMessage message);
-
+JAUS_EXPORT unsigned int queryVideoFrameMessageSize(QueryVideoFrameMessage message);
 
 #endif // QUERY_VIDEO_FRAME_MESSAGE_H

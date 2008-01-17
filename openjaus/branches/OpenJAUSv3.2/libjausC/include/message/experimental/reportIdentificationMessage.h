@@ -102,16 +102,15 @@ typedef struct
 
 typedef ReportIdentificationMessageStruct* ReportIdentificationMessage;
 
-ReportIdentificationMessage reportIdentificationMessageCreate(void);
-void reportIdentificationMessageDestroy(ReportIdentificationMessage);
+JAUS_EXPORT ReportIdentificationMessage reportIdentificationMessageCreate(void);
+JAUS_EXPORT void reportIdentificationMessageDestroy(ReportIdentificationMessage);
 
-JausBoolean reportIdentificationMessageFromBuffer(ReportIdentificationMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean reportIdentificationMessageToBuffer(ReportIdentificationMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean reportIdentificationMessageFromBuffer(ReportIdentificationMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean reportIdentificationMessageToBuffer(ReportIdentificationMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
-ReportIdentificationMessage reportIdentificationMessageFromJausMessage(JausMessage jausMessage);
-JausMessage reportIdentificationMessageToJausMessage(ReportIdentificationMessage message);
+JAUS_EXPORT ReportIdentificationMessage reportIdentificationMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage reportIdentificationMessageToJausMessage(ReportIdentificationMessage message);
 
-unsigned int reportIdentificationMessageSize(ReportIdentificationMessage message);
-
+JAUS_EXPORT unsigned int reportIdentificationMessageSize(ReportIdentificationMessage message);
 
 #endif // REPORT_IDENTIFICATION_MESSAGE_H

@@ -52,7 +52,7 @@ typedef struct{
 
 typedef JausGeometryPointLLAStruct *JausGeometryPointLLA;
 
-JausGeometryPointLLA jausGeometryPointLLACreate(void);
-void jausGeometryPointLLADestroy(JausGeometryPointLLA);
+JAUS_EXPORT JausGeometryPointLLA jausGeometryPointLLACreate(void);
+JAUS_EXPORT void jausGeometryPointLLADestroy(JausGeometryPointLLA);
 
 #endif

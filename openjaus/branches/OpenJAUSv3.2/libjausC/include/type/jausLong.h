@@ -55,12 +55,12 @@
 
 typedef	long long JausLong;
 
-JausLong newJausLong(long long val);
+JAUS_EXPORT JausLong newJausLong(long long val);
 
-JausBoolean jausLongFromBuffer(JausLong *jLong, unsigned char *buf, unsigned int bufferSizeBytes);
-JausBoolean jausLongToBuffer(JausLong input, unsigned char *buf, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean jausLongFromBuffer(JausLong *jLong, unsigned char *buf, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean jausLongToBuffer(JausLong input, unsigned char *buf, unsigned int bufferSizeBytes);
 
-double jausLongToDouble(JausLong input, double min, double max);
-JausLong jausLongFromDouble(double value, double min, double max);
+JAUS_EXPORT double jausLongToDouble(JausLong input, double min, double max);
+JAUS_EXPORT JausLong jausLongFromDouble(double value, double min, double max);
 
 #endif // JAUS_LONG_H

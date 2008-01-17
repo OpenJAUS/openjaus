@@ -90,16 +90,15 @@ typedef struct
 
 typedef QueryTravelSpeedMessageStruct* QueryTravelSpeedMessage;
 
-QueryTravelSpeedMessage queryTravelSpeedMessageCreate(void);
-void queryTravelSpeedMessageDestroy(QueryTravelSpeedMessage);
+JAUS_EXPORT QueryTravelSpeedMessage queryTravelSpeedMessageCreate(void);
+JAUS_EXPORT void queryTravelSpeedMessageDestroy(QueryTravelSpeedMessage);
 
-JausBoolean queryTravelSpeedMessageFromBuffer(QueryTravelSpeedMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean queryTravelSpeedMessageToBuffer(QueryTravelSpeedMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean queryTravelSpeedMessageFromBuffer(QueryTravelSpeedMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean queryTravelSpeedMessageToBuffer(QueryTravelSpeedMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
-QueryTravelSpeedMessage queryTravelSpeedMessageFromJausMessage(JausMessage jausMessage);
-JausMessage queryTravelSpeedMessageToJausMessage(QueryTravelSpeedMessage message);
+JAUS_EXPORT QueryTravelSpeedMessage queryTravelSpeedMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage queryTravelSpeedMessageToJausMessage(QueryTravelSpeedMessage message);
 
-unsigned int queryTravelSpeedMessageSize(QueryTravelSpeedMessage message);
-
+JAUS_EXPORT unsigned int queryTravelSpeedMessageSize(QueryTravelSpeedMessage message);
 
 #endif // QUERY_TRAVEL_SPEED_MESSAGE_H

@@ -90,16 +90,15 @@ typedef struct
 
 typedef QueryHeartbeatPulseMessageStruct* QueryHeartbeatPulseMessage;
 
-QueryHeartbeatPulseMessage queryHeartbeatPulseMessageCreate(void);
-void queryHeartbeatPulseMessageDestroy(QueryHeartbeatPulseMessage);
+JAUS_EXPORT QueryHeartbeatPulseMessage queryHeartbeatPulseMessageCreate(void);
+JAUS_EXPORT void queryHeartbeatPulseMessageDestroy(QueryHeartbeatPulseMessage);
 
-JausBoolean queryHeartbeatPulseMessageFromBuffer(QueryHeartbeatPulseMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean queryHeartbeatPulseMessageToBuffer(QueryHeartbeatPulseMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean queryHeartbeatPulseMessageFromBuffer(QueryHeartbeatPulseMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean queryHeartbeatPulseMessageToBuffer(QueryHeartbeatPulseMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
-QueryHeartbeatPulseMessage queryHeartbeatPulseMessageFromJausMessage(JausMessage jausMessage);
-JausMessage queryHeartbeatPulseMessageToJausMessage(QueryHeartbeatPulseMessage message);
+JAUS_EXPORT QueryHeartbeatPulseMessage queryHeartbeatPulseMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage queryHeartbeatPulseMessageToJausMessage(QueryHeartbeatPulseMessage message);
 
-unsigned int queryHeartbeatPulseMessageSize(QueryHeartbeatPulseMessage message);
-
+JAUS_EXPORT unsigned int queryHeartbeatPulseMessageSize(QueryHeartbeatPulseMessage message);
 
 #endif // QUERY_HEARTBEAT_PULSE_MESSAGE_H

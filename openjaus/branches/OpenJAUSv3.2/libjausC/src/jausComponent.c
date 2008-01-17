@@ -108,6 +108,7 @@ void jausComponentDestroy(JausComponent component)
 JausComponent jausComponentClone(JausComponent component)
 {
 	JausComponent clone;
+	size_t stringLength = 0;
 	
 	clone = (JausComponent)malloc( sizeof(JausComponentStruct) );
 	if(clone == NULL)
@@ -117,9 +118,10 @@ JausComponent jausComponentClone(JausComponent component)
 
 	// Init Values
 	if(component->identification)
-	{
-		clone->identification = malloc(strlen(component->identification)+1);
-		sprintf(clone->identification, "%s", component->identification);
+	{ 
+		stringLength = strlen(component->identification) + 1;
+		clone->identification = malloc(stringLength);
+		SAFE_SPRINTF(clone->identification, stringLength, "%s", component->identification);
 	}
 	else
 	{
@@ -247,18 +249,18 @@ JausBoolean jausComponentIsTimedOut(JausComponent component)
 	return difftime(now, component->timeStampSec) > COMPONENT_TIMEOUT_SEC? JAUS_TRUE : JAUS_FALSE;
 }
 
-int jausComponentToString(JausComponent component, char *buf)
+int jausComponentToString(JausComponent component, char *buf, size_t buffSize)
 {
 	if(component->identification)
 	{
-		return sprintf(buf, "%s (%s)-%d.%d", component->identification, 
+		return SAFE_SPRINTF(buf, buffSize, "%s (%s)-%d.%d", component->identification, 
 											 jausComponentGetTypeString(component), 
 											 component->address->component, 
 											 component->address->instance);
 	}
 	else
 	{
-		return sprintf(buf, "%s-%d.%d", jausComponentGetTypeString(component), 
+		return SAFE_SPRINTF(buf, buffSize, "%s-%d.%d", jausComponentGetTypeString(component), 
 										component->address->component, 
 										component->address->instance);
 	}

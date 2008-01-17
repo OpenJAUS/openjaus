@@ -119,18 +119,15 @@ typedef struct
 
 typedef SetWrenchEffortMessageStruct* SetWrenchEffortMessage;
 
-SetWrenchEffortMessage setWrenchEffortMessageCreate(void);
-void setWrenchEffortMessageDestroy(SetWrenchEffortMessage);
+JAUS_EXPORT SetWrenchEffortMessage setWrenchEffortMessageCreate(void);
+JAUS_EXPORT void setWrenchEffortMessageDestroy(SetWrenchEffortMessage);
 
-JausBoolean setWrenchEffortMessageFromBuffer(SetWrenchEffortMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean setWrenchEffortMessageToBuffer(SetWrenchEffortMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean setWrenchEffortMessageFromBuffer(SetWrenchEffortMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean setWrenchEffortMessageToBuffer(SetWrenchEffortMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
+JAUS_EXPORT SetWrenchEffortMessage setWrenchEffortMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage setWrenchEffortMessageToJausMessage(SetWrenchEffortMessage message);
 
-SetWrenchEffortMessage setWrenchEffortMessageFromJausMessage(JausMessage jausMessage);
-JausMessage setWrenchEffortMessageToJausMessage(SetWrenchEffortMessage message);
-
-
-unsigned int setWrenchEffortMessageSize(SetWrenchEffortMessage message);
-
+JAUS_EXPORT unsigned int setWrenchEffortMessageSize(SetWrenchEffortMessage message);
 
 #endif // SET_WRENCH_EFFORT_MESSAGE_H

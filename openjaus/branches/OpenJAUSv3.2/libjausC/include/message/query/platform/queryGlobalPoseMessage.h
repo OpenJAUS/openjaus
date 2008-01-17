@@ -90,16 +90,15 @@ typedef struct
 
 typedef QueryGlobalPoseMessageStruct* QueryGlobalPoseMessage;
 
-QueryGlobalPoseMessage queryGlobalPoseMessageCreate(void);
-void queryGlobalPoseMessageDestroy(QueryGlobalPoseMessage);
+JAUS_EXPORT QueryGlobalPoseMessage queryGlobalPoseMessageCreate(void);
+JAUS_EXPORT void queryGlobalPoseMessageDestroy(QueryGlobalPoseMessage);
 
-JausBoolean queryGlobalPoseMessageFromBuffer(QueryGlobalPoseMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean queryGlobalPoseMessageToBuffer(QueryGlobalPoseMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean queryGlobalPoseMessageFromBuffer(QueryGlobalPoseMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean queryGlobalPoseMessageToBuffer(QueryGlobalPoseMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
-QueryGlobalPoseMessage queryGlobalPoseMessageFromJausMessage(JausMessage jausMessage);
-JausMessage queryGlobalPoseMessageToJausMessage(QueryGlobalPoseMessage message);
+JAUS_EXPORT QueryGlobalPoseMessage queryGlobalPoseMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage queryGlobalPoseMessageToJausMessage(QueryGlobalPoseMessage message);
 
-unsigned int queryGlobalPoseMessageSize(QueryGlobalPoseMessage message);
-
+JAUS_EXPORT unsigned int queryGlobalPoseMessageSize(QueryGlobalPoseMessage message);
 
 #endif // QUERY_GLOBAL_POSE_MESSAGE_H

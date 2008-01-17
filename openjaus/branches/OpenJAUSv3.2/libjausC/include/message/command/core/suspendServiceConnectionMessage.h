@@ -91,18 +91,15 @@ typedef struct
 
 typedef SuspendServiceConnectionMessageStruct* SuspendServiceConnectionMessage;
 
-SuspendServiceConnectionMessage suspendServiceConnectionMessageCreate(void);
-void suspendServiceConnectionMessageDestroy(SuspendServiceConnectionMessage);
+JAUS_EXPORT SuspendServiceConnectionMessage suspendServiceConnectionMessageCreate(void);
+JAUS_EXPORT void suspendServiceConnectionMessageDestroy(SuspendServiceConnectionMessage);
 
-JausBoolean suspendServiceConnectionMessageFromBuffer(SuspendServiceConnectionMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean suspendServiceConnectionMessageToBuffer(SuspendServiceConnectionMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean suspendServiceConnectionMessageFromBuffer(SuspendServiceConnectionMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean suspendServiceConnectionMessageToBuffer(SuspendServiceConnectionMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
+JAUS_EXPORT SuspendServiceConnectionMessage suspendServiceConnectionMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage suspendServiceConnectionMessageToJausMessage(SuspendServiceConnectionMessage message);
 
-SuspendServiceConnectionMessage suspendServiceConnectionMessageFromJausMessage(JausMessage jausMessage);
-JausMessage suspendServiceConnectionMessageToJausMessage(SuspendServiceConnectionMessage message);
-
-
-unsigned int suspendServiceConnectionMessageSize(SuspendServiceConnectionMessage message);
-
+JAUS_EXPORT unsigned int suspendServiceConnectionMessageSize(SuspendServiceConnectionMessage message);
 
 #endif // SUSPEND_SERVICE_CONNECTION_MESSAGE_H

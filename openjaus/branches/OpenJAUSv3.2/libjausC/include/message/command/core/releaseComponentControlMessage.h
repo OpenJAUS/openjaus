@@ -94,18 +94,15 @@ typedef struct
 
 typedef ReleaseComponentControlMessageStruct* ReleaseComponentControlMessage;
 
-ReleaseComponentControlMessage releaseComponentControlMessageCreate(void);
-void releaseComponentControlMessageDestroy(ReleaseComponentControlMessage);
+JAUS_EXPORT ReleaseComponentControlMessage releaseComponentControlMessageCreate(void);
+JAUS_EXPORT void releaseComponentControlMessageDestroy(ReleaseComponentControlMessage);
 
-JausBoolean releaseComponentControlMessageFromBuffer(ReleaseComponentControlMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean releaseComponentControlMessageToBuffer(ReleaseComponentControlMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean releaseComponentControlMessageFromBuffer(ReleaseComponentControlMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean releaseComponentControlMessageToBuffer(ReleaseComponentControlMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
+JAUS_EXPORT ReleaseComponentControlMessage releaseComponentControlMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage releaseComponentControlMessageToJausMessage(ReleaseComponentControlMessage message);
 
-ReleaseComponentControlMessage releaseComponentControlMessageFromJausMessage(JausMessage jausMessage);
-JausMessage releaseComponentControlMessageToJausMessage(ReleaseComponentControlMessage message);
-
-
-unsigned int releaseComponentControlMessageSize(ReleaseComponentControlMessage message);
-
+JAUS_EXPORT unsigned int releaseComponentControlMessageSize(ReleaseComponentControlMessage message);
 
 #endif // RELEASE_COMPONENT_CONTROL_MESSAGE_H

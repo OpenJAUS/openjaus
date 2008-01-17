@@ -99,16 +99,15 @@ typedef struct
 
 typedef QueryIdentificationMessageStruct* QueryIdentificationMessage;
 
-QueryIdentificationMessage queryIdentificationMessageCreate(void);
-void queryIdentificationMessageDestroy(QueryIdentificationMessage);
+JAUS_EXPORT QueryIdentificationMessage queryIdentificationMessageCreate(void);
+JAUS_EXPORT void queryIdentificationMessageDestroy(QueryIdentificationMessage);
 
-JausBoolean queryIdentificationMessageFromBuffer(QueryIdentificationMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean queryIdentificationMessageToBuffer(QueryIdentificationMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean queryIdentificationMessageFromBuffer(QueryIdentificationMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean queryIdentificationMessageToBuffer(QueryIdentificationMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
-QueryIdentificationMessage queryIdentificationMessageFromJausMessage(JausMessage jausMessage);
-JausMessage queryIdentificationMessageToJausMessage(QueryIdentificationMessage message);
+JAUS_EXPORT QueryIdentificationMessage queryIdentificationMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage queryIdentificationMessageToJausMessage(QueryIdentificationMessage message);
 
-unsigned int queryIdentificationMessageSize(QueryIdentificationMessage message);
-
+JAUS_EXPORT unsigned int queryIdentificationMessageSize(QueryIdentificationMessage message);
 
 #endif // QUERY_IDENTIFICATION_MESSAGE_H

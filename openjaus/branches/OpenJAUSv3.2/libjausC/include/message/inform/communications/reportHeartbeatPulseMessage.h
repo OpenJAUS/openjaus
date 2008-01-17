@@ -90,16 +90,15 @@ typedef struct
 
 typedef ReportHeartbeatPulseMessageStruct* ReportHeartbeatPulseMessage;
 
-ReportHeartbeatPulseMessage reportHeartbeatPulseMessageCreate(void);
-void reportHeartbeatPulseMessageDestroy(ReportHeartbeatPulseMessage);
+JAUS_EXPORT ReportHeartbeatPulseMessage reportHeartbeatPulseMessageCreate(void);
+JAUS_EXPORT void reportHeartbeatPulseMessageDestroy(ReportHeartbeatPulseMessage);
 
-JausBoolean reportHeartbeatPulseMessageFromBuffer(ReportHeartbeatPulseMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean reportHeartbeatPulseMessageToBuffer(ReportHeartbeatPulseMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean reportHeartbeatPulseMessageFromBuffer(ReportHeartbeatPulseMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean reportHeartbeatPulseMessageToBuffer(ReportHeartbeatPulseMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
-ReportHeartbeatPulseMessage reportHeartbeatPulseMessageFromJausMessage(JausMessage jausMessage);
-JausMessage reportHeartbeatPulseMessageToJausMessage(ReportHeartbeatPulseMessage message);
+JAUS_EXPORT ReportHeartbeatPulseMessage reportHeartbeatPulseMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage reportHeartbeatPulseMessageToJausMessage(ReportHeartbeatPulseMessage message);
 
-unsigned int reportHeartbeatPulseMessageSize(ReportHeartbeatPulseMessage message);
-
+JAUS_EXPORT unsigned int reportHeartbeatPulseMessageSize(ReportHeartbeatPulseMessage message);
 
 #endif // REPORT_HEARTBEAT_PULSE_MESSAGE_H

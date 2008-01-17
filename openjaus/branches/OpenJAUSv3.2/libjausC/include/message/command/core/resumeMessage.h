@@ -90,18 +90,15 @@ typedef struct
 
 typedef ResumeMessageStruct* ResumeMessage;
 
-ResumeMessage resumeMessageCreate(void);
-void resumeMessageDestroy(ResumeMessage);
+JAUS_EXPORT ResumeMessage resumeMessageCreate(void);
+JAUS_EXPORT void resumeMessageDestroy(ResumeMessage);
 
-JausBoolean resumeMessageFromBuffer(ResumeMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean resumeMessageToBuffer(ResumeMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean resumeMessageFromBuffer(ResumeMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean resumeMessageToBuffer(ResumeMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
+JAUS_EXPORT ResumeMessage resumeMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage resumeMessageToJausMessage(ResumeMessage message);
 
-ResumeMessage resumeMessageFromJausMessage(JausMessage jausMessage);
-JausMessage resumeMessageToJausMessage(ResumeMessage message);
-
-
-unsigned int resumeMessageSize(ResumeMessage message);
-
+JAUS_EXPORT unsigned int resumeMessageSize(ResumeMessage message);
 
 #endif // RESUME_MESSAGE_H

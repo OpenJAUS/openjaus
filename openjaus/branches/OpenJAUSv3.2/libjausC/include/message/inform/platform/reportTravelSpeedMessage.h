@@ -90,18 +90,15 @@ typedef struct
 
 typedef ReportTravelSpeedMessageStruct* ReportTravelSpeedMessage;
 
-ReportTravelSpeedMessage reportTravelSpeedMessageCreate(void);
-void reportTravelSpeedMessageDestroy(ReportTravelSpeedMessage);
+JAUS_EXPORT ReportTravelSpeedMessage reportTravelSpeedMessageCreate(void);
+JAUS_EXPORT void reportTravelSpeedMessageDestroy(ReportTravelSpeedMessage);
 
-JausBoolean reportTravelSpeedMessageFromBuffer(ReportTravelSpeedMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean reportTravelSpeedMessageToBuffer(ReportTravelSpeedMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean reportTravelSpeedMessageFromBuffer(ReportTravelSpeedMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean reportTravelSpeedMessageToBuffer(ReportTravelSpeedMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
+JAUS_EXPORT ReportTravelSpeedMessage reportTravelSpeedMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage reportTravelSpeedMessageToJausMessage(ReportTravelSpeedMessage message);
 
-ReportTravelSpeedMessage reportTravelSpeedMessageFromJausMessage(JausMessage jausMessage);
-JausMessage reportTravelSpeedMessageToJausMessage(ReportTravelSpeedMessage message);
-
-
-unsigned int reportTravelSpeedMessageSize(ReportTravelSpeedMessage message);
-
+JAUS_EXPORT unsigned int reportTravelSpeedMessageSize(ReportTravelSpeedMessage message);
 
 #endif // REPORT_TRAVEL_SPEED_MESSAGE_H

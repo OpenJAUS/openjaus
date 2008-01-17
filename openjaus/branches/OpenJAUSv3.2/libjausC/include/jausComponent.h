@@ -104,17 +104,17 @@ typedef struct
 
 typedef JausComponentStruct *JausComponent;
 
-JausComponent jausComponentCreate(void);
-void jausComponentDestroy(JausComponent);
-JausComponent jausComponentClone(JausComponent);
+JAUS_EXPORT JausComponent jausComponentCreate(void);
+JAUS_EXPORT void jausComponentDestroy(JausComponent cmpt);
+JAUS_EXPORT JausComponent jausComponentClone(JausComponent cmpt);
 
-char *jausComponentGetTypeString(JausComponent);
+JAUS_EXPORT char *jausComponentGetTypeString(JausComponent cmpt);
 
-void jausComponentUpdateTimestamp(JausComponent);
-JausBoolean jausComponentIsTimedOut(JausComponent);
-JausBoolean jausComponentHasIdentification(JausComponent cmpt);
-JausBoolean jausComponentHasServices(JausComponent cmpt);
+JAUS_EXPORT void jausComponentUpdateTimestamp(JausComponent cmpt);
+JAUS_EXPORT JausBoolean jausComponentIsTimedOut(JausComponent cmpt);
+JAUS_EXPORT JausBoolean jausComponentHasIdentification(JausComponent cmpt);
+JAUS_EXPORT JausBoolean jausComponentHasServices(JausComponent cmpt);
 
-int jausComponentToString(JausComponent, char *);
+JAUS_EXPORT int jausComponentToString(JausComponent cmpt, char *buf, size_t buffSize);
 
 #endif // JAUS_COMPONENT_H

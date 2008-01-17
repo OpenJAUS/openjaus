@@ -105,18 +105,15 @@ typedef struct
 
 typedef SetGlobalWaypointMessageStruct* SetGlobalWaypointMessage;
 
-SetGlobalWaypointMessage setGlobalWaypointMessageCreate(void);
-void setGlobalWaypointMessageDestroy(SetGlobalWaypointMessage);
+JAUS_EXPORT SetGlobalWaypointMessage setGlobalWaypointMessageCreate(void);
+JAUS_EXPORT void setGlobalWaypointMessageDestroy(SetGlobalWaypointMessage);
 
-JausBoolean setGlobalWaypointMessageFromBuffer(SetGlobalWaypointMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean setGlobalWaypointMessageToBuffer(SetGlobalWaypointMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean setGlobalWaypointMessageFromBuffer(SetGlobalWaypointMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean setGlobalWaypointMessageToBuffer(SetGlobalWaypointMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
+JAUS_EXPORT SetGlobalWaypointMessage setGlobalWaypointMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage setGlobalWaypointMessageToJausMessage(SetGlobalWaypointMessage message);
 
-SetGlobalWaypointMessage setGlobalWaypointMessageFromJausMessage(JausMessage jausMessage);
-JausMessage setGlobalWaypointMessageToJausMessage(SetGlobalWaypointMessage message);
-
-
-unsigned int setGlobalWaypointMessageSize(SetGlobalWaypointMessage message);
-
+JAUS_EXPORT unsigned int setGlobalWaypointMessageSize(SetGlobalWaypointMessage message);
 
 #endif // SET_GLOBAL_WAYPOINT_MESSAGE_H

@@ -93,16 +93,16 @@ typedef struct
 
 typedef QueryPayloadDataElementMessageStruct* QueryPayloadDataElementMessage;
 
-QueryPayloadDataElementMessage queryPayloadDataElementMessageCreate(void);
-void queryPayloadDataElementMessageDestroy(QueryPayloadDataElementMessage);
+JAUS_EXPORT QueryPayloadDataElementMessage queryPayloadDataElementMessageCreate(void);
+JAUS_EXPORT void queryPayloadDataElementMessageDestroy(QueryPayloadDataElementMessage);
 
-JausBoolean queryPayloadDataElementMessageFromBuffer(QueryPayloadDataElementMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean queryPayloadDataElementMessageToBuffer(QueryPayloadDataElementMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean queryPayloadDataElementMessageFromBuffer(QueryPayloadDataElementMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean queryPayloadDataElementMessageToBuffer(QueryPayloadDataElementMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
-QueryPayloadDataElementMessage queryPayloadDataElementMessageFromJausMessage(JausMessage jausMessage);
-JausMessage queryPayloadDataElementMessageToJausMessage(QueryPayloadDataElementMessage message);
+JAUS_EXPORT QueryPayloadDataElementMessage queryPayloadDataElementMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage queryPayloadDataElementMessageToJausMessage(QueryPayloadDataElementMessage message);
 
-unsigned int queryPayloadDataElementMessageSize(QueryPayloadDataElementMessage message);
+JAUS_EXPORT unsigned int queryPayloadDataElementMessageSize(QueryPayloadDataElementMessage message);
 
 #endif
 

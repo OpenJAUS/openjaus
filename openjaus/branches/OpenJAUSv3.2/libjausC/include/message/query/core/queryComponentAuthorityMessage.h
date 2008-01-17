@@ -91,16 +91,15 @@ typedef struct
 
 typedef QueryComponentAuthorityMessageStruct* QueryComponentAuthorityMessage;
 
-QueryComponentAuthorityMessage queryComponentAuthorityMessageCreate(void);
-void queryComponentAuthorityMessageDestroy(QueryComponentAuthorityMessage);
+JAUS_EXPORT QueryComponentAuthorityMessage queryComponentAuthorityMessageCreate(void);
+JAUS_EXPORT void queryComponentAuthorityMessageDestroy(QueryComponentAuthorityMessage);
 
-JausBoolean queryComponentAuthorityMessageFromBuffer(QueryComponentAuthorityMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean queryComponentAuthorityMessageToBuffer(QueryComponentAuthorityMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean queryComponentAuthorityMessageFromBuffer(QueryComponentAuthorityMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean queryComponentAuthorityMessageToBuffer(QueryComponentAuthorityMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
-QueryComponentAuthorityMessage queryComponentAuthorityMessageFromJausMessage(JausMessage jausMessage);
-JausMessage queryComponentAuthorityMessageToJausMessage(QueryComponentAuthorityMessage message);
+JAUS_EXPORT QueryComponentAuthorityMessage queryComponentAuthorityMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage queryComponentAuthorityMessageToJausMessage(QueryComponentAuthorityMessage message);
 
-unsigned int queryComponentAuthorityMessageSize(QueryComponentAuthorityMessage message);
-
+JAUS_EXPORT unsigned int queryComponentAuthorityMessageSize(QueryComponentAuthorityMessage message);
 
 #endif // QUERY_COMPONENT_AUTHORITY_MESSAGE_H

@@ -59,19 +59,19 @@ typedef struct
 
 typedef JausSubsystemStruct *JausSubsystem;
 
-JausSubsystem jausSubsystemCreate(void);
-void jausSubsystemDestroy(JausSubsystem);
-JausSubsystem jausSubsystemClone(JausSubsystem);
+JAUS_EXPORT JausSubsystem jausSubsystemCreate(void);
+JAUS_EXPORT void jausSubsystemDestroy(JausSubsystem subs);
+JAUS_EXPORT JausSubsystem jausSubsystemClone(JausSubsystem subs);
 
-JausBoolean jausSubsystemFreeMemory(JausSubsystem);
+JAUS_EXPORT JausBoolean jausSubsystemFreeMemory(JausSubsystem subs);
 
-void jausSubsystemUpdateTimestamp(JausSubsystem);
-JausBoolean jausSubsystemIsTimedOut(JausSubsystem);
-JausBoolean jausSubsystemHasIdentification(JausSubsystem);
-JausBoolean jausSubsystemHasConfiguration(JausSubsystem);
+JAUS_EXPORT void jausSubsystemUpdateTimestamp(JausSubsystem subs);
+JAUS_EXPORT JausBoolean jausSubsystemIsTimedOut(JausSubsystem subs);
+JAUS_EXPORT JausBoolean jausSubsystemHasIdentification(JausSubsystem subs);
+JAUS_EXPORT JausBoolean jausSubsystemHasConfiguration(JausSubsystem subs);
 
-int jausSubsystemToString(JausSubsystem, char *);
-int jausSubsystemTableToString(JausSubsystem, char *);
-int jausSubsystemTableToDetailedString(JausSubsystem, char *);
+JAUS_EXPORT int jausSubsystemToString(JausSubsystem subs, char *buf, size_t buffSize);
+JAUS_EXPORT int jausSubsystemTableToString(JausSubsystem subs, char *buf, size_t buffSize);
+JAUS_EXPORT int jausSubsystemTableToDetailedString(JausSubsystem subs, char *buf, size_t buffSize);
 
 #endif

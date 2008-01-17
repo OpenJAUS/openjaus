@@ -113,16 +113,15 @@ typedef struct
 
 typedef QueryVksObjectsMessageStruct* QueryVksObjectsMessage;
 
-QueryVksObjectsMessage queryVksObjectsMessageCreate(void);
-void queryVksObjectsMessageDestroy(QueryVksObjectsMessage);
+JAUS_EXPORT QueryVksObjectsMessage queryVksObjectsMessageCreate(void);
+JAUS_EXPORT void queryVksObjectsMessageDestroy(QueryVksObjectsMessage);
 
-JausBoolean queryVksObjectsMessageFromBuffer(QueryVksObjectsMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean queryVksObjectsMessageToBuffer(QueryVksObjectsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean queryVksObjectsMessageFromBuffer(QueryVksObjectsMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean queryVksObjectsMessageToBuffer(QueryVksObjectsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
-QueryVksObjectsMessage queryVksObjectsMessageFromJausMessage(JausMessage jausMessage);
-JausMessage queryVksObjectsMessageToJausMessage(QueryVksObjectsMessage message);
+JAUS_EXPORT QueryVksObjectsMessage queryVksObjectsMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage queryVksObjectsMessageToJausMessage(QueryVksObjectsMessage message);
 
-unsigned int queryVksObjectsMessageSize(QueryVksObjectsMessage message);
-
+JAUS_EXPORT unsigned int queryVksObjectsMessageSize(QueryVksObjectsMessage message);
 
 #endif // QUERY_VKS_OBJECTS_MESSAGE_H

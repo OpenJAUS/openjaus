@@ -54,12 +54,12 @@ typedef struct
 
 typedef JausArrayStruct * JausArray;
 
-JausArray jausArrayCreate(void);
-void jausArrayDestroy(JausArray, void (*)(void *));
-void jausArrayAdd(JausArray, void *);
-int jausArrayContains(JausArray, void *, int (*)(void *, void *));
-void *jausArrayRemove(JausArray, void *, int (*)(void *, void *));
-void *jausArrayRemoveAt(JausArray, int);
-void jausArrayRemoveAll(JausArray jausArray, void (*elementDestroy)(void *));
+JAUS_EXPORT JausArray jausArrayCreate(void);
+JAUS_EXPORT void jausArrayDestroy(JausArray, void (*)(void *));
+JAUS_EXPORT void jausArrayAdd(JausArray, void *);
+JAUS_EXPORT int jausArrayContains(JausArray, void *, int (*)(void *, void *));
+JAUS_EXPORT void *jausArrayRemove(JausArray, void *, int (*)(void *, void *));
+JAUS_EXPORT void *jausArrayRemoveAt(JausArray, int);
+JAUS_EXPORT void jausArrayRemoveAll(JausArray jausArray, void (*elementDestroy)(void *));
 
 #endif // JAUS_ARRAY_H

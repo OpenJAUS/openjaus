@@ -91,16 +91,15 @@ typedef struct
 
 typedef ReportComponentAuthorityMessageStruct* ReportComponentAuthorityMessage;
 
-ReportComponentAuthorityMessage reportComponentAuthorityMessageCreate(void);
-void reportComponentAuthorityMessageDestroy(ReportComponentAuthorityMessage);
+JAUS_EXPORT ReportComponentAuthorityMessage reportComponentAuthorityMessageCreate(void);
+JAUS_EXPORT void reportComponentAuthorityMessageDestroy(ReportComponentAuthorityMessage);
 
-JausBoolean reportComponentAuthorityMessageFromBuffer(ReportComponentAuthorityMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean reportComponentAuthorityMessageToBuffer(ReportComponentAuthorityMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean reportComponentAuthorityMessageFromBuffer(ReportComponentAuthorityMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean reportComponentAuthorityMessageToBuffer(ReportComponentAuthorityMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
-ReportComponentAuthorityMessage reportComponentAuthorityMessageFromJausMessage(JausMessage jausMessage);
-JausMessage reportComponentAuthorityMessageToJausMessage(ReportComponentAuthorityMessage message);
+JAUS_EXPORT ReportComponentAuthorityMessage reportComponentAuthorityMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage reportComponentAuthorityMessageToJausMessage(ReportComponentAuthorityMessage message);
 
-unsigned int reportComponentAuthorityMessageSize(ReportComponentAuthorityMessage message);
-
+JAUS_EXPORT unsigned int reportComponentAuthorityMessageSize(ReportComponentAuthorityMessage message);
 
 #endif // REPORT_COMPONENT_AUTHORITY_MESSAGE_H

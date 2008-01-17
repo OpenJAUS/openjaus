@@ -55,13 +55,13 @@
 
 typedef JausUnsignedShort JausShortPresenceVector;
 
-JausShortPresenceVector newJausShortPresenceVector(void);
+JAUS_EXPORT JausShortPresenceVector newJausShortPresenceVector(void);
 
-JausBoolean jausShortPresenceVectorFromBuffer(JausShortPresenceVector *vector, unsigned char *buf, unsigned int bufferSizeBytes);
-JausBoolean jausShortPresenceVectorToBuffer(JausShortPresenceVector vector, unsigned char *buf, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean jausShortPresenceVectorFromBuffer(JausShortPresenceVector *vector, unsigned char *buf, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean jausShortPresenceVectorToBuffer(JausShortPresenceVector vector, unsigned char *buf, unsigned int bufferSizeBytes);
 
-JausBoolean jausShortPresenceVectorIsBitSet(JausShortPresenceVector vector, int bit);
-JausBoolean jausShortPresenceVectorSetBit(JausShortPresenceVector *vector, int bit);
-JausBoolean jausShortPresenceVectorClearBit(JausShortPresenceVector *vector, int bit);
+JAUS_EXPORT JausBoolean jausShortPresenceVectorIsBitSet(JausShortPresenceVector vector, int bit);
+JAUS_EXPORT JausBoolean jausShortPresenceVectorSetBit(JausShortPresenceVector *vector, int bit);
+JAUS_EXPORT JausBoolean jausShortPresenceVectorClearBit(JausShortPresenceVector *vector, int bit);
 
 #endif // JAUS_SHORT_PRESENCE_VECTOR_H

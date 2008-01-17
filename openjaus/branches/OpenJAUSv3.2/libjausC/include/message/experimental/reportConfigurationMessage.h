@@ -90,16 +90,15 @@ typedef struct
 
 typedef ReportConfigurationMessageStruct* ReportConfigurationMessage;
 
-ReportConfigurationMessage reportConfigurationMessageCreate(void);
-void reportConfigurationMessageDestroy(ReportConfigurationMessage);
+JAUS_EXPORT ReportConfigurationMessage reportConfigurationMessageCreate(void);
+JAUS_EXPORT void reportConfigurationMessageDestroy(ReportConfigurationMessage);
 
-JausBoolean reportConfigurationMessageFromBuffer(ReportConfigurationMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean reportConfigurationMessageToBuffer(ReportConfigurationMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean reportConfigurationMessageFromBuffer(ReportConfigurationMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean reportConfigurationMessageToBuffer(ReportConfigurationMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
-ReportConfigurationMessage reportConfigurationMessageFromJausMessage(JausMessage jausMessage);
-JausMessage reportConfigurationMessageToJausMessage(ReportConfigurationMessage message);
+JAUS_EXPORT ReportConfigurationMessage reportConfigurationMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage reportConfigurationMessageToJausMessage(ReportConfigurationMessage message);
 
-unsigned int reportConfigurationMessageSize(ReportConfigurationMessage message);
-
+JAUS_EXPORT unsigned int reportConfigurationMessageSize(ReportConfigurationMessage message);
 
 #endif // REPORT_CONFIGURATION_MESSAGE_H

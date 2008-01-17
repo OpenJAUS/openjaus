@@ -196,142 +196,140 @@ typedef JausPayloadDataElementStruct *JausPayloadDataElement;
 
 
 // Command Interface Constructor
-JausCommandInterface jausCommandInterfaceCreate(void);
+JAUS_EXPORT JausCommandInterface jausCommandInterfaceCreate(void);
 
 // Information Interface Constructor
-JausInformationInterface jausInformationInterfaceCreate(void);
+JAUS_EXPORT JausInformationInterface jausInformationInterfaceCreate(void);
 
 // Command Interface Destructor
-void jausCommandInterfaceDestroy(JausCommandInterface commandInterface);
+JAUS_EXPORT void jausCommandInterfaceDestroy(JausCommandInterface commandInterface);
 
 // Information Interface Destructor
-void jausInformationInterfaceDestroy(JausInformationInterface informationInterface);
+JAUS_EXPORT void jausInformationInterfaceDestroy(JausInformationInterface informationInterface);
 
 // Interface Retrievers
-JausCommandInterface jausCommandInterfaceRetrieve(JausPayloadInterface payloadInterface, char* identifier);
+JAUS_EXPORT JausCommandInterface jausCommandInterfaceRetrieve(JausPayloadInterface payloadInterface, char* identifier);
 
-JausInformationInterface jausInformationInterfaceRetrieve(JausPayloadInterface payloadInterface, char* identifier);
+JAUS_EXPORT JausInformationInterface jausInformationInterfaceRetrieve(JausPayloadInterface payloadInterface, char* identifier);
 
 // ************************************************************************************************************************************
 //			Report PayloadInterface End User Functions
 // ************************************************************************************************************************************
 
 // Payload Interface Constructor
-JausPayloadInterface jausPayloadInterfaceCreate(void);
+JAUS_EXPORT JausPayloadInterface jausPayloadInterfaceCreate(void);
 
 // Payload Interface Destructor
-void jausPayloadInterfaceDestroy(JausPayloadInterface payloadInterface);
+JAUS_EXPORT void jausPayloadInterfaceDestroy(JausPayloadInterface payloadInterface);
 
 // Interface Adders
-JausCommandInterface jausAddNewCommandInterface(JausPayloadInterface payloadInterface, char* identifier, JausByte typeCode);
-JausInformationInterface jausAddNewInformationInterface(JausPayloadInterface payloadInterface, char* identifier, JausByte typeCode);
+JAUS_EXPORT JausCommandInterface jausAddNewCommandInterface(JausPayloadInterface payloadInterface, char* identifier, JausByte typeCode);
+JAUS_EXPORT JausInformationInterface jausAddNewInformationInterface(JausPayloadInterface payloadInterface, char* identifier, JausByte typeCode);
 
 // Report Payload Interface Message Support Functions
 
 // NOTE: this function assumes end user is starting their index at 1, iaw the numbering scheme in the JAUS OPC ICD
-char* jausGetCommandInterfaceIdentifierByIndex(JausPayloadInterface payloadInterface, int index, int* successFlag);
+JAUS_EXPORT char* jausGetCommandInterfaceIdentifierByIndex(JausPayloadInterface payloadInterface, int index, int* successFlag);
 
-char* jausGetInformationInterfaceIdentifierByIndex(JausPayloadInterface payloadInterface, int index, int* successFlag);
+JAUS_EXPORT char* jausGetInformationInterfaceIdentifierByIndex(JausPayloadInterface payloadInterface, int index, int* successFlag);
 
-JausByte jausGetCommandInterfaceTypeCode(JausPayloadInterface payloadInterface, char* identifier, int* successFlag);
+JAUS_EXPORT JausByte jausGetCommandInterfaceTypeCode(JausPayloadInterface payloadInterface, char* identifier, int* successFlag);
 
-JausByte jausGetInformationInterfaceTypeCode(JausPayloadInterface payloadInterface, char* identifier, int* successFlag);
+JAUS_EXPORT JausByte jausGetInformationInterfaceTypeCode(JausPayloadInterface payloadInterface, char* identifier, int* successFlag);
 
-JausBoolean jausSetCommandInterfaceUnits(JausPayloadInterface payloadInterface, char* identifier, JausByte units);
+JAUS_EXPORT JausBoolean jausSetCommandInterfaceUnits(JausPayloadInterface payloadInterface, char* identifier, JausByte units);
 
-JausByte jausGetCommandInterfaceUnits(JausPayloadInterface payloadInterface, char* identifier, int* successFlag);
+JAUS_EXPORT JausByte jausGetCommandInterfaceUnits(JausPayloadInterface payloadInterface, char* identifier, int* successFlag);
 
-JausBoolean jausSetCommandInterfaceBlockingFlag(JausPayloadInterface payloadInterface, char* identifier);
+JAUS_EXPORT JausBoolean jausSetCommandInterfaceBlockingFlag(JausPayloadInterface payloadInterface, char* identifier);
 
-JausBoolean jausClearCommandInterfaceBlockingFlag(JausPayloadInterface payloadInterface, char* identifier);
+JAUS_EXPORT JausBoolean jausClearCommandInterfaceBlockingFlag(JausPayloadInterface payloadInterface, char* identifier);
 
-JausBoolean jausGetCommandInterfaceBlockingFlag(JausPayloadInterface payloadInterface, char* identifier, int* successFlag);
+JAUS_EXPORT JausBoolean jausGetCommandInterfaceBlockingFlag(JausPayloadInterface payloadInterface, char* identifier, int* successFlag);
 
-JausBoolean jausSetCommandInterfaceMinMax(JausPayloadInterface payloadInterface, char* identifier, JausTypeCode minValue, JausTypeCode maxValue);
+JAUS_EXPORT JausBoolean jausSetCommandInterfaceMinMax(JausPayloadInterface payloadInterface, char* identifier, JausTypeCode minValue, JausTypeCode maxValue);
 
-JausTypeCode jausGetCommandInterfaceMin(JausPayloadInterface payloadInterface, char* identifier, int* successFlag);
+JAUS_EXPORT JausTypeCode jausGetCommandInterfaceMin(JausPayloadInterface payloadInterface, char* identifier, int* successFlag);
 
-JausTypeCode jausGetCommandInterfaceMax(JausPayloadInterface payloadInterface, char* identifier, int* successFlag);
+JAUS_EXPORT JausTypeCode jausGetCommandInterfaceMax(JausPayloadInterface payloadInterface, char* identifier, int* successFlag);
 
-JausBoolean jausSetCommandInterfaceDefault(JausPayloadInterface payloadInterface, char* identifier, JausTypeCode defaultValue);
+JAUS_EXPORT JausBoolean jausSetCommandInterfaceDefault(JausPayloadInterface payloadInterface, char* identifier, JausTypeCode defaultValue);
 
-JausTypeCode jausGetCommandInterfaceDefault(JausPayloadInterface payloadInterface, char* identifier, int* successFlag);
+JAUS_EXPORT JausTypeCode jausGetCommandInterfaceDefault(JausPayloadInterface payloadInterface, char* identifier, int* successFlag);
 
-JausBoolean jausSetCommandInterfaceEnumeration(JausPayloadInterface payloadInterface, char* identifier, char* enumeration);
+JAUS_EXPORT JausBoolean jausSetCommandInterfaceEnumeration(JausPayloadInterface payloadInterface, char* identifier, char* enumeration);
 
-char* jausGetCommandInterfaceEnumeration(JausPayloadInterface payloadInterface, char* identifier, int* successFlag);
+JAUS_EXPORT char* jausGetCommandInterfaceEnumeration(JausPayloadInterface payloadInterface, char* identifier, int* successFlag);
 
-JausUnsignedShort jausGetCommandInterfaceEnumerationLength(JausPayloadInterface payloadInterface, char* identifier, int* successFlag);
+JAUS_EXPORT JausUnsignedShort jausGetCommandInterfaceEnumerationLength(JausPayloadInterface payloadInterface, char* identifier, int* successFlag);
 
-JausBoolean jausSetCommandInterfaceHmiRecommendation(JausPayloadInterface payloadInterface, char* identifier, JausByte hmiRecommendation);
+JAUS_EXPORT JausBoolean jausSetCommandInterfaceHmiRecommendation(JausPayloadInterface payloadInterface, char* identifier, JausByte hmiRecommendation);
 
-JausByte jausGetCommandInterfaceHmiRecommendation(JausPayloadInterface payloadInterface, char* identifier, int* successFlag);
-
-// NOTE: recommended HMI positioning must be set as a group
-JausBoolean jausSetCommandInterfaceHmiParameters(JausPayloadInterface payloadInterface, char* identifier, JausUnsignedShort xPixels, JausUnsignedShort yPixels, JausUnsignedShort widthPixels, JausUnsignedShort heightPixels);
-
-JausUnsignedShort jausGetCommandInterfaceHmiXPositionPixels(JausPayloadInterface payloadInterface, char* identifier, int* successFlag);
-
-JausUnsignedShort jausGetCommandInterfaceHmiYPositionPixels(JausPayloadInterface payloadInterface, char* identifier, int* successFlag);
-
-JausUnsignedShort jausGetCommandInterfaceHmiWidthPixels(JausPayloadInterface payloadInterface, char* identifier, int* successFlag);
-
-JausUnsignedShort jausGetCommandInterfaceHmiHeightPixels(JausPayloadInterface payloadInterface, char* identifier, int* successFlag);
-
-JausBoolean jausSetInformationInterfaceUnits(JausPayloadInterface payloadInterface, char* identifier, JausByte units);
-
-JausByte jausGetInformationInterfaceUnits(JausPayloadInterface payloadInterface, char* identifier, int* successFlag);
-
-JausBoolean jausSetInformationInterfaceCommandInterfaceAssoc(JausPayloadInterface payloadInterface, char* identifier, JausByte commandInterfaceAssociation);
-
-JausByte jausGetInformationInterfaceCommandInterfaceAssoc(JausPayloadInterface payloadInterface, char* identifier, int* successFlag);
-
-JausBoolean jausSetInformationInterfaceMinMax(JausPayloadInterface payloadInterface, char* identifier, JausTypeCode minValue, JausTypeCode maxValue);
-
-JausTypeCode jausGetInformationInterfaceMin(JausPayloadInterface payloadInterface, char* identifier, int* successFlag);
-
-JausTypeCode jausGetInformationInterfaceMax(JausPayloadInterface payloadInterface, char* identifier, int* successFlag);
-
-JausBoolean jausSetInformationInterfaceDefault(JausPayloadInterface payloadInterface, char* identifier, JausTypeCode defaultValue);
-
-JausTypeCode jausGetInformationInterfaceDefault(JausPayloadInterface payloadInterface, char* identifier, int* successFlag);
-
-JausBoolean jausSetInformationInterfaceEnumeration(JausPayloadInterface payloadInterface, char* identifier, char* enumeration);
-
-char* jausGetInformationInterfaceEnumeration(JausPayloadInterface payloadInterface, char* identifier, int* successFlag);
-
-JausUnsignedShort jausGetInformationInterfaceEnumerationLength(JausPayloadInterface payloadInterface, char* identifier, int* successFlag);
-
-JausBoolean jausSetInformationInterfaceHmiRecommendation(JausPayloadInterface payloadInterface, char* identifier, JausByte hmiRecommendation);
-
-JausByte jausGetInformationInterfaceHmiRecommendation(JausPayloadInterface payloadInterface, char* identifier, int* successFlag);
+JAUS_EXPORT JausByte jausGetCommandInterfaceHmiRecommendation(JausPayloadInterface payloadInterface, char* identifier, int* successFlag);
 
 // NOTE: recommended HMI positioning must be set as a group
-JausBoolean jausSetInformationInterfaceHmiParameters(JausPayloadInterface payloadInterface, char* identifier, JausUnsignedShort xPixels, JausUnsignedShort yPixels, JausUnsignedShort widthPixels, JausUnsignedShort heightPixels);
+JAUS_EXPORT JausBoolean jausSetCommandInterfaceHmiParameters(JausPayloadInterface payloadInterface, char* identifier, JausUnsignedShort xPixels, JausUnsignedShort yPixels, JausUnsignedShort widthPixels, JausUnsignedShort heightPixels);
 
-JausUnsignedShort jausGetInformationInterfaceHmiXPositionPixels(JausPayloadInterface payloadInterface, char* identifier, int* successFlag);
+JAUS_EXPORT JausUnsignedShort jausGetCommandInterfaceHmiXPositionPixels(JausPayloadInterface payloadInterface, char* identifier, int* successFlag);
 
-JausUnsignedShort jausGetInformationInterfaceHmiYPositionPixels(JausPayloadInterface payloadInterface, char* identifier, int* successFlag);
+JAUS_EXPORT JausUnsignedShort jausGetCommandInterfaceHmiYPositionPixels(JausPayloadInterface payloadInterface, char* identifier, int* successFlag);
 
-JausUnsignedShort jausGetInformationInterfaceHmiWidthPixels(JausPayloadInterface payloadInterface, char* identifier, int* successFlag);
+JAUS_EXPORT JausUnsignedShort jausGetCommandInterfaceHmiWidthPixels(JausPayloadInterface payloadInterface, char* identifier, int* successFlag);
 
-JausUnsignedShort jausGetInformationInterfaceHmiHeightPixels(JausPayloadInterface payloadInterface, char* identifier, int* successFlag);
+JAUS_EXPORT JausUnsignedShort jausGetCommandInterfaceHmiHeightPixels(JausPayloadInterface payloadInterface, char* identifier, int* successFlag);
+
+JAUS_EXPORT JausBoolean jausSetInformationInterfaceUnits(JausPayloadInterface payloadInterface, char* identifier, JausByte units);
+
+JAUS_EXPORT JausByte jausGetInformationInterfaceUnits(JausPayloadInterface payloadInterface, char* identifier, int* successFlag);
+
+JAUS_EXPORT JausBoolean jausSetInformationInterfaceCommandInterfaceAssoc(JausPayloadInterface payloadInterface, char* identifier, JausByte commandInterfaceAssociation);
+
+JAUS_EXPORT JausByte jausGetInformationInterfaceCommandInterfaceAssoc(JausPayloadInterface payloadInterface, char* identifier, int* successFlag);
+
+JAUS_EXPORT JausBoolean jausSetInformationInterfaceMinMax(JausPayloadInterface payloadInterface, char* identifier, JausTypeCode minValue, JausTypeCode maxValue);
+
+JAUS_EXPORT JausTypeCode jausGetInformationInterfaceMin(JausPayloadInterface payloadInterface, char* identifier, int* successFlag);
+
+JAUS_EXPORT JausTypeCode jausGetInformationInterfaceMax(JausPayloadInterface payloadInterface, char* identifier, int* successFlag);
+
+JAUS_EXPORT JausBoolean jausSetInformationInterfaceDefault(JausPayloadInterface payloadInterface, char* identifier, JausTypeCode defaultValue);
+
+JAUS_EXPORT JausTypeCode jausGetInformationInterfaceDefault(JausPayloadInterface payloadInterface, char* identifier, int* successFlag);
+
+JAUS_EXPORT JausBoolean jausSetInformationInterfaceEnumeration(JausPayloadInterface payloadInterface, char* identifier, char* enumeration);
+
+JAUS_EXPORT char* jausGetInformationInterfaceEnumeration(JausPayloadInterface payloadInterface, char* identifier, int* successFlag);
+
+JAUS_EXPORT JausUnsignedShort jausGetInformationInterfaceEnumerationLength(JausPayloadInterface payloadInterface, char* identifier, int* successFlag);
+
+JAUS_EXPORT JausBoolean jausSetInformationInterfaceHmiRecommendation(JausPayloadInterface payloadInterface, char* identifier, JausByte hmiRecommendation);
+
+JAUS_EXPORT JausByte jausGetInformationInterfaceHmiRecommendation(JausPayloadInterface payloadInterface, char* identifier, int* successFlag);
+
+// NOTE: recommended HMI positioning must be set as a group
+JAUS_EXPORT JausBoolean jausSetInformationInterfaceHmiParameters(JausPayloadInterface payloadInterface, char* identifier, JausUnsignedShort xPixels, JausUnsignedShort yPixels, JausUnsignedShort widthPixels, JausUnsignedShort heightPixels);
+
+JAUS_EXPORT JausUnsignedShort jausGetInformationInterfaceHmiXPositionPixels(JausPayloadInterface payloadInterface, char* identifier, int* successFlag);
+
+JAUS_EXPORT JausUnsignedShort jausGetInformationInterfaceHmiYPositionPixels(JausPayloadInterface payloadInterface, char* identifier, int* successFlag);
+
+JAUS_EXPORT JausUnsignedShort jausGetInformationInterfaceHmiWidthPixels(JausPayloadInterface payloadInterface, char* identifier, int* successFlag);
+
+JAUS_EXPORT JausUnsignedShort jausGetInformationInterfaceHmiHeightPixels(JausPayloadInterface payloadInterface, char* identifier, int* successFlag);
 
 // decodes the Type Code value and returns the number of bytes required 
-int jausMinMaxDefaultSizeBytes(JausByte typeCodeEnum);
-int jausCommandValueSizeBytes(JausCommandInterface commandInterface);
-int jausInformationValueSizeBytes(JausInformationInterface informationInterface);
+JAUS_EXPORT int jausMinMaxDefaultSizeBytes(JausByte typeCodeEnum);
+JAUS_EXPORT int jausCommandValueSizeBytes(JausCommandInterface commandInterface);
+JAUS_EXPORT int jausInformationValueSizeBytes(JausInformationInterface informationInterface);
 
 // determines how to pack fields that have a JausTypeCode data type
-int jausMinMaxDefaultToBuffer(JausTypeCode field, unsigned char* buffer, unsigned int bufferSizeBytes, JausByte typeCodeEnum);
-int jausInformationValueToBuffer(JausInformationInterface informationInterface, unsigned char* buffer, unsigned int bufferSizeBytes);
-int jausCommandValueToBuffer(JausCommandInterface commandInterface, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT int jausMinMaxDefaultToBuffer(JausTypeCode field, unsigned char* buffer, unsigned int bufferSizeBytes, JausByte typeCodeEnum);
+JAUS_EXPORT int jausInformationValueToBuffer(JausInformationInterface informationInterface, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT int jausCommandValueToBuffer(JausCommandInterface commandInterface, unsigned char* buffer, unsigned int bufferSizeBytes);
 
 // determines how to unpack fields that have a JausTypeCode data type
-JausBoolean jausMinMaxDefaultFromBuffer(JausTypeCode *field, unsigned char* buffer, unsigned int bufferSizeBytes, JausByte typeCodeEnum);
-JausBoolean jausInformationValueFromBuffer(JausInformationInterface informationInterface, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean jausCommandValueFromBuffer(JausCommandInterface commandInterface, unsigned char* buffer, unsigned int bufferSizeBytes);
-
-
+JAUS_EXPORT JausBoolean jausMinMaxDefaultFromBuffer(JausTypeCode *field, unsigned char* buffer, unsigned int bufferSizeBytes, JausByte typeCodeEnum);
+JAUS_EXPORT JausBoolean jausInformationValueFromBuffer(JausInformationInterface informationInterface, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean jausCommandValueFromBuffer(JausCommandInterface commandInterface, unsigned char* buffer, unsigned int bufferSizeBytes);
 
 #endif

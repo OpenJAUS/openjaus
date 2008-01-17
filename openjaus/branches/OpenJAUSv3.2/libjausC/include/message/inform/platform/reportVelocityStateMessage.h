@@ -112,18 +112,15 @@ typedef struct
 
 typedef ReportVelocityStateMessageStruct* ReportVelocityStateMessage;
 
-ReportVelocityStateMessage reportVelocityStateMessageCreate(void);
-void reportVelocityStateMessageDestroy(ReportVelocityStateMessage);
+JAUS_EXPORT ReportVelocityStateMessage reportVelocityStateMessageCreate(void);
+JAUS_EXPORT void reportVelocityStateMessageDestroy(ReportVelocityStateMessage);
 
-JausBoolean reportVelocityStateMessageFromBuffer(ReportVelocityStateMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean reportVelocityStateMessageToBuffer(ReportVelocityStateMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean reportVelocityStateMessageFromBuffer(ReportVelocityStateMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean reportVelocityStateMessageToBuffer(ReportVelocityStateMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
+JAUS_EXPORT ReportVelocityStateMessage reportVelocityStateMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage reportVelocityStateMessageToJausMessage(ReportVelocityStateMessage message);
 
-ReportVelocityStateMessage reportVelocityStateMessageFromJausMessage(JausMessage jausMessage);
-JausMessage reportVelocityStateMessageToJausMessage(ReportVelocityStateMessage message);
-
-
-unsigned int reportVelocityStateMessageSize(ReportVelocityStateMessage message);
-
+JAUS_EXPORT unsigned int reportVelocityStateMessageSize(ReportVelocityStateMessage message);
 
 #endif // REPORT_VELOCITY_STATE_MESSAGE_H

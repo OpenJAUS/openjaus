@@ -112,16 +112,15 @@ typedef struct
 
 typedef ReportGlobalPoseMessageStruct* ReportGlobalPoseMessage;
 
-ReportGlobalPoseMessage reportGlobalPoseMessageCreate(void);
-void reportGlobalPoseMessageDestroy(ReportGlobalPoseMessage);
+JAUS_EXPORT ReportGlobalPoseMessage reportGlobalPoseMessageCreate(void);
+JAUS_EXPORT void reportGlobalPoseMessageDestroy(ReportGlobalPoseMessage);
 
-JausBoolean reportGlobalPoseMessageFromBuffer(ReportGlobalPoseMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean reportGlobalPoseMessageToBuffer(ReportGlobalPoseMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean reportGlobalPoseMessageFromBuffer(ReportGlobalPoseMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean reportGlobalPoseMessageToBuffer(ReportGlobalPoseMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
-ReportGlobalPoseMessage reportGlobalPoseMessageFromJausMessage(JausMessage jausMessage);
-JausMessage reportGlobalPoseMessageToJausMessage(ReportGlobalPoseMessage message);
+JAUS_EXPORT ReportGlobalPoseMessage reportGlobalPoseMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage reportGlobalPoseMessageToJausMessage(ReportGlobalPoseMessage message);
 
-unsigned int reportGlobalPoseMessageSize(ReportGlobalPoseMessage message);
-
+JAUS_EXPORT unsigned int reportGlobalPoseMessageSize(ReportGlobalPoseMessage message);
 
 #endif // REPORT_GLOBAL_POSE_MESSAGE_H

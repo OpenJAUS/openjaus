@@ -114,16 +114,15 @@ typedef struct
 
 typedef ConfirmEventMessageStruct* ConfirmEventMessage;
 
-ConfirmEventMessage confirmEventMessageCreate(void);
-void confirmEventMessageDestroy(ConfirmEventMessage);
+JAUS_EXPORT ConfirmEventMessage confirmEventMessageCreate(void);
+JAUS_EXPORT void confirmEventMessageDestroy(ConfirmEventMessage);
 
-JausBoolean confirmEventMessageFromBuffer(ConfirmEventMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean confirmEventMessageToBuffer(ConfirmEventMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean confirmEventMessageFromBuffer(ConfirmEventMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean confirmEventMessageToBuffer(ConfirmEventMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
-ConfirmEventMessage confirmEventMessageFromJausMessage(JausMessage jausMessage);
-JausMessage confirmEventMessageToJausMessage(ConfirmEventMessage message);
+JAUS_EXPORT ConfirmEventMessage confirmEventMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage confirmEventMessageToJausMessage(ConfirmEventMessage message);
 
-unsigned int confirmEventMessageSize(ConfirmEventMessage message);
-
+JAUS_EXPORT unsigned int confirmEventMessageSize(ConfirmEventMessage message);
 
 #endif // CONFIRM_EVENT_MESSAGE_H

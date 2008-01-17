@@ -96,16 +96,15 @@ typedef struct
 
 typedef QueryConfigurationMessageStruct* QueryConfigurationMessage;
 
-QueryConfigurationMessage queryConfigurationMessageCreate(void);
-void queryConfigurationMessageDestroy(QueryConfigurationMessage);
+JAUS_EXPORT QueryConfigurationMessage queryConfigurationMessageCreate(void);
+JAUS_EXPORT void queryConfigurationMessageDestroy(QueryConfigurationMessage);
 
-JausBoolean queryConfigurationMessageFromBuffer(QueryConfigurationMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean queryConfigurationMessageToBuffer(QueryConfigurationMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean queryConfigurationMessageFromBuffer(QueryConfigurationMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean queryConfigurationMessageToBuffer(QueryConfigurationMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
-QueryConfigurationMessage queryConfigurationMessageFromJausMessage(JausMessage jausMessage);
-JausMessage queryConfigurationMessageToJausMessage(QueryConfigurationMessage message);
+JAUS_EXPORT QueryConfigurationMessage queryConfigurationMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage queryConfigurationMessageToJausMessage(QueryConfigurationMessage message);
 
-unsigned int queryConfigurationMessageSize(QueryConfigurationMessage message);
-
+JAUS_EXPORT unsigned int queryConfigurationMessageSize(QueryConfigurationMessage message);
 
 #endif // QUERY_CONFIGURATION_MESSAGE_H

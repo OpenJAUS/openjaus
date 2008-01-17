@@ -90,18 +90,15 @@ typedef struct
 
 typedef SetComponentAuthorityMessageStruct* SetComponentAuthorityMessage;
 
-SetComponentAuthorityMessage setComponentAuthorityMessageCreate(void);
-void setComponentAuthorityMessageDestroy(SetComponentAuthorityMessage);
+JAUS_EXPORT SetComponentAuthorityMessage setComponentAuthorityMessageCreate(void);
+JAUS_EXPORT void setComponentAuthorityMessageDestroy(SetComponentAuthorityMessage);
 
-JausBoolean setComponentAuthorityMessageFromBuffer(SetComponentAuthorityMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean setComponentAuthorityMessageToBuffer(SetComponentAuthorityMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean setComponentAuthorityMessageFromBuffer(SetComponentAuthorityMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean setComponentAuthorityMessageToBuffer(SetComponentAuthorityMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
+JAUS_EXPORT SetComponentAuthorityMessage setComponentAuthorityMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage setComponentAuthorityMessageToJausMessage(SetComponentAuthorityMessage message);
 
-SetComponentAuthorityMessage setComponentAuthorityMessageFromJausMessage(JausMessage jausMessage);
-JausMessage setComponentAuthorityMessageToJausMessage(SetComponentAuthorityMessage message);
-
-
-unsigned int setComponentAuthorityMessageSize(SetComponentAuthorityMessage message);
-
+JAUS_EXPORT unsigned int setComponentAuthorityMessageSize(SetComponentAuthorityMessage message);
 
 #endif // SET_COMPONENT_AUTHORITY_MESSAGE_H

@@ -90,18 +90,15 @@ typedef struct
 
 typedef SpoolMissionMessageStruct* SpoolMissionMessage;
 
-SpoolMissionMessage spoolMissionMessageCreate(void);
-void spoolMissionMessageDestroy(SpoolMissionMessage);
+JAUS_EXPORT SpoolMissionMessage spoolMissionMessageCreate(void);
+JAUS_EXPORT void spoolMissionMessageDestroy(SpoolMissionMessage);
 
-JausBoolean spoolMissionMessageFromBuffer(SpoolMissionMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean spoolMissionMessageToBuffer(SpoolMissionMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean spoolMissionMessageFromBuffer(SpoolMissionMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean spoolMissionMessageToBuffer(SpoolMissionMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
+JAUS_EXPORT SpoolMissionMessage spoolMissionMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage spoolMissionMessageToJausMessage(SpoolMissionMessage message);
 
-SpoolMissionMessage spoolMissionMessageFromJausMessage(JausMessage jausMessage);
-JausMessage spoolMissionMessageToJausMessage(SpoolMissionMessage message);
-
-
-unsigned int spoolMissionMessageSize(SpoolMissionMessage message);
-
+JAUS_EXPORT unsigned int spoolMissionMessageSize(SpoolMissionMessage message);
 
 #endif // SPOOL_MISSION_MESSAGE_H

@@ -79,6 +79,7 @@ JausNode jausNodeClone(JausNode node)
 	JausNode clone;
 	JausComponent tempCmpt;
 	int i;
+	size_t stringLength;
 	
 	clone = (JausNode)malloc( sizeof(JausNodeStruct) );
 	if(clone == NULL)
@@ -89,13 +90,15 @@ JausNode jausNodeClone(JausNode node)
 	//Init Values
 	if(node->identification)
 	{
-		clone->identification = (char *) malloc(strlen(node->identification)+1);
-		sprintf(clone->identification, "%s", node->identification);
+		stringLength = strlen(node->identification) + 1;
+		clone->identification = (char *) malloc(stringLength);
+		SAFE_SPRINTF(clone->identification, stringLength, "%s", node->identification);
 	}
 	else
 	{
 		clone->identification = NULL;
 	}
+
 	clone->id = node->id;
 	clone->components = jausArrayCreate();
 	for( i = 0; i < node->components->elementCount; i++)
@@ -132,15 +135,15 @@ JausBoolean jausNodeIsTimedOut(JausNode node)
 	return difftime(now, node->timeStampSec) > NODE_TIMEOUT_SEC? JAUS_TRUE : JAUS_FALSE;
 }
 
-int jausNodeToString(JausNode node, char *buf)
+int jausNodeToString(JausNode node, char *buf, size_t buffSize)
 {	
 	if(node->identification)
 	{
-		return sprintf(buf, "%s-%d", node->identification, node->id);
+		return SAFE_SPRINTF(buf, buffSize, "%s-%d", node->identification, node->id);
 	}
 	else
 	{
-		return sprintf(buf, "JausNode-%d", node->id);
+		return SAFE_SPRINTF(buf, buffSize, "JausNode-%d", node->id);
 	}
 }
 

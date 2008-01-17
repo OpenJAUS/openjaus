@@ -83,14 +83,14 @@ struct JausAddressStruct
 
 typedef struct JausAddressStruct *JausAddress;
 
-JausAddress jausAddressCreate(void);
-void jausAddressDestroy(JausAddress);
+JAUS_EXPORT JausAddress jausAddressCreate(void);
+JAUS_EXPORT void jausAddressDestroy(JausAddress);
 
-int jausAddressToString(JausAddress, char *);
-JausAddress jausAddressClone(JausAddress src);
-JausBoolean jausAddressCopy(JausAddress dst, JausAddress src);
-JausBoolean jausAddressEqual(JausAddress, JausAddress);
-JausBoolean jausAddressIsValid(JausAddress address);
-int jausAddressHash(JausAddress address);
+JAUS_EXPORT int jausAddressToString(JausAddress, char *, size_t buffSize);
+JAUS_EXPORT JausAddress jausAddressClone(JausAddress src);
+JAUS_EXPORT JausBoolean jausAddressCopy(JausAddress dst, JausAddress src);
+JAUS_EXPORT JausBoolean jausAddressEqual(JausAddress, JausAddress);
+JAUS_EXPORT JausBoolean jausAddressIsValid(JausAddress address);
+JAUS_EXPORT int jausAddressHash(JausAddress address);
 
 #endif // JAUS_ADDRESS_H

@@ -90,16 +90,15 @@ typedef struct
 
 typedef QueryPayloadInterfaceMessageStruct* QueryPayloadInterfaceMessage;
 
-QueryPayloadInterfaceMessage queryPayloadInterfaceMessageCreate(void);
-void queryPayloadInterfaceMessageDestroy(QueryPayloadInterfaceMessage);
+JAUS_EXPORT QueryPayloadInterfaceMessage queryPayloadInterfaceMessageCreate(void);
+JAUS_EXPORT void queryPayloadInterfaceMessageDestroy(QueryPayloadInterfaceMessage);
 
-JausBoolean queryPayloadInterfaceMessageFromBuffer(QueryPayloadInterfaceMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean queryPayloadInterfaceMessageToBuffer(QueryPayloadInterfaceMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean queryPayloadInterfaceMessageFromBuffer(QueryPayloadInterfaceMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean queryPayloadInterfaceMessageToBuffer(QueryPayloadInterfaceMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
-QueryPayloadInterfaceMessage queryPayloadInterfaceMessageFromJausMessage(JausMessage jausMessage);
-JausMessage queryPayloadInterfaceMessageToJausMessage(QueryPayloadInterfaceMessage message);
+JAUS_EXPORT QueryPayloadInterfaceMessage queryPayloadInterfaceMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage queryPayloadInterfaceMessageToJausMessage(QueryPayloadInterfaceMessage message);
 
-unsigned int queryPayloadInterfaceMessageSize(QueryPayloadInterfaceMessage message);
-
+JAUS_EXPORT unsigned int queryPayloadInterfaceMessageSize(QueryPayloadInterfaceMessage message);
 
 #endif // QUERY_PAYLOAD_INTERFACE_MESSAGE_H
