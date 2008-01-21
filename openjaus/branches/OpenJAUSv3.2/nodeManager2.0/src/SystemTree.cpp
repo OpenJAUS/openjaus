@@ -1453,7 +1453,7 @@ std::string SystemTree::toString()
 	{
 		if(system[i])
 		{
-			jausSubsystemTableToString(system[i], buffer, 4096);
+			jausSubsystemTableToString(system[i], buffer);
 			output += buffer;
 			output += "\n";
 		}
@@ -1476,7 +1476,7 @@ std::string SystemTree::toDetailedString()
 	{
 		if(system[i])
 		{
-			jausSubsystemTableToDetailedString(system[i], buffer, 20480);
+			jausSubsystemTableToDetailedString(system[i], buffer);
 			output += buffer;
 			output += "\n";
 		}
