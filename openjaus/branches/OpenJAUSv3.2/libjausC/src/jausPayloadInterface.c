@@ -210,7 +210,7 @@ JausCommandInterface jausAddNewCommandInterface(JausPayloadInterface payloadInte
 	
 	if(jausCommandInterfaceRetrieve(payloadInterface, identifier) )
 	{
-		//cError("%s:%d: command interface %s already exists\n", __FILE__, __LINE__, identifier);
+		////cError("%s:%d: command interface %s already exists\n", __FILE__, __LINE__, identifier);
 		return NULL;
 	}
 	
@@ -223,7 +223,7 @@ JausCommandInterface jausAddNewCommandInterface(JausPayloadInterface payloadInte
 	}
 	else
 	{
-		//cError("%s:%d: could not create command interface named %s\n", __FILE__, __LINE__, identifier);
+		////cError("%s:%d: could not create command interface named %s\n", __FILE__, __LINE__, identifier);
 		return NULL;
 	}
 }
@@ -234,7 +234,7 @@ JausInformationInterface jausAddNewInformationInterface(JausPayloadInterface pay
 	
 	if(jausInformationInterfaceRetrieve(payloadInterface, identifier) )
 	{
-		//cError("%s:%d: information interface %s already exists\n", __FILE__, __LINE__, identifier);
+		////cError("%s:%d: information interface %s already exists\n", __FILE__, __LINE__, identifier);
 		return NULL;
 	}
 	
@@ -247,7 +247,7 @@ JausInformationInterface jausAddNewInformationInterface(JausPayloadInterface pay
 	}
 	else
 	{
-		//cError("%s:%d: could not create information interface named %s\n", __FILE__, __LINE__, identifier);
+		////cError("%s:%d: could not create information interface named %s\n", __FILE__, __LINE__, identifier);
 		return NULL;
 	}
 }
@@ -264,7 +264,7 @@ char* jausGetCommandInterfaceIdentifierByIndex(JausPayloadInterface payloadInter
 	}
 	else
 	{
-		//cError("%s:%d: could not find a command interface with an index of %d\n", __FILE__, __LINE__, index);
+		////cError("%s:%d: could not find a command interface with an index of %d\n", __FILE__, __LINE__, index);
 		if(*successFlag) *successFlag = FAILURE;
 		return "0";
 	}
@@ -282,7 +282,7 @@ char* jausGetInformationInterfaceIdentifierByIndex(JausPayloadInterface payloadI
 	}
 	else
 	{
-		//cError("%s:%d: could not find an information interface with an index of %d\n", __FILE__, __LINE__, index);
+		////cError("%s:%d: could not find an information interface with an index of %d\n", __FILE__, __LINE__, index);
 		if(*successFlag) *successFlag = FAILURE;
 		return "0";
 	}
@@ -298,7 +298,7 @@ JausByte jausGetCommandInterfaceTypeCode(JausPayloadInterface payloadInterface, 
 	}
 	else
 	{
-		//cError("%s:%d: could not find command interface named %s\n", __FILE__, __LINE__, identifier);
+		////cError("%s:%d: could not find command interface named %s\n", __FILE__, __LINE__, identifier);
 		if(*successFlag) *successFlag = FAILURE;
 		return 0;
 	}
@@ -314,7 +314,7 @@ JausByte jausGetInformationInterfaceTypeCode(JausPayloadInterface payloadInterfa
 	}
 	else
 	{
-		//cError("%s:%d: could not find information interface named %s\n", __FILE__, __LINE__, identifier);
+		////cError("%s:%d: could not find information interface named %s\n", __FILE__, __LINE__, identifier);
 		if(*successFlag) *successFlag = FAILURE;
 		return 0;
 	}
@@ -331,7 +331,7 @@ JausBoolean jausSetCommandInterfaceUnits(JausPayloadInterface payloadInterface, 
 	}
 	else
 	{
-		//cError("%s:%d: could not find command interface named %s\n", __FILE__, __LINE__, identifier);
+		////cError("%s:%d: could not find command interface named %s\n", __FILE__, __LINE__, identifier);
 		return JAUS_FALSE;
 	}
 }
@@ -346,7 +346,7 @@ JausByte jausGetCommandInterfaceUnits(JausPayloadInterface payloadInterface, cha
 	}
 	else
 	{
-		//cError("%s:%d: could not find command interface named %s\n", __FILE__, __LINE__, identifier);
+		////cError("%s:%d: could not find command interface named %s\n", __FILE__, __LINE__, identifier);
 		if(*successFlag) *successFlag = FAILURE;
 		return 0;
 	}
@@ -363,7 +363,7 @@ JausBoolean jausSetCommandInterfaceBlockingFlag(JausPayloadInterface payloadInte
 	}
 	else
 	{
-		//cError("%s:%d: could not find command interface named %s\n", __FILE__, __LINE__, identifier);
+		////cError("%s:%d: could not find command interface named %s\n", __FILE__, __LINE__, identifier);
 		return JAUS_FALSE;
 	}
 }
@@ -379,7 +379,7 @@ JausBoolean jausClearCommandInterfaceBlockingFlag(JausPayloadInterface payloadIn
 	}
 	else
 	{
-		//cError("%s:%d: could not find command interface named %s\n", __FILE__, __LINE__, identifier);
+		////cError("%s:%d: could not find command interface named %s\n", __FILE__, __LINE__, identifier);
 		return JAUS_FALSE;
 	}
 }
@@ -396,7 +396,7 @@ JausBoolean jausGetCommandInterfaceBlockingFlag(JausPayloadInterface payloadInte
 	}
 	else
 	{
-		//cError("%s:%d: could not find command interface named %s\n", __FILE__, __LINE__, identifier);
+		////cError("%s:%d: could not find command interface named %s\n", __FILE__, __LINE__, identifier);
 		if(*successFlag) *successFlag = FAILURE;
 		return JAUS_FALSE;
 	}
@@ -414,7 +414,7 @@ JausBoolean jausSetCommandInterfaceMinMax(JausPayloadInterface payloadInterface,
 	}
 	else
 	{
-		//cError("%s:%d: could not find command interface named %s\n", __FILE__, __LINE__, identifier);
+		////cError("%s:%d: could not find command interface named %s\n", __FILE__, __LINE__, identifier);
 		return JAUS_FALSE;
 	}
 }
@@ -430,7 +430,7 @@ JausTypeCode jausGetCommandInterfaceMin(JausPayloadInterface payloadInterface, c
 	}
 	else
 	{
-		//cError("%s:%d: could not find command interface named %s\n", __FILE__, __LINE__, identifier);
+		////cError("%s:%d: could not find command interface named %s\n", __FILE__, __LINE__, identifier);
 		if(*successFlag) *successFlag = FAILURE;
 		return failCode;
 	}
@@ -447,7 +447,7 @@ JausTypeCode jausGetCommandInterfaceMax(JausPayloadInterface payloadInterface, c
 	}
 	else
 	{
-		//cError("%s:%d: could not find command interface named %s\n", __FILE__, __LINE__, identifier);
+		////cError("%s:%d: could not find command interface named %s\n", __FILE__, __LINE__, identifier);
 		if(*successFlag) *successFlag = FAILURE;
 		return failCode;
 	}
@@ -464,7 +464,7 @@ JausBoolean jausSetCommandInterfaceDefault(JausPayloadInterface payloadInterface
 	}
 	else
 	{
-		//cError("%s:%d: could not find command interface named %s\n", __FILE__, __LINE__, identifier);
+		////cError("%s:%d: could not find command interface named %s\n", __FILE__, __LINE__, identifier);
 		return JAUS_FALSE;
 	}
 }
@@ -480,7 +480,7 @@ JausTypeCode jausGetCommandInterfaceDefault(JausPayloadInterface payloadInterfac
 	}
 	else
 	{
-		//cError("%s:%d: could not find command interface named %s\n", __FILE__, __LINE__, identifier);
+		////cError("%s:%d: could not find command interface named %s\n", __FILE__, __LINE__, identifier);
 		if(*successFlag) *successFlag = FAILURE;
 		return failCode;
 	}
@@ -498,7 +498,7 @@ JausBoolean jausSetCommandInterfaceEnumeration(JausPayloadInterface payloadInter
 	}
 	else
 	{
-		//cError("%s:%d: could not find command interface named %s\n", __FILE__, __LINE__, identifier);
+		////cError("%s:%d: could not find command interface named %s\n", __FILE__, __LINE__, identifier);
 		return JAUS_FALSE;
 	}
 }
@@ -513,7 +513,7 @@ char* jausGetCommandInterfaceEnumeration(JausPayloadInterface payloadInterface, 
 	}
 	else
 	{
-		//cError("%s:%d: could not find command interface named %s\n", __FILE__, __LINE__, identifier);
+		////cError("%s:%d: could not find command interface named %s\n", __FILE__, __LINE__, identifier);
 		if(*successFlag) *successFlag = FAILURE;
 		return "0";
 	}
@@ -529,7 +529,7 @@ JausUnsignedShort jausGetCommandInterfaceEnumerationLength(JausPayloadInterface 
 	}
 	else
 	{
-		//cError("%s:%d: could not find command interface named %s\n", __FILE__, __LINE__, identifier);
+		////cError("%s:%d: could not find command interface named %s\n", __FILE__, __LINE__, identifier);
 		if(*successFlag) *successFlag = FAILURE;
 		return 0;
 	}
@@ -547,7 +547,7 @@ JausBoolean jausSetCommandInterfaceHmiRecommendation(JausPayloadInterface payloa
 	}
 	else
 	{
-		//cError("%s:%d: could not find command interface named %s\n", __FILE__, __LINE__, identifier);
+		////cError("%s:%d: could not find command interface named %s\n", __FILE__, __LINE__, identifier);
 		return JAUS_FALSE;
 	}
 }
@@ -562,7 +562,7 @@ JausByte jausGetCommandInterfaceHmiRecommendation(JausPayloadInterface payloadIn
 	}
 	else
 	{
-		//cError("%s:%d: could not find command interface named %s\n", __FILE__, __LINE__, identifier);
+		////cError("%s:%d: could not find command interface named %s\n", __FILE__, __LINE__, identifier);
 		if(*successFlag) *successFlag = FAILURE;
 		return 0;
 	}
@@ -588,7 +588,7 @@ JausBoolean jausSetCommandInterfaceHmiParameters(JausPayloadInterface payloadInt
 	}
 	else
 	{
-		//cError("%s:%d: could not find command interface named %s\n", __FILE__, __LINE__, identifier);
+		////cError("%s:%d: could not find command interface named %s\n", __FILE__, __LINE__, identifier);
 		return JAUS_FALSE;
 	}
 }
@@ -603,7 +603,7 @@ JausUnsignedShort jausGetCommandInterfaceHmiXPositionPixels(JausPayloadInterface
 	}
 	else
 	{
-		//cError("%s:%d: could not find command interface named %s\n", __FILE__, __LINE__, identifier);
+		////cError("%s:%d: could not find command interface named %s\n", __FILE__, __LINE__, identifier);
 		if(*successFlag) *successFlag = FAILURE;
 		return 0;
 	}
@@ -619,7 +619,7 @@ JausUnsignedShort jausGetCommandInterfaceHmiYPositionPixels(JausPayloadInterface
 	}
 	else
 	{
-		//cError("%s:%d: could not find command interface named %s\n", __FILE__, __LINE__, identifier);
+		////cError("%s:%d: could not find command interface named %s\n", __FILE__, __LINE__, identifier);
 		if(*successFlag) *successFlag = FAILURE;
 		return 0;
 	}
@@ -635,7 +635,7 @@ JausUnsignedShort jausGetCommandInterfaceHmiWidthPixels(JausPayloadInterface pay
 	}
 	else
 	{
-		//cError("%s:%d: could not find command interface named %s\n", __FILE__, __LINE__, identifier);
+		////cError("%s:%d: could not find command interface named %s\n", __FILE__, __LINE__, identifier);
 		if(*successFlag) *successFlag = FAILURE;
 		return 0;
 	}
@@ -651,7 +651,7 @@ JausUnsignedShort jausGetCommandInterfaceHmiHeightPixels(JausPayloadInterface pa
 	}
 	else
 	{
-		//cError("%s:%d: could not find command interface named %s\n", __FILE__, __LINE__, identifier);
+		////cError("%s:%d: could not find command interface named %s\n", __FILE__, __LINE__, identifier);
 		if(*successFlag) *successFlag = FAILURE;
 		return 0;
 	}
@@ -668,7 +668,7 @@ JausBoolean jausSetInformationInterfaceUnits(JausPayloadInterface payloadInterfa
 	}
 	else
 	{
-		//cError("%s:%d: could not find information interface named %s\n", __FILE__, __LINE__, identifier);
+		////cError("%s:%d: could not find information interface named %s\n", __FILE__, __LINE__, identifier);
 		return JAUS_FALSE;
 	}
 }
@@ -683,7 +683,7 @@ JausByte jausGetInformationInterfaceUnits(JausPayloadInterface payloadInterface,
 	}
 	else
 	{
-		//cError("%s:%d: could not find information interface named %s\n", __FILE__, __LINE__, identifier);
+		////cError("%s:%d: could not find information interface named %s\n", __FILE__, __LINE__, identifier);
 		if(*successFlag) *successFlag = FAILURE;
 		return 0;
 	}
@@ -700,7 +700,7 @@ JausBoolean jausSetInformationInterfaceCommandInterfaceAssoc(JausPayloadInterfac
 	}
 	else
 	{
-		//cError("%s:%d: could not find information interface named %s\n", __FILE__, __LINE__, identifier);
+		////cError("%s:%d: could not find information interface named %s\n", __FILE__, __LINE__, identifier);
 		return JAUS_FALSE;
 	}
 }
@@ -715,7 +715,7 @@ JausByte jausGetInformationInterfaceCommandInterfaceAssoc(JausPayloadInterface p
 	}
 	else
 	{
-		//cError("%s:%d: could not find information interface named %s\n", __FILE__, __LINE__, identifier);
+		////cError("%s:%d: could not find information interface named %s\n", __FILE__, __LINE__, identifier);
 		if(*successFlag) *successFlag = FAILURE;
 		return 0;
 	}
@@ -733,7 +733,7 @@ JausBoolean jausSetInformationInterfaceMinMax(JausPayloadInterface payloadInterf
 	}
 	else
 	{
-		//cError("%s:%d: could not find information interface named %s\n", __FILE__, __LINE__, identifier);
+		////cError("%s:%d: could not find information interface named %s\n", __FILE__, __LINE__, identifier);
 		return JAUS_FALSE;
 	}
 }
@@ -749,7 +749,7 @@ JausTypeCode jausGetInformationInterfaceMin(JausPayloadInterface payloadInterfac
 	}
 	else
 	{
-		//cError("%s:%d: could not find information interface named %s\n", __FILE__, __LINE__, identifier);
+		////cError("%s:%d: could not find information interface named %s\n", __FILE__, __LINE__, identifier);
 		if(*successFlag) *successFlag = FAILURE;
 		return failCode;
 	}
@@ -766,7 +766,7 @@ JausTypeCode jausGetInformationInterfaceMax(JausPayloadInterface payloadInterfac
 	}
 	else
 	{
-		//cError("%s:%d: could not find information interface named %s\n", __FILE__, __LINE__, identifier);
+		////cError("%s:%d: could not find information interface named %s\n", __FILE__, __LINE__, identifier);
 		if(*successFlag) *successFlag = FAILURE;
 		return failCode;
 	}
@@ -783,7 +783,7 @@ JausBoolean jausSetInformationInterfaceDefault(JausPayloadInterface payloadInter
 	}
 	else
 	{
-		//cError("%s:%d: could not find information interface named %s\n", __FILE__, __LINE__, identifier);
+		////cError("%s:%d: could not find information interface named %s\n", __FILE__, __LINE__, identifier);
 		return JAUS_FALSE;
 	}
 }
@@ -799,7 +799,7 @@ JausTypeCode jausGetInformationInterfaceDefault(JausPayloadInterface payloadInte
 	}
 	else
 	{
-		//cError("%s:%d: could not find information interface named %s\n", __FILE__, __LINE__, identifier);
+		////cError("%s:%d: could not find information interface named %s\n", __FILE__, __LINE__, identifier);
 		if(*successFlag) *successFlag = FAILURE;
 		return failCode;
 	}
@@ -817,7 +817,7 @@ JausBoolean jausSetInformationInterfaceEnumeration(JausPayloadInterface payloadI
 	}
 	else
 	{
-		//cError("%s:%d: could not find information interface named %s\n", __FILE__, __LINE__, identifier);
+		////cError("%s:%d: could not find information interface named %s\n", __FILE__, __LINE__, identifier);
 		return JAUS_FALSE;
 	}
 }
@@ -832,7 +832,7 @@ char* jausGetInformationInterfaceEnumeration(JausPayloadInterface payloadInterfa
 	}
 	else
 	{
-		//cError("%s:%d: could not find information interface named %s\n", __FILE__, __LINE__, identifier);
+		////cError("%s:%d: could not find information interface named %s\n", __FILE__, __LINE__, identifier);
 		if(*successFlag) *successFlag = FAILURE;
 		return "0";
 	}
@@ -848,7 +848,7 @@ JausUnsignedShort jausGetInformationInterfaceEnumerationLength(JausPayloadInterf
 	}
 	else
 	{
-		//cError("%s:%d: could not find information interface named %s\n", __FILE__, __LINE__, identifier);
+		////cError("%s:%d: could not find information interface named %s\n", __FILE__, __LINE__, identifier);
 		if(*successFlag) *successFlag = FAILURE;
 		return 0;
 	}
@@ -866,7 +866,7 @@ JausBoolean jausSetInformationInterfaceHmiRecommendation(JausPayloadInterface pa
 	}
 	else
 	{
-		//cError("%s:%d: could not find information interface named %s\n", __FILE__, __LINE__, identifier);
+		////cError("%s:%d: could not find information interface named %s\n", __FILE__, __LINE__, identifier);
 		return JAUS_FALSE;
 	}
 }
@@ -881,7 +881,7 @@ JausByte jausGetInformationInterfaceHmiRecommendation(JausPayloadInterface paylo
 	}
 	else
 	{
-		//cError("%s:%d: could not find information interface named %s\n", __FILE__, __LINE__, identifier);
+		////cError("%s:%d: could not find information interface named %s\n", __FILE__, __LINE__, identifier);
 		if(*successFlag) *successFlag = FAILURE;
 		return 0;
 	}
@@ -907,7 +907,7 @@ JausBoolean jausSetInformationInterfaceHmiParameters(JausPayloadInterface payloa
 	}
 	else
 	{
-		//cError("%s:%d: could not find information interface named %s\n", __FILE__, __LINE__, identifier);
+		////cError("%s:%d: could not find information interface named %s\n", __FILE__, __LINE__, identifier);
 		return JAUS_FALSE;
 	}
 }
@@ -922,7 +922,7 @@ JausUnsignedShort jausGetInformationInterfaceHmiXPositionPixels(JausPayloadInter
 	}
 	else
 	{
-		//cError("%s:%d: could not find information interface named %s\n", __FILE__, __LINE__, identifier);
+		////cError("%s:%d: could not find information interface named %s\n", __FILE__, __LINE__, identifier);
 		if(*successFlag) *successFlag = FAILURE;
 		return 0;
 	}
@@ -938,7 +938,7 @@ JausUnsignedShort jausGetInformationInterfaceHmiYPositionPixels(JausPayloadInter
 	}
 	else
 	{
-		//cError("%s:%d: could not find information interface named %s\n", __FILE__, __LINE__, identifier);
+		////cError("%s:%d: could not find information interface named %s\n", __FILE__, __LINE__, identifier);
 		if(*successFlag) *successFlag = FAILURE;
 		return 0;
 	}
@@ -954,7 +954,7 @@ JausUnsignedShort jausGetInformationInterfaceHmiWidthPixels(JausPayloadInterface
 	}
 	else
 	{
-		//cError("%s:%d: could not find information interface named %s\n", __FILE__, __LINE__, identifier);
+		////cError("%s:%d: could not find information interface named %s\n", __FILE__, __LINE__, identifier);
 		if(*successFlag) *successFlag = FAILURE;
 		return 0;
 	}
@@ -970,7 +970,7 @@ JausUnsignedShort jausGetInformationInterfaceHmiHeightPixels(JausPayloadInterfac
 	}
 	else
 	{
-		//cError("%s:%d: could not find information interface named %s\n", __FILE__, __LINE__, identifier);
+		////cError("%s:%d: could not find information interface named %s\n", __FILE__, __LINE__, identifier);
 		if(*successFlag) *successFlag = FAILURE;
 		return 0;
 	}

@@ -249,7 +249,7 @@ JausBoolean jausComponentIsTimedOut(JausComponent component)
 	return difftime(now, component->timeStampSec) > COMPONENT_TIMEOUT_SEC? JAUS_TRUE : JAUS_FALSE;
 }
 
-int jausComponentToString(JausComponent component, char *buf, size_t buffSize)
+int jausComponentToString(JausComponent component, char *buf)
 {
 	if(component->identification)
 	{

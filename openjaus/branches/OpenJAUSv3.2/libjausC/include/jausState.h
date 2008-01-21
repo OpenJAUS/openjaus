@@ -57,7 +57,7 @@ typedef enum
 	JAUS_EMERGENCY_STATE = 5
 }JausState;
 
-JAUS_EXPORT int jausStateToString(JausState state, char *buf, size_t buffSize);
+JAUS_EXPORT int jausStateToString(JausState state, char *buf);
 JAUS_EXPORT char *jausStateGetString(JausState state);
 
 #endif

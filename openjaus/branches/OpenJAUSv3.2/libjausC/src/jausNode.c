@@ -135,7 +135,7 @@ JausBoolean jausNodeIsTimedOut(JausNode node)
 	return difftime(now, node->timeStampSec) > NODE_TIMEOUT_SEC? JAUS_TRUE : JAUS_FALSE;
 }
 
-int jausNodeToString(JausNode node, char *buf, size_t buffSize)
+int jausNodeToString(JausNode node, char *buf)
 {	
 	if(node->identification)
 	{

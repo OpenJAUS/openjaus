@@ -44,7 +44,7 @@
 #include <stdio.h>
 #include "jaus.h"
 
-int jausStateToString(JausState state, char *buf, size_t buffSize)
+int jausStateToString(JausState state, char *buf)
 {
 	return sprintf(buf, "%s", jausStateGetString(state));
 }

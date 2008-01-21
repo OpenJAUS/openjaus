@@ -86,7 +86,7 @@ typedef struct JausAddressStruct *JausAddress;
 JAUS_EXPORT JausAddress jausAddressCreate(void);
 JAUS_EXPORT void jausAddressDestroy(JausAddress);
 
-JAUS_EXPORT int jausAddressToString(JausAddress, char *, size_t buffSize);
+JAUS_EXPORT int jausAddressToString(JausAddress, char *);
 JAUS_EXPORT JausAddress jausAddressClone(JausAddress src);
 JAUS_EXPORT JausBoolean jausAddressCopy(JausAddress dst, JausAddress src);
 JAUS_EXPORT JausBoolean jausAddressEqual(JausAddress, JausAddress);

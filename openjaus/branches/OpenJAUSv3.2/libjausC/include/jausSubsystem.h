@@ -70,8 +70,8 @@ JAUS_EXPORT JausBoolean jausSubsystemIsTimedOut(JausSubsystem subs);
 JAUS_EXPORT JausBoolean jausSubsystemHasIdentification(JausSubsystem subs);
 JAUS_EXPORT JausBoolean jausSubsystemHasConfiguration(JausSubsystem subs);
 
-JAUS_EXPORT int jausSubsystemToString(JausSubsystem subs, char *buf, size_t buffSize);
-JAUS_EXPORT int jausSubsystemTableToString(JausSubsystem subs, char *buf, size_t buffSize);
-JAUS_EXPORT int jausSubsystemTableToDetailedString(JausSubsystem subs, char *buf, size_t buffSize);
+JAUS_EXPORT int jausSubsystemToString(JausSubsystem subs, char *buf);
+JAUS_EXPORT int jausSubsystemTableToString(JausSubsystem subs, char *buf);
+JAUS_EXPORT int jausSubsystemTableToDetailedString(JausSubsystem subs, char *buf);
 
 #endif
