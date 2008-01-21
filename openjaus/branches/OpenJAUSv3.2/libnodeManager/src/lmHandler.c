@@ -96,7 +96,7 @@ void lmHandlerReceiveLargeMessage(NodeManagerInterface nmi, JausMessage message)
 			// Check for valid SeqNumber(0), else Error
 			if(message->sequenceNumber) 
 			{
-				cError("LargeMessageHandler: Received First Data Packet with invalid Sequence Number(%d)\n", message->sequenceNumber);
+				//cError("LargeMessageHandler: Received First Data Packet with invalid Sequence Number(%d)\n", message->sequenceNumber);
 				jausMessageDestroy(message);
 				return;
 			}
@@ -128,7 +128,7 @@ void lmHandlerReceiveLargeMessage(NodeManagerInterface nmi, JausMessage message)
 				// Check if item exists in LargeMessageList with seqNumber
 				if(vectorContains(msgList->messages, message, (void *)lmHandlerLargeMessageCheck) != -1)
 				{
-					cError("LargeMessageHandler: Received duplicate NORMAL_DATA_PACKET\n");
+					//cError("LargeMessageHandler: Received duplicate NORMAL_DATA_PACKET\n");
 					jausMessageDestroy(message);
 				}
 				else
@@ -140,7 +140,7 @@ void lmHandlerReceiveLargeMessage(NodeManagerInterface nmi, JausMessage message)
 			else
 			{
 				// Destroy Message
-				cError("LargeMessageHandler: Received NORMAL_DATA_PACKET (0x%4X) for unknown Large Message Set (never received JAUS_FIRST_DATA_PACKET)\n", message->commandCode);
+				//cError("LargeMessageHandler: Received NORMAL_DATA_PACKET (0x%4X) for unknown Large Message Set (never received JAUS_FIRST_DATA_PACKET)\n", message->commandCode);
 				jausMessageDestroy(message);
 			}
 			break;
@@ -161,7 +161,7 @@ void lmHandlerReceiveLargeMessage(NodeManagerInterface nmi, JausMessage message)
 			}
 			else
 			{
-				cError("LargeMessageHandler: Received RETRANSMITTED_DATA_PACKET for unknown Large Message Set (never received JAUS_FIRST_DATA_PACKET)\n");
+				//cError("LargeMessageHandler: Received RETRANSMITTED_DATA_PACKET for unknown Large Message Set (never received JAUS_FIRST_DATA_PACKET)\n");
 				jausMessageDestroy(message);				
 			}
 			break;
@@ -217,7 +217,7 @@ void lmHandlerReceiveLargeMessage(NodeManagerInterface nmi, JausMessage message)
 							vectorRemove(nmi->lmh->messageLists, msgList, (void *)lmHandlerMessageListEqual);
 							lmListDestroy(msgList);
 						
-							cError("LargeMessageHandler: Received LAST_DATA_PACKET, but do not have proper sequence of messages\n");						
+							//cError("LargeMessageHandler: Received LAST_DATA_PACKET, but do not have proper sequence of messages\n");						
 							jausMessageDestroy(outMessage);
 							return;
 						}
@@ -250,14 +250,14 @@ void lmHandlerReceiveLargeMessage(NodeManagerInterface nmi, JausMessage message)
 			}
 			else
 			{
-				cError("LargeMessageHandler: Received LAST_DATA_PACKET for unknown Large Message Set (never received JAUS_FIRST_DATA_PACKET)\n");
+				//cError("LargeMessageHandler: Received LAST_DATA_PACKET for unknown Large Message Set (never received JAUS_FIRST_DATA_PACKET)\n");
 				jausMessageDestroy(message);				
 			}
 			break;
 		
 		default:
 			jausAddressToString(message->source, address);
-			cError("lmHandler: Received (%s) with improper dataFlag (%d) from %s\n", jausMessageCommandCodeString(message), message->dataFlag, address);
+			//cError("lmHandler: Received (%s) with improper dataFlag (%d) from %s\n", jausMessageCommandCodeString(message), message->dataFlag, address);
 			jausMessageDestroy(message);
 			break;
 	}
