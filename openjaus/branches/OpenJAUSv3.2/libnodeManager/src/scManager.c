@@ -930,7 +930,7 @@ JausBoolean scManagerReceiveServiceConnection(NodeManagerInterface nmi, ServiceC
 		}
 	}
 
-	cError(	"libnodeManager: scManagerServiceConnectionReceive: Requested SC does not exist\n" );
+	////cError(	"libnodeManager: scManagerServiceConnectionReceive: Requested SC does not exist\n" );
 	return JAUS_FALSE;
 }
 
@@ -956,7 +956,7 @@ void scManagerReceiveMessage(NodeManagerInterface nmi, JausMessage message)
 				{
 					queuePush(sc->queue, (void *)message);
 				} 
-				// cDebug(3, "Queue Size: %d\n", sc->queue->size);
+				//cDebug(3, "Queue Size: %d\n", sc->queue->size);
 			}			
 			else
 			{
@@ -969,7 +969,7 @@ void scManagerReceiveMessage(NodeManagerInterface nmi, JausMessage message)
 	}
 
 	jausAddressToString(message->source, string);
-	cError("libnodeManager: scManangerReceiveMessage: No SC for: %s, from: %s\n", jausMessageCommandCodeString(message), string);
+	////cError("libnodeManager: scManangerReceiveMessage: No SC for: %s, from: %s\n", jausMessageCommandCodeString(message), string);
 	jausMessageDestroy(message);
 }
 
@@ -1037,7 +1037,7 @@ void scManagerProccessCreateEvent(NodeManagerInterface nmi, CreateEventMessage m
 		}
 		else
 		{
-			cError("scManagerProccessCreateEvent: Cannot create confirmEvent\n");
+			////cError("scManagerProccessCreateEvent: Cannot create confirmEvent\n");
 		}
 		return;
 	}
@@ -1065,7 +1065,7 @@ void scManagerProccessCreateEvent(NodeManagerInterface nmi, CreateEventMessage m
 		}
 		else
 		{
-			cError("scManagerProccessCreateEvent: Cannot create confirmEvent\n");
+			//cError("scManagerProccessCreateEvent: Cannot create confirmEvent\n");
 		}
 		return;
 	}
@@ -1107,7 +1107,7 @@ void scManagerProccessCreateEvent(NodeManagerInterface nmi, CreateEventMessage m
 		}
 		else
 		{
-			cError("scManagerProccessCreateEvent: Cannot create confirmEvent\n");
+			//cError("scManagerProccessCreateEvent: Cannot create confirmEvent\n");
 		}
 		jausMessageDestroy(newSc->queryMessage);
 		jausAddressDestroy(newSc->address);
@@ -1159,7 +1159,7 @@ void scManagerProccessCreateEvent(NodeManagerInterface nmi, CreateEventMessage m
 	}
 	else
 	{
-		cError("scManagerProccessCreateEvent: Cannot create confirmEvent\n");
+		//cError("scManagerProccessCreateEvent: Cannot create confirmEvent\n");
 	}
 }
 

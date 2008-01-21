@@ -155,7 +155,7 @@ NodeManagerInterface nodeManagerOpen(JausComponent cmpt)
 		return NULL;
 	}
 
-	nmi->isOpen = TRUE;
+	nmi->isOpen = JAUS_TRUE;
 
 	memset(&threadAttributes, 0, sizeof(threadAttributes));
 	if(pthread_attr_init(&threadAttributes))
@@ -369,7 +369,8 @@ void *heartbeatThread(void *threadArgument)
 		nmi->heartbeatCount++;
 		if( (getTimeSeconds() - NODE_MANAGER_TIMEOUT_SEC) > nmi->timestamp)
 		{
-			cError("libNodeManager: Node Manager Has Timed Out\n");
+			// TODO: Capture Error
+			////cError("libNodeManager: Node Manager Has Timed Out\n");
 			//nmi->cmpt->state = JAUS_FAILURE_STATE;
 			//break;
 		}

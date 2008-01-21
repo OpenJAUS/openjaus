@@ -89,7 +89,7 @@ void defaultJausMessageProcessor(JausMessage message, NodeManagerInterface nmi, 
 	if(cmpt->controller.active && !jausAddressEqual(message->source, cmpt->controller.address) && jausMessageIsRejectableCommand(message) )
 	{
 		jausAddressToString(message->source, string);
-		cError("DefaultMessageProcessor: Command %s, from non-controlling source: %s\n", jausMessageCommandCodeString(message));
+		////cError("DefaultMessageProcessor: Command %s, from non-controlling source: %s\n", jausMessageCommandCodeString(message));
 		jausMessageDestroy(message);
 		return;		
 	}	
@@ -105,7 +105,8 @@ void defaultJausMessageProcessor(JausMessage message, NodeManagerInterface nmi, 
 			}
 			else
 			{
-				cError("DefaultMessageProcessor: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
+				//TODO: Throw errors (need a way to capture errors in this library)
+				////cError("DefaultMessageProcessor: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
 			}
 			jausMessageDestroy(message);
 			break;
@@ -227,7 +228,7 @@ void defaultJausMessageProcessor(JausMessage message, NodeManagerInterface nmi, 
 			}
 			else
 			{
-				cError("DefaultMessageProcessor: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
+				//cError("DefaultMessageProcessor: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
 			}
 			jausMessageDestroy(message);
 			break;
@@ -247,7 +248,7 @@ void defaultJausMessageProcessor(JausMessage message, NodeManagerInterface nmi, 
 			}
 			else
 			{
-				cError("DefaultMessageProcessor: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
+				//cError("DefaultMessageProcessor: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
 			}
 			jausMessageDestroy(message);
 			break;
@@ -261,7 +262,7 @@ void defaultJausMessageProcessor(JausMessage message, NodeManagerInterface nmi, 
 			}
 			else
 			{
-				cError("DefaultMessageProcessor: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
+				//cError("DefaultMessageProcessor: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
 			}
 			jausMessageDestroy(message);
 			break;
@@ -275,7 +276,7 @@ void defaultJausMessageProcessor(JausMessage message, NodeManagerInterface nmi, 
 			}
 			else
 			{
-				cError("DefaultMessageProcessor: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
+				//cError("DefaultMessageProcessor: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
 			}
 			jausMessageDestroy(message);
 			break;
@@ -289,7 +290,7 @@ void defaultJausMessageProcessor(JausMessage message, NodeManagerInterface nmi, 
 			}
 			else
 			{
-				cError("DefaultMessageProcessor: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
+				//cError("DefaultMessageProcessor: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
 			}
 			jausMessageDestroy(message);
 			break;
@@ -303,7 +304,7 @@ void defaultJausMessageProcessor(JausMessage message, NodeManagerInterface nmi, 
 			}
 			else
 			{
-				cError("DefaultMessageProcessor: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
+				//cError("DefaultMessageProcessor: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
 			}
 			jausMessageDestroy(message);
 			break;
@@ -317,7 +318,7 @@ void defaultJausMessageProcessor(JausMessage message, NodeManagerInterface nmi, 
 			}
 			else
 			{
-				cError("DefaultMessageProcessor: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
+				//cError("DefaultMessageProcessor: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
 			}
 			jausMessageDestroy(message);
 			break;
@@ -428,8 +429,8 @@ void defaultJausMessageProcessor(JausMessage message, NodeManagerInterface nmi, 
 				// Check for Controlleer
 				if(	cmpt->controller.active == JAUS_TRUE && !nodeManagerVerifyAddress(nmi, cmpt->controller.address) )
 				{
-					cError("Active Component Controller (%d.%d.%d.%d) lost.\n", 
-						cmpt->controller.address->subsystem, cmpt->controller.address->node, cmpt->controller.address->component, cmpt->controller.address->instance);
+					//cError("Active Component Controller (%d.%d.%d.%d) lost.\n", 
+						//cmpt->controller.address->subsystem, cmpt->controller.address->node, cmpt->controller.address->component, cmpt->controller.address->instance);
 
 					// Disable Controller
 					cmpt->controller.active = JAUS_FALSE;
@@ -443,7 +444,7 @@ void defaultJausMessageProcessor(JausMessage message, NodeManagerInterface nmi, 
 			}
 			else
 			{
-				cError("DefaultMessageProcessor: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
+				//cError("DefaultMessageProcessor: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
 			}
 			jausMessageDestroy(message);
 			break;
@@ -490,7 +491,7 @@ void defaultJausMessageProcessor(JausMessage message, NodeManagerInterface nmi, 
 				{
 					// Don't handle other Event Types Here
 					// Error and send a refusal back
-					cError("DefaultMessageProcessor: Warning! Received Event Message not of Periodic Type\n");
+					//cError("DefaultMessageProcessor: Warning! Received Event Message not of Periodic Type\n");
 					confirmEvent = confirmEventMessageCreate();
 					if(confirmEvent)
 					{
@@ -509,14 +510,14 @@ void defaultJausMessageProcessor(JausMessage message, NodeManagerInterface nmi, 
 					}
 					else
 					{
-						cError("DefaultMessageProcessor: Cannot create confirmEvent\n");
+						//cError("DefaultMessageProcessor: Cannot create confirmEvent\n");
 					}
 				}
 				createEventMessageDestroy(createEvent);				
 			}
 			else
 			{
-				cError("DefaultMessageProcessor: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
+				//cError("DefaultMessageProcessor: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
 			}
 			jausMessageDestroy(message);
 			break;
@@ -530,7 +531,7 @@ void defaultJausMessageProcessor(JausMessage message, NodeManagerInterface nmi, 
 			}
 			else
 			{
-				cError("DefaultMessageProcessor: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
+				//cError("DefaultMessageProcessor: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
 			}
 			jausMessageDestroy(message);
 			break;
@@ -544,7 +545,7 @@ void defaultJausMessageProcessor(JausMessage message, NodeManagerInterface nmi, 
 			}
 			else
 			{
-				cError("DefaultMessageProcessor: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
+				//cError("DefaultMessageProcessor: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
 			}
 			jausMessageDestroy(message);
 			break;
@@ -571,7 +572,7 @@ void defaultJausMessageProcessor(JausMessage message, NodeManagerInterface nmi, 
 			}
 			else
 			{
-				cError("DefaultMessageProcessor: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
+				//cError("DefaultMessageProcessor: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
 			}
 			jausMessageDestroy(message);
 			break;
@@ -579,7 +580,7 @@ void defaultJausMessageProcessor(JausMessage message, NodeManagerInterface nmi, 
 		default:
 			// Destroy the rxMessage
 			jausAddressToString(message->source, string);
-			cError("DefaultMessageProcessor: Unhandled code: %s, from: %s\n", jausMessageCommandCodeString(message), string);
+			//cError("DefaultMessageProcessor: Unhandled code: %s, from: %s\n", jausMessageCommandCodeString(message), string);
 			jausMessageDestroy(message);
 			break;
 	}

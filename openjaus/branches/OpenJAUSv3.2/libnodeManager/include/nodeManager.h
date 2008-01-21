@@ -34,8 +34,11 @@
 #ifndef NODE_MANAGER_H
 #define NODE_MANAGER_H
 
-#include "cimar.h"
+#include "datagramSocket.h"
+#include "inetAddress.h"
+#include "queue.h"
 #include "jaus.h"
+#include "timeLib.h"
 #include <pthread.h>
 #include <string.h>
 
@@ -106,7 +109,7 @@ typedef struct JausAddressListStruct
 
 typedef struct
 {
-	Vector messageLists;
+	JausArray messageLists;
 }LargeMessageHandlerStruct;
 
 typedef LargeMessageHandlerStruct *LargeMessageHandler;
@@ -115,7 +118,7 @@ typedef struct
 {
 	JausUnsignedShort commandCode;
 	JausAddress source;
-	Vector messages;
+	JausArray messages;
 }LargeMessageListStruct;
 
 typedef LargeMessageListStruct *LargeMessageList;
