@@ -115,6 +115,6 @@ JAUS_EXPORT JausBoolean jausComponentIsTimedOut(JausComponent cmpt);
 JAUS_EXPORT JausBoolean jausComponentHasIdentification(JausComponent cmpt);
 JAUS_EXPORT JausBoolean jausComponentHasServices(JausComponent cmpt);
 
-JAUS_EXPORT int jausComponentToString(JausComponent cmpt, char *buf, size_t buffSize);
+JAUS_EXPORT int jausComponentToString(JausComponent cmpt, char *buf);
 
 #endif // JAUS_COMPONENT_H

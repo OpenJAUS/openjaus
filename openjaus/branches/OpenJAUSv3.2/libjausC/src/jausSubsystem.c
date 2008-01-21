@@ -161,7 +161,7 @@ JausBoolean jausSubsystemHasConfiguration(JausSubsystem subs)
 	}
 }
 
-int jausSubsystemToString(JausSubsystem subsystem, char *buf, size_t buffSize)
+int jausSubsystemToString(JausSubsystem subsystem, char *buf)
 {
 	if(subsystem->identification == NULL)
 	{
@@ -173,7 +173,7 @@ int jausSubsystemToString(JausSubsystem subsystem, char *buf, size_t buffSize)
 	}
 }
 
-int jausSubsystemTableToString(JausSubsystem subsystem, char *buf, size_t buffSize)
+int jausSubsystemTableToString(JausSubsystem subsystem, char *buf)
 {
 	int i = 0;
 	int j = 0;
@@ -183,14 +183,14 @@ int jausSubsystemTableToString(JausSubsystem subsystem, char *buf, size_t buffSi
 	JausComponent comp;
 	JausService service;
 	
-	jausSubsystemToString(subsystem, tempBuf, 256);
+	jausSubsystemToString(subsystem, tempBuf);
 	sprintf(buf, "%s\n", tempBuf);
 	
 	for(i = 0; i < subsystem->nodes->elementCount; i++)
 	{
 		node = (JausNode)subsystem->nodes->elementData[i];
 
-		jausNodeToString(node, tempBuf, 256);
+		jausNodeToString(node, tempBuf);
 		
 		sprintf(buf, "%s   %s\n", buf, tempBuf);
 		
@@ -200,7 +200,7 @@ int jausSubsystemTableToString(JausSubsystem subsystem, char *buf, size_t buffSi
 
 			memset(tempBuf, 0, 256);
 			
-			jausComponentToString(comp, tempBuf, 256);
+			jausComponentToString(comp, tempBuf);
 			
 			sprintf(buf, "%s      %s\n", buf, tempBuf);
 		
@@ -221,7 +221,7 @@ int jausSubsystemTableToString(JausSubsystem subsystem, char *buf, size_t buffSi
 	return (int)strlen(buf);
 }
 
-int jausSubsystemTableToDetailedString(JausSubsystem subsystem, char *buf, size_t buffSize)
+int jausSubsystemTableToDetailedString(JausSubsystem subsystem, char *buf)
 {
 	int i = 0;
 	int j = 0;
@@ -232,14 +232,14 @@ int jausSubsystemTableToDetailedString(JausSubsystem subsystem, char *buf, size_
 	JausService service;
 	JausCommand command;
 
-	jausSubsystemToString(subsystem, tempBuf, 256);
+	jausSubsystemToString(subsystem, tempBuf);
 	sprintf(buf, "%s\n", tempBuf);
 	
 	for(i = 0; i < subsystem->nodes->elementCount; i++)
 	{
 		node = (JausNode)subsystem->nodes->elementData[i];
 
-		jausNodeToString(node, tempBuf, 256);
+		jausNodeToString(node, tempBuf);
 		
 		sprintf(buf, "%s   %s\n", buf, tempBuf);
 		
@@ -249,7 +249,7 @@ int jausSubsystemTableToDetailedString(JausSubsystem subsystem, char *buf, size_
 
 			memset(tempBuf, 0, 256);			
 			
-			jausComponentToString(comp, tempBuf, 256);
+			jausComponentToString(comp, tempBuf);
 			
 			sprintf(buf, "%s      %s\n", buf, tempBuf);
 			for(k = 0; k < comp->services->elementCount; k++)

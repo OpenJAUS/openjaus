@@ -70,6 +70,6 @@ JAUS_EXPORT JausBoolean jausNodeHasConfiguration(JausNode node);
 JAUS_EXPORT JausBoolean jausNodeFreeMemory(JausNode node);
 JAUS_EXPORT void jausNodeUpdateTimestamp(JausNode node);
 JAUS_EXPORT JausBoolean jausNodeIsTimedOut(JausNode node);
-JAUS_EXPORT int jausNodeToString(JausNode node, char *buf, size_t buffSize);
+JAUS_EXPORT int jausNodeToString(JausNode node, char *buf);
 
 #endif //JAUS_NODE_H

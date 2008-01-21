@@ -352,7 +352,7 @@ JausWorldModelVectorObject vectorObjectCopy(JausWorldModelVectorObject input)
 		objectCopy->featureClasses = jausArrayCreate();
 		if(!objectCopy->featureClasses)
 		{
-			////cError("JausWorldModelVectorObject:%d: Failed to create objectCopy->featureClasses\n", __LINE__);
+			//////cError("JausWorldModelVectorObject:%d: Failed to create objectCopy->featureClasses\n", __LINE__);
 			free(objectCopy);
 			return NULL;
 		}
@@ -362,7 +362,7 @@ JausWorldModelVectorObject vectorObjectCopy(JausWorldModelVectorObject input)
 			fc = featureClassCopy((JausWorldModelFeatureClass)input->featureClasses->elementData[i]);
 			if(!fc)
 			{
-				//cError("JausWorldModelVectorObject:%d: Failed to clone FeatureClass\n", __LINE__);
+				////cError("JausWorldModelVectorObject:%d: Failed to clone FeatureClass\n", __LINE__);
 				jausArrayDestroy(objectCopy->featureClasses, (void *)featureClassDestroy);
 				free(objectCopy);
 				return NULL;
@@ -373,7 +373,7 @@ JausWorldModelVectorObject vectorObjectCopy(JausWorldModelVectorObject input)
 		objectCopy->dataPoints = jausArrayCreate();
 		if(!objectCopy->dataPoints)
 		{
-			//cError("JausWorldModelVectorObject:%d: Failed to create objectCopy->dataPoints\n", __LINE__);
+			////cError("JausWorldModelVectorObject:%d: Failed to create objectCopy->dataPoints\n", __LINE__);
 			jausArrayDestroy(objectCopy->featureClasses, (void *)featureClassDestroy);
 			free(objectCopy);
 			return NULL;
@@ -385,7 +385,7 @@ JausWorldModelVectorObject vectorObjectCopy(JausWorldModelVectorObject input)
 			pointCopy = jausGeometryPointLLACreate();
 			if(!pointCopy)
 			{
-				//cError("JausWorldModelVectorObject:%d: Failed to clone DataPoint\n", __LINE__);
+				////cError("JausWorldModelVectorObject:%d: Failed to clone DataPoint\n", __LINE__);
 				jausArrayDestroy(objectCopy->featureClasses, (void *)featureClassDestroy);
 				jausArrayDestroy(objectCopy->dataPoints, (void *)jausGeometryPointLLADestroy);
 				free(objectCopy);
@@ -401,10 +401,10 @@ JausWorldModelVectorObject vectorObjectCopy(JausWorldModelVectorObject input)
 	}
 	else
 	{
-		//cError("JausWorldModelVectorObject:%d: Failed to create objectCopy\n", __LINE__);
+		////cError("JausWorldModelVectorObject:%d: Failed to create objectCopy\n", __LINE__);
 		return NULL;
 	}
 
-	//cError("JausWorldModelVectorObject:%d: This shouldn't happen.\n", __LINE__);	
+	////cError("JausWorldModelVectorObject:%d: This shouldn't happen.\n", __LINE__);	
 	return NULL;
 }

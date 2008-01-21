@@ -116,7 +116,7 @@ JausBoolean jausAddressEqual(JausAddress first, JausAddress second)
 }
 
 
-int jausAddressToString(JausAddress address, char *buf, size_t buffSize)
+int jausAddressToString(JausAddress address, char *buf)
 {
 	if(address)
 	{
