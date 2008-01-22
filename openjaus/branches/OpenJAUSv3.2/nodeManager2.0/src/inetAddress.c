@@ -161,7 +161,7 @@ InetAddress inetAddressGetByString(char *addressString)
 	}
 }
 
-int inetAddressToString(InetAddress address, char *string, unsigned int stringLength)
+int inetAddressToString(InetAddress address, char *string)
 {
 	struct in_addr inAddress;
 	

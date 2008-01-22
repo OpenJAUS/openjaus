@@ -10,13 +10,13 @@ NodeManagerComponent::NodeManagerComponent(FileLoader *configData, EventHandler 
 {
 	int subsystemId, nodeId;
 
-	this->handler = handler;
+	this->eventHandler = handler;
 
 	if(configData == NULL)
 	{
 		// OK, don't do this. This is bad.
 		ErrorEvent *e = new ErrorEvent(ErrorEvent::NullPointer, __FUNCTION__, __LINE__, "configData is NULL");
-		this->handler->handleEvent(e);
+		this->eventHandler->handleEvent(e);
 		return;
 	}
 
@@ -24,7 +24,7 @@ NodeManagerComponent::NodeManagerComponent(FileLoader *configData, EventHandler 
 	{
 		// OK, don't do this. This is bad.
 		ErrorEvent *e = new ErrorEvent(ErrorEvent::NullPointer, __FUNCTION__, __LINE__, "cmptComms is NULL");
-		this->handler->handleEvent(e);
+		this->eventHandler->handleEvent(e);
 		return;
 	}
 
@@ -46,7 +46,7 @@ NodeManagerComponent::NodeManagerComponent(FileLoader *configData, EventHandler 
 	{
 		// Invalid ID
 		ErrorEvent *e = new ErrorEvent(ErrorEvent::Configuration, __FUNCTION__, __LINE__, "Invalid SubsystemId");
-		this->handler->handleEvent(e);
+		this->eventHandler->handleEvent(e);
 		return;
 	}
 
@@ -55,7 +55,7 @@ NodeManagerComponent::NodeManagerComponent(FileLoader *configData, EventHandler 
 	{
 		// Invalid ID
 		ErrorEvent *e = new ErrorEvent(ErrorEvent::Configuration, __FUNCTION__, __LINE__, "Invalid NodeId");
-		this->handler->handleEvent(e);
+		this->eventHandler->handleEvent(e);
 		return;
 	}
 
@@ -63,7 +63,7 @@ NodeManagerComponent::NodeManagerComponent(FileLoader *configData, EventHandler 
 	if(!this->cmpt)
 	{
 		ErrorEvent *e = new ErrorEvent(ErrorEvent::Memory, __FUNCTION__, __LINE__, "Cannot create component");
-		this->handler->handleEvent(e);
+		this->eventHandler->handleEvent(e);
 		return;
 	}
 
@@ -79,11 +79,10 @@ NodeManagerComponent::NodeManagerComponent(FileLoader *configData, EventHandler 
 	this->startupState();
 	this->setupThread();
 
-
 	if(!systemTree->addComponent(this->cmpt->address, this->cmpt))
 	{
 		ErrorEvent *e = new ErrorEvent(ErrorEvent::Configuration, __FUNCTION__, __LINE__, "Cannot add Node Manager component");
-		this->handler->handleEvent(e);
+		this->eventHandler->handleEvent(e);
 	}
 }
 
@@ -94,7 +93,7 @@ bool NodeManagerComponent::processMessage(JausMessage message)
 	if(!message || !message->destination)
 	{
 		ErrorEvent *e = new ErrorEvent(ErrorEvent::NullPointer, __FUNCTION__, __LINE__, "Invalid JausMessage.");
-		this->handler->handleEvent(e);
+		this->eventHandler->handleEvent(e);
 		return false;
 	}
 
@@ -195,37 +194,37 @@ std::string NodeManagerComponent::toString()
 
 JausAddress NodeManagerComponent::checkInLocalComponent(int cmptId)
 {
-	JausComponent cmpt = jausComponentCreate();
-	if(!cmpt) return NULL;
+	JausComponent component = jausComponentCreate();
+	if(!component) return NULL;
 	
 	// Setup query address
-	cmpt->address->subsystem = this->cmpt->address->subsystem;
-	cmpt->address->node = this->cmpt->address->subsystem;
-	cmpt->address->component = cmptId;
-	cmpt->address->instance = 0;
+	component->address->subsystem = this->cmpt->address->subsystem;
+	component->address->node = this->cmpt->address->subsystem;
+	component->address->component = cmptId;
+	component->address->instance = 0;
 
 	// Query SystemTree for next valid instance ID
-	cmpt->address->instance = this->getCommunicationManager()->getSystemTree()->getNextInstanceId(cmpt->address);
+	component->address->instance = this->getCommunicationManager()->getSystemTree()->getNextInstanceId(component->address);
 	
 	// Check returned value
-	if(cmpt->address->instance == JAUS_INVALID_INSTANCE_ID)
+	if(component->address->instance == JAUS_INVALID_INSTANCE_ID)
 	{
-		jausComponentDestroy(cmpt);
+		jausComponentDestroy(component);
 		return NULL;
 	}
 	else
 	{
-		if(this->commMngr->getSystemTree()->addComponent(this->cmpt->address, this->cmpt))
+		if(this->commMngr->getSystemTree()->addComponent(component->address, component))
 		{
-			JausAddress address = jausAddressClone(cmpt->address);
-			jausComponentDestroy(cmpt);
+			JausAddress address = jausAddressClone(component->address);
+			jausComponentDestroy(component);
 			
 			sendNodeChangedEvents();
 			return address;
 		}
 		else
 		{
-			jausComponentDestroy(cmpt);
+			jausComponentDestroy(component);
 			return NULL;
 		}
 	}
@@ -302,7 +301,7 @@ bool NodeManagerComponent::processReportConfiguration(JausMessage message)
 	{
 		// Error unpacking the reportConf
 		ErrorEvent *e = new ErrorEvent(ErrorEvent::Memory, __FUNCTION__, __LINE__, "Cannot unpack ReportConf");
-		this->handler->handleEvent(e);
+		this->eventHandler->handleEvent(e);
 		jausMessageDestroy(message);
 		return false;
 	}
@@ -333,7 +332,7 @@ bool NodeManagerComponent::processReportConfiguration(JausMessage message)
 				if(!address)
 				{
 					ErrorEvent *e = new ErrorEvent(ErrorEvent::Memory, __FUNCTION__, __LINE__, "Cannot create address");
-					this->handler->handleEvent(e);
+					this->eventHandler->handleEvent(e);
 					reportConfigurationMessageDestroy(reportConf);
 					jausMessageDestroy(message);
 					return false;
@@ -373,7 +372,7 @@ bool NodeManagerComponent::processReportConfiguration(JausMessage message)
 	{
 		// Report Conf from unknown node! This is an unsolicited report
 		ErrorEvent *e = new ErrorEvent(ErrorEvent::Message, __FUNCTION__, __LINE__, "Report Conf from unknown node! This is an unsolicited report");
-		this->handler->handleEvent(e);
+		this->eventHandler->handleEvent(e);
 		reportConfigurationMessageDestroy(reportConf);
 		jausMessageDestroy(message);
 		return true;
@@ -385,7 +384,7 @@ bool NodeManagerComponent::processReportConfiguration(JausMessage message)
 	{
 		// Warning
 		ErrorEvent *e = new ErrorEvent(ErrorEvent::Warning, __FUNCTION__, __LINE__, "Node-level Report Conf with more than 1 node included. Ignoring other nodes.");
-		this->handler->handleEvent(e);
+		this->eventHandler->handleEvent(e);
 	}
 
 	JausNode node = (JausNode) reportConf->subsystem->nodes->elementData[0];

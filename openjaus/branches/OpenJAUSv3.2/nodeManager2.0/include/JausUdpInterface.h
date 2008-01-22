@@ -47,7 +47,7 @@ public:
 
 private:
 	MulticastSocket socket;
-	void openSocket(void);
+	bool openSocket(void);
 	void closeSocket(void);
 
 	bool multicast;

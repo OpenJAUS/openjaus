@@ -16,7 +16,7 @@
 class JausComponentCommunicationManager;
 class SystemTree;
 
-#define NM_RATE_HZ			10
+#define NM_RATE_HZ			5
 #define MAXIMUM_EVENT_ID	255
 #define REFRESH_TIME_SEC	1
 

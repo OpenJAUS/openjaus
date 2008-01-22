@@ -14,7 +14,7 @@ CommunicatorComponent::CommunicatorComponent(FileLoader *configData, EventHandle
 		return;
 	}
 
-	this->handler = handler;
+	this->eventHandler = handler;
 
 	if(cmptComms == NULL)
 	{

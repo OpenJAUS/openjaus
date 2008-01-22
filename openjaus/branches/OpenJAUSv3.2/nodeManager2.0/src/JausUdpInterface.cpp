@@ -2,11 +2,12 @@
 #include "JausSubsystemCommunicationManager.h"
 #include "JausNodeCommunicationManager.h"
 #include "JausComponentCommunicationManager.h"
+#include "ErrorEvent.h"
 
 JausUdpInterface::JausUdpInterface(FileLoader *configData, EventHandler *handler, JausCommunicationManager *commMngr)
 {
 	this->commMngr = commMngr;
-	this->handler = handler;
+	this->eventHandler = handler;
 	this->name = JAUS_UDP_NAME;
 	this->configData = configData;
 	this->multicast = false;
@@ -30,7 +31,10 @@ JausUdpInterface::JausUdpInterface(FileLoader *configData, EventHandler *handler
 	}
 
 	// Setup our UDP Socket
-	this->openSocket();
+	if(!this->openSocket())
+	{
+		abort();
+	}
 
 	// Setup our pThread
 	this->setupThread();
@@ -203,7 +207,7 @@ void JausUdpInterface::run()
 	while(this->running)
 	{
 		pthread_cond_wait(&threadConditional, &threadMutex);
-
+		
 		while(!this->queue.isEmpty())
 		{
 			// Pop a packet off the queue and send it off
@@ -217,12 +221,20 @@ std::string JausUdpInterface::toString()
 {
 	char ret[256] = {0};
 	char buf[80] = {0};
-	inetAddressToString(this->socket->address, buf, 80);
-	sprintf(ret, "%s %s:%d", JAUS_UDP_NAME, buf, this->socket->port);
-	return ret;
+	if(this->socket)
+	{
+		inetAddressToString(this->socket->address, buf);
+		sprintf(ret, "%s %s:%d", JAUS_UDP_NAME, buf, this->socket->port);
+		return ret;
+	}
+	else
+	{
+		sprintf(ret, "%s Invalid.", JAUS_UDP_NAME);
+		return ret;
+	}
 }
 
-void JausUdpInterface::openSocket(void)
+bool JausUdpInterface::openSocket(void)
 {
 	switch(this->type)
 	{
@@ -230,6 +242,9 @@ void JausUdpInterface::openSocket(void)
 			// Read Subsystem UDP Parameters
 			this->portNumber = this->configData->GetConfigDataInt("Subsystem_Communications", "JAUS_UDP_Port");
 			this->ipAddress = inetAddressGetByString((char *)this->configData->GetConfigDataString("Subsystem_Communications", "JAUS_UDP_IP").c_str());
+			
+			// TODO: Can we test this ipAddress somehow?
+			
 			if(this->ipAddress == NULL)
 			{
 				this->ipAddress = inetAddressCreate();
@@ -241,7 +256,20 @@ void JausUdpInterface::openSocket(void)
 			if(!this->socket)
 			{
 				// Error creating our socket
-				return;
+				char errorString[128] = {0};
+				char buf[24] = {0};
+				
+				inetAddressToString(this->ipAddress, buf);
+				sprintf(errorString, "Could not open socket: %s:%d", buf, JAUS_UDP_DATA_PORT);
+				ErrorEvent *e = new ErrorEvent(ErrorEvent::Configuration, __FUNCTION__, __LINE__, errorString);
+				this->eventHandler->handleEvent(e);
+
+				return false;
+			}
+			else
+			{
+				this->ipAddress = socket->address;
+				this->portNumber = socket->port;
 			}
 
 			// Setup Multicast
@@ -264,7 +292,7 @@ void JausUdpInterface::openSocket(void)
 				multicastData.addressValue = multicastGroup->value;
 				multicastData.port = JAUS_UDP_DATA_PORT;
 			}
-			break;
+			return true;
 
 		case NODE_INTERFACE:
 			// Setup Node Configuration
@@ -281,7 +309,20 @@ void JausUdpInterface::openSocket(void)
 			if(!this->socket)
 			{
 				// Error creating our socket
-				return;
+				char errorString[128] = {0};
+				char buf[24] = {0};
+				
+				inetAddressToString(this->ipAddress, buf);
+				sprintf(errorString, "Could not open socket: %s:%d", buf, JAUS_UDP_DATA_PORT);
+				ErrorEvent *e = new ErrorEvent(ErrorEvent::Configuration, __FUNCTION__, __LINE__, errorString);
+				this->eventHandler->handleEvent(e);
+
+				return false;
+			}
+			else
+			{
+				this->ipAddress = socket->address;
+				this->portNumber = socket->port;
 			}
 
 			// Setup Multicast
@@ -301,7 +342,7 @@ void JausUdpInterface::openSocket(void)
 				multicastData.addressValue = multicastGroup->value;
 				multicastData.port = JAUS_UDP_DATA_PORT;
 			}
-			break;
+			return true;
 
 		case COMPONENT_INTERFACE:
 			// Read Component Configuration
@@ -318,7 +359,20 @@ void JausUdpInterface::openSocket(void)
 			if(!this->socket)
 			{
 				// Error creating our socket
-				return;
+				char errorString[128] = {0};
+				char buf[24] = {0};
+				
+				inetAddressToString(this->ipAddress, buf);
+				sprintf(errorString, "Could not open socket: %s:%d", buf, JAUS_UDP_DATA_PORT);
+				ErrorEvent *e = new ErrorEvent(ErrorEvent::Configuration, __FUNCTION__, __LINE__, errorString);
+				this->eventHandler->handleEvent(e);
+
+				return false;
+			}
+			else
+			{
+				this->ipAddress = socket->address;
+				this->portNumber = socket->port;
 			}
 
 			// Setup Multicast
@@ -338,10 +392,12 @@ void JausUdpInterface::openSocket(void)
 				multicastData.addressValue = multicastGroup->value;
 				multicastData.port = JAUS_UDP_DATA_PORT;
 			}
-			break;
+			return true;
 
 		default:
 			// Unknown type
+			// TODO: Log Error
+			return false;
 			break;
 	}
 }

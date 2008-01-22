@@ -82,7 +82,7 @@ MulticastSocket multicastSocketCreate(short port, InetAddress ipAddress)
 
 	memset(&address, 0, sizeof(address));			// Clear the data structure to zero
 	address.sin_family = AF_INET;					// Set Internet Socket (sin), Family to: Address Family (AF) IPv4 (INET)
-	address.sin_addr.s_addr = ipAddress->value;	// Set Internet Socket (sin), Address to: The ipAddressString argument
+	address.sin_addr.s_addr = ipAddress->value;		// Set Internet Socket (sin), Address to: The ipAddressString argument
 	address.sin_port = htons(port);					// Set Internet Socket (sin), Port to: the port argument
 
 	// Bind our open socket to a free port on the localhost, with our defined ipAddress
@@ -114,6 +114,7 @@ MulticastSocket multicastSocketCreate(short port, InetAddress ipAddress)
 	}
 #endif
 
+	ipAddress->value = address.sin_addr.s_addr;
 	multicastSocket->address = ipAddress;
 	multicastSocket->port = ntohs(address.sin_port);
 	multicastSocket->timeout.tv_sec = 0;

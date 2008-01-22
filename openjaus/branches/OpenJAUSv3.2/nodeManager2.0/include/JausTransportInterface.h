@@ -47,7 +47,7 @@ protected:
 	void setupThread();
 	void wakeThread();
 
-	EventHandler *handler;
+	EventHandler *eventHandler;
 	std::string name;
 	JausTransportType type;
 	JausTransportQueue queue;

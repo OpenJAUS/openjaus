@@ -3,6 +3,10 @@
 
 #include "NodeManagerEvent.h"
 
+#if defined(__GNUC__)
+	#define __FUNCTION__ __PRETTY_FUNCTION__
+#endif
+
 class EventHandler
 {
 public:
@@ -11,4 +15,3 @@ public:
 };
 
 #endif
-

@@ -5,7 +5,7 @@ void LocalComponent::run()
 {
 	struct timespec timeout;
 	struct timeval now;
-
+		
 	if(!this->cmpt)
 	{
 		// ERROR: This cannot be called if we haven't yet constructed our component
@@ -15,7 +15,7 @@ void LocalComponent::run()
 
 	// Lock our mutex
 	pthread_mutex_lock(&this->threadMutex);
-
+	
 	// prepare new timeout value.
 	// Note that we need an absolute time.
 	gettimeofday(&now, NULL);
@@ -28,6 +28,12 @@ void LocalComponent::run()
 
 	while(this->running)
 	{
+		if(timeout.tv_nsec > 1e9)
+		{
+			timeout.tv_nsec = timeout.tv_nsec % (long)1e9;
+			timeout.tv_sec++;
+		}
+		
 		int rc = pthread_cond_timedwait(&this->threadConditional, &this->threadMutex, &timeout);
 		switch(rc)
 		{
@@ -104,9 +110,21 @@ void LocalComponent::run()
 			default:
 				// Some other error occured
 				// TODO: Log error.
+				usleep(100);				
+				gettimeofday(&now, NULL);
+
+				// prepare new timeout value.
+				// Note that we need an absolute time.
+				timeout.tv_sec = now.tv_sec;
+
+				// timeval uses micro-seconds.
+				// timespec uses nano-seconds.
+				// 1 micro-second = 1000 nano-seconds.
+				timeout.tv_nsec = (now.tv_usec * 1000) + (long)(1e9 / this->cmptRateHz);
 				break;
 		}
 	}
+	
 	pthread_mutex_unlock(&this->threadMutex);
 	shutdownState();
 }
