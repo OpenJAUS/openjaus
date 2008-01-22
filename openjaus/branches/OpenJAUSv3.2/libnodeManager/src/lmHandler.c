@@ -47,7 +47,7 @@ LargeMessageHandler lmHandlerCreate(void)
 	LargeMessageHandler lmh = (LargeMessageHandler)malloc( sizeof(LargeMessageHandlerStruct) );
 	if(lmh)
 	{
-		lmh->messageLists = vectorCreate();
+		lmh->messageLists = jausArrayCreate();
 		return lmh;
 	}
 	else
@@ -58,7 +58,7 @@ LargeMessageHandler lmHandlerCreate(void)
 
 void lmHandlerDestroy(LargeMessageHandler lmh)
 {
-	vectorDestroy(lmh->messageLists, (void *)lmListDestroy);
+	jausArrayDestroy(lmh->messageLists, (void *)lmListDestroy);
 	free(lmh);
 }
 
@@ -67,13 +67,13 @@ LargeMessageList lmListCreate(void)
 	LargeMessageList msgList = (LargeMessageList)malloc(sizeof(LargeMessageListStruct));
 	msgList->commandCode = 0;
 	msgList->source = jausAddressCreate();
-	msgList->messages = vectorCreate();
+	msgList->messages = jausArrayCreate();
 	return msgList;
 }
 
 void lmListDestroy(LargeMessageList msgList)
 {
-	vectorDestroy(msgList->messages, (void *)jausMessageDestroy);
+	jausArrayDestroy(msgList->messages, (void *)jausMessageDestroy);
 	jausAddressDestroy(msgList->source);
 	free(msgList);
 }
@@ -106,18 +106,18 @@ void lmHandlerReceiveLargeMessage(NodeManagerInterface nmi, JausMessage message)
 			if(msgList)
 			{
 				// Destroy the list and all messages
-				vectorRemove(nmi->lmh->messageLists, msgList, (void *)lmHandlerMessageListEqual);
+				jausArrayRemove(nmi->lmh->messageLists, msgList, (void *)lmHandlerMessageListEqual);
 				lmListDestroy(msgList);		
 			}
 
 			// create LargeMessageList
 			msgList = lmListCreate();
-			vectorAdd(nmi->lmh->messageLists, msgList);
+			jausArrayAdd(nmi->lmh->messageLists, msgList);
 				
 			// add message to LargeMessageList at first position
 			msgList->commandCode = message->commandCode;
 			jausAddressCopy(msgList->source, message->source);
-			vectorAdd(msgList->messages, message);
+			jausArrayAdd(msgList->messages, message);
 			break;
 		
 		case JAUS_NORMAL_DATA_PACKET:
@@ -126,15 +126,15 @@ void lmHandlerReceiveLargeMessage(NodeManagerInterface nmi, JausMessage message)
 			if(msgList)
 			{
 				// Check if item exists in LargeMessageList with seqNumber
-				if(vectorContains(msgList->messages, message, (void *)lmHandlerLargeMessageCheck) != -1)
+				if(jausArrayContains(msgList->messages, message, (void *)lmHandlerLargeMessageCheck) != -1)
 				{
 					//cError("LargeMessageHandler: Received duplicate NORMAL_DATA_PACKET\n");
 					jausMessageDestroy(message);
 				}
 				else
 				{
-					// insert to Vector
-					vectorAdd(msgList->messages, message);
+					// insert to jausArray
+					jausArrayAdd(msgList->messages, message);
 				}
 			}
 			else
@@ -151,13 +151,13 @@ void lmHandlerReceiveLargeMessage(NodeManagerInterface nmi, JausMessage message)
 			if(msgList)
 			{
 				// Check if item exists in LargeMessageList with seqNumber
-				if(vectorContains(msgList->messages, message, (void *)lmHandlerLargeMessageCheck) != -1)
+				if(jausArrayContains(msgList->messages, message, (void *)lmHandlerLargeMessageCheck) != -1)
 				{
-					tempMessage = (JausMessage) vectorRemove(msgList->messages, message, (void *)lmHandlerLargeMessageCheck);
+					tempMessage = (JausMessage) jausArrayRemove(msgList->messages, message, (void *)lmHandlerLargeMessageCheck);
 					jausMessageDestroy(tempMessage);
 				}
-				// insert to Vector
-				vectorAdd(msgList->messages, message);
+				// insert to jausArray
+				jausArrayAdd(msgList->messages, message);
 			}
 			else
 			{
@@ -172,7 +172,7 @@ void lmHandlerReceiveLargeMessage(NodeManagerInterface nmi, JausMessage message)
 			if(msgList && msgList->messages->elementCount > 0)
 			{
 				// insert message to end of list
-				vectorAdd(msgList->messages, message);
+				jausArrayAdd(msgList->messages, message);
 
 				// Create JausMessage object
 				outMessage = jausMessageCreate();
@@ -214,7 +214,7 @@ void lmHandlerReceiveLargeMessage(NodeManagerInterface nmi, JausMessage message)
 	
 							// Received LAST_DATA_PACKET, but do not have proper sequence of messages
 							// Destroy the list and all messages
-							vectorRemove(nmi->lmh->messageLists, msgList, (void *)lmHandlerMessageListEqual);
+							jausArrayRemove(nmi->lmh->messageLists, msgList, (void *)lmHandlerMessageListEqual);
 							lmListDestroy(msgList);
 						
 							//cError("LargeMessageHandler: Received LAST_DATA_PACKET, but do not have proper sequence of messages\n");						
@@ -245,7 +245,7 @@ void lmHandlerReceiveLargeMessage(NodeManagerInterface nmi, JausMessage message)
 				}
 				
 				// Destroy LargeMessageList
-				vectorRemove(nmi->lmh->messageLists, msgList, (void *)lmHandlerMessageListEqual);
+				jausArrayRemove(nmi->lmh->messageLists, msgList, (void *)lmHandlerMessageListEqual);
 				lmListDestroy(msgList);
 			}
 			else
@@ -280,7 +280,7 @@ LargeMessageList lmHandlerGetMessageList(LargeMessageHandler lmh, JausMessage me
 	int i;
 	LargeMessageList msgList;
 	
-	// Look for the matching LargeMessageList object in the vector array
+	// Look for the matching LargeMessageList object in the jausArray array
 	for(i = 0; i < lmh->messageLists->elementCount; i++)
 	{
 		msgList = (LargeMessageList) lmh->messageLists->elementData[i];
