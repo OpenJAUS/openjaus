@@ -6,7 +6,7 @@
 OjApiComponentInterface::OjApiComponentInterface(FileLoader *configData, EventHandler *handler, JausComponentCommunicationManager *cmptComms)
 {
 	this->type = COMPONENT_INTERFACE;
-	this->handler = handler;
+	this->eventHandler = handler;
 	this->commMngr = cmptComms;
 	this->name = OJ_API_NAME;
 	

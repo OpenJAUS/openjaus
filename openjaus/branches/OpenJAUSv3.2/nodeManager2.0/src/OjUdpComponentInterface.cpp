@@ -5,7 +5,7 @@ OjUdpComponentInterface::OjUdpComponentInterface(FileLoader *configData, EventHa
 {
 	this->configData = configData;
 	this->commMngr = cmptMngr;
-	this->handler = handler;
+	this->eventHandler = handler;
 	
 	this->systemTree = cmptMngr->getSystemTree();
 	this->nodeManager = cmptMngr->getNodeManagerComponent();
@@ -90,16 +90,19 @@ void OjUdpComponentInterface::run()
 		bytesRecv = datagramSocketReceive(this->socket, packet);
 		if(bytesRecv == OJ_UDP_INTERFACE_MESSAGE_SIZE_BYTES)
 		{
+			// This is to ensure we are using a valid NM pointer (this occurs
+			this->nodeManager = ((JausComponentCommunicationManager *)this->commMngr)->getNodeManagerComponent();
+
 			switch(packet->buffer[0])
 			{
-			case CHECK_IN:
+				case CHECK_IN:
 				// System.out.println("ComponentInterface: Received Query JAUS address command from: " + JausComponent.getName(componentId));
 					componentId = (packet->buffer[1] & 0xFF);
 					if(componentId < JAUS_MINIMUM_COMPONENT_ID || componentId > JAUS_MAXIMUM_COMPONENT_ID)
 					{
 						sprintf(buf, "Invalid Component Id (%d) trying to check in.", componentId);
 						ErrorEvent *e = new ErrorEvent(ErrorEvent::Configuration, __FUNCTION__, __LINE__, buf);
-						this->handler->handleEvent(e);
+						this->eventHandler->handleEvent(e);
 						return;
 					}
 
@@ -108,7 +111,7 @@ void OjUdpComponentInterface::run()
 					{
 						sprintf(buf, "Cannot add local component with Id: %d.", componentId);
 						ErrorEvent *e = new ErrorEvent(ErrorEvent::Warning, __FUNCTION__, __LINE__, buf);
-						this->handler->handleEvent(e);
+						this->eventHandler->handleEvent(e);
 						
 						// TODO: Send back checkin error reply (no available instance)							
 						break;
@@ -128,9 +131,9 @@ void OjUdpComponentInterface::run()
 					jausAddressDestroy(address);
 					break;
 
-			case CHECK_OUT:
-				nodeManager->checkOutLocalComponent(packet->buffer[4], packet->buffer[3], packet->buffer[2], packet->buffer[1]);
-				break;
+				case CHECK_OUT:
+					nodeManager->checkOutLocalComponent(packet->buffer[4], packet->buffer[3], packet->buffer[2], packet->buffer[1]);
+					break;
 					
 				    
 			//case VERIFY_ADDRESS:
@@ -298,7 +301,7 @@ void OjUdpComponentInterface::run()
 				    
 				default:
 					ErrorEvent *e = new ErrorEvent(ErrorEvent::Warning, __FUNCTION__, __LINE__, "Unknown Interface Message Received");
-					this->handler->handleEvent(e);
+					this->eventHandler->handleEvent(e);
 					break;
 			}
 		}

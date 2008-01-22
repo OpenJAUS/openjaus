@@ -35,6 +35,14 @@ JausComponentCommunicationManager::JausComponentCommunicationManager(FileLoader 
 		return;
 	}
 
+	// Start Local Components
+	this->nodeManagerCmpt = new NodeManagerComponent(this->configData, this->handler, this);
+	this->interfaces.push_back(nodeManagerCmpt);
+	
+	// TODO: Only start this if the subsystemCommMngr is enabled
+	this->communicatorCmpt = new CommunicatorComponent(this->configData, this->handler, this);
+	this->interfaces.push_back(communicatorCmpt);
+	
 	// Start component interface(s)
 	if(configData->GetConfigDataBool("Component_Communications", "JAUS_UDP"))
 	{
@@ -51,7 +59,7 @@ JausComponentCommunicationManager::JausComponentCommunicationManager(FileLoader 
 		printf("[DONE: %s]\n", apiCmptInf->toString().c_str());
 		this->interfaces.push_back(apiCmptInf);
 	}
-
+	
 	if(configData->GetConfigDataBool("Component_Communications", "OpenJAUS_UDP"))
 	{
 		printf("Opening Component Interface:\t");
@@ -59,13 +67,6 @@ JausComponentCommunicationManager::JausComponentCommunicationManager(FileLoader 
 		printf("[DONE: %s]\n", udpCmptInf->toString().c_str());
 		this->interfaces.push_back(udpCmptInf);
 	}
-
-	// Start Local Components
-	this->nodeManagerCmpt = new NodeManagerComponent(this->configData, this->handler, this);
-	this->interfaces.push_back(nodeManagerCmpt);
-	this->communicatorCmpt = new CommunicatorComponent(this->configData, this->handler, this);
-	this->interfaces.push_back(communicatorCmpt);
-
 }
 
 JausComponentCommunicationManager::~JausComponentCommunicationManager(void)
@@ -256,7 +257,7 @@ bool JausComponentCommunicationManager::sendToComponentX(JausMessage message)
 
 bool JausComponentCommunicationManager::sendToAllInterfaces(JausMessage message)
 {
-	HASH_MAP<int, JausTransportInterface *>::iterator iter;
+	std::vector <JausTransportInterface *>::iterator iter;
 
 	if(!message)
 	{
@@ -265,14 +266,11 @@ bool JausComponentCommunicationManager::sendToAllInterfaces(JausMessage message)
 		return false;
 	}
 
-	for(iter = interfaceMap.begin(); iter != interfaceMap.end(); iter++)
+	for(iter = interfaces.begin(); iter != interfaces.end(); iter++)
 	{
-		if(iter->second != NULL)
-		{
-			iter->second->queueJausMessage(jausMessageClone(message));
-		}
+		//printf("Sending 0x%4X to %s\n", message->commandCode, (*iter)->toString().c_str());
+		(*iter)->queueJausMessage(jausMessageClone(message));
 	}
-	
 	jausMessageDestroy(message);
 	return true;
 }

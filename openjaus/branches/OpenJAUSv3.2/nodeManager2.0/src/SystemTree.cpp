@@ -63,8 +63,13 @@ bool SystemTree::updateSubsystemTimestamp(JausAddress address)
 
 unsigned char SystemTree::getNextInstanceId(JausAddress address)
 {
-	bool instanceAvailable[255] = {true};
+	bool instanceAvailable[JAUS_MAXIMUM_INSTANCE_ID];
 	int i = 0;
+	
+	for(i = 0; i < JAUS_MAXIMUM_INSTANCE_ID; i++)
+	{
+		instanceAvailable[i] = true;
+	}
 	
 	// Get this node
 	JausNode node = findNode(address->subsystem, address->node);
@@ -90,6 +95,7 @@ unsigned char SystemTree::getNextInstanceId(JausAddress address)
 			{
 				return i;
 			}
+			i++;
 		}
 		return JAUS_INVALID_INSTANCE_ID;
 	}
