@@ -27,6 +27,10 @@
 
 #define VEHICLE_SIM_AUTO_STATE	1
 
+#include "utm/pointLla.h"
+#include "utm/pointUtm.h"
+#include "utm/utmLib.h"
+
 int vehicleSimStartup(void);
 int vehicleSimShutdown(void);
 

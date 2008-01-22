@@ -5,16 +5,15 @@
 // Description:	This file contains the skeleton C code for implementing a JAUS component in a Linux environment
 //				This code is designed to work with the node manager and JAUS library software written by CIMAR
 
-#include <cimar.h>
-#include <cimar/jaus.h>			// JAUS message set (USER: JAUS libraries must be installed first)
-#include <cimar/nodeManager.h>	// Node managment functions for sending and receiving JAUS messages (USER: Node Manager must be installed)
+#include "jaus.h"			// JAUS message set (USER: JAUS libraries must be installed first)
+#include "nodeManager.h"	// Node managment functions for sending and receiving JAUS messages (USER: Node Manager must be installed)
 #include <pthread.h>			// Multi-threading functions (standard to unix)
 #include <stdlib.h>	
 #include <unistd.h>				// Unix standard functions
 #include <string.h>
+#include "properties.h"
 
 #include "vehicleSim.h"
-
 #include "pd.h"	// USER: Implement and rename this header file. Include prototypes for all public functions contained in this file.
 
 #define CONTROLLER_STATUS_SC_TIMEOUT_SECONDS 	1.5
@@ -26,7 +25,7 @@
 
 // Private function prototypes
 void *pdThread(void *);
-void pdProcessMessage(JausMessage);
+void pdProcessMessage(JausMessage rxMessage);
 void pdStartupState(void);
 void pdInitState(void);
 void pdStandbyState(void);
@@ -38,24 +37,7 @@ void pdAllState(void);
 // USER: Insert any private function prototypes here
 void pdSendReportWrenchEffort(void);
 
-static JausAddressStruct pdAddress =	{ { 0, JAUS_PRIMITIVE_DRIVER, 0, 0} }; 
-static JausAddressStruct pdControllerAddress =	{ { 0, 0, 0, 0} }; 
-static JausComponentStruct pdStruct =	{	"pd",
-											&pdAddress,
-											JAUS_SHUTDOWN_STATE,
-											0,
-											NULL,
-											NULL,
-											{
-												&pdControllerAddress,
-												JAUS_UNDEFINED_STATE,
-												0,
-												JAUS_FALSE
-											},
-											0,
-											0.0
-										}; // All component specific information is stored in this CIMAR JAUS Library data structure
-static JausComponent pd = &pdStruct;
+static JausComponent pd = NULL;
 static JausNode pdNode;
 static JausSubsystem pdSubsystem;
 
@@ -82,6 +64,14 @@ int pdStartup(void)
 	FILE * propertyFile;
 	pthread_attr_t attr;	// Thread attributed for the component threads spawned in this function
 	
+	if(!pd)
+	{
+		pd = jausComponentCreate();
+		pd->address->component = JAUS_PRIMITIVE_DRIVER;
+		pd->identification  = "pd";
+		pd->state = JAUS_SHUTDOWN_STATE;
+	}
+
 	if(pd->state == JAUS_SHUTDOWN_STATE)	// Execute the startup routines only if the component is not running
 	{
 		propertyFile = fopen("./config/pd.conf", "r");
@@ -93,7 +83,7 @@ int pdStartup(void)
 		}
 		else
 		{
-			cError("pd: Cannot find or open properties file\n");
+			printf("pd: Cannot find or open properties file\n");
 			return PD_LOAD_CONFIGURATION_ERROR;
 		}
 		
@@ -108,7 +98,7 @@ int pdStartup(void)
 		pdNmi = nodeManagerOpen(pd); 
 		if(pdNmi == NULL)
 		{
-			cError("pd: Could not open connection to node manager\n");
+			printf("pd: Could not open connection to node manager\n");
 			return PD_NODE_MANAGER_OPEN_ERROR; 
 		}
 
@@ -119,7 +109,7 @@ int pdStartup(void)
 
 		if(pthread_create(&pdThreadId, &attr, pdThread, NULL) != 0)
 		{
-			cError("pd: Could not create pdThread\n");
+			//cError("pd: Could not create pdThread\n");
 			pdShutdown();
 			pthread_attr_destroy(&attr);
 			return PD_THREAD_CREATE_ERROR;
@@ -128,7 +118,7 @@ int pdStartup(void)
 	}
 	else
 	{
-		cError("pd: Attempted startup while not shutdown\n");
+		//cError("pd: Attempted startup while not shutdown\n");
 		return PD_STARTUP_BEFORE_SHUTDOWN_ERROR;
 	}
 	
@@ -156,7 +146,7 @@ int pdShutdown(void)
 			{
 				pthread_cancel(pdThreadId);
 				pdThreadRunning = FALSE;
-				cError("pd: pdThread Shutdown Improperly\n");
+				//cError("pd: pdThread Shutdown Improperly\n");
 				break;
 			}
 		}
@@ -243,7 +233,7 @@ void *pdThread(void *threadData)
 		{
 			if(nodeManagerReceive(pdNmi, &rxMessage))
 			{
-				cDebug(4, "PD: Got message: %s from %d.%d.%d.%d\n", jausMessageCommandCodeString(rxMessage), rxMessage->source->subsystem, rxMessage->source->node, rxMessage->source->component, rxMessage->source->instance);
+				//cDebug(4, "PD: Got message: %s from %d.%d.%d.%d\n", jausMessageCommandCodeString(rxMessage), rxMessage->source->subsystem, rxMessage->source->node, rxMessage->source->component, rxMessage->source->instance);
 				pdProcessMessage(rxMessage);
 			}
 			else 
@@ -322,10 +312,10 @@ void pdProcessMessage(JausMessage message)
 	char buf[64] = {0};
 
 	// This block of code is intended to reject commands from non-controlling components
-	if(pd->controller.active && message->source->id != pd->controller.address->id && jausMessageIsRejectableCommand(message) )
+	if(pd->controller.active && !jausAddressEqual(message->source, pd->controller.address) && jausMessageIsRejectableCommand(message) )
 	{
 		jausAddressToString(message->source, buf);
-		cError("pd: Received command message %s from non-controlling component (%s).\n", jausMessageCommandCodeString(message), buf);
+		//cError("pd: Received command message %s from non-controlling component (%s).\n", jausMessageCommandCodeString(message), buf);
 		jausMessageDestroy(message); // Ignore this message
 		return;		
 	}	
@@ -336,7 +326,7 @@ void pdProcessMessage(JausMessage message)
 			reportComponentStatus = reportComponentStatusMessageFromJausMessage(message);
 			if(reportComponentStatus)
 			{
-				if(reportComponentStatus->source->id == pd->controller.address->id)
+				if(jausAddressEqual(reportComponentStatus->source, pd->controller.address))
 				{
 					pd->controller.state = reportComponentStatus->primaryStatusCode;
 				}
@@ -344,7 +334,7 @@ void pdProcessMessage(JausMessage message)
 			}
 			else
 			{
-				cError("pd: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
+				//cError("pd: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
 			}
 			jausMessageDestroy(message);
 			break;
@@ -358,7 +348,7 @@ void pdProcessMessage(JausMessage message)
 			setWrenchEffort = setWrenchEffortMessageFromJausMessage(message);
 			if(!setWrenchEffort)
 			{
-				cError("pd: Error unpacking %s message\n", jausMessageCommandCodeString(message));
+				//cError("pd: Error unpacking %s message\n", jausMessageCommandCodeString(message));
 			}
 			jausMessageDestroy(message);
 			break;
@@ -372,7 +362,7 @@ void pdProcessMessage(JausMessage message)
 			setDiscreteDevices = setDiscreteDevicesMessageFromJausMessage(message);
 			if(!setDiscreteDevices)
 			{
-				cError("pd: Error unpacking %s message\n", jausMessageCommandCodeString(message));
+				//cError("pd: Error unpacking %s message\n", jausMessageCommandCodeString(message));
 			}
 			jausMessageDestroy(message);
 			break;
@@ -383,8 +373,8 @@ void pdProcessMessage(JausMessage message)
 			{
 				reportPlatformSpecifications = reportPlatformSpecificationsMessageCreate();
 				
-				reportPlatformSpecifications->destination->id = queryPlatformSpecifications->source->id;
-				reportPlatformSpecifications->source->id = queryPlatformSpecifications->destination->id;
+				jausAddressCopy(reportPlatformSpecifications->destination, queryPlatformSpecifications->source);
+				jausAddressCopy(reportPlatformSpecifications->source, queryPlatformSpecifications->destination);
 				
 				reportPlatformSpecifications->maximumVelocityXMps = 10.0;
 				
@@ -393,7 +383,7 @@ void pdProcessMessage(JausMessage message)
 				jausMessageDestroy(txMessage);
 				
 				
-				cError("pd: Error unpacking %s message\n", jausMessageCommandCodeString(message));
+				//cError("pd: Error unpacking %s message\n", jausMessageCommandCodeString(message));
 			}
 			jausMessageDestroy(message);
 			
@@ -412,7 +402,7 @@ void pdStartupState(void)
 	// Populate Core Service
 	if(!jausServiceAddCoreServices(pd->services))
 	{
-		cError("pd: Addition of Core Services FAILED! Switching to FAILURE_STATE\n");
+		//cError("pd: Addition of Core Services FAILED! Switching to FAILURE_STATE\n");
 		pd->state = JAUS_FAILURE_STATE;
 	}
 	service = jausServiceCreate(pd->address->component); 
@@ -431,7 +421,7 @@ void pdStartupState(void)
 	setWrenchEffort = setWrenchEffortMessageCreate();
 
 	reportWrenchEffort = reportWrenchEffortMessageCreate();
-	reportWrenchEffort->source->id = pd->address->id;
+	jausAddressCopy(reportWrenchEffort->source, pd->address);
 
 	controllerStatusSc = serviceConnectionCreate();
 	controllerStatusSc->requestedUpdateRateHz = CONTROLLER_STATUS_SC_UPDATE_RATE_HZ;
@@ -462,7 +452,7 @@ void pdStandbyState(void)
 	if(	vehicleSimGetState() != VEHICLE_SIM_READY_STATE )
 	{
 		pd->state = JAUS_EMERGENCY_STATE;
-		cError("pd: Emergency, vehicle Sim State: %d", vehicleSimGetState() );
+		//cError("pd: Emergency, vehicle Sim State: %d", vehicleSimGetState() );
 		return;
 	}
 
@@ -495,11 +485,11 @@ void pdStandbyState(void)
 	{
 		if(scManagerTerminateServiceConnection(pdNmi, controllerStatusSc))
 		{
-			cDebug(2, "Terminated Component Status Sc\n");
+			//cDebug(2, "Terminated Component Status Sc\n");
 		}
 		else
 		{
-			cError("pd: Failed to terminate controller status service connection\n");
+			//cError("pd: Failed to terminate controller status service connection\n");
 		}
 		usleep(500000);
 		controllerStatusSc->isActive = JAUS_FALSE;
@@ -518,7 +508,7 @@ void pdReadyState(void)
 	if(	vehicleSimGetState() != VEHICLE_SIM_READY_STATE )
 	{
 		pd->state = JAUS_EMERGENCY_STATE;
-		cError("pd: Emergency, vehicle sim: %d", vehicleSimGetState() );
+		//cError("pd: Emergency, vehicle sim: %d", vehicleSimGetState() );
 		return;
 	}
 
@@ -528,7 +518,7 @@ void pdReadyState(void)
 		return;
 	}		
 	
-	cDebug(5, "%s", pd->controller.active? "True" : "False");
+	//cDebug(5, "%s", pd->controller.active? "True" : "False");
 
 	if(pd->controller.active)
 	{
@@ -537,27 +527,27 @@ void pdReadyState(void)
 			if(getTimeSeconds() > scSendCreateTime)
 			{
 				// set up the service connection
-				controllerStatusSc->address->id = pd->controller.address->id;		
+				jausAddressCopy(controllerStatusSc->address, pd->controller.address);
 				scManagerCreateServiceConnection(pdNmi, controllerStatusSc);
 				scSendCreateTime = getTimeSeconds() + 1.0;
 				
 				jausAddressToString(controllerStatusSc->address, buf);
-				cDebug(5, "Sent SC Request to Controller (%s)", buf);
+				//cDebug(5, "Sent SC Request to Controller (%s)", buf);
 			}
 			vehicleSimSetCommand(0, 80, 0);
 		}		
 		else if(getTimeSeconds() - controllerStatusSc->lastSentTime > CONTROLLER_STATUS_SC_TIMEOUT_SECONDS)
 		{
 			pd->state = JAUS_EMERGENCY_STATE;
-			cError("pd: Emergency, Controller status service connection timed out\n");
+			//cError("pd: Emergency, Controller status service connection timed out\n");
 
 			if(scManagerTerminateServiceConnection(pdNmi, controllerStatusSc))
 			{
-				cDebug(2, "pd: Terminated Component Status Sc\n");
+				//cDebug(2, "pd: Terminated Component Status Sc\n");
 			}
 			else
 			{
-				cError("pd: Failed to terminate controller status service connection\n");
+				//cError("pd: Failed to terminate controller status service connection\n");
 			}
 			usleep(500000);
 			controllerStatusSc->isActive = JAUS_FALSE;
@@ -587,11 +577,11 @@ void pdReadyState(void)
 		{
 			if(scManagerTerminateServiceConnection(pdNmi, controllerStatusSc))
 			{
-				cDebug(2, "Terminated Component Status Sc\n");
+				//cDebug(2, "Terminated Component Status Sc\n");
 			}
 			else
 			{
-				cError("pd: Failed to terminate controller status service connection\n");
+				//cError("pd: Failed to terminate controller status service connection\n");
 			}
 			usleep(500000);
 			controllerStatusSc->isActive = JAUS_FALSE;
@@ -608,11 +598,11 @@ void pdEmergencyState(void)
 	{
 		if(scManagerTerminateServiceConnection(pdNmi, controllerStatusSc))
 		{
-			cDebug(2, "Terminated Component Status Sc\n");
+			//cDebug(2, "Terminated Component Status Sc\n");
 		}
 		else
 		{
-			cError("pd: Failed to terminate controller status service connection\n");
+			//cError("pd: Failed to terminate controller status service connection\n");
 		}
 		usleep(500000);
 		controllerStatusSc->isActive = JAUS_FALSE;
@@ -635,8 +625,8 @@ void pdFailureState(void)
 	{
 		// Terminate control of current component
 		rejectComponentControl = rejectComponentControlMessageCreate();
-		rejectComponentControl->source->id = pd->address->id;
-		rejectComponentControl->destination->id = pd->controller.address->id;
+		jausAddressCopy(rejectComponentControl->source, pd->address);
+		jausAddressCopy(rejectComponentControl->destination, pd->controller.address);
 		
 		txMessage = rejectComponentControlMessageToJausMessage(rejectComponentControl);
 		nodeManagerSend(pdNmi, txMessage);
@@ -649,11 +639,11 @@ void pdFailureState(void)
 	{
 		if(scManagerTerminateServiceConnection(pdNmi, controllerStatusSc))
 		{
-			cDebug(2, "Terminated Component Status Sc\n");
+			//cDebug(2, "Terminated Component Status Sc\n");
 		}
 		else
 		{
-			cError("pd: Failed to terminate controller status service connection\n");
+			//cError("pd: Failed to terminate controller status service connection\n");
 		}
 		controllerStatusSc = NULL;
 		pd->controller.state = JAUS_UNKNOWN_STATE;
@@ -672,11 +662,11 @@ void pdShutdownState(void)
 	{
 		if(scManagerTerminateServiceConnection(pdNmi, controllerStatusSc))
 		{
-			cDebug(2, "Terminated Component Status Sc\n");
+			//cDebug(2, "Terminated Component Status Sc\n");
 		}
 		else
 		{
-			cError("pd: Failed to terminate controller status service connection\n");
+			//cError("pd: Failed to terminate controller status service connection\n");
 		}
 		pd->controller.state = JAUS_UNKNOWN_STATE;
 	}
@@ -686,8 +676,8 @@ void pdShutdownState(void)
 	{
 		// Terminate control of current component
 		rejectComponentControl = rejectComponentControlMessageCreate();
-		rejectComponentControl->source->id = pd->address->id;
-		rejectComponentControl->destination->id = pd->controller.address->id;
+		jausAddressCopy(rejectComponentControl->source, pd->address);
+		jausAddressCopy(rejectComponentControl->destination, pd->controller.address);
 
 		txMessage = rejectComponentControlMessageToJausMessage(rejectComponentControl);
 		nodeManagerSend(pdNmi, txMessage);
@@ -725,10 +715,10 @@ void pdSendReportWrenchEffort(void)
 	sc = scList;
 	while(sc)
 	{
-		reportWrenchEffort->destination->id = sc->address->id;
+		jausAddressCopy(reportWrenchEffort->destination, sc->address);
 		reportWrenchEffort->presenceVector = sc->presenceVector;
 		reportWrenchEffort->sequenceNumber = sc->sequenceNumber;
-		reportWrenchEffort->scFlag = JAUS_SERVICE_CONNECTION_MESSAGE;
+		reportWrenchEffort->properties.scFlag = JAUS_SERVICE_CONNECTION_MESSAGE;
 		
 		txMessage = reportWrenchEffortMessageToJausMessage(reportWrenchEffort);
 		nodeManagerSend(pdNmi, txMessage);		

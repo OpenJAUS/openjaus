@@ -61,7 +61,7 @@ ALGORITHM REFERENCES
     Printing Office, Washington D.C., 1989.
 *******************************************************************************/
 #include <stdlib.h>
-#include "cproj.h"
+#include "utm/utmLib.h"
 
 /* Variables common to all subroutines in this code file
   -----------------------------------------------------*/

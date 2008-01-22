@@ -44,8 +44,11 @@
 #ifndef UTM_WRAPPER_H
 #define UTM_WRAPPER_H
 
-#include "cimar.h"
+#include <math.h>
 #include "cproj.h"
+#include "pointUtm.h"
+#include "pointLla.h"
+#include "greatCircle.h"
 
 #ifndef RAD_PER_DEG
 #define RAD_PER_DEG D2R
@@ -64,10 +67,10 @@
 #endif
 
 unsigned char utmInitCheck(void);
-unsigned char utmZoneCheck(PointLla);
-long utmConversionInit(PointLla);
+unsigned char utmZoneCheck(PointLla pointLla);
+long utmConversionInit(PointLla pointLla);
 
-PointLla pointUtmToPointLla(PointUtm);
-PointUtm pointLlaToPointUtm(PointLla);
+PointLla pointUtmToPointLla(PointUtm pointUtm);
+PointUtm pointLlaToPointUtm(PointLla pointLla);
 
 #endif

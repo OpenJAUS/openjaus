@@ -1,12 +1,11 @@
-#include <cimar.h>
-#include <cimar/jaus.h>			// JAUS message set (USER: JAUS libraries must be installed first)
-#include <math.h>	
+#include <jaus.h>			// JAUS message set (USER: JAUS libraries must be installed first)
+#include <nodeManager.h>
 #include <pthread.h>			// Multi-threading functions (standard to unix)
 #include <stdlib.h>	
 #include <unistd.h>				// Unix standard functions
 #include <string.h>
-
-#include "vehicleSim.h"	
+#include "properties.h"
+#include "vehicleSim.h"
 
 #define MIN_TURNING_RADIUS_M		4.25
 
@@ -61,7 +60,7 @@ int vehicleSimStartup(void)
 	vehiclePosLla = pointLlaCreate();
 	if(!vehiclePosLla)
 	{
-		cError("vehicleSim: Could not create vehicleSimThread\n");
+		//cError("vehicleSim: Could not create vehicleSimThread\n");
 		vehicleSimShutdown();
 		return VEHICLE_SIM_MALLOC_ERROR;
 	}
@@ -75,7 +74,7 @@ int vehicleSimStartup(void)
 	}
 	else
 	{
-		cError("vehicleSim: Cannot find or open properties file\n");
+		//cError("vehicleSim: Cannot find or open properties file\n");
 		return VEHICLE_SIM_LOAD_CONFIGURATION_ERROR;
 	}
 	
@@ -83,35 +82,35 @@ int vehicleSimStartup(void)
 	if(property)
 	{
 		vehiclePosLla->latitudeRadians = atof( property );
-		cDebug(3, "vehicleSim: Property loaded INITIAL_LAT_DEGREES: %lf\n", vehiclePosLla->latitudeRadians);
+		//cDebug(3, "vehicleSim: Property loaded INITIAL_LAT_DEGREES: %lf\n", vehiclePosLla->latitudeRadians);
 		vehiclePosLla->latitudeRadians *= RAD_PER_DEG;
 	}
 	else
 	{
-		cDebug(3, "vehicleSim: Property INITIAL_LAT_DEGREES not found, using default value: %lf\n", vehiclePosLla->latitudeRadians);
+		//cDebug(3, "vehicleSim: Property INITIAL_LAT_DEGREES not found, using default value: %lf\n", vehiclePosLla->latitudeRadians);
 	}
 
 	property = propertiesGetProperty(vehicleSimProperties, "INITIAL_LON_DEGREES");
 	if(property)
 	{
 		vehiclePosLla->longitudeRadians = atof( property );
-		cDebug(3, "vehicleSim: Property loaded INITIAL_LON_DEGREES: %lf\n", vehiclePosLla->longitudeRadians);
+		//cDebug(3, "vehicleSim: Property loaded INITIAL_LON_DEGREES: %lf\n", vehiclePosLla->longitudeRadians);
 		vehiclePosLla->longitudeRadians *= RAD_PER_DEG;
 	}
 	else
 	{
-		cDebug(3, "vehicleSim: Property INITIAL_LON_DEGREES not found, using default value: %lf\n", vehiclePosLla->longitudeRadians);
+		//cDebug(3, "vehicleSim: Property INITIAL_LON_DEGREES not found, using default value: %lf\n", vehiclePosLla->longitudeRadians);
 	}
 
 	property = propertiesGetProperty(vehicleSimProperties, "INITIAL_HEADING_DEGREES");
 	if(property)
 	{
 		vehicleH = atof( property );
-		cDebug(3, "vehicleSim: Property loaded INITIAL_HEADING_DEGREES: %lf\n", vehicleH);
+		//cDebug(3, "vehicleSim: Property loaded INITIAL_HEADING_DEGREES: %lf\n", vehicleH);
 	}
 	else
 	{
-		cDebug(3, "vehicleSim: Property INITIAL_HEADING_DEGREES not found, using default value: %lf\n", vehicleH);
+		//cDebug(3, "vehicleSim: Property INITIAL_HEADING_DEGREES not found, using default value: %lf\n", vehicleH);
 	}
 
 	pthread_attr_init(&attr);
@@ -121,7 +120,7 @@ int vehicleSimStartup(void)
 
 	if(pthread_create(&vehicleSimThreadId, &attr, vehicleSimThread, NULL) != 0)
 	{
-		cError("vehicleSim: Could not create vehicleSimThread\n");
+		//cError("vehicleSim: Could not create vehicleSimThread\n");
 		vehicleSimShutdown();
 		pthread_attr_destroy(&attr);
 		return VEHICLE_SIM_THREAD_CREATE_ERROR;
@@ -150,7 +149,7 @@ int vehicleSimShutdown(void)
 		{
 			pthread_cancel(vehicleSimThreadId);
 			vehicleSimThreadRunning = FALSE;
-			cError("vehicleSim: vehicleSimThread Shutdown Improperly\n");
+			//cError("vehicleSim: vehicleSimThread Shutdown Improperly\n");
 			break;
 		}
 	}
@@ -241,8 +240,6 @@ void vehicleSimSetCommand(double throttle, double brake, double steering)
 	{
 		vehicleDesiredRotationalEffort = steering;
 	}
-
-
 }
 
 // Function: vehicleSimThread

@@ -17,9 +17,9 @@
 // Note that for new/experimental components, the component ID will have to be defined in the header file 
 // After all changes are implemented, change the file header information at the begining of the file accordingly
 
-#include <cimar.h>
-#include <cimar/jaus.h>			// JAUS message set (USER: JAUS libraries must be installed first)
-#include <cimar/nodeManager.h>	// Node managment functions for sending and receiving JAUS messages (USER: Node Manager must be installed)
+#include "properties.h"
+#include <jaus.h>			// JAUS message set (USER: JAUS libraries must be installed first)
+#include <nodeManager.h>	// Node managment functions for sending and receiving JAUS messages (USER: Node Manager must be installed)
 #include <pthread.h>			// Multi-threading functions (standard to unix)
 #include <stdlib.h>	
 #include <unistd.h>				// Unix standard functions
@@ -42,24 +42,7 @@ void vssShutdownState(void);
 void vssAllState(void);
 // USER: Insert any private function prototypes here
 
-static JausAddressStruct vssAddress =	{ { 0, JAUS_VELOCITY_STATE_SENSOR, 0, 0} }; 
-static JausAddressStruct vssControllerAddress =	{ { 0, 0, 0, 0} }; 
-static JausComponentStruct vssStruct =	{	"vss",
-											&vssAddress,
-											JAUS_SHUTDOWN_STATE,
-											0,
-											NULL,
-											NULL,
-											{
-												&vssControllerAddress,
-												JAUS_UNDEFINED_STATE,
-												0,
-												JAUS_FALSE
-											},
-											0,
-											0.0
-										}; // All component specific information is stored in this CIMAR JAUS Library data structure
-static JausComponent vss = &vssStruct;
+static JausComponent vss = NULL;
 static JausNode vssNode;
 static JausSubsystem vssSubsystem;
 
@@ -85,6 +68,14 @@ int vssStartup(void)
 	FILE * propertyFile;
 	pthread_attr_t attr;	// Thread attributed for the component threads spawned in this function
 	
+	if(!vss)
+	{
+		vss = jausComponentCreate();
+		vss->address->component = JAUS_VELOCITY_STATE_SENSOR;
+		vss->identification  = "vss";
+		vss->state = JAUS_SHUTDOWN_STATE;
+	}
+
 	if(vss->state == JAUS_SHUTDOWN_STATE)	// Execute the startup routines only if the component is not running
 	{
 		propertyFile = fopen("./config/vss.conf", "r");
@@ -96,7 +87,7 @@ int vssStartup(void)
 		}
 		else
 		{
-			cError("vss: Cannot find or open properties file\n");
+			//cError("vss: Cannot find or open properties file\n");
 			return VSS_LOAD_CONFIGURATION_ERROR;
 		}
 		
@@ -111,7 +102,7 @@ int vssStartup(void)
 		vssNmi = nodeManagerOpen(vss); 
 		if(vssNmi == NULL)
 		{
-			cError("vss: Could not open connection to node manager\n");
+			//cError("vss: Could not open connection to node manager\n");
 			return VSS_NODE_MANAGER_OPEN_ERROR; 
 		}
 
@@ -122,7 +113,7 @@ int vssStartup(void)
 
 		if(pthread_create(&vssThreadId, &attr, vssThread, NULL) != 0)
 		{
-			cError("vss: Could not create vssThread\n");
+			//cError("vss: Could not create vssThread\n");
 			vssShutdown();
 			pthread_attr_destroy(&attr);
 			return VSS_THREAD_CREATE_ERROR;
@@ -131,7 +122,7 @@ int vssStartup(void)
 	}
 	else
 	{
-		cError("vss: Attempted startup while not shutdown\n");
+		//cError("vss: Attempted startup while not shutdown\n");
 		return VSS_STARTUP_BEFORE_SHUTDOWN_ERROR;
 	}
 	
@@ -159,7 +150,7 @@ int vssShutdown(void)
 			{
 				pthread_cancel(vssThreadId);
 				vssThreadRunning = FALSE;
-				cError("vss: vssThread Shutdown Improperly\n");
+				//cError("vss: vssThread Shutdown Improperly\n");
 				break;
 			}
 		}
@@ -231,7 +222,7 @@ void *vssThread(void *threadData)
 		{
 			if(nodeManagerReceive(vssNmi, &rxMessage))
 			{
-				cDebug(4, "VSS: Got message: %s from %d.%d.%d.%d\n", jausMessageCommandCodeString(rxMessage), rxMessage->source->subsystem, rxMessage->source->node, rxMessage->source->component, rxMessage->source->instance);
+				//cDebug(4, "VSS: Got message: %s from %d.%d.%d.%d\n", jausMessageCommandCodeString(rxMessage), rxMessage->source->subsystem, rxMessage->source->node, rxMessage->source->component, rxMessage->source->instance);
 				vssProcessMessage(rxMessage);
 			}
 			else 
@@ -307,9 +298,9 @@ void vssProcessMessage(JausMessage message)
 	JausMessage txMessage;
 
 	// This block of code is intended to reject commands from non-controlling components
-	if(vss->controller.active && message->source->id != vss->controller.address->id && jausMessageIsRejectableCommand(message) )
+	if(vss->controller.active && !jausAddressEqual(message->source, vss->controller.address) && jausMessageIsRejectableCommand(message))	
 	{
-		cError("vss: Received command message %s from non-controlling component.\n", jausMessageCommandCodeString(message));
+		//cError("vss: Received command message %s from non-controlling component.\n", jausMessageCommandCodeString(message));
 		jausMessageDestroy(message); // Ignore this message
 		return;		
 	}	
@@ -320,10 +311,10 @@ void vssProcessMessage(JausMessage message)
 			queryVelocityState = queryVelocityStateMessageFromJausMessage(message);
 			if(queryVelocityState)
 			{
-				vssMessage->destination->id = queryVelocityState->source->id;
+				jausAddressCopy(vssMessage->destination, queryVelocityState->source);
 				vssMessage->presenceVector = queryVelocityState->presenceVector;
 				vssMessage->sequenceNumber = 0;
-				vssMessage->scFlag = 0;
+				vssMessage->properties.scFlag = 0;
 				
 				txMessage = reportVelocityStateMessageToJausMessage(vssMessage);
 				nodeManagerSend(vssNmi, txMessage);
@@ -333,13 +324,13 @@ void vssProcessMessage(JausMessage message)
 			}
 			else
 			{
-				cError("vss: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
+				//cError("vss: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
 			}
 			jausMessageDestroy(message);
 			break;
 		
 		default:
-			//cError("Test %04X : %d\n", message->commandCode, message->dataSize);
+			////cError("Test %04X : %d\n", message->commandCode, message->dataSize);
 			defaultJausMessageProcessor(message, vssNmi, vss);
 			break;
 	}
@@ -352,7 +343,7 @@ void vssStartupState(void)
 	// Populate Core Service
 	if(!jausServiceAddCoreServices(vss->services))
 	{
-		cError("vss: Addition of Core Services FAILED! Switching to FAILURE_STATE\n");
+		//cError("vss: Addition of Core Services FAILED! Switching to FAILURE_STATE\n");
 		vss->state = JAUS_FAILURE_STATE;
 	}
 	// USER: Add the rest of your component specific service(s) here
@@ -361,7 +352,7 @@ void vssStartupState(void)
         service = jausServiceCreate(vss->address->component);
         if(!service)
         {
-                cError("vss:%d: Creation of JausService FAILED! Switching to FAILURE_STATE\n", __LINE__);
+                //cError("vss:%d: Creation of JausService FAILED! Switching to FAILURE_STATE\n", __LINE__);
                 vss->state = JAUS_FAILURE_STATE;
         }
         jausServiceAddService(vss->services, service);
@@ -371,7 +362,7 @@ void vssStartupState(void)
 
 	// Code run once through the init state
 	vssMessage = reportVelocityStateMessageCreate();
-	vssMessage->source->id = vss->address->id;
+	jausAddressCopy(vssMessage->source, vss->address);
 
 	//add support for ReportGlovalPose Service Connections
 	scManagerAddSupportedMessage(vssNmi, JAUS_REPORT_VELOCITY_STATE);
@@ -413,10 +404,10 @@ void vssReadyState(void)
 		sc = scList;
 		while(sc)
 		{
-			vssMessage->destination->id = sc->address->id;
+			jausAddressCopy(vssMessage->destination, sc->address);
 			vssMessage->presenceVector = sc->presenceVector;
 			vssMessage->sequenceNumber = sc->sequenceNumber;
-			vssMessage->scFlag = JAUS_SERVICE_CONNECTION_MESSAGE;
+			vssMessage->properties.scFlag = JAUS_SERVICE_CONNECTION_MESSAGE;
 			
 			txMessage = reportVelocityStateMessageToJausMessage(vssMessage);
 			nodeManagerSend(vssNmi, txMessage);		
@@ -424,7 +415,7 @@ void vssReadyState(void)
 	
 			jausAddressToString(vssMessage->source, buf);
 			jausAddressToString(vssMessage->destination, buf2);
-			cDebug(9, "Sent VSS SC from %s to %s\n", buf, buf2);
+			//cDebug(9, "Sent VSS SC from %s to %s\n", buf, buf2);
 	
 			sc = sc->nextSc;
 		}
@@ -456,8 +447,8 @@ void vssShutdownState(void)
 	{
 		// Terminate control of current component
 		rejectComponentControl = rejectComponentControlMessageCreate();
-		rejectComponentControl->source->id = vss->address->id;
-		rejectComponentControl->destination->id = vss->controller.address->id;
+		jausAddressCopy(rejectComponentControl->source, vss->address);
+		jausAddressCopy(rejectComponentControl->destination, vss->controller.address);
 
 		txMessage = rejectComponentControlMessageToJausMessage(rejectComponentControl);
 		nodeManagerSend(vssNmi, txMessage);

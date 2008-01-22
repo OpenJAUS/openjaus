@@ -44,7 +44,7 @@
 #ifndef WD_H
 #define WD_H
 
-#include <cimar/jaus.h>
+#include <jaus.h>
 #include "vehicle.h"
 
 #ifndef FALSE

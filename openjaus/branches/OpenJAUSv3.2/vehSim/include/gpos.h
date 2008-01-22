@@ -7,7 +7,8 @@
 #ifndef GPOS_H
 #define GPOS_H
 
-#include <cimar/jaus.h>
+#include "jaus.h"
+#include "math.h"
 
 #ifndef FALSE
 #define FALSE 0
@@ -24,6 +25,7 @@
 #define GPOS_THREAD_TIMEOUT_SEC				1.0
 #define GPOS_THREAD_DESIRED_RATE_HZ			50.0
 // USER: Insert defines here
+
 
 int gposStartup(void);
 int gposShutdown(void);

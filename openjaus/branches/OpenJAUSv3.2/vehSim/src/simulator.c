@@ -1,5 +1,5 @@
 
-#include <cimar.h>
+//#include "properties.h"
 #include "pd.h"
 #include "simulator.h"
 #include "vehicleSim.h"
@@ -11,7 +11,7 @@ int simulatorStartup(void)
 {
 	if(vehicleSimStartup())
 	{
-		cError("node: vehicleSimStartup failed\n");
+		//cError("node: vehicleSimStartup failed\n");
 		simulatorShutdown();
 		
 		return SIMULATOR_STARTUP_FAILED;	
@@ -19,7 +19,8 @@ int simulatorStartup(void)
 
 	if(pdStartup())
 	{
-		cError("node: pdStartup failed\n");
+		printf("node: pdStartup failed\n");
+		//cError("node: pdStartup failed\n");
 		simulatorShutdown();
 		
 		return SIMULATOR_STARTUP_FAILED;	
@@ -27,7 +28,7 @@ int simulatorStartup(void)
 	
 	if(gposStartup())
 	{
-		cError("node: gposStartup failed\n");
+		//cError("node: gposStartup failed\n");
 		simulatorShutdown();
 		
 		return SIMULATOR_STARTUP_FAILED;	
@@ -35,7 +36,7 @@ int simulatorStartup(void)
 
 	if(vssStartup())
 	{
-		cError("node: vssStartup failed\n");
+		//cError("node: vssStartup failed\n");
 		simulatorShutdown();
 		
 		return SIMULATOR_STARTUP_FAILED;	
@@ -43,7 +44,7 @@ int simulatorStartup(void)
 
 	if(wdStartup())
 	{
-		cError("node: wdStartup failed\n");
+		//cError("node: wdStartup failed\n");
 		simulatorShutdown();
 		
 		return SIMULATOR_STARTUP_FAILED;	

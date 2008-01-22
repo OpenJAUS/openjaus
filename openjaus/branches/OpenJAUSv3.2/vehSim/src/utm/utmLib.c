@@ -60,7 +60,7 @@
 
 #include <malloc.h>
 #include <stdio.h>
-#include "cimar.h"
+#include "utm/utmLib.h"
 
 static unsigned char utmLibInitFlag = FALSE;	// Place holder to test if the library has been initialized
 static long utmLibZone = 0;						// Place holder to remember the last zone the library was initialized to
