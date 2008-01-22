@@ -42,9 +42,10 @@
 // Description:	This file contains the skeleton C code for implementing a JAUS component in a Linux environment
 //				This code is designed to work with the node manager and JAUS library software written by CIMAR
 
-#include <cimar.h>
-#include <cimar/jaus.h>			// JAUS message set (USER: JAUS libraries must be installed first)
-#include <cimar/nodeManager.h>	// Node managment functions for sending and receiving JAUS messages (USER: Node Manager must be installed)
+#include "properties.h"
+#include "utm/utmLib.h"
+#include <jaus.h>			// JAUS message set (USER: JAUS libraries must be installed first)
+#include <nodeManager.h>	// Node managment functions for sending and receiving JAUS messages (USER: Node Manager must be installed)
 #include <pthread.h>			// Multi-threading functions (standard to unix)
 #include <stdlib.h>	
 #include <unistd.h>				// Unix standard functions
@@ -121,24 +122,7 @@ void wdAllState(void);
 void wdExcecuteControl(VehicleState);
 double wdAngleSubtract(double a, double b);
 
-static JausAddressStruct wdAddress =	{ { 0, JAUS_GLOBAL_WAYPOINT_DRIVER, 0, 0} }; 
-static JausAddressStruct wdControllerAddress =	{ { 0, 0, 0, 0} }; 
-static JausComponentStruct wdStruct =	{	"Waypoint Driver",
-											&wdAddress,
-											JAUS_SHUTDOWN_STATE,
-											0,
-											NULL,
-											NULL,
-											{
-												&wdControllerAddress,
-												JAUS_UNDEFINED_STATE,
-												0,
-												JAUS_FALSE
-											},
-											0,
-											0.0
-										}; // All component specific information is stored in this CIMAR JAUS Library data structure
-static JausComponent wd = &wdStruct;
+static JausComponent wd = NULL;
 static JausNode wdNode;
 static JausSubsystem wdSubsystem;
 
@@ -163,7 +147,7 @@ static ServiceConnection pdStatusSc = NULL;
 static JausBoolean wdInControl = JAUS_FALSE;
 static JausBoolean wdRequestControl = JAUS_FALSE;
 
-static Vector wdWaypoints = NULL;					// Array of commaned waypoints
+static JausArray wdWaypoints = NULL;					// Array of commaned waypoints
 static int currentWaypointIndex = 0;
 static double wdWaypointDistance = 0;
 
@@ -187,6 +171,14 @@ int wdStartup(void)
 	FILE * propertyFile;
 	pthread_attr_t attr;	// Thread attributed for the component threads spawned in this function
 	
+	if(!wd)
+	{
+		wd = jausComponentCreate();
+		wd->address->component = JAUS_GLOBAL_WAYPOINT_DRIVER;
+		wd->identification  = "Waypoint Driver";
+		wd->state = JAUS_SHUTDOWN_STATE;
+	}
+
 	if(wd->state == JAUS_SHUTDOWN_STATE)	// Execute the startup routines only if the component is not running
 	{
 		propertyFile = fopen("./config/wd.conf", "r");
@@ -198,7 +190,7 @@ int wdStartup(void)
 		}
 		else
 		{
-			cError("wd: Cannot find or open properties file\n");
+			//cError("wd: Cannot find or open properties file\n");
 			return WD_LOAD_CONFIGURATION_ERROR;
 		}
 		
@@ -213,7 +205,7 @@ int wdStartup(void)
 		wdNmi = nodeManagerOpen(wd); 
 		if(wdNmi == NULL)
 		{
-			cError("wd: Could not open connection to node manager\n");
+			//cError("wd: Could not open connection to node manager\n");
 			return WD_NODE_MANAGER_OPEN_ERROR; 
 		}
 
@@ -224,7 +216,7 @@ int wdStartup(void)
 
 		if(pthread_create(&wdThreadId, &attr, wdThread, NULL) != 0)
 		{
-			cError("wd: Could not create wdThread\n");
+			//cError("wd: Could not create wdThread\n");
 			wdShutdown();
 			pthread_attr_destroy(&attr);
 			return WD_THREAD_CREATE_ERROR;
@@ -233,7 +225,7 @@ int wdStartup(void)
 	}
 	else
 	{
-		cError("wd: Attempted startup while not shutdown\n");
+		//cError("wd: Attempted startup while not shutdown\n");
 		return WD_STARTUP_BEFORE_SHUTDOWN_ERROR;
 	}
 	
@@ -261,7 +253,7 @@ int wdShutdown(void)
 			{
 				pthread_cancel(wdThreadId);
 				wdThreadRunning = FALSE;
-				cError("wd: wdThread Shutdown Improperly\n");
+				//cError("wd: wdThread Shutdown Improperly\n");
 				break;
 			}
 		}
@@ -461,7 +453,7 @@ void *wdThread(void *threadData)
 		{
 			if(nodeManagerReceive(wdNmi, &rxMessage))
 			{
-				cDebug(4, "WD: Got message: %s from %d.%d.%d.%d\n", jausMessageCommandCodeString(rxMessage), rxMessage->source->subsystem, rxMessage->source->node, rxMessage->source->component, rxMessage->source->instance);
+				//cDebug(4, "WD: Got message: %s from %d.%d.%d.%d\n", jausMessageCommandCodeString(rxMessage), rxMessage->source->subsystem, rxMessage->source->node, rxMessage->source->component, rxMessage->source->instance);
 				wdProcessMessage(rxMessage);
 			}
 			else 
@@ -545,9 +537,9 @@ void wdProcessMessage(JausMessage message)
 	char buf[64] = {0};
 
 	// This block of code is intended to reject commands from non-controlling components
-	if(wd->controller.active && message->source->id != wd->controller.address->id && jausMessageIsRejectableCommand(message) )
+	if(wd->controller.active && !jausAddressEqual(message->source, wd->controller.address) && jausMessageIsRejectableCommand(message))
 	{
-		cError("wd: Received command message %s from non-controlling component.\n", jausMessageCommandCodeString(message));
+		//cError("wd: Received command message %s from non-controlling component.\n", jausMessageCommandCodeString(message));
 		jausMessageDestroy(message); // Ignore this message
 		return;		
 	}	
@@ -558,7 +550,7 @@ void wdProcessMessage(JausMessage message)
 			reportComponentStatus = reportComponentStatusMessageFromJausMessage(message);
 			if(reportComponentStatus)
 			{
-				if(reportComponentStatus->source->id == pd->address->id)
+				if(jausAddressEqual(reportComponentStatus->source, pd->address))
 				{
 					pd->state = reportComponentStatus->primaryStatusCode;
 				}
@@ -566,7 +558,7 @@ void wdProcessMessage(JausMessage message)
 			}
 			else
 			{
-				cError("wd: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
+				//cError("wd: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
 			}
 			jausMessageDestroy(message);
 			break;
@@ -575,16 +567,16 @@ void wdProcessMessage(JausMessage message)
 			confirmComponentControl = confirmComponentControlMessageFromJausMessage(message);
 			if(confirmComponentControl)
 			{
-				if(confirmComponentControl->source->id == pd->address->id)
+				if(jausAddressEqual(confirmComponentControl->source, pd->address))
 				{
-					cDebug(4,"wd: Confirmed control of PD\n");
+					//cDebug(4,"wd: Confirmed control of PD\n");
 					wdInControl = JAUS_TRUE;
 				}
 				confirmComponentControlMessageDestroy(confirmComponentControl);
 			}
 			else
 			{
-				cError("wd: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
+				//cError("wd: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
 			}
 			jausMessageDestroy(message);
 			break;
@@ -593,16 +585,16 @@ void wdProcessMessage(JausMessage message)
 			rejectComponentControl = rejectComponentControlMessageFromJausMessage(message);
 			if(rejectComponentControl)
 			{
-				if(rejectComponentControl->source->id == pd->address->id)
+				if(jausAddressEqual(rejectComponentControl->source, pd->address))
 				{			
-					cDebug(4,"wd: Lost control of PD\n");
+					//cDebug(4,"wd: Lost control of PD\n");
 					wdInControl = JAUS_FALSE;
 				}
 				rejectComponentControlMessageDestroy(rejectComponentControl);
 			}
 			else
 			{
-				cError("wd: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
+				//cError("wd: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
 			}
 			jausMessageDestroy(message);
 			break;
@@ -616,7 +608,7 @@ void wdProcessMessage(JausMessage message)
 			wdSpeed = setTravelSpeedMessageFromJausMessage(message);
 			if(!wdSpeed)
 			{
-				cError("wd: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
+				//cError("wd: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
 			}
 			jausMessageDestroy(message);
 			break;
@@ -632,12 +624,12 @@ void wdProcessMessage(JausMessage message)
 			{
 				// Nothing to do
 				jausAddressToString(message->source, buf);
-				cDebug(9, "Recv GPOS msg from %s\n", buf);
+				//cDebug(9, "Recv GPOS msg from %s\n", buf);
 				
 			}
 			else
 			{
-				cError("wd: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
+				//cError("wd: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
 			}
 
 			if(currentWaypointIndex < wdWaypoints->elementCount)
@@ -649,7 +641,7 @@ void wdProcessMessage(JausMessage message)
 								
 				if(wdWaypointDistance < WAYPOINT_POP_DISTANCE_M)
 				{
-					cError("wd: popping waypoint: %d\n",currentWaypointIndex); 
+					//cError("wd: popping waypoint: %d\n",currentWaypointIndex); 
 					currentWaypointIndex++;
 				}
 			}
@@ -670,7 +662,7 @@ void wdProcessMessage(JausMessage message)
 			wdReportVss = reportVelocityStateMessageFromJausMessage(message);
 			if(!wdReportVss)
 			{
-				cError("wd: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
+				//cError("wd: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
 			}
 			jausMessageDestroy(message);
 			break;
@@ -684,7 +676,7 @@ void wdProcessMessage(JausMessage message)
 			wdReportWrench = reportWrenchEffortMessageFromJausMessage(message);
 			if(!wdReportWrench)
 			{
-				cError("wd: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
+				//cError("wd: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
 			}
 			jausMessageDestroy(message);
 			break;
@@ -693,17 +685,17 @@ void wdProcessMessage(JausMessage message)
 			wdGlobalWaypoint = setGlobalWaypointMessageFromJausMessage(message);
 			if(!wdGlobalWaypoint)
 			{
-				cError("wd: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
+				//cError("wd: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
 			}
 			jausMessageDestroy(message);
-			vectorAdd(wdWaypoints, wdGlobalWaypoint);
+			jausArrayAdd(wdWaypoints, wdGlobalWaypoint);
 			break;
 
 		case JAUS_QUERY_GLOBAL_WAYPOINT:
 			queryGlobalWaypointMessage = queryGlobalWaypointMessageFromJausMessage(message);
 			if(!queryGlobalWaypointMessage)
 			{
-				cError("wd: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
+				//cError("wd: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
 			}
 			// loop thru waypoints to find the one that matches the request
 			// if there's a match, prepare/send the report, else whine
@@ -715,8 +707,8 @@ void wdProcessMessage(JausMessage message)
 				if(tempGlobalWaypoint->waypointNumber == queryGlobalWaypointMessage->waypointNumber)
 				{
 					reportGlobalWaypointMessage = reportGlobalWaypointMessageCreate();
-					reportGlobalWaypointMessage->destination->id = queryGlobalWaypointMessage->source->id;
-					reportGlobalWaypointMessage->source->id = wd->address->id;
+					jausAddressCopy(reportGlobalWaypointMessage->destination, queryGlobalWaypointMessage->source);
+					jausAddressCopy(reportGlobalWaypointMessage->source, wd->address);
 					reportGlobalWaypointMessage->presenceVector = NO_PRESENCE_VECTOR;
 					reportGlobalWaypointMessage->waypointNumber = tempGlobalWaypoint->waypointNumber;
 					reportGlobalWaypointMessage->latitudeDegrees = tempGlobalWaypoint->latitudeDegrees;
@@ -735,11 +727,11 @@ void wdProcessMessage(JausMessage message)
 			queryWaypointCountMessage = queryWaypointCountMessageFromJausMessage(message);
 			if(!queryWaypointCountMessage)
 			{
-				cError("wd: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
+				//cError("wd: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
 			}
 			reportWaypointCountMessage = reportWaypointCountMessageCreate();
-			reportWaypointCountMessage->destination->id = queryWaypointCountMessage->source->id;
-			reportWaypointCountMessage->source->id = wd->address->id;
+			jausAddressCopy(reportWaypointCountMessage->destination, queryWaypointCountMessage->source);
+			jausAddressCopy(reportWaypointCountMessage->source, wd->address);
 			reportWaypointCountMessage->waypointCount = wdWaypoints->elementCount;
 			txMessage = reportWaypointCountMessageToJausMessage(reportWaypointCountMessage);
 			reportWaypointCountMessageDestroy(reportWaypointCountMessage);
@@ -761,7 +753,7 @@ void wdStartupState(void)
 	// Populate Core Service
 	if(!jausServiceAddCoreServices(wd->services))
 	{
-		cError("wd: Addition of Core Services FAILED! Switching to FAILURE_STATE\n");
+		//cError("wd: Addition of Core Services FAILED! Switching to FAILURE_STATE\n");
 		wd->state = JAUS_FAILURE_STATE;
 	}
 	// USER: Add the rest of your component specific service(s) here
@@ -782,7 +774,7 @@ void wdStartupState(void)
 	// add the service to the component's services vector
 	if(!jausServiceAddService(wd->services, service))
 	{
-		cError("wd: Could not add services");
+		//cError("wd: Could not add services");
 	}
 
 	wd->authority = 127;
@@ -831,14 +823,14 @@ void wdStartupState(void)
 	
 	// Setup message to be sent to the PD
 	wdWrench = setWrenchEffortMessageCreate();
-	wdWrench->source->id = wd->address->id;
+	jausAddressCopy(wdWrench->source, wd->address);
 	jausShortPresenceVectorSetBit(&wdWrench->presenceVector, JAUS_WRENCH_PV_PROPULSIVE_LINEAR_X_BIT);
 	jausShortPresenceVectorSetBit(&wdWrench->presenceVector, JAUS_WRENCH_PV_PROPULSIVE_ROTATIONAL_Z_BIT);
 	jausShortPresenceVectorSetBit(&wdWrench->presenceVector, JAUS_WRENCH_PV_RESISTIVE_LINEAR_X_BIT);
 
 	scManagerAddSupportedMessage(wdNmi, JAUS_REPORT_COMPONENT_STATUS);
 
-	wdWaypoints = vectorCreate();
+	wdWaypoints = jausArrayCreate();
 	
 	vehicleState = vehicleStateCreate();
 
@@ -856,7 +848,7 @@ void wdInitState(void)
 	{
 		// Transition to Standby
 		wd->state = JAUS_STANDBY_STATE;
-		cDebug(4, "wd: Switching to STANDBY State\n");
+		//cDebug(4, "wd: Switching to STANDBY State\n");
 	}
 	else if(getTimeSeconds() > nextRequestTimeSec)
 	{
@@ -864,7 +856,7 @@ void wdInitState(void)
 		{
 			if(scManagerCreateServiceConnection(wdNmi, gposSc))
 			{
-				cDebug(4, "wd: Sent GPOS SC Request\n");
+				//cDebug(4, "wd: Sent GPOS SC Request\n");
 			}
 		}
 		
@@ -872,7 +864,7 @@ void wdInitState(void)
 		{
 			if(scManagerCreateServiceConnection(wdNmi, vssSc))
 			{
-				cDebug(4, "wd: Sent VSS SC Request\n");
+				//cDebug(4, "wd: Sent VSS SC Request\n");
 			}
 		}
 
@@ -880,7 +872,7 @@ void wdInitState(void)
 		{
 			if(scManagerCreateServiceConnection(wdNmi, pdWrenchSc))
 			{
-				cDebug(4, "wd: Sent PD Wrench SC Request\n");
+				//cDebug(4, "wd: Sent PD Wrench SC Request\n");
 			}
 		}
 
@@ -888,7 +880,7 @@ void wdInitState(void)
 		{
 			if(scManagerCreateServiceConnection(wdNmi, pdStatusSc))
 			{
-				cDebug(4, "wd: Sent PD Status SC Request\n");
+				//cDebug(4, "wd: Sent PD Status SC Request\n");
 			}
 		}
 		
@@ -904,18 +896,18 @@ void wdInitState(void)
 			
 			if(nodeManagerLookupAddress(wdNmi, pd->address))
 			{
-				wdWrench->destination->id = pd->address->id;
+				jausAddressCopy(wdWrench->destination, pd->address);
 			}
 		}
 		
 		if(pd->address->node)
 		{
 			jausAddressToString(pd->address, buf);
-			cDebug(4, "wd: Requesting control of PD %s\n", buf);
+			//cDebug(4, "wd: Requesting control of PD %s\n", buf);
 	
 			requestControl = requestComponentControlMessageCreate();
-			requestControl->source->id = wd->address->id;
-			requestControl->destination->id = pd->address->id;
+			jausAddressCopy(requestControl->source, wd->address);
+			jausAddressCopy(requestControl->destination, pd->address);
 			requestControl->authorityCode = wd->authority;
 			
 			txMessage = requestComponentControlMessageToJausMessage(requestControl);
@@ -926,12 +918,12 @@ void wdInitState(void)
 
 			if(scManagerCreateServiceConnection(wdNmi, pdStatusSc))
 			{
-				cDebug(4, "wd: Sent PD Status SC Request\n");
+				//cDebug(4, "wd: Sent PD Status SC Request\n");
 			}
 
 			if(scManagerCreateServiceConnection(wdNmi, pdWrenchSc))
 			{
-				cDebug(4, "wd: Sent PD Wrench SC Request\n");
+				//cDebug(4, "wd: Sent PD Wrench SC Request\n");
 			}
 
 			nextRequestTimeSec = getTimeSeconds() + REQUEST_TIMEOUT_SEC;
@@ -945,13 +937,13 @@ void wdStandbyState(void)
 	{
 		wd->state = JAUS_EMERGENCY_STATE;
 		
-		cError(	"wd: Switching to EMERGENCY: GposSc: %s, VssSc: %s, PdWrenchSc: %s, PdStatusSc: %s, Rd: %s\n", 
-				gposSc->isActive? "Active" : "Inactive",
-				vssSc->isActive? "Active" : "Inactive",
-				pdWrenchSc->isActive? "Active" : "Inactive",
-				pdStatusSc->isActive? "Active" : "Inactive",
-				wdInControl? "In Control" : "Not In Control" 
-				);
+//		cError(	"wd: Switching to EMERGENCY: GposSc: %s, VssSc: %s, PdWrenchSc: %s, PdStatusSc: %s, Rd: %s\n", 
+//				gposSc->isActive? "Active" : "Inactive",
+//				vssSc->isActive? "Active" : "Inactive",
+//				pdWrenchSc->isActive? "Active" : "Inactive",
+//				pdStatusSc->isActive? "Active" : "Inactive",
+//				wdInControl? "In Control" : "Not In Control" 
+//				);
 				
 		return;
 	}
@@ -976,13 +968,13 @@ void wdReadyState(void)
 	{
 		wd->state = JAUS_EMERGENCY_STATE;
 		
-		cError(	"wd: Switching to EMERGENCY: GposSc: %s, VssSc: %s, PdWrenchSc: %s, PdStatusSc: %s, Rd: %s\n", 
-				gposSc->isActive? "Active" : "Inactive",
-				vssSc->isActive? "Active" : "Inactive",
-				pdWrenchSc->isActive? "Active" : "Inactive",
-				pdStatusSc->isActive? "Active" : "Inactive",
-				wdInControl? "In Control" : "Not In Control" 
-				);
+//		cError(	"wd: Switching to EMERGENCY: GposSc: %s, VssSc: %s, PdWrenchSc: %s, PdStatusSc: %s, Rd: %s\n", 
+//				gposSc->isActive? "Active" : "Inactive",
+//				vssSc->isActive? "Active" : "Inactive",
+//				pdWrenchSc->isActive? "Active" : "Inactive",
+//				pdStatusSc->isActive? "Active" : "Inactive",
+//				wdInControl? "In Control" : "Not In Control" 
+//				);
 				
 		return;
 	}
@@ -1044,8 +1036,8 @@ void wdShutdownState(void)
 	{
 		// Terminate control of current component
 		rejectComponentControl = rejectComponentControlMessageCreate();
-		rejectComponentControl->source->id = wd->address->id;
-		rejectComponentControl->destination->id = wd->controller.address->id;
+		jausAddressCopy(rejectComponentControl->source, wd->address);
+		jausAddressCopy(rejectComponentControl->destination, wd->controller.address);
 
 		txMessage = rejectComponentControlMessageToJausMessage(rejectComponentControl);
 		nodeManagerSend(wdNmi, txMessage);
@@ -1059,11 +1051,11 @@ void wdShutdownState(void)
 	// Release Control
 	if(wdInControl)
 	{
-		cDebug(4, "wd: Releasing control of PD\n");
+		//cDebug(4, "wd: Releasing control of PD\n");
 	
 		releaseControl = releaseComponentControlMessageCreate();
-		releaseControl->source->id = wd->address->id;
-		releaseControl->destination->id = pd->address->id;
+		jausAddressCopy(releaseControl->source, wd->address);
+		jausAddressCopy(releaseControl->destination, pd->address);
 		
 		txMessage = releaseComponentControlMessageToJausMessage(releaseControl);
 		nodeManagerSend(wdNmi, txMessage);
@@ -1122,7 +1114,7 @@ void wdShutdownState(void)
 
 	// Destroy Global Variables
 	vehicleStateDestroy(vehicleState);	
-	vectorDestroy(wdWaypoints, (void *)setGlobalWaypointMessageDestroy);
+	jausArrayDestroy(wdWaypoints, (void *)setGlobalWaypointMessageDestroy);
 	setWrenchEffortMessageDestroy(wdWrench);
 	jausComponentDestroy(pd);
 }
@@ -1173,14 +1165,14 @@ void wdAllState(void)
 	if(scList)
 	{
 		reportStatus = reportComponentStatusMessageCreate();
-		reportStatus->source->id = wd->address->id;
-		reportStatus->scFlag = JAUS_SERVICE_CONNECTION_MESSAGE;
+		jausAddressCopy(reportStatus->source, wd->address);
+		reportStatus->properties.scFlag = JAUS_SERVICE_CONNECTION_MESSAGE;
 		reportStatus->primaryStatusCode = wd->state;
 
 		sc = scList;
 		while(sc)
 		{
-				reportStatus->destination->id = sc->address->id;
+				jausAddressCopy(reportStatus->destination, sc->address);
 				reportStatus->sequenceNumber = sc->sequenceNumber;
 
 				message = reportComponentStatusMessageToJausMessage(reportStatus);
@@ -1197,11 +1189,11 @@ void wdAllState(void)
 	if(!wdRequestControl && wdInControl)
 	{
 		// Release Control
-		cDebug(4, "wd: Releasing control of PD\n");
+		//cDebug(4, "wd: Releasing control of PD\n");
 
 		releaseControl = releaseComponentControlMessageCreate();
-		releaseControl->source->id = wd->address->id;
-		releaseControl->destination->id = pd->address->id;
+		jausAddressCopy(releaseControl->source, wd->address);
+		jausAddressCopy(releaseControl->destination, pd->address);
 		
 		message = releaseComponentControlMessageToJausMessage(releaseControl);
 		nodeManagerSend(wdNmi, message);
@@ -1347,7 +1339,7 @@ void wdExcecuteControl(VehicleState vehicleState)
 		wdWrench->propulsiveRotationalEffortZPercent = -100.0;
 	}
 
-	wdWrench->destination->id = pd->address->id;
+	jausAddressCopy(wdWrench->destination, pd->address);
 
 	txMessage = setWrenchEffortMessageToJausMessage(wdWrench);
 	nodeManagerSend(wdNmi, txMessage);		

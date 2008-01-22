@@ -68,7 +68,7 @@ S. Nelson, EROS		Nov, 1993	Added loop counter in ADJUST_LON
 S. Nelson, EROS		Jan, 1998	Changed misspelled error message
 
 *******************************************************************************/
-#include "cproj.h"
+#include "utm/utmLib.h"
 
 #define MAX_VAL 4
 #define MAXLONG 2147483647.

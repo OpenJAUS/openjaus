@@ -1,5 +1,5 @@
-#include <cimar.h>
-#include <cimar/jaus.h>
+#include <jaus.h>
+#include <nodeManager.h>
 #include <ncurses.h>
 #include <ctype.h>
 #include <errno.h>
@@ -234,15 +234,15 @@ int main(int argCount, char **argString)
 
 	printf("main: CIMAR Core Executable: %s\n", timeString);
 
-	// Make directory and set permisions on CIMAR Directory to fully read, write, execute
-	if(mkdir("/var/log/CIMAR/", 0777) < 0) 
-	{
-		if(errno != EEXIST)
-		{
-			perror("main: Error");
-			return -1;
-		}
-	}
+//	// Make directory and set permisions on CIMAR Directory to fully read, write, execute
+//	if(mkdir("/var/log/CIMAR/", 0777) < 0) 
+//	{
+//		if(errno != EEXIST)
+//		{
+//			perror("main: Error");
+//			return -1;
+//		}
+//	}
 
 	for(i=1; i<argCount; i++)
 	{
@@ -252,13 +252,13 @@ int main(int argCount, char **argString)
 			{
 				case 'v':
 					verbose = TRUE;
-					setLogVerbose(TRUE);
+					//setLogVerbose(TRUE);
 					break;
 					
 				case 'd':
 					if(argString[i][2] == '+') 
 					{
-						setDebugLogic(DEBUG_GREATER_THAN);
+						//setDebugLogic(DEBUG_GREATER_THAN);
 						sprintf(debugLogicString, "Greater than or equal to: ");
 						if(argString[i][3] >= '0' && argString[i][3] <= '9')
 						{
@@ -272,7 +272,7 @@ int main(int argCount, char **argString)
 					}
 					else if(argString[i][2] == '-')
 					{
-						setDebugLogic(DEBUG_LESS_THAN);
+						//setDebugLogic(DEBUG_LESS_THAN);
 						sprintf(debugLogicString, "Less than or equal to: ");
 						if(argString[i][3] >= '0' && argString[i][3] <= '9')
 						{
@@ -286,7 +286,7 @@ int main(int argCount, char **argString)
 					}
 					else if(argString[i][2] == '=')
 					{
-						setDebugLogic(DEBUG_EQUAL_TO);
+						//setDebugLogic(DEBUG_EQUAL_TO);
 						if(argString[i][3] >= '0' && argString[i][3] <= '9')
 						{
 							debugLevel = atoi(&argString[i][3]);
@@ -307,7 +307,7 @@ int main(int argCount, char **argString)
 						break;
 					}
 					printf("main: Switching to debug level: %s%d\n", debugLogicString, debugLevel);
-					setDebugLevel(debugLevel);
+					//setDebugLevel(debugLevel);
 					break;
 					
 				case 'l':
@@ -317,7 +317,7 @@ int main(int argCount, char **argString)
 						if(logFile != NULL)
 						{
 							fprintf(logFile, "CIMAR %s Log -- %s\n", argString[0], timeString);
-							setLogFile(logFile);
+							//setLogFile(logFile);
 						}
 						else printf("main: Error creating log file, switching to default\n");
 					}
@@ -334,28 +334,28 @@ int main(int argCount, char **argString)
 		}
 	}
 
-	if(logFile == NULL)
-	{
-		i = strlen(argString[0]) - 1;
-		while(i>0 && argString[0][i-1] != '/') i--;
-				
-		sprintf(logFileStr, "/var/log/CIMAR/%s.log", &argString[0][i]);
-		printf("main: Creating log: %s\n", logFileStr);
-		logFile = fopen(logFileStr, "w");
-		if(logFile != NULL)
-		{
-			fprintf(logFile, "CIMAR %s Log -- %s\n", argString[0], timeString);
-			setLogFile(logFile);
-		}
-		else printf("main: ERROR: Could not create log file\n");
-		// BUG: Else pError here
-	}
-		
-	cDebug(1, "main: Starting Up %s Node Software\n", simulatorGetName());
+//	if(logFile == NULL)
+//	{
+//		i = strlen(argString[0]) - 1;
+//		while(i>0 && argString[0][i-1] != '/') i--;
+//				
+//		sprintf(logFileStr, "/var/log/CIMAR/%s.log", &argString[0][i]);
+//		printf("main: Creating log: %s\n", logFileStr);
+//		logFile = fopen(logFileStr, "w");
+//		if(logFile != NULL)
+//		{
+//			fprintf(logFile, "CIMAR %s Log -- %s\n", argString[0], timeString);
+//			//setLogFile(logFile);
+//		}
+//		else printf("main: ERROR: Could not create log file\n");
+//		// BUG: Else pError here
+//	}
+			
+	//cDebug(1, "main: Starting Up %s Node Software\n", simulatorGetName());
 	if(simulatorStartup())
 	{
-		cError("main: %s Node Startup failed\n", simulatorGetName());
-		cDebug(1, "main: Exiting %s Node Software\n", simulatorGetName());
+		////cError("main: %s Node Startup failed\n", simulatorGetName());
+		//cDebug(1, "main: Exiting %s Node Software\n", simulatorGetName());
 		return 0;
 	}
 
@@ -441,7 +441,7 @@ int main(int argCount, char **argString)
 		endwin();
 	}
 	
-	cDebug(1, "main: Shutting Down %s Node Software\n", simulatorGetName());
+	//cDebug(1, "main: Shutting Down %s Node Software\n", simulatorGetName());
 	simulatorShutdown();
 	
 	if(logFile != NULL)

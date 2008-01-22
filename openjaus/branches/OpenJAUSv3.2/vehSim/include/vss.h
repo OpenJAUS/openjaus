@@ -7,7 +7,7 @@
 #ifndef VSS_H
 #define VSS_H
 
-#include <cimar/jaus.h>
+#include <jaus.h>
 
 #ifndef FALSE
 #define FALSE 0

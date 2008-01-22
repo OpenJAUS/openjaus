@@ -15,7 +15,7 @@
 #ifndef PD_H
 #define PD_H
 
-#include <cimar/jaus.h>
+#include <jaus.h>
 
 #ifndef FALSE
 #define FALSE 0

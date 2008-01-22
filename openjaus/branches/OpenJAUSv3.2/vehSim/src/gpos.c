@@ -5,21 +5,22 @@
 // Description:	This file contains the skeleton C code for implementing a JAUS component in a Linux environment
 //				This code is designed to work with the node manager and JAUS library software written by CIMAR
 
-#include <cimar.h>
-#include <cimar/jaus.h>			// JAUS message set (USER: JAUS libraries must be installed first)
-#include <cimar/nodeManager.h>	// Node managment functions for sending and receiving JAUS messages (USER: Node Manager must be installed)
+#include "jaus.h"			// JAUS message set (USER: JAUS libraries must be installed first)
+#include "nodeManager.h"	// Node managment functions for sending and receiving JAUS messages (USER: Node Manager must be installed)
 #include <pthread.h>			// Multi-threading functions (standard to unix)
 #include <stdlib.h>	
 #include <unistd.h>				// Unix standard functions
 #include <string.h>
+#include "properties.h"
 // USER: Add include files here as appropriate
 
 #include "gpos.h"	// USER: Implement and rename this header file. Include prototypes for all public functions contained in this file.
 #include "vehicleSim.h"
+#include "utm/pointLla.h"
 
 // Private function prototypes
 void *gposThread(void *);
-void gposProcessMessage(JausMessage);
+void gposProcessMessage(JausMessage rxMessage);
 void gposStartupState(void);
 void gposInitState(void);
 void gposStandbyState(void);
@@ -29,24 +30,7 @@ void gposFailureState(void);
 void gposShutdownState(void);
 void gposAllState(void);
 
-static JausAddressStruct gposAddress =	{ { 0, JAUS_GLOBAL_POSE_SENSOR, 0, 0} }; 
-static JausAddressStruct gposControllerAddress =	{ { 0, 0, 0, 0} }; 
-static JausComponentStruct gposStruct =	{	"gpos",
-											&gposAddress,
-											JAUS_SHUTDOWN_STATE,
-											0,
-											NULL,
-											NULL,
-											{
-												&gposControllerAddress,
-												JAUS_UNDEFINED_STATE,
-												0,
-												JAUS_FALSE
-											},
-											0,
-											0.0
-										}; // All component specific information is stored in this CIMAR JAUS Library data structure
-static JausComponent gpos = &gposStruct;
+static JausComponent gpos = NULL;
 static JausNode gposNode;
 static JausSubsystem gposSubsystem;
 
@@ -72,6 +56,14 @@ int gposStartup(void)
 	FILE * propertyFile;
 	pthread_attr_t attr;	// Thread attributed for the component threads spawned in this function
 	
+	if(!gpos)
+	{
+		gpos = jausComponentCreate();
+		gpos->address->component = JAUS_GLOBAL_POSE_SENSOR;
+		gpos->identification  = "gpos";
+		gpos->state = JAUS_SHUTDOWN_STATE;
+	}
+	
 	if(gpos->state == JAUS_SHUTDOWN_STATE)	// Execute the startup routines only if the component is not running
 	{
 		propertyFile = fopen("./config/gpos.conf", "r");
@@ -83,7 +75,7 @@ int gposStartup(void)
 		}
 		else
 		{
-			cError("gpos: Cannot find or open properties file\n");
+			////cError("gpos: Cannot find or open properties file\n");
 			return GPOS_LOAD_CONFIGURATION_ERROR;
 		}
 		
@@ -98,7 +90,7 @@ int gposStartup(void)
 		gposNmi = nodeManagerOpen(gpos); 
 		if(gposNmi == NULL)
 		{
-			cError("gpos: Could not open connection to node manager\n");
+			////cError("gpos: Could not open connection to node manager\n");
 			return GPOS_NODE_MANAGER_OPEN_ERROR; 
 		}
 
@@ -109,7 +101,7 @@ int gposStartup(void)
 
 		if(pthread_create(&gposThreadId, &attr, gposThread, NULL) != 0)
 		{
-			cError("gpos: Could not create gposThread\n");
+			////cError("gpos: Could not create gposThread\n");
 			gposShutdown();
 			pthread_attr_destroy(&attr);
 			return GPOS_THREAD_CREATE_ERROR;
@@ -118,7 +110,7 @@ int gposStartup(void)
 	}
 	else
 	{
-		cError("gpos: Attempted startup while not shutdown\n");
+		////cError("gpos: Attempted startup while not shutdown\n");
 		return GPOS_STARTUP_BEFORE_SHUTDOWN_ERROR;
 	}
 	
@@ -146,7 +138,7 @@ int gposShutdown(void)
 			{
 				pthread_cancel(gposThreadId);
 				gposThreadRunning = FALSE;
-				cError("gpos: gposThread Shutdown Improperly\n");
+				////cError("gpos: gposThread Shutdown Improperly\n");
 				break;
 			}
 		}
@@ -228,7 +220,7 @@ void *gposThread(void *threadData)
 		{
 			if(nodeManagerReceive(gposNmi, &rxMessage))
 			{
-				cDebug(4, "GPOS: Got message: %s from %d.%d.%d.%d\n", jausMessageCommandCodeString(rxMessage), rxMessage->source->subsystem, rxMessage->source->node, rxMessage->source->component, rxMessage->source->instance);
+				////cDebug(4, "GPOS: Got message: %s from %d.%d.%d.%d\n", jausMessageCommandCodeString(rxMessage), rxMessage->source->subsystem, rxMessage->source->node, rxMessage->source->component, rxMessage->source->instance);
 				gposProcessMessage(rxMessage);
 			}
 			else 
@@ -304,9 +296,9 @@ void gposProcessMessage(JausMessage message)
 	JausMessage txMessage;
 
 	// This block of code is intended to reject commands from non-controlling components
-	if(gpos->controller.active && message->source->id != gpos->controller.address->id && jausMessageIsRejectableCommand(message) )
+	if(gpos->controller.active && !jausAddressEqual(message->source, gpos->controller.address) && jausMessageIsRejectableCommand(message) )
 	{
-		cError("gpos: Received command message %s from non-controlling component.\n", jausMessageCommandCodeString(message));
+		////cError("gpos: Received command message %s from non-controlling component.\n", jausMessageCommandCodeString(message));
 		jausMessageDestroy(message); // Ignore this message
 		return;		
 	}	
@@ -317,10 +309,10 @@ void gposProcessMessage(JausMessage message)
 			queryGlobalPose = queryGlobalPoseMessageFromJausMessage(message);
 			if(queryGlobalPose)
 			{
-				gposMessage->destination->id = queryGlobalPose->source->id;
+				jausAddressCopy(gposMessage->destination, queryGlobalPose->source);
 				gposMessage->presenceVector = queryGlobalPose->presenceVector;
 				gposMessage->sequenceNumber = 0;
-				gposMessage->scFlag = 0;
+				gposMessage->properties.scFlag = 0;
 				
 				txMessage = reportGlobalPoseMessageToJausMessage(gposMessage);
 				nodeManagerSend(gposNmi, txMessage);		
@@ -330,7 +322,7 @@ void gposProcessMessage(JausMessage message)
 			}
 			else
 			{
-				cError("gpos: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
+				////cError("gpos: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
 			}
 			jausMessageDestroy(message);
 			break;
@@ -348,14 +340,14 @@ void gposStartupState(void)
 	// Populate Core Service
 	if(!jausServiceAddCoreServices(gpos->services))
 	{
-		cError("gpos: Addition of Core Services FAILED! Switching to FAILURE_STATE\n");
+		////cError("gpos: Addition of Core Services FAILED! Switching to FAILURE_STATE\n");
 		gpos->state = JAUS_FAILURE_STATE;
 	}
 	// USER: Add the rest of your component specific service(s) here
 	service = jausServiceCreate(gpos->address->component);
         if(!service)
         {
-                cError("gpos:%d: Creation of JausService FAILED! Switching to FAILURE_STATE\n", __LINE__);
+                ////cError("gpos:%d: Creation of JausService FAILED! Switching to FAILURE_STATE\n", __LINE__);
                 gpos->state = JAUS_FAILURE_STATE;
         }
         jausServiceAddService(gpos->services, service);
@@ -364,7 +356,7 @@ void gposStartupState(void)
 	
 
 	gposMessage = reportGlobalPoseMessageCreate();
-	gposMessage->source->id = gpos->address->id;
+	jausAddressCopy(gposMessage->source, gpos->address);
 
 	//add support for ReportGlovalPose Service Connections
 	scManagerAddSupportedMessage(gposNmi, JAUS_REPORT_GLOBAL_POSE);
@@ -397,7 +389,7 @@ void gposReadyState(void)
 		gposMessage->longitudeDegrees = vehiclePosLla->longitudeRadians * DEG_PER_RAD;
 	}
 	
-	gposMessage->yawRadians = -(vehicleSimGetH() - PI/2.0);
+	gposMessage->yawRadians = -(vehicleSimGetH() - M_PI/2.0);
 
 	gposMessage->elevationMeters = 0;
 	gposMessage->positionRmsMeters = 1.0;
@@ -415,10 +407,10 @@ void gposReadyState(void)
 		sc = scList;
 		while(sc)
 		{
-			gposMessage->destination->id = sc->address->id;
+			jausAddressCopy(gposMessage->destination, sc->address);
 			gposMessage->presenceVector = sc->presenceVector;
 			gposMessage->sequenceNumber = sc->sequenceNumber;
-			gposMessage->scFlag = JAUS_SERVICE_CONNECTION_MESSAGE;
+			gposMessage->properties.scFlag = JAUS_SERVICE_CONNECTION_MESSAGE;
 			
 			txMessage = reportGlobalPoseMessageToJausMessage(gposMessage);
 			nodeManagerSend(gposNmi, txMessage);
@@ -426,7 +418,7 @@ void gposReadyState(void)
 	
 			jausAddressToString(gposMessage->source, buf);
 			jausAddressToString(gposMessage->destination, buf2);
-			cDebug(9, "Sent GPOS SC from %s to %s\n", buf, buf2);
+			//cDebug(9, "Sent GPOS SC from %s to %s\n", buf, buf2);
 	
 			sc = sc->nextSc;
 		}
@@ -458,8 +450,8 @@ void gposShutdownState(void)
 	{
 		// Terminate control of current component
 		rejectComponentControl = rejectComponentControlMessageCreate();
-		rejectComponentControl->source->id = gpos->address->id;
-		rejectComponentControl->destination->id = gpos->controller.address->id;
+		jausAddressCopy(rejectComponentControl->source, gpos->address);
+		jausAddressCopy(rejectComponentControl->destination, gpos->controller.address);
 
 		txMessage = rejectComponentControlMessageToJausMessage(rejectComponentControl);
 		nodeManagerSend(gposNmi, txMessage);

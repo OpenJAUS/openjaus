@@ -31,7 +31,7 @@
  *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
  *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ****************************************************************************/
-// File Name: pointUtm.c
+// File Name: pointLla.c
 //
 // Written By: Danny Kent (jaus AT dannykent DOT com)
 //
@@ -39,31 +39,30 @@
 //
 // Date: 08/04/06
 //
-// Description: This file defines the functions of a PointUtm object
+// Description: This file defines the functions of a PointLla Object
 
 #include <malloc.h>
 #include "utm/utmLib.h"
 
-PointUtm pointUtmCreate(void)
+PointLla pointLlaCreate(void)
 {
-	PointUtm pointUtm;
+	PointLla pointLla;
 	
-	pointUtm = (PointUtm)malloc(sizeof(PointUtmStruct));
-	if(pointUtm)
+	pointLla = (PointLla)malloc(sizeof(PointLlaStruct));
+	
+	if(pointLla)
 	{
-		pointUtm->xMeters = 0.0;
-		pointUtm->yMeters = 0.0;
-		pointUtm->zMeters = 0.0;
-		
-		return pointUtm;
+		pointLla->latitudeRadians = 10.0;
+		pointLla->longitudeRadians = 10.0;
+		pointLla->altitudeMeters = 0.0;
+	
+		return pointLla;
 	}
 	else
 		return NULL;
 }
 
-
-void pointUtmDestroy(PointUtm pointUtm)
+void pointLlaDestroy(PointLla pointLla)
 {
-	free(pointUtm);
+	free(pointLla);
 }
-

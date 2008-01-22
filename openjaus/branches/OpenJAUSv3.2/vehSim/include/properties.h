@@ -31,39 +31,34 @@
  *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
  *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ****************************************************************************/
-// File Name: pointUtm.c
+// File Name: properties.h
 //
-// Written By: Danny Kent (jaus AT dannykent DOT com)
+// Written By: Tom Galluzzo (galluzzo AT gmail DOT com)
 //
 // Version: 3.2
 //
 // Date: 08/04/06
 //
-// Description: This file defines the functions of a PointUtm object
+// Description:	This file describes the functionality associated with a Properties object.
+// Inspired by the class of the same name in the JAVA language.
 
-#include <malloc.h>
-#include "utm/utmLib.h"
+#ifndef PROPERTIES_H
+#define PROPERTIES_H
 
-PointUtm pointUtmCreate(void)
+#include <stdio.h>
+
+typedef struct propertyStruct
 {
-	PointUtm pointUtm;
-	
-	pointUtm = (PointUtm)malloc(sizeof(PointUtmStruct));
-	if(pointUtm)
-	{
-		pointUtm->xMeters = 0.0;
-		pointUtm->yMeters = 0.0;
-		pointUtm->zMeters = 0.0;
-		
-		return pointUtm;
-	}
-	else
-		return NULL;
-}
+	char *property;
+	char *value;
+	struct propertyStruct *nextProperty;
+}PropertyStruct;
 
+typedef PropertyStruct *Properties;
 
-void pointUtmDestroy(PointUtm pointUtm)
-{
-	free(pointUtm);
-}
+Properties propertiesCreate(void);
+void propertiesDestroy(Properties);
+Properties propertiesLoad(Properties, FILE *);
+char *propertiesGetProperty(Properties, char *);
 
+#endif // PROPERTIES_H

@@ -44,7 +44,7 @@
 // of the earth is a great circle.
 
 #include <math.h>
-#include "cimar.h"
+#include "utm/utmLib.h"
 
 double greatCircleDistance(double lat1, double lon1, double lat2, double lon2)
 {
