@@ -53,6 +53,7 @@
     #endif
 	#define CLOSE_SOCKET closesocket
 	typedef unsigned int size_t;
+	#define JAUS_EXPORT	__declspec(dllexport)
 #elif defined(__linux) || defined(linux) || defined(__linux__)
 	#include <unistd.h>
 	#include <sys/socket.h>
@@ -62,6 +63,7 @@
 	#include <netinet/in.h>
 	#include <sys/types.h>
 	#define CLOSE_SOCKET close
+	#define JAUS_EXPORT
 #else
 	#error "No Socket implementation defined for this platform."
 #endif
@@ -77,7 +79,7 @@ typedef struct
 {
 	unsigned char *buffer;
 
-#ifdef __LINUX
+#if defined(__linux) || defined(linux) || defined(__linux__)
 	size_t bufferSizeBytes;
 #else
 	int bufferSizeBytes;
@@ -89,8 +91,8 @@ typedef struct
 
 typedef DatagramPacketStruct *DatagramPacket;
 
-DatagramPacket datagramPacketCreate(void);
-void datagramPacketDestroy(DatagramPacket);
+JAUS_EXPORT DatagramPacket datagramPacketCreate(void);
+JAUS_EXPORT void datagramPacketDestroy(DatagramPacket);
 
 #ifdef __cplusplus
 }

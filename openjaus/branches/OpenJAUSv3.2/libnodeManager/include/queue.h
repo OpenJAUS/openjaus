@@ -44,6 +44,12 @@
 #ifndef QUEUE_H
 #define QUEUE_H
 
+#ifdef WIN32
+	#define JAUS_EXPORT	__declspec(dllexport)
+#else
+	#define JAUS_EXPORT
+#endif
+
 typedef struct queueObject
 {
 	void *object;
@@ -59,9 +65,9 @@ typedef struct
 
 typedef QueueStruct *Queue;
 
-Queue queueCreate(void);
-void queueDestroy(Queue, void (*)(void *));
-void*  queuePop(Queue);
-void queuePush(Queue, void *);
+JAUS_EXPORT Queue queueCreate(void);
+JAUS_EXPORT void queueDestroy(Queue, void (*)(void *));
+JAUS_EXPORT void *queuePop(Queue);
+JAUS_EXPORT void queuePush(Queue, void *);
 
 #endif // QUEUE_H

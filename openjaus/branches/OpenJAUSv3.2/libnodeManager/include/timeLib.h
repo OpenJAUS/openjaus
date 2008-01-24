@@ -44,12 +44,19 @@
 #ifndef	TIME_LIB_H
 #define	TIME_LIB_H
 
+#ifdef WIN32
+	#define JAUS_EXPORT	__declspec(dllexport)
+#else
+	#define JAUS_EXPORT
+#endif
+
+
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-double getTimeSeconds(void);
+JAUS_EXPORT double getTimeSeconds(void);
 
 #ifdef __cplusplus
 }

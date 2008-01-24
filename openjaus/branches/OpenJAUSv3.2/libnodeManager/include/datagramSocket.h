@@ -46,6 +46,7 @@
 #define DATAGRAM_SOCKET_H
 
 #ifdef WIN32
+	#define JAUS_EXPORT	__declspec(dllexport)
 	#include <winsock2.h>
 	#include <ws2tcpip.h>
     #ifndef socklen_t
@@ -54,6 +55,7 @@
 	#define CLOSE_SOCKET closesocket
 	typedef unsigned int size_t;
 #elif defined(__linux) || defined(linux) || defined(__linux__)
+	#define JAUS_EXPORT
 	#include <unistd.h>
 	#include <sys/socket.h>
 	#include <netdb.h>
@@ -85,16 +87,16 @@ typedef struct
 
 typedef DatagramSocketStruct *DatagramSocket;
 
-DatagramSocket datagramSocketCreate(short, InetAddress);
-void datagramSocketDestroy(DatagramSocket);
+JAUS_EXPORT DatagramSocket datagramSocketCreate(short, InetAddress);
+JAUS_EXPORT void datagramSocketDestroy(DatagramSocket);
 
-void datagramSocketSetSendBufferSize(DatagramSocket, int);
-int datagramSocketGetSendBufferSize(DatagramSocket);
-void datagramSocketSetRecvBufferSize(DatagramSocket, int);
-int datagramSocketGetRecvBufferSize(DatagramSocket);
-int datagramSocketSend(DatagramSocket, DatagramPacket);
-int datagramSocketReceive(DatagramSocket, DatagramPacket);
-void datagramSocketSetTimeout(DatagramSocket, double);
+JAUS_EXPORT void datagramSocketSetSendBufferSize(DatagramSocket, int);
+JAUS_EXPORT int datagramSocketGetSendBufferSize(DatagramSocket);
+JAUS_EXPORT void datagramSocketSetRecvBufferSize(DatagramSocket, int);
+JAUS_EXPORT int datagramSocketGetRecvBufferSize(DatagramSocket);
+JAUS_EXPORT int datagramSocketSend(DatagramSocket, DatagramPacket);
+JAUS_EXPORT int datagramSocketReceive(DatagramSocket, DatagramPacket);
+JAUS_EXPORT void datagramSocketSetTimeout(DatagramSocket, double);
 
 #ifdef __cplusplus
 }
