@@ -272,18 +272,18 @@ bool JausUdpInterface::openSocket(void)
 				this->portNumber = socket->port;
 			}
 
+			// Setup Timeout
+			multicastSocketSetTimeout(this->socket, this->configData->GetConfigDataInt("Subsystem_Communications", "JAUS_UDP_Timeout_Sec"));
+
+			// Setup TTL
+			multicastSocketSetTTL(this->socket, this->configData->GetConfigDataInt("Subsystem_Communications", "JAUS_UDP_TTL"));
+
 			// Setup Multicast
 			if(this->configData->GetConfigDataBool("Subsystem_Communications", "JAUS_UDP_Multicast"))
 			{
 				this->multicast = true;
 				this->multicastGroup  = inetAddressGetByString((char *)this->configData->GetConfigDataString("Subsystem_Communications", "JAUS_UDP_Multicast_Group").c_str());
 				multicastSocketJoinGroup(this->socket, this->multicastGroup);
-
-				// Setup TTL
-				multicastSocketSetTTL(this->socket, this->configData->GetConfigDataInt("Subsystem_Communications", "JAUS_UDP_TTL"));
-
-				// Setup Timeout
-				multicastSocketSetTimeout(this->socket, this->configData->GetConfigDataInt("Subsystem_Communications", "JAUS_UDP_Timeout_Sec"));
 
 				// Setup Loopback
 				multicastSocketSetLoopback(this->socket, LOOPBACK_DISABLED);
@@ -325,15 +325,18 @@ bool JausUdpInterface::openSocket(void)
 				this->portNumber = socket->port;
 			}
 
+			// Setup Timeout
+			multicastSocketSetTimeout(this->socket, this->configData->GetConfigDataInt("Node_Communications", "JAUS_UDP_Timeout_Sec"));
+
+			// Setup TTL
+			multicastSocketSetTTL(this->socket, this->configData->GetConfigDataInt("Node_Communications", "JAUS_UDP_TTL"));
+
 			// Setup Multicast
 			if(this->configData->GetConfigDataBool("Node_Communications", "JAUS_UDP_Multicast"))
 			{
 				this->multicast = true;
 				this->multicastGroup  = inetAddressGetByString((char *)this->configData->GetConfigDataString("Node_Communications", "JAUS_UDP_Multicast_Group").c_str());
 				multicastSocketJoinGroup(this->socket, this->multicastGroup);
-
-				// Setup Timeout
-				multicastSocketSetTimeout(this->socket, this->configData->GetConfigDataInt("Node_Communications", "JAUS_UDP_Timeout_Sec"));
 
 				// Setup Loopback
 				multicastSocketSetLoopback(this->socket, LOOPBACK_DISABLED);
@@ -375,15 +378,18 @@ bool JausUdpInterface::openSocket(void)
 				this->portNumber = socket->port;
 			}
 
+			// Setup Timeout
+			multicastSocketSetTimeout(this->socket, this->configData->GetConfigDataInt("Component_Communications", "JAUS_UDP_Timeout_Sec"));
+
+			// Setup TTL
+			multicastSocketSetTTL(this->socket, this->configData->GetConfigDataInt("Component_Communications", "JAUS_UDP_TTL"));
+
 			// Setup Multicast
 			if(this->configData->GetConfigDataBool("Component_Communications", "JAUS_UDP_Multicast"))
 			{
 				this->multicast = true;
 				this->multicastGroup  = inetAddressGetByString((char *)this->configData->GetConfigDataString("Component_Communications", "JAUS_UDP_Multicast_Group").c_str());
 				multicastSocketJoinGroup(this->socket, this->multicastGroup);
-
-				// Setup Timeout
-				multicastSocketSetTimeout(this->socket, this->configData->GetConfigDataInt("Component_Communications", "JAUS_UDP_Timeout_Sec"));
 
 				// Setup Loopback
 				multicastSocketSetLoopback(this->socket, LOOPBACK_DISABLED);
@@ -443,6 +449,7 @@ void JausUdpInterface::recvThreadRun()
 	JausMessage rxMessage;
 	UdpTransportData data;
 	int index = 0;
+	unsigned int bytesRecv = 0;
 
 	packet = datagramPacketCreate();
 	packet->bufferSizeBytes = JAUS_HEADER_SIZE_BYTES + JAUS_MAX_DATA_SIZE_BYTES + JAUS_OPC_UDP_HEADER_SIZE_BYTES;
@@ -451,7 +458,13 @@ void JausUdpInterface::recvThreadRun()
 	while(this->running)
 	{
 		index = 0;
-		if(multicastSocketReceive(this->socket, packet) > 0)
+		bytesRecv = multicastSocketReceive(this->socket, packet);
+		if(this->type == COMPONENT_INTERFACE)
+		{
+			printf("CMPT UDP Bytes Recv: %d\n", bytesRecv);
+		}
+		
+		if(bytesRecv > 0)
 		{
 			if(!strncmp((char *)packet->buffer, JAUS_OPC_UDP_HEADER, JAUS_OPC_UDP_HEADER_SIZE_BYTES)) // equals 1 if same
 			{

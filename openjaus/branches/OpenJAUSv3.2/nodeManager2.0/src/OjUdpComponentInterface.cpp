@@ -96,7 +96,7 @@ void OjUdpComponentInterface::run()
 			switch(packet->buffer[0])
 			{
 				case CHECK_IN:
-				// System.out.println("ComponentInterface: Received Query JAUS address command from: " + JausComponent.getName(componentId));
+					// System.out.println("ComponentInterface: Received Query JAUS address command from: " + JausComponent.getName(componentId));
 					componentId = (packet->buffer[1] & 0xFF);
 					if(componentId < JAUS_MINIMUM_COMPONENT_ID || componentId > JAUS_MAXIMUM_COMPONENT_ID)
 					{
@@ -134,30 +134,29 @@ void OjUdpComponentInterface::run()
 				case CHECK_OUT:
 					nodeManager->checkOutLocalComponent(packet->buffer[4], packet->buffer[3], packet->buffer[2], packet->buffer[1]);
 					break;
-					
 				    
-			//case VERIFY_ADDRESS:
-			//		lookupAddress = jausAddressCreate();
-			//		lookupAddress->instance(packet->buffer[1] & 0xFF);
-			//		lookupAddress->component(packet->buffer[2] & 0xFF);
-			//		lookupAddress->node(packet->buffer[3] & 0xFF);
-			//		lookupAddress->subsystem(packet->buffer[4] & 0xFF);						
+				case VERIFY_ADDRESS:
+					lookupAddress = jausAddressCreate();
+					lookupAddress->instance = (packet->buffer[1] & 0xFF);
+					lookupAddress->component = (packet->buffer[2] & 0xFF);
+					lookupAddress->node = (packet->buffer[3] & 0xFF);
+					lookupAddress->subsystem = (packet->buffer[4] & 0xFF);						
 
-			//		memset(packet->buffer, 0, OJ_UDP_INTERFACE_MESSAGE_SIZE_BYTES);
-			//		packet->buffer[0] = ADDRESS_VERIFIED;
-			//		if(this->systemTree->hasComponent(address))
-			//		{
-			//			packet->buffer[1] = JAUS_TRUE;
-			//		}
-			//		else
-			//		{
-			//			packet->buffer[1] = JAUS_FALSE;
-			//		}
-			//		packet->address = this->ipAddress;
+					memset(packet->buffer, 0, OJ_UDP_INTERFACE_MESSAGE_SIZE_BYTES);
+					packet->buffer[0] = ADDRESS_VERIFIED;
+					if(this->systemTree->hasComponent(address))
+					{
+						packet->buffer[1] = JAUS_TRUE;
+					}
+					else
+					{
+						packet->buffer[1] = JAUS_FALSE;
+					}
+					packet->address = this->ipAddress;
 
-			//		datagramSocketSend(this->socket, packet);
-			//		jausAddressDestroy(lookupAddress);
-			//		break;
+					datagramSocketSend(this->socket, packet);
+					jausAddressDestroy(lookupAddress);
+					break;
 
 			//	case GET_COMPONENT_ADDRESS_LIST:
 			//		componentId  = packet->buffer[1] & 0xFF;
@@ -187,38 +186,38 @@ void OjUdpComponentInterface::run()
 			//		jausAddressDestroy(address);
 			//		break;
 
-				//case LOOKUP_ADDRESS:
-				//	lookupAddress = jausAddressCreate();
-				//	lookupAddress->instance(packet->buffer[1] & 0xFF);
-				//	lookupAddress->component(packet->buffer[2] & 0xFF);
-				//	lookupAddress->node(packet->buffer[3] & 0xFF);
-				//	lookupAddress->subsystem(packet->buffer[4] & 0xFF);						
-				//	//if(log.isDebugEnabled())log.debug("Looking Up Address: " + address);
+				case LOOKUP_ADDRESS:
+					lookupAddress = jausAddressCreate();
+					lookupAddress->instance = (packet->buffer[1] & 0xFF);
+					lookupAddress->component = (packet->buffer[2] & 0xFF);
+					lookupAddress->node = (packet->buffer[3] & 0xFF);
+					lookupAddress->subsystem = (packet->buffer[4] & 0xFF);						
+					//if(log.isDebugEnabled())log.debug("Looking Up Address: " + address);
 
-				//	memset(packet->buffer, 0, OJ_UDP_INTERFACE_MESSAGE_SIZE_BYTES);
-				//	packet->buffer[0] = LOOKUP_ADDRESS_RESPONSE;
-				//	
-				//	address = systemTree->lookUpAddress(lookupAddress);
-				//	if(address && jausAddressIsValid(address))
-				//	{
-				//		packet->buffer[5] = (unsigned char) JAUS_TRUE;
-				//		//if(log.isDebugEnabled())log.debug("Lookup Address Found: " + address);
-				//	}
-				//	else
-				//	{
-				//		packet->buffer[5] = (unsigned char) JAUS_FALSE;					
-				//		//if(log.isDebugEnabled())log.debug("Lookup Address NOT Found: " + address);
-				//	}
-				//	
-				//	packet->buffer[1] = (unsigned char) (address->instance & 0xFF);
-				//	packet->buffer[2] = (unsigned char) (address->component & 0xFF);
-				//	packet->buffer[3] = (unsigned char) (address->node & 0xFF);
-				//	packet->buffer[4] = (unsigned char) (address->subsystem & 0xFF);
-				//	packet->address = this->ipAddress;
-				//	datagramSocketSend(this->socket, packet);
-				//	jausAddressDestroy(address);
-				//	jausAddressDestroy(lookupAddress);
-				//	break;
+					memset(packet->buffer, 0, OJ_UDP_INTERFACE_MESSAGE_SIZE_BYTES);
+					packet->buffer[0] = LOOKUP_ADDRESS_RESPONSE;
+					
+					address = systemTree->lookUpAddress(lookupAddress);
+					if(address && jausAddressIsValid(address))
+					{
+						packet->buffer[5] = (unsigned char) JAUS_TRUE;
+						//if(log.isDebugEnabled())log.debug("Lookup Address Found: " + address);
+					}
+					else
+					{
+						packet->buffer[5] = (unsigned char) JAUS_FALSE;					
+						//if(log.isDebugEnabled())log.debug("Lookup Address NOT Found: " + address);
+					}
+					
+					packet->buffer[1] = (unsigned char) (address->instance & 0xFF);
+					packet->buffer[2] = (unsigned char) (address->component & 0xFF);
+					packet->buffer[3] = (unsigned char) (address->node & 0xFF);
+					packet->buffer[4] = (unsigned char) (address->subsystem & 0xFF);
+					packet->address = this->ipAddress;
+					datagramSocketSend(this->socket, packet);
+					jausAddressDestroy(address);
+					jausAddressDestroy(lookupAddress);
+					break;
 
 				//case InterfaceMessage.NODE_MANAGER_LOOKUP_SERVICE_ADDRESS:
 				//	lookupAddress = jausAddressCreate();
@@ -300,7 +299,8 @@ void OjUdpComponentInterface::run()
 				//	break;
 				    
 				default:
-					ErrorEvent *e = new ErrorEvent(ErrorEvent::Warning, __FUNCTION__, __LINE__, "Unknown Interface Message Received");
+					sprintf(buf, "Unknown Interface Message Received. CC: 0x%02X\n", packet->buffer[0]);
+					ErrorEvent *e = new ErrorEvent(ErrorEvent::Warning, __FUNCTION__, __LINE__, buf);
 					this->eventHandler->handleEvent(e);
 					break;
 			}
