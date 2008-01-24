@@ -9,6 +9,12 @@
 
 #include "vehicle.h"
 
+#if defined (WIN32)
+	#define SLEEP_MS(x) Sleep(x)
+#elif defined(__linux) || defined(linux) || defined(__linux__)
+	#define SLEEP_MS(x) usleep(x*1000)
+#endif
+
 #define K_MINIMUM_THRESHOLD				0.001
 #define SPEED_MINIMUM_THRESHOLD			0.001
 
@@ -36,8 +42,8 @@ void vehicleModelTimeStep( VehicleState state, double dTime)
 {
 	float kAve = state->phiEffort;
 	float dPhi = state->desiredPhiEffort - state->phiEffort;
-	float dMaxPhi = VEHICLE_MAX_PHI_RATE_EFFORT_PER_SEC * dTime;
-	float dDistM = state->speedMps * dTime;
+	double dMaxPhi = VEHICLE_MAX_PHI_RATE_EFFORT_PER_SEC * dTime;
+	double dDistM = state->speedMps * dTime;
 	float dYawRad;
 	
 	if(dPhi > 0)

@@ -1,6 +1,3 @@
-#include <jaus.h>
-#include <nodeManager.h>
-#include <ncurses.h>
 #include <ctype.h>
 #include <errno.h>
 #include <signal.h>
@@ -9,9 +6,24 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include <termios.h>
 #include <time.h>
-#include <unistd.h>
+
+#include <jaus.h>
+#include <nodeManager.h>
+
+#if defined(WIN32)
+	#undef MOUSE_MOVED	// conflict between PDCURSES and WIN32
+	#include <curses.h>
+	#include <windows.h>
+	#define SLEEP_MS(x) Sleep(x)
+	#define CLEAR "cls"
+#elif defined(__linux) || defined(linux) || defined(__linux__)
+	#include <ncurses.h>
+	#include <termios.h>
+	#include <unistd.h>
+	#define CLEAR "clear"
+	#define SLEEP_MS(x) usleep(x*1000)
+#endif
 
 #include "simulator.h"
 #include "pd.h"
@@ -28,10 +40,22 @@
 #endif
 
 #define DEFAULT_STRING_LENGTH 128
-
 #define KEYBOARD_LOCK_TIMEOUT_SEC	60.0
 
 static int mainRunning = FALSE;
+static int verbose = FALSE;
+static int keyboardLock = FALSE;
+static FILE *logFile = NULL;
+static char timeString[DEFAULT_STRING_LENGTH] = "";
+
+// Operating specific console handles
+#if defined(WIN32)
+	static HANDLE handleStdin;
+#elif defined(__linux) || defined(linux) || defined(__linux__)
+	static struct termios newTermio;
+	static struct termios storedTermio;
+#endif
+
 
 // Refresh screen in curses mode
 void updateScreen(int keyboardLock, int keyPress)
@@ -210,40 +234,34 @@ void updateScreen(int keyboardLock, int keyPress)
 	refresh();
 }
 
-int main(int argCount, char **argString)
+void parseUserInput(char input)
+{
+	switch(input)
+	{
+		case 12: // 12 == 'ctrl + L'
+			keyboardLock = !keyboardLock;
+			break;
+		
+		case 27: // 27 
+			if(!keyboardLock)
+			{
+				mainRunning = FALSE;
+			}
+			break;
+		
+		default:
+			break;
+	}
+	return;
+}
+
+void parseCommandLine(int argCount, char **argString)
 {
 	int i = 0;
-	int choice=0;
-	int verbose = FALSE;
-	int keyboardLock = FALSE;
 	int debugLevel = 0;
-	double keyboardLockTime = getTimeSeconds() + KEYBOARD_LOCK_TIMEOUT_SEC;
-	struct termios newTermio;
-	struct termios storedTermio;
-	FILE *logFile = NULL;
 	char logFileStr[DEFAULT_STRING_LENGTH] = "";
-	char timeString[DEFAULT_STRING_LENGTH] = "";
 	char debugLogicString[DEFAULT_STRING_LENGTH] = "";
-	time_t timeStamp;
 	
-	//Get and Format Time String
-	time(&timeStamp);
-	strftime(timeString, DEFAULT_STRING_LENGTH-1, "%m-%d-%Y %X", localtime(&timeStamp));
-
-	system("clear");
-
-	printf("main: CIMAR Core Executable: %s\n", timeString);
-
-//	// Make directory and set permisions on CIMAR Directory to fully read, write, execute
-//	if(mkdir("/var/log/CIMAR/", 0777) < 0) 
-//	{
-//		if(errno != EEXIST)
-//		{
-//			perror("main: Error");
-//			return -1;
-//		}
-//	}
-
 	for(i=1; i<argCount; i++)
 	{
 		if(argString[i][0] == '-')
@@ -333,6 +351,143 @@ int main(int argCount, char **argString)
 			}
 		}
 	}
+}
+
+void setupTerminal()
+{
+	if(verbose)
+	{
+#if defined(__linux) || defined(linux) || defined(__linux__)
+		tcgetattr(0,&storedTermio);
+		memcpy(&newTermio,&storedTermio,sizeof(struct termios));
+		
+		// Disable canonical mode, and set buffer size to 0 byte(s)
+		newTermio.c_lflag &= (~ICANON);
+		newTermio.c_lflag &= (~ECHO);
+		newTermio.c_cc[VTIME] = 0;
+		newTermio.c_cc[VMIN] = 0;
+		tcsetattr(0,TCSANOW,&newTermio);
+#elif defined(WIN32)
+		// Setup the console window's input handle
+		handleStdin = GetStdHandle(STD_INPUT_HANDLE); 
+#endif
+	}
+	else
+	{	
+		// Start up Curses window
+		initscr();
+		cbreak();
+		noecho();
+		nodelay(stdscr, 1);	// Don't wait at the getch() function if the user hasn't hit a key
+		keypad(stdscr, 1); // Allow Function key input and arrow key input
+	}
+}
+
+void cleanupConsole()
+{
+	if(verbose)
+	{
+#if defined(__linux) || defined(linux) || defined(__linux__)
+		tcsetattr(0,TCSANOW,&storedTermio);
+#endif
+	}
+	else
+	{
+		// Stop Curses
+		clear();
+		endwin();
+	}
+}
+
+char getUserInput()
+{
+	char retVal = FALSE;
+	int choice;
+	int i = 0;
+
+	if(verbose)
+	{
+	#if defined(WIN32)
+    INPUT_RECORD inputEvents[128];
+	DWORD eventCount;
+
+		// See how many events are waiting for us, this prevents blocking if none
+		GetNumberOfConsoleInputEvents(handleStdin, &eventCount);
+		
+		if(eventCount > 0)
+		{
+			// Check for user input here
+			ReadConsoleInput( 
+					handleStdin,		// input buffer handle 
+					inputEvents,		// buffer to read into 
+					128,				// size of read buffer 
+					&eventCount);		// number of records read 
+		}
+ 
+	    // Parse console input events 
+        for (i = 0; i < (int) eventCount; i++) 
+        {
+            switch(inputEvents[i].EventType) 
+            { 
+				case KEY_EVENT: // keyboard input 
+					parseUserInput(inputEvents[i].Event.KeyEvent.uChar.AsciiChar);
+					retVal = TRUE;
+					break;
+				
+				default:
+					break;
+			}
+		}
+	#elif defined(__linux) || defined(linux) || defined(__linux__)
+		choice = getc(stdin);
+		if(choice > -1)
+		{
+			parseUserInput(choice);
+			retVal = TRUE;
+		}
+	#endif
+	}
+	else
+	{
+		choice = getch(); // Get the key that the user has selected
+		updateScreen(keyboardLock, choice);
+		if(choice > -1)
+		{
+			parseUserInput(choice);
+			retVal = TRUE;
+		}
+	}
+
+	return retVal;
+}
+
+
+int main(int argCount, char **argString)
+{
+	int i = 0;
+	char keyPressed = FALSE;
+	int keyboardLock = FALSE;
+	double keyboardLockTime = getTimeSeconds() + KEYBOARD_LOCK_TIMEOUT_SEC;
+	time_t timeStamp;
+	
+	//Get and Format Time String
+	time(&timeStamp);
+	strftime(timeString, DEFAULT_STRING_LENGTH-1, "%m-%d-%Y %X", localtime(&timeStamp));
+
+	system(CLEAR);
+
+	printf("main: CIMAR Core Executable: %s\n", timeString);
+
+//	// Make directory and set permisions on CIMAR Directory to fully read, write, execute
+//	if(mkdir("/var/log/CIMAR/", 0777) < 0) 
+//	{
+//		if(errno != EEXIST)
+//		{
+//			perror("main: Error");
+//			return -1;
+//		}
+//	}
+
 
 //	if(logFile == NULL)
 //	{
@@ -354,92 +509,48 @@ int main(int argCount, char **argString)
 	//cDebug(1, "main: Starting Up %s Node Software\n", simulatorGetName());
 	if(simulatorStartup())
 	{
-		////cError("main: %s Node Startup failed\n", simulatorGetName());
+		printf("main: %s Node Startup failed\n", simulatorGetName());
 		//cDebug(1, "main: Exiting %s Node Software\n", simulatorGetName());
+#if defined(WIN32)
+		system("pause");
+#elif
+		printf("Press ENTER to exit\n");
+		getch();
+#endif
 		return 0;
 	}
 
-	if(verbose)
-	{
-		tcgetattr(0,&storedTermio);
-		memcpy(&newTermio,&storedTermio,sizeof(struct termios));
-		
-		// Disable canonical mode, and set buffer size to 0 byte(s)
-		newTermio.c_lflag &= (~ICANON);
-		newTermio.c_lflag &= (~ECHO);
-		newTermio.c_cc[VTIME] = 0;
-		newTermio.c_cc[VMIN] = 0;
-		tcsetattr(0,TCSANOW,&newTermio);
-	}
-	else
-	{	
-		// Start up Curses window
-		initscr();
-		cbreak();
-		noecho();
-		nodelay(stdscr, 1);	// Don't wait at the getch() function if the user hasn't hit a key
-		keypad(stdscr, 1); // Allow Function key input and arrow key input
-	}
-	
+	setupTerminal();
+
 	mainRunning = TRUE;
 	
 	while(mainRunning)
 	{
-		if(verbose)
-		{
-			choice = getc(stdin);
-		}
-		else // Not in verbose mode
-		{
-			choice = getch(); // Get the key that the user has selected
-			updateScreen(keyboardLock, choice);		
-		}
+		keyPressed = getUserInput();
 
-		if(choice > -1)
+		if(keyPressed)
 		{
-			keyboardLockTime = getTimeSeconds() + KEYBOARD_LOCK_TIMEOUT_SEC;
-			if(choice == 12) // 12 == 'ctrl + L'
-			{
-				keyboardLock = !keyboardLock;
-			}
+			keyboardLockTime = getTimeSeconds() + KEYBOARD_LOCK_TIMEOUT_SEC;		
 		}
-		else
+		else if(getTimeSeconds() > keyboardLockTime)
 		{
-			if(getTimeSeconds() > keyboardLockTime)
-			{
 				keyboardLock = TRUE;
-			}
 		}
-		
-		
-		if(!keyboardLock)
-		{
-			switch(choice)
-			{
-				// USER: Add key press event options here
 
-				case 27: // Escape Key Pressed
-					mainRunning = FALSE;
-					break;
-					
-				default:
-					break;
-			}
-		}
-				
-		usleep(100000);
+		//if(verbose)
+		//{
+		//	choice = getc(stdin);
+		//}
+		//else // Not in verbose mode
+		//{
+		//	choice = getch(); // Get the key that the user has selected
+		//	updateScreen(keyboardLock, choice);		
+		//}
+						
+		SLEEP_MS(1000);
 	}
-	
-	if(verbose)
-	{
-		tcsetattr(0,TCSANOW,&storedTermio);
-	}
-	else
-	{
-		// Stop Curses
-		clear();
-		endwin();
-	}
+
+	cleanupConsole();
 	
 	//cDebug(1, "main: Shutting Down %s Node Software\n", simulatorGetName());
 	simulatorShutdown();

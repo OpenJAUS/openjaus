@@ -42,6 +42,7 @@
 // Description: This file defines the functions of a PointUtm object
 
 #include <malloc.h>
+#include <string.h>
 #include "utm/utmLib.h"
 
 PointUtm pointUtmCreate(void)

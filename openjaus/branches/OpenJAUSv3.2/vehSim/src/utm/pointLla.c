@@ -41,6 +41,7 @@
 //
 // Description: This file defines the functions of a PointLla Object
 
+#include <string.h>
 #include <malloc.h>
 #include "utm/utmLib.h"
 

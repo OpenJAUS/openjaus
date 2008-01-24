@@ -1,4 +1,4 @@
-
+#include <stdio.h>
 //#include "properties.h"
 #include "pd.h"
 #include "simulator.h"
@@ -6,6 +6,12 @@
 #include "gpos.h"
 #include "vss.h"
 #include "wd.h"
+
+#if defined (WIN32)
+	#define SLEEP_MS(x) Sleep(x)
+#elif defined(__linux) || defined(linux) || defined(__linux__)
+	#define SLEEP_MS(x) usleep(x*1000)
+#endif
 
 int simulatorStartup(void)
 {

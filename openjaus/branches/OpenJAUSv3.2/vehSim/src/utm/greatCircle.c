@@ -43,6 +43,10 @@
 // a converstion method from Latitude and Longitude to Meters based on the approximation that the circumference 
 // of the earth is a great circle.
 
+#if defined(WIN32)
+	#define _USE_MATH_DEFINES
+#endif
+
 #include <math.h>
 #include "utm/utmLib.h"
 

@@ -9,14 +9,22 @@
 #include "nodeManager.h"	// Node managment functions for sending and receiving JAUS messages (USER: Node Manager must be installed)
 #include <pthread.h>			// Multi-threading functions (standard to unix)
 #include <stdlib.h>	
-#include <unistd.h>				// Unix standard functions
 #include <string.h>
 #include "properties.h"
+
 // USER: Add include files here as appropriate
 
 #include "gpos.h"	// USER: Implement and rename this header file. Include prototypes for all public functions contained in this file.
 #include "vehicleSim.h"
 #include "utm/pointLla.h"
+
+#if defined (WIN32)
+	#define SLEEP_MS(x) Sleep(x)
+	#define _USE_MATH_DEFINES
+	#include <math.h>
+#elif defined(__linux) || defined(linux) || defined(__linux__)
+	#define SLEEP_MS(x) usleep(x*1000)
+#endif
 
 // Private function prototypes
 void *gposThread(void *);
@@ -37,7 +45,7 @@ static JausSubsystem gposSubsystem;
 static int gposRun = FALSE;
 static double gposThreadHz = 0;									// Stores the calculated update rate for main state thread
 static int gposThreadRunning = FALSE;
-static pthread_t gposThreadId = 0;							// pthread component thread identifier
+static pthread_t gposThreadId;							// pthread component thread identifier
 
 static Properties gposProperties;
 static NodeManagerInterface gposNmi;	// A data structure containing the Node Manager Interface for this component
@@ -126,14 +134,14 @@ int gposShutdown(void)
 {
 	double timeOutSec;
 
-	if(gpos->state != JAUS_SHUTDOWN_STATE)	// Execute the shutdown routines only if the component is running
+	if(gpos && gpos->state != JAUS_SHUTDOWN_STATE)	// Execute the shutdown routines only if the component is running
 	{
 		gposRun = FALSE;
 
 		timeOutSec = getTimeSeconds() + GPOS_THREAD_TIMEOUT_SEC;
 		while(gposThreadRunning)
 		{
-			usleep(100000);
+			SLEEP_MS(1000);
 			if(getTimeSeconds() >= timeOutSec)
 			{
 				pthread_cancel(gposThreadId);
@@ -220,7 +228,7 @@ void *gposThread(void *threadData)
 		{
 			if(nodeManagerReceive(gposNmi, &rxMessage))
 			{
-				////cDebug(4, "GPOS: Got message: %s from %d.%d.%d.%d\n", jausMessageCommandCodeString(rxMessage), rxMessage->source->subsystem, rxMessage->source->node, rxMessage->source->component, rxMessage->source->instance);
+				//cDebug(4, "GPOS: Got message: %s from %d.%d.%d.%d\n", jausMessageCommandCodeString(rxMessage), rxMessage->source->subsystem, rxMessage->source->node, rxMessage->source->component, rxMessage->source->instance);
 				gposProcessMessage(rxMessage);
 			}
 			else 
@@ -231,7 +239,8 @@ void *gposThread(void *threadData)
 				}
 				else
 				{
-					nanosleep(&sleepTime, NULL);
+					//nanosleep(&sleepTime, NULL);
+					SLEEP_MS(1);
 				}
 			}
 		}while(getTimeSeconds() < nextExcecuteTime);
@@ -279,7 +288,7 @@ void *gposThread(void *threadData)
 	
 	gposShutdownState();
 	
-	usleep(50000);	// Sleep for 50 milliseconds and then exit
+	SLEEP_MS(50);	// Sleep for 50 milliseconds and then exit
 
 	gposThreadRunning = FALSE;
 	
