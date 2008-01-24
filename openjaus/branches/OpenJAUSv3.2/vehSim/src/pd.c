@@ -18,8 +18,10 @@
 
 #if defined (WIN32)
 	#define SLEEP_MS(x) Sleep(x)
+	#define CONFIG_DIRECTORY ".\\config\\"
 #elif defined(__linux) || defined(linux) || defined(__linux__)
 	#define SLEEP_MS(x) usleep(x*1000)
+	#define CONFIG_DIRECTORY "./config/"
 #endif
 
 #define CONTROLLER_STATUS_SC_TIMEOUT_SECONDS 	1.5
@@ -69,7 +71,8 @@ int pdStartup(void)
 {
 	FILE * propertyFile;
 	pthread_attr_t attr;	// Thread attributed for the component threads spawned in this function
-	
+	char fileName[128] = {0};
+
 	if(!pd)
 	{
 		pd = jausComponentCreate();
@@ -80,7 +83,8 @@ int pdStartup(void)
 
 	if(pd->state == JAUS_SHUTDOWN_STATE)	// Execute the startup routines only if the component is not running
 	{
-		propertyFile = fopen("./config/pd.conf", "r");
+		sprintf(fileName, "%spd.conf", CONFIG_DIRECTORY);
+		propertyFile = fopen(fileName, "r");
 		if(propertyFile)
 		{
 			pdProperties = propertiesCreate();
