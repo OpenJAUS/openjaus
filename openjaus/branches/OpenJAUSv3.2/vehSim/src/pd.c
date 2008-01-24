@@ -255,7 +255,7 @@ void *pdThread(void *threadData)
 				else
 				{
 					//nanosleep(&sleepTime, NULL);
-					SLEEP_MS(1);
+					SLEEP_MS(.1);
 				}
 			}
 		}while(getTimeSeconds() < nextExcecuteTime);
