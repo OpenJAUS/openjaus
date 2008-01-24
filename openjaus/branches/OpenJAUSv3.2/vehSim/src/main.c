@@ -513,7 +513,7 @@ int main(int argCount, char **argString)
 		//cDebug(1, "main: Exiting %s Node Software\n", simulatorGetName());
 #if defined(WIN32)
 		system("pause");
-#elif
+#else
 		printf("Press ENTER to exit\n");
 		getch();
 #endif

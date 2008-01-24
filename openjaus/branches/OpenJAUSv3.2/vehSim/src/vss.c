@@ -293,7 +293,7 @@ void *vssThread(void *threadData)
 	vssShutdownState();
 	
 	//usleep(50000);	// Sleep for 50 milliseconds and then exit
-	Sleep(50);
+	SLEEP_MS(50);
 
 	vssThreadRunning = FALSE;
 	

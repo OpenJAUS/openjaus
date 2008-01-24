@@ -55,6 +55,9 @@
 
 #include "nodeManager.h"
 
+#define JAUS_OPC_UDP_HEADER				"JAUS01.0"
+#define JAUS_OPC_UDP_HEADER_SIZE_BYTES	8 
+
 #define NODE_MANAGER_INTERFACE_PORT 24627
 #define NODE_MANAGER_MESSAGE_PORT 24629
 #define NODE_MANAGER_TIMEOUT_SEC 3.0
@@ -396,7 +399,8 @@ void *heartbeatThread(void *threadArgument)
 void *receiveThread(void *threadArgument)
 {
 	int bufferSizeBytes = JAUS_HEADER_SIZE_BYTES + JAUS_MAX_DATA_SIZE_BYTES;
-
+	int index;
+	
 	NodeManagerInterface nmi = (NodeManagerInterface)threadArgument;
 	DatagramPacket packet;
 
@@ -416,8 +420,16 @@ void *receiveThread(void *threadArgument)
 	{
 		if(datagramSocketReceive(nmi->messageSocket, packet) > 0)
 		{	
-			message = jausMessageCreate();		
-			if(jausMessageFromBuffer(message, packet->buffer, bufferSizeBytes))
+			printf("Here A\n");
+			index = 0;
+			if(!strncmp((char *)packet->buffer, JAUS_OPC_UDP_HEADER, JAUS_OPC_UDP_HEADER_SIZE_BYTES)) // equals 1 if same
+			{
+				printf("Here B\n");
+				index += JAUS_OPC_UDP_HEADER_SIZE_BYTES;
+			}
+
+			message = jausMessageCreate();
+			if(jausMessageFromBuffer(message, packet->buffer + index, packet->bufferSizeBytes - index))
 			{
 				if(message->dataFlag)
 				{
