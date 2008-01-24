@@ -41,8 +41,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
-#include <sys/time.h>
+
+#if defined (WIN32)
+	#define WIN32_LEAN_AND_MEAN
+	#include <winsock2.h>
+	#include <windows.h>
+	#define SLEEP_MS(x) Sleep(x)
+#elif defined(__linux) || defined(linux) || defined(__linux__)
+	#include <unistd.h>
+	#include <sys/time.h>
+	#define SLEEP_MS(x) usleep(x*1000)
+#endif
+
 #include "nodeManager.h"
 
 #define NODE_MANAGER_INTERFACE_PORT 24627
@@ -184,7 +194,6 @@ NodeManagerInterface nodeManagerOpen(JausComponent cmpt)
 		return NULL;
 	}
 
-	nmi->heartbeatThreadId = 0;
 	if(pthread_create(&nmi->heartbeatThreadId, &threadAttributes, heartbeatThread, (void *)nmi))
 	{
 		lmHandlerDestroy(nmi->lmh);
@@ -198,7 +207,6 @@ NodeManagerInterface nodeManagerOpen(JausComponent cmpt)
 		return NULL;
 	}
 
-	nmi->receiveThreadId = 0;
 	if(pthread_create(&nmi->receiveThreadId, &threadAttributes, receiveThread, (void *)nmi))
 	{
 		pthread_cancel(nmi->heartbeatThreadId);
@@ -241,7 +249,7 @@ int nodeManagerClose(NodeManagerInterface nmi)
 		timeOutSec = getTimeSeconds() + INTERFACE_THREAD_TIMEOUT_SEC;
 		while(nmi->heartbeatThreadRunning)
 		{
-			usleep(10000);
+			SLEEP_MS(10);
 			if(getTimeSeconds() >= timeOutSec)
 			{
 				pthread_cancel(nmi->heartbeatThreadId);
@@ -254,7 +262,7 @@ int nodeManagerClose(NodeManagerInterface nmi)
 		timeOutSec = getTimeSeconds() + INTERFACE_THREAD_TIMEOUT_SEC;
 		while(nmi->receiveThreadRunning)
 		{
-			usleep(10000);
+			SLEEP_MS(10);
 			if(getTimeSeconds() >= timeOutSec)
 			{
 				pthread_cancel(nmi->receiveThreadId);
@@ -374,7 +382,7 @@ void *heartbeatThread(void *threadArgument)
 			//nmi->cmpt->state = JAUS_FAILURE_STATE;
 			//break;
 		}
-		sleep(1); // sleep one second
+		SLEEP_MS(1000); // sleep one second
 	}
 
 	jausMessageDestroy(txMessage);	
@@ -581,7 +589,7 @@ JausAddressList *nodeManagerLookupServiceAddressList(NodeManagerInterface nmi, J
 
 	if(!nmi || !nmi->isOpen || !commandCode)
 	{
-		return JAUS_FALSE;
+		return NULL;
 	}
 
 	packet = datagramPacketCreate();

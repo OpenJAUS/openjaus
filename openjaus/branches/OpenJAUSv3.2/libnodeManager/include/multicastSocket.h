@@ -46,6 +46,7 @@
 #define MULTICAST_SOCKET_H
 
 #ifdef WIN32
+	#define JAUS_EXPORT	__declspec(dllexport)
 	#include <winsock2.h>
 	#include <ws2tcpip.h>
     #ifndef socklen_t
@@ -54,6 +55,7 @@
 	#define CLOSE_SOCKET closesocket
 	typedef unsigned int size_t;
 #elif defined(__linux) || defined(linux) || defined(__linux__)
+	#define JAUS_EXPORT
 	#include <unistd.h>
 	#include <sys/socket.h>
 	#include <netdb.h>
@@ -89,16 +91,15 @@ typedef struct
 
 typedef MulticastSocketStruct *MulticastSocket;
 
-MulticastSocket multicastSocketCreate(short, InetAddress ipAdress);
-void multicastSocketDestroy(MulticastSocket);
+JAUS_EXPORT MulticastSocket multicastSocketCreate(short, InetAddress ipAdress);
+JAUS_EXPORT void multicastSocketDestroy(MulticastSocket);
 //int multicastSocketSetNetIf(MulticastSocket, NetworkInterface);
-int multicastSocketJoinGroup(MulticastSocket, InetAddress);
-int multicastSocketSend(MulticastSocket, DatagramPacket);
-int multicastSocketReceive(MulticastSocket multicastSocket, DatagramPacket packet);
-int multicastSocketSetTTL(MulticastSocket multicastSocket, unsigned int ttl);
-int multicastSocketSetLoopback(MulticastSocket multicastSocket, unsigned int loop);
-void multicastSocketSetTimeout(MulticastSocket multicastSocket, double timeoutSec);
-
+JAUS_EXPORT int multicastSocketJoinGroup(MulticastSocket, InetAddress);
+JAUS_EXPORT int multicastSocketSend(MulticastSocket, DatagramPacket);
+JAUS_EXPORT int multicastSocketReceive(MulticastSocket multicastSocket, DatagramPacket packet);
+JAUS_EXPORT int multicastSocketSetTTL(MulticastSocket multicastSocket, unsigned int ttl);
+JAUS_EXPORT int multicastSocketSetLoopback(MulticastSocket multicastSocket, unsigned int loop);
+JAUS_EXPORT void multicastSocketSetTimeout(MulticastSocket multicastSocket, double timeoutSec);
 
 #ifdef __cplusplus
 }

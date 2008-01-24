@@ -42,6 +42,12 @@
 #include <pthread.h>
 #include <string.h>
 
+#ifdef WIN32
+	#define JAUS_EXPORT	__declspec(dllexport)
+#else
+	#define JAUS_EXPORT
+#endif
+
 #ifdef __cplusplus
 extern "C" 
 {
@@ -152,60 +158,60 @@ typedef struct
 
 typedef NodeManagerInterfaceStruct *NodeManagerInterface;
 
-NodeManagerInterface nodeManagerOpen(JausComponent);
-int nodeManagerClose(NodeManagerInterface);
-int nodeManagerReceive(NodeManagerInterface, JausMessage *);
-int nodeManagerSend(NodeManagerInterface, JausMessage);
-int nodeManagerSendSingleMessage(NodeManagerInterface, JausMessage);
-JausAddressList *nodeManagerGetComponentAddressList(NodeManagerInterface, unsigned char);
-void nodeManagerDestroyAddressList(JausAddressList *);
-int nodeManagerVerifyAddress(NodeManagerInterface, JausAddress);
-JausBoolean nodeManagerLookupAddress(NodeManagerInterface, JausAddress);
-void nodeManagerSendCoreServiceConnections(NodeManagerInterface);
-JausBoolean nodeManagerLookupServiceAddress(NodeManagerInterface, JausAddress, unsigned short, int);
-JausAddressList* nodeManagerLookupServiceAddressList(NodeManagerInterface, JausAddress, unsigned short, int);
+JAUS_EXPORT NodeManagerInterface nodeManagerOpen(JausComponent);
+JAUS_EXPORT int nodeManagerClose(NodeManagerInterface);
+JAUS_EXPORT int nodeManagerReceive(NodeManagerInterface, JausMessage *);
+JAUS_EXPORT int nodeManagerSend(NodeManagerInterface, JausMessage);
+JAUS_EXPORT int nodeManagerSendSingleMessage(NodeManagerInterface, JausMessage);
+JAUS_EXPORT JausAddressList *nodeManagerGetComponentAddressList(NodeManagerInterface, unsigned char);
+JAUS_EXPORT void nodeManagerDestroyAddressList(JausAddressList *);
+JAUS_EXPORT int nodeManagerVerifyAddress(NodeManagerInterface, JausAddress);
+JAUS_EXPORT JausBoolean nodeManagerLookupAddress(NodeManagerInterface, JausAddress);
+JAUS_EXPORT void nodeManagerSendCoreServiceConnections(NodeManagerInterface);
+JAUS_EXPORT JausBoolean nodeManagerLookupServiceAddress(NodeManagerInterface, JausAddress, unsigned short, int);
+JAUS_EXPORT JausAddressList* nodeManagerLookupServiceAddressList(NodeManagerInterface, JausAddress, unsigned short, int);
 
-ServiceConnection serviceConnectionCreate(void);
-void serviceConnectionDestroy(ServiceConnection sc);
+JAUS_EXPORT ServiceConnection serviceConnectionCreate(void);
+JAUS_EXPORT void serviceConnectionDestroy(ServiceConnection sc);
 
-ServiceConnectionManager scManagerCreate(void);
-void scManagerDestroy(ServiceConnectionManager);
+JAUS_EXPORT ServiceConnectionManager scManagerCreate(void);
+JAUS_EXPORT void scManagerDestroy(ServiceConnectionManager);
 
-void scManagerProcessConfirmScMessage(NodeManagerInterface, ConfirmServiceConnectionMessage);
-void scManagerProcessCreateScMessage(NodeManagerInterface, CreateServiceConnectionMessage);
-void scManagerProcessActivateScMessage(NodeManagerInterface, ActivateServiceConnectionMessage);
-void scManagerProcessSuspendScMessage(NodeManagerInterface, SuspendServiceConnectionMessage);
-void scManagerProcessTerminateScMessage(NodeManagerInterface, TerminateServiceConnectionMessage);
-void scManagerProcessUpdatedSubystem(NodeManagerInterface, JausSubsystem);
-void scManagerProccessCreateEvent(NodeManagerInterface, CreateEventMessage);
-void scManagerProcessConfirmEvent(NodeManagerInterface, ConfirmEventMessage);
-void scManagerProcessCancelEvent(NodeManagerInterface, CancelEventMessage);
-JausBoolean scManagerCreatePeriodicEvent(NodeManagerInterface, ServiceConnection);
-JausBoolean scManagerCancelPeriodicEvent(NodeManagerInterface, ServiceConnection);
+JAUS_EXPORT void scManagerProcessConfirmScMessage(NodeManagerInterface, ConfirmServiceConnectionMessage);
+JAUS_EXPORT void scManagerProcessCreateScMessage(NodeManagerInterface, CreateServiceConnectionMessage);
+JAUS_EXPORT void scManagerProcessActivateScMessage(NodeManagerInterface, ActivateServiceConnectionMessage);
+JAUS_EXPORT void scManagerProcessSuspendScMessage(NodeManagerInterface, SuspendServiceConnectionMessage);
+JAUS_EXPORT void scManagerProcessTerminateScMessage(NodeManagerInterface, TerminateServiceConnectionMessage);
+JAUS_EXPORT void scManagerProcessUpdatedSubystem(NodeManagerInterface, JausSubsystem);
+JAUS_EXPORT void scManagerProccessCreateEvent(NodeManagerInterface, CreateEventMessage);
+JAUS_EXPORT void scManagerProcessConfirmEvent(NodeManagerInterface, ConfirmEventMessage);
+JAUS_EXPORT void scManagerProcessCancelEvent(NodeManagerInterface, CancelEventMessage);
+JAUS_EXPORT JausBoolean scManagerCreatePeriodicEvent(NodeManagerInterface, ServiceConnection);
+JAUS_EXPORT JausBoolean scManagerCancelPeriodicEvent(NodeManagerInterface, ServiceConnection);
 
-void scManagerAddSupportedMessage(NodeManagerInterface, unsigned short);
-void scManagerRemoveSupportedMessage(NodeManagerInterface, unsigned short);
-JausBoolean scManagerQueryActiveMessage(NodeManagerInterface, unsigned short);
+JAUS_EXPORT void scManagerAddSupportedMessage(NodeManagerInterface, unsigned short);
+JAUS_EXPORT void scManagerRemoveSupportedMessage(NodeManagerInterface, unsigned short);
+JAUS_EXPORT JausBoolean scManagerQueryActiveMessage(NodeManagerInterface, unsigned short);
 
-ServiceConnection scManagerGetSendList(NodeManagerInterface, unsigned short);
-void scManagerDestroySendList(ServiceConnection);
+JAUS_EXPORT ServiceConnection scManagerGetSendList(NodeManagerInterface, unsigned short);
+JAUS_EXPORT void scManagerDestroySendList(ServiceConnection);
 
-JausBoolean scManagerCreateServiceConnection(NodeManagerInterface nmi, ServiceConnection sc);
-JausBoolean scManagerTerminateServiceConnection(NodeManagerInterface, ServiceConnection);
-JausBoolean scManagerReceiveServiceConnection(NodeManagerInterface nmi, ServiceConnection requestSc, JausMessage *message);
-void scManagerReceiveMessage(NodeManagerInterface, JausMessage);
+JAUS_EXPORT JausBoolean scManagerCreateServiceConnection(NodeManagerInterface nmi, ServiceConnection sc);
+JAUS_EXPORT JausBoolean scManagerTerminateServiceConnection(NodeManagerInterface, ServiceConnection);
+JAUS_EXPORT JausBoolean scManagerReceiveServiceConnection(NodeManagerInterface nmi, ServiceConnection requestSc, JausMessage *message);
+JAUS_EXPORT void scManagerReceiveMessage(NodeManagerInterface, JausMessage);
 
-void defaultJausMessageProcessor(JausMessage, NodeManagerInterface, JausComponent);
+JAUS_EXPORT void defaultJausMessageProcessor(JausMessage, NodeManagerInterface, JausComponent);
 
-LargeMessageHandler lmHandlerCreate(void);
-void lmHandlerDestroy(LargeMessageHandler);
-LargeMessageList lmListCreate(void);
-void lmListDestroy(LargeMessageList);
-void lmHandlerReceiveLargeMessage(NodeManagerInterface, JausMessage);
-int lmHandlerMessageListEqual(LargeMessageList, LargeMessageList);
-LargeMessageList lmHandlerGetMessageList(LargeMessageHandler, JausMessage);
-int lmHandlerLargeMessageCheck(JausMessage, JausMessage);
-int lmHandlerSendLargeMessage(NodeManagerInterface, JausMessage);
+JAUS_EXPORT LargeMessageHandler lmHandlerCreate(void);
+JAUS_EXPORT void lmHandlerDestroy(LargeMessageHandler);
+JAUS_EXPORT LargeMessageList lmListCreate(void);
+JAUS_EXPORT void lmListDestroy(LargeMessageList);
+JAUS_EXPORT void lmHandlerReceiveLargeMessage(NodeManagerInterface, JausMessage);
+JAUS_EXPORT int lmHandlerMessageListEqual(LargeMessageList, LargeMessageList);
+JAUS_EXPORT LargeMessageList lmHandlerGetMessageList(LargeMessageHandler, JausMessage);
+JAUS_EXPORT int lmHandlerLargeMessageCheck(JausMessage, JausMessage);
+JAUS_EXPORT int lmHandlerSendLargeMessage(NodeManagerInterface, JausMessage);
 
 #ifdef __cplusplus
 }
