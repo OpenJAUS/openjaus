@@ -110,7 +110,6 @@ void LocalComponent::run()
 			default:
 				// Some other error occured
 				// TODO: Log error.
-				usleep(100);				
 				gettimeofday(&now, NULL);
 
 				// prepare new timeout value.
