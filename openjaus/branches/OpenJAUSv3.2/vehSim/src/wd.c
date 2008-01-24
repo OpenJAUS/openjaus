@@ -48,12 +48,20 @@
 #include <nodeManager.h>	// Node managment functions for sending and receiving JAUS messages (USER: Node Manager must be installed)
 #include <pthread.h>			// Multi-threading functions (standard to unix)
 #include <stdlib.h>	
-#include <unistd.h>				// Unix standard functions
+//#include <unistd.h>				// Unix standard functions
 #include <string.h>
 // USER: Add include files here as appropriate
 
 #include "wd.h"
 #include "vehicle.h"
+
+#if defined (WIN32)
+	#define SLEEP_MS(x) Sleep(x)
+	#define _USE_MATH_DEFINES
+	#include <math.h>
+#elif defined(__linux) || defined(linux) || defined(__linux__)
+	#define SLEEP_MS(x) usleep(x*1000)
+#endif
 
 // GPOS Service Connection Defines
 #define GPOS_SC_TIMEOUT_SECONDS 		1.0		// The timeout between receiving service connection messages
@@ -129,7 +137,7 @@ static JausSubsystem wdSubsystem;
 static int wdRun = FALSE;
 static double wdThreadHz = 0;									// Stores the calculated update rate for main state thread
 static int wdThreadRunning = FALSE;
-static pthread_t wdThreadId = 0;							// pthread component thread identifier
+static pthread_t wdThreadId;							// pthread component thread identifier
 
 static Properties wdProperties;
 static NodeManagerInterface wdNmi;	// A data structure containing the Node Manager Interface for this component
@@ -241,14 +249,14 @@ int wdShutdown(void)
 {
 	double timeOutSec;
 
-	if(wd->state != JAUS_SHUTDOWN_STATE)	// Execute the shutdown routines only if the component is running
+	if(wd && wd->state != JAUS_SHUTDOWN_STATE)	// Execute the shutdown routines only if the component is running
 	{
 		wdRun = FALSE;
 
 		timeOutSec = getTimeSeconds() + WD_THREAD_TIMEOUT_SEC;
 		while(wdThreadRunning)
 		{
-			usleep(100000);
+			SLEEP_MS(1000);
 			if(getTimeSeconds() >= timeOutSec)
 			{
 				pthread_cancel(wdThreadId);
@@ -464,7 +472,8 @@ void *wdThread(void *threadData)
 				}
 				else
 				{
-					nanosleep(&sleepTime, NULL);
+					//nanosleep(&sleepTime, NULL);
+					SLEEP_MS(1);
 				}
 			}
 		}while(getTimeSeconds() < nextExcecuteTime);
@@ -512,7 +521,8 @@ void *wdThread(void *threadData)
 	
 	wdShutdownState();
 	
-	usleep(50000);	// Sleep for 50 milliseconds and then exit
+	//usleep(50000);	// Sleep for 50 milliseconds and then exit
+	SLEEP_MS(50);
 
 	wdThreadRunning = FALSE;
 	
@@ -985,7 +995,7 @@ void wdReadyState(void)
 		return;
 	}	
 	
-	vehicleState->speedMps = wdReportVss? wdReportVss->velocityXMps : 0;
+	vehicleState->speedMps = wdReportVss? (float) wdReportVss->velocityXMps : (float) 0.0;
 
 	if(currentWaypointIndex < wdWaypoints->elementCount)
 	{
@@ -998,8 +1008,8 @@ void wdReadyState(void)
 		headingDelta = wdAngleSubtract(waypointHeading, wdReportGpos->yawRadians);
 		
 		//cLog("HeadingDelta: %7.2f\n", headingDelta);
-		vehicleState->desiredPhiEffort = WHEEL_ROTATION_EFFORT_PER_RAD * headingDelta;
-		vehicleState->desiredSpeedMps = wdSpeed? wdSpeed->speedMps : 0.0;
+		vehicleState->desiredPhiEffort = (float) (WHEEL_ROTATION_EFFORT_PER_RAD * headingDelta);
+		vehicleState->desiredSpeedMps = wdSpeed? (float) wdSpeed->speedMps : (float) 0.0;
 		//cLog("vehicleState->desiredPhiEffort: %7.2f\n", vehicleState->desiredPhiEffort);		
 	}
 	else

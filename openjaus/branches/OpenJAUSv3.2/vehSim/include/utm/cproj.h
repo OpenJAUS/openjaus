@@ -60,7 +60,7 @@
 #define OK	0
 #endif
 
-#define ERROR  -1
+#define UTM_ERROR  -1
 #define IN_BREAK -2
 
 /* Misc macros

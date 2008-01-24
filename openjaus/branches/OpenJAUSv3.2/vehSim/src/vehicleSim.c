@@ -2,10 +2,20 @@
 #include <nodeManager.h>
 #include <pthread.h>			// Multi-threading functions (standard to unix)
 #include <stdlib.h>	
-#include <unistd.h>				// Unix standard functions
+//#include <unistd.h>				// Unix standard functions
 #include <string.h>
 #include "properties.h"
 #include "vehicleSim.h"
+
+#if defined (WIN32)
+	#define SLEEP_MS(x) Sleep(x)
+	#define _USE_MATH_DEFINES
+	#include <math.h>
+	#define CONFIG_DIRECTORY "..\\config\\"
+#elif defined(__linux) || defined(linux) || defined(__linux__)
+	#define SLEEP_MS(x) usleep(x*1000)
+	#define CONFIG_DIRECTORY "./config/"
+#endif
 
 #define MIN_TURNING_RADIUS_M		4.25
 
@@ -30,7 +40,7 @@ void *vehicleSimThread(void *);
 static int vehicleSimRun = FALSE;
 static double vehicleSimThreadHz = 0;				// Stores the calculated uvehicleSimate rate for main state thread
 static int vehicleSimThreadRunning = FALSE;
-static pthread_t vehicleSimThreadId = 0;			// pthread component thread identifier
+static pthread_t vehicleSimThreadId;			// pthread component thread identifier
 
 static Properties vehicleSimProperties;
 
@@ -52,10 +62,11 @@ static double vehicleResistiveEffortX = 0;
 
 int vehicleSimStartup(void)
 {
-	FILE * propertyFile;
+	FILE * propertyFile = NULL;
 	char *property = NULL;
 	pthread_attr_t attr;	// Thread attributed for the component threads spawned in this function
-	
+	char fileName[128] = {0};
+
 	// Create vehiclePosLla object
 	vehiclePosLla = pointLlaCreate();
 	if(!vehiclePosLla)
@@ -65,7 +76,9 @@ int vehicleSimStartup(void)
 		return VEHICLE_SIM_MALLOC_ERROR;
 	}
 	
-	propertyFile = fopen("./config/vehicleSim.conf", "r");
+	//sprintf(fileName, "%svehicleSim.conf", CONFIG_DIRECTORY);
+	sprintf(fileName, "C:\\Projects\\OpenJaus3.2\\vehicleSim\\config\\vehicleSim.conf");
+	propertyFile = fopen(fileName, "r");
 	if(propertyFile)
 	{
 		vehicleSimProperties = propertiesCreate();
@@ -144,7 +157,7 @@ int vehicleSimShutdown(void)
 	timeOutSec = getTimeSeconds() + VEHICLE_SIM_THREAD_TIMEOUT_SEC;
 	while(vehicleSimThreadRunning)
 	{
-		usleep(100000);
+		SLEEP_MS(1000);
 		if(getTimeSeconds() >= timeOutSec)
 		{
 			pthread_cancel(vehicleSimThreadId);
@@ -326,10 +339,12 @@ void *vehicleSimThread(void *threadData)
 		}
 		vehiclePosLla = pointUtmToPointLla(vehiclePosUtm);
 
-		usleep(25000);
+		SLEEP_MS(25);
+		//usleep(25000);
 	}	
 	
-	usleep(50000);	// Sleep for 50 milliseconds and then exit
+	//usleep(50000);	// Sleep for 50 milliseconds and then exit
+	SLEEP_MS(50);
 
 	vehicleSimThreadRunning = FALSE;
 	

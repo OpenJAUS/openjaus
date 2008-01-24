@@ -9,12 +9,18 @@
 #include "nodeManager.h"	// Node managment functions for sending and receiving JAUS messages (USER: Node Manager must be installed)
 #include <pthread.h>			// Multi-threading functions (standard to unix)
 #include <stdlib.h>	
-#include <unistd.h>				// Unix standard functions
+//#include <unistd.h>				// Unix standard functions
 #include <string.h>
 #include "properties.h"
 
 #include "vehicleSim.h"
 #include "pd.h"	// USER: Implement and rename this header file. Include prototypes for all public functions contained in this file.
+
+#if defined (WIN32)
+	#define SLEEP_MS(x) Sleep(x)
+#elif defined(__linux) || defined(linux) || defined(__linux__)
+	#define SLEEP_MS(x) usleep(x*1000)
+#endif
 
 #define CONTROLLER_STATUS_SC_TIMEOUT_SECONDS 	1.5
 #define CONTROLLER_STATUS_SC_UPDATE_RATE_HZ		5.0
@@ -42,9 +48,9 @@ static JausNode pdNode;
 static JausSubsystem pdSubsystem;
 
 static int pdRun = FALSE;
-static double pdThreadHz = 0;									// Stores the calculated update rate for main state thread
+static double pdThreadHz = 0;		// Stores the calculated update rate for main state thread
 static int pdThreadRunning = FALSE;
-static pthread_t pdThreadId = 0;							// pthread component thread identifier
+static pthread_t pdThreadId;		// pthread component thread identifier
 
 static Properties pdProperties;
 static NodeManagerInterface pdNmi;	// A data structure containing the Node Manager Interface for this component
@@ -134,14 +140,14 @@ int pdShutdown(void)
 {
 	double timeOutSec;
 
-	if(pd->state != JAUS_SHUTDOWN_STATE)	// Execute the shutdown routines only if the component is running
+	if(pd && pd->state != JAUS_SHUTDOWN_STATE)	// Execute the shutdown routines only if the component is running
 	{
 		pdRun = FALSE;
 
 		timeOutSec = getTimeSeconds() + PD_THREAD_TIMEOUT_SEC;
 		while(pdThreadRunning)
 		{
-			usleep(100000);
+			SLEEP_MS(1000);
 			if(getTimeSeconds() >= timeOutSec)
 			{
 				pthread_cancel(pdThreadId);
@@ -244,7 +250,8 @@ void *pdThread(void *threadData)
 				}
 				else
 				{
-					nanosleep(&sleepTime, NULL);
+					//nanosleep(&sleepTime, NULL);
+					SLEEP_MS(1);
 				}
 			}
 		}while(getTimeSeconds() < nextExcecuteTime);
@@ -292,7 +299,8 @@ void *pdThread(void *threadData)
 	
 	pdShutdownState();
 	
-	usleep(50000);	// Sleep for 50 milliseconds and then exit
+	//usleep(50000);	// Sleep for 50 milliseconds and then exit
+	SLEEP_MS(50);
 
 	pdThreadRunning = FALSE;
 	
@@ -549,7 +557,9 @@ void pdReadyState(void)
 			{
 				//cError("pd: Failed to terminate controller status service connection\n");
 			}
-			usleep(500000);
+			//usleep(500000);
+			SLEEP_MS(500);
+
 			controllerStatusSc->isActive = JAUS_FALSE;
 			pd->controller.state = JAUS_UNKNOWN_STATE;
 		}
@@ -583,7 +593,8 @@ void pdReadyState(void)
 			{
 				//cError("pd: Failed to terminate controller status service connection\n");
 			}
-			usleep(500000);
+			//usleep(500000);
+			SLEEP_MS(500);
 			controllerStatusSc->isActive = JAUS_FALSE;
 			pd->controller.state = JAUS_UNKNOWN_STATE;
 		}
@@ -604,7 +615,8 @@ void pdEmergencyState(void)
 		{
 			//cError("pd: Failed to terminate controller status service connection\n");
 		}
-		usleep(500000);
+		//usleep(500000);
+		SLEEP_MS(500);
 		controllerStatusSc->isActive = JAUS_FALSE;
 		pd->controller.state = JAUS_UNKNOWN_STATE;
 	}

@@ -42,11 +42,17 @@
 // Description:	This file describes the functionality associated with a Properties object.
 // Inspired by the class of the same name in the JAVA language.
 
-#define _GNU_SOURCE
+#if defined(__GNUC__)
+	#define _GNU_SOURCE
+#endif
+
+#if defined(__APPLE__) || defined(WIN32)
+	#include "getline.h"
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
 #include "properties.h"
 
 Properties propertiesCreate(void)
@@ -67,52 +73,6 @@ void propertiesDestroy(Properties properties)
 		free(deadProperty);
 	}
 }
-
-#ifdef __APPLE__
-ssize_t getline(char **buf, size_t *n, FILE *file)
-{
-	ssize_t size = 0;
-	int c;
-	while (1)
-	{
-		c = fgetc(file);
-		// check if EOF
-		if (c == EOF || c == '\n')
-			break;
-
-		size++;
-	}
- 
-	if (size > 0)
-	{
-		if (c == '\n')
-		{
-			size += 1; // +1 for the \n
-		}
-		
-		if (fseek(file, -size, SEEK_CUR))
-		{
-			return -1;getline
-		}
-		
-		if (buf == NULL)
-		{
-		 *buf = (char*)malloc(size+1 * sizeof(char)); // +1 for xtra \0
-		}
-		else if (size != *n)
-		{
-			*buf = (char*)realloc(*buf, size+1 * sizeof(char));
-			*n = size;
-		}
-	
-		fgets(*buf, size+1, file);
-	
-		return size; // success
- 	}
- 	
- 	return -1;
-}
-#endif
 
 Properties propertiesLoad(Properties properties, FILE *file)
 {

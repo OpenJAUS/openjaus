@@ -22,12 +22,18 @@
 #include <nodeManager.h>	// Node managment functions for sending and receiving JAUS messages (USER: Node Manager must be installed)
 #include <pthread.h>			// Multi-threading functions (standard to unix)
 #include <stdlib.h>	
-#include <unistd.h>				// Unix standard functions
+//#include <unistd.h>				// Unix standard functions
 #include <string.h>
 // USER: Add include files here as appropriate
 
 #include "vss.h"	// USER: Implement and rename this header file. Include prototypes for all public functions contained in this file.
 #include "vehicleSim.h"	
+
+#if defined (WIN32)
+	#define SLEEP_MS(x) Sleep(x)
+#elif defined(__linux) || defined(linux) || defined(__linux__)
+	#define SLEEP_MS(x) usleep(x*1000)
+#endif
 
 // Private function prototypes
 void *vssThread(void *);
@@ -49,7 +55,7 @@ static JausSubsystem vssSubsystem;
 static int vssRun = FALSE;
 static double vssThreadHz = 0;									// Stores the calculated update rate for main state thread
 static int vssThreadRunning = FALSE;
-static pthread_t vssThreadId = 0;							// pthread component thread identifier
+static pthread_t vssThreadId;							// pthread component thread identifier
 
 static Properties vssProperties;
 static NodeManagerInterface vssNmi;	// A data structure containing the Node Manager Interface for this component
@@ -138,14 +144,14 @@ int vssShutdown(void)
 {
 	double timeOutSec;
 
-	if(vss->state != JAUS_SHUTDOWN_STATE)	// Execute the shutdown routines only if the component is running
+	if(vss && vss->state != JAUS_SHUTDOWN_STATE)	// Execute the shutdown routines only if the component is running
 	{
 		vssRun = FALSE;
 
 		timeOutSec = getTimeSeconds() + VSS_THREAD_TIMEOUT_SEC;
 		while(vssThreadRunning)
 		{
-			usleep(100000);
+			SLEEP_MS(1000);
 			if(getTimeSeconds() >= timeOutSec)
 			{
 				pthread_cancel(vssThreadId);
@@ -233,7 +239,8 @@ void *vssThread(void *threadData)
 				}
 				else
 				{
-					nanosleep(&sleepTime, NULL);
+					//nanosleep(&sleepTime, NULL);
+					SLEEP_MS(1);
 				}
 			}
 		}while(getTimeSeconds() < nextExcecuteTime);
@@ -281,7 +288,8 @@ void *vssThread(void *threadData)
 	
 	vssShutdownState();
 	
-	usleep(50000);	// Sleep for 50 milliseconds and then exit
+	//usleep(50000);	// Sleep for 50 milliseconds and then exit
+	Sleep(50);
 
 	vssThreadRunning = FALSE;
 	

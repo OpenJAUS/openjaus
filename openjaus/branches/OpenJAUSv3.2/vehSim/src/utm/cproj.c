@@ -173,7 +173,7 @@ long i;
         }
   p_error ("Convergence error","phi1z-conv");
   *flag = 001;
-  return(ERROR);
+  return(UTM_ERROR);
 }
 
 /* Function to compute the latitude angle, phi2, for the inverse of the
