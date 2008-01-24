@@ -362,6 +362,7 @@ void defaultJausMessageProcessor(JausMessage message, NodeManagerInterface nmi, 
 			break;
 					
 		case JAUS_QUERY_IDENTIFICATION:
+			printf("ID Queried\n");
 			reportIdentification = reportIdentificationMessageCreate();
 			jausAddressCopy(reportIdentification->source, cmpt->address);
 			jausAddressCopy(reportIdentification->destination, message->source);

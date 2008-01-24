@@ -252,7 +252,7 @@ bool JausUdpInterface::openSocket(void)
 			}
 
 			// Create Subsystem Socket
-			this->socket = multicastSocketCreate(JAUS_UDP_DATA_PORT, ipAddress);
+			this->socket = multicastSocketCreate(this->portNumber, ipAddress);
 			if(!this->socket)
 			{
 				// Error creating our socket
@@ -260,7 +260,7 @@ bool JausUdpInterface::openSocket(void)
 				char buf[24] = {0};
 				
 				inetAddressToString(this->ipAddress, buf);
-				sprintf(errorString, "Could not open socket: %s:%d", buf, JAUS_UDP_DATA_PORT);
+				sprintf(errorString, "Could not open socket: %s:%d", buf, this->portNumber);
 				ErrorEvent *e = new ErrorEvent(ErrorEvent::Configuration, __FUNCTION__, __LINE__, errorString);
 				this->eventHandler->handleEvent(e);
 
@@ -305,7 +305,7 @@ bool JausUdpInterface::openSocket(void)
 			}
 
 			// Create Node Socket
-			this->socket = multicastSocketCreate(JAUS_UDP_DATA_PORT, ipAddress);
+			this->socket = multicastSocketCreate(this->portNumber, ipAddress);
 			if(!this->socket)
 			{
 				// Error creating our socket
@@ -313,7 +313,7 @@ bool JausUdpInterface::openSocket(void)
 				char buf[24] = {0};
 				
 				inetAddressToString(this->ipAddress, buf);
-				sprintf(errorString, "Could not open socket: %s:%d", buf, JAUS_UDP_DATA_PORT);
+				sprintf(errorString, "Could not open socket: %s:%d", buf, this->portNumber);
 				ErrorEvent *e = new ErrorEvent(ErrorEvent::Configuration, __FUNCTION__, __LINE__, errorString);
 				this->eventHandler->handleEvent(e);
 
@@ -358,7 +358,7 @@ bool JausUdpInterface::openSocket(void)
 			}
 
 			// Create Component Socket
-			this->socket = multicastSocketCreate(JAUS_UDP_DATA_PORT, ipAddress);
+			this->socket = multicastSocketCreate(this->portNumber, ipAddress);
 			if(!this->socket)
 			{
 				// Error creating our socket
@@ -366,7 +366,7 @@ bool JausUdpInterface::openSocket(void)
 				char buf[24] = {0};
 				
 				inetAddressToString(this->ipAddress, buf);
-				sprintf(errorString, "Could not open socket: %s:%d", buf, JAUS_UDP_DATA_PORT);
+				sprintf(errorString, "Could not open socket: %s:%d", buf, this->portNumber);
 				ErrorEvent *e = new ErrorEvent(ErrorEvent::Configuration, __FUNCTION__, __LINE__, errorString);
 				this->eventHandler->handleEvent(e);
 
@@ -459,10 +459,6 @@ void JausUdpInterface::recvThreadRun()
 	{
 		index = 0;
 		bytesRecv = multicastSocketReceive(this->socket, packet);
-		if(this->type == COMPONENT_INTERFACE)
-		{
-			printf("CMPT UDP Bytes Recv: %d\n", bytesRecv);
-		}
 		
 		if(bytesRecv > 0)
 		{
