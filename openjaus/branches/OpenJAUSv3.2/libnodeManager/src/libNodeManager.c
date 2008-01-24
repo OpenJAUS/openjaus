@@ -373,14 +373,15 @@ void *heartbeatThread(void *threadArgument)
 
 	while(nmi->isOpen)
 	{
+		printf("HB\n");
 		nodeManagerSend(nmi, txMessage);
 		nmi->heartbeatCount++;
 		if( (getTimeSeconds() - NODE_MANAGER_TIMEOUT_SEC) > nmi->timestamp)
 		{
 			// TODO: Capture Error
-			////cError("libNodeManager: Node Manager Has Timed Out\n");
+			printf("libNodeManager: Node Manager Has Timed Out\n");
 			//nmi->cmpt->state = JAUS_FAILURE_STATE;
-			//break;
+			break;
 		}
 		SLEEP_MS(1000); // sleep one second
 	}
@@ -800,7 +801,6 @@ int nodeManagerSendSingleMessage(NodeManagerInterface nmi, JausMessage message)
 		{
 			result = datagramSocketSend(nmi->messageSocket, packet);
 		}
-	
 		free(packet->buffer);
 		datagramPacketDestroy(packet);
 	}
