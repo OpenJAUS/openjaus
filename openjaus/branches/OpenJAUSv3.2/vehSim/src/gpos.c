@@ -21,9 +21,11 @@
 #if defined (WIN32)
 	#define SLEEP_MS(x) Sleep(x)
 	#define _USE_MATH_DEFINES
+	#define CONFIG_DIRECTORY ".\\config\\"
 	#include <math.h>
 #elif defined(__linux) || defined(linux) || defined(__linux__)
 	#define SLEEP_MS(x) usleep(x*1000)
+	#define CONFIG_DIRECTORY "./config/"
 #endif
 
 // Private function prototypes
@@ -63,7 +65,8 @@ int gposStartup(void)
 {
 	FILE * propertyFile;
 	pthread_attr_t attr;	// Thread attributed for the component threads spawned in this function
-	
+	char fileName[128] = {0};
+
 	if(!gpos)
 	{
 		gpos = jausComponentCreate();
@@ -74,7 +77,8 @@ int gposStartup(void)
 	
 	if(gpos->state == JAUS_SHUTDOWN_STATE)	// Execute the startup routines only if the component is not running
 	{
-		propertyFile = fopen("./config/gpos.conf", "r");
+		sprintf(fileName, "%sgpos.conf", CONFIG_DIRECTORY);
+		propertyFile = fopen(fileName, "r");
 		if(propertyFile)
 		{
 			gposProperties = propertiesCreate();

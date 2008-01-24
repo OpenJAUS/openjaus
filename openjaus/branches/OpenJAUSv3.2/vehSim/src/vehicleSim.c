@@ -11,7 +11,7 @@
 	#define SLEEP_MS(x) Sleep(x)
 	#define _USE_MATH_DEFINES
 	#include <math.h>
-	#define CONFIG_DIRECTORY "..\\config\\"
+	#define CONFIG_DIRECTORY ".\\config\\"
 #elif defined(__linux) || defined(linux) || defined(__linux__)
 	#define SLEEP_MS(x) usleep(x*1000)
 	#define CONFIG_DIRECTORY "./config/"
@@ -76,8 +76,7 @@ int vehicleSimStartup(void)
 		return VEHICLE_SIM_MALLOC_ERROR;
 	}
 	
-	//sprintf(fileName, "%svehicleSim.conf", CONFIG_DIRECTORY);
-	sprintf(fileName, "C:\\Projects\\OpenJaus3.2\\vehicleSim\\config\\vehicleSim.conf");
+	sprintf(fileName, "%svehicleSim.conf", CONFIG_DIRECTORY);
 	propertyFile = fopen(fileName, "r");
 	if(propertyFile)
 	{
