@@ -76,10 +76,10 @@ void OjUdpComponentInterface::run()
 	int bytesRecv = 0;
 	char buf[256] = {0};
 	int componentId = 0;
-	int componentMessagePort = 0;
-	int instanceId = 0;
-	int commandCode = 0;
-	int serviceType = 0;
+	//int componentMessagePort = 0;
+	//int instanceId = 0;
+	//int commandCode = 0;
+	//int serviceType = 0;
 
 	packet = datagramPacketCreate();
 	packet->bufferSizeBytes = OJ_UDP_INTERFACE_MESSAGE_SIZE_BYTES;
@@ -144,7 +144,7 @@ void OjUdpComponentInterface::run()
 
 					memset(packet->buffer, 0, OJ_UDP_INTERFACE_MESSAGE_SIZE_BYTES);
 					packet->buffer[0] = ADDRESS_VERIFIED;
-					if(this->systemTree->hasComponent(address))
+					if(this->systemTree->hasComponent(lookupAddress))
 					{
 						packet->buffer[1] = JAUS_TRUE;
 					}
