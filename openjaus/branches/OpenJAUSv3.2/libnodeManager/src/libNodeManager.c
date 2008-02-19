@@ -308,7 +308,7 @@ static int checkIntoNodeManager(NodeManagerInterface nmi)
 
 	packet->port = NODE_MANAGER_INTERFACE_PORT;
 	packet->address->value = nmi->ipAddress->value;
-	
+
 	datagramSocketSend(nmi->interfaceSocket, packet);
 	datagramSocketReceive(nmi->interfaceSocket, packet);
 
@@ -376,7 +376,6 @@ void *heartbeatThread(void *threadArgument)
 
 	while(nmi->isOpen)
 	{
-		printf("HB\n");
 		nodeManagerSend(nmi, txMessage);
 		nmi->heartbeatCount++;
 		if( (getTimeSeconds() - NODE_MANAGER_TIMEOUT_SEC) > nmi->timestamp)
@@ -420,11 +419,9 @@ void *receiveThread(void *threadArgument)
 	{
 		if(datagramSocketReceive(nmi->messageSocket, packet) > 0)
 		{	
-			printf("Here A\n");
 			index = 0;
 			if(!strncmp((char *)packet->buffer, JAUS_OPC_UDP_HEADER, JAUS_OPC_UDP_HEADER_SIZE_BYTES)) // equals 1 if same
 			{
-				printf("Here B\n");
 				index += JAUS_OPC_UDP_HEADER_SIZE_BYTES;
 			}
 
