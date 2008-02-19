@@ -32,29 +32,29 @@ int simulatorStartup(void)
 		return SIMULATOR_STARTUP_FAILED;	
 	}
 	
-	//if(gposStartup())
-	//{
-	//	//cError("node: gposStartup failed\n");
-	//	simulatorShutdown();
-	//	
-	//	return SIMULATOR_STARTUP_FAILED;	
-	//}
+	if(gposStartup())
+	{
+		//cError("node: gposStartup failed\n");
+		simulatorShutdown();
+		
+		return SIMULATOR_STARTUP_FAILED;	
+	}
 
-	//if(vssStartup())
-	//{
-	//	//cError("node: vssStartup failed\n");
-	//	simulatorShutdown();
-	//	
-	//	return SIMULATOR_STARTUP_FAILED;	
-	//}
+	if(vssStartup())
+	{
+		//cError("node: vssStartup failed\n");
+		simulatorShutdown();
+		
+		return SIMULATOR_STARTUP_FAILED;	
+	}
 
-	//if(wdStartup())
-	//{
-	//	//cError("node: wdStartup failed\n");
-	//	simulatorShutdown();
-	//	
-	//	return SIMULATOR_STARTUP_FAILED;	
-	//}
+	if(wdStartup())
+	{
+		//cError("node: wdStartup failed\n");
+		simulatorShutdown();
+		
+		return SIMULATOR_STARTUP_FAILED;	
+	}
 
 	return 0;
 }
