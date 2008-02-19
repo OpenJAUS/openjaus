@@ -449,7 +449,7 @@ void JausUdpInterface::recvThreadRun()
 	JausMessage rxMessage;
 	UdpTransportData data;
 	int index = 0;
-	unsigned int bytesRecv = 0;
+	long bytesRecv = 0;
 
 	packet = datagramPacketCreate();
 	packet->bufferSizeBytes = JAUS_HEADER_SIZE_BYTES + JAUS_MAX_DATA_SIZE_BYTES + JAUS_OPC_UDP_HEADER_SIZE_BYTES;
@@ -470,6 +470,15 @@ void JausUdpInterface::recvThreadRun()
 			rxMessage = jausMessageCreate();
 			if(jausMessageFromBuffer(rxMessage, packet->buffer + index, packet->bufferSizeBytes - index))
 			{
+
+//char buf[80] = {0};
+//inetAddressToString(packet->address, buf);
+//printf("Recv %d bytes from %s:%d\n", bytesRecv, buf, packet->port);
+//jausAddressToString(rxMessage->source, buf);
+//printf("Recv %s from %s", jausMessageCommandCodeString(rxMessage), buf);
+//jausAddressToString(rxMessage->destination, buf);
+//printf(" to %s\n", buf);
+
 				// Add to transportMap
 				switch(this->type)
 				{
@@ -487,7 +496,7 @@ void JausUdpInterface::recvThreadRun()
 
 					case COMPONENT_INTERFACE:
 						data.addressValue = packet->address->value;
-						data.port = JAUS_UDP_DATA_PORT;
+						data.port = packet->port;
 						this->addressMap[jausAddressHash(rxMessage->source)] = data;
 						break;
 

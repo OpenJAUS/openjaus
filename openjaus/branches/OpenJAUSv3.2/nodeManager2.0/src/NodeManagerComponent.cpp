@@ -532,7 +532,7 @@ bool NodeManagerComponent::processReportServices(JausMessage message)
 bool NodeManagerComponent::processReportHeartbeatPulse(JausMessage message)
 {
 	// This function follows the flowchart designed for NM 2.0 by D. Kent and T. Galluzzo
-	printf("Process HB from: %d.%d.%d.%d\n", message->source->subsystem, message->source->node, message->source->component, message->source->instance);
+	//printf("Process HB from: %d.%d.%d.%d\n", message->source->subsystem, message->source->node, message->source->component, message->source->instance);
 	
 	// Has Subs?
 	if(!systemTree->hasSubsystem(message->source))
@@ -736,13 +736,13 @@ bool NodeManagerComponent::processReportHeartbeatPulse(JausMessage message)
 
 	if(!systemTree->hasComponentIdentification(message->source))
 	{
-		printf("Send Query Cmpt Id\n");
+		//printf("Send Query Cmpt Id\n");
 		sendQueryComponentIdentification(message->source);
 	}
 
 	if(!systemTree->hasComponentServices(message->source))
 	{
-		printf("Send Query Cmpt Services\n");
+		//printf("Send Query Cmpt Services\n");
 		sendQueryComponentServices(message->source);
 	}
 

@@ -1200,6 +1200,10 @@ bool SystemTree::removeComponent(int subsystemId, int nodeId, int componentId, i
 			if(cmpt->address->component == componentId && cmpt->address->instance == instanceId)
 			{
 				jausArrayRemoveAt(node->components, i);
+
+				SystemTreeEvent *e = new SystemTreeEvent(SystemTreeEvent::ComponentRemoved, cmpt);
+				this->eventHandler->handleEvent(e);
+
 				jausComponentDestroy(cmpt);
 				return true;
 			}
