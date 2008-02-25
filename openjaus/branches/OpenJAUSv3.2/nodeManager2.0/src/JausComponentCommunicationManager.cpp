@@ -39,10 +39,13 @@ JausComponentCommunicationManager::JausComponentCommunicationManager(FileLoader 
 	this->nodeManagerCmpt = new NodeManagerComponent(this->configData, this->handler, this);
 	this->interfaces.push_back(nodeManagerCmpt);
 	
-	// TODO: Only start this if the subsystemCommMngr is enabled
-	this->communicatorCmpt = new CommunicatorComponent(this->configData, this->handler, this);
-	this->interfaces.push_back(communicatorCmpt);
-	
+	// Only start the Communicator if the SubsystemCommunications is enabled
+	if( configData->GetConfigDataBool("Subsystem_Communications", "Enabled"))
+	{
+		this->communicatorCmpt = new CommunicatorComponent(this->configData, this->handler, this);
+		this->interfaces.push_back(communicatorCmpt);
+	}
+
 	// Start component interface(s)
 	if(configData->GetConfigDataBool("Component_Communications", "JAUS_UDP"))
 	{
