@@ -199,7 +199,7 @@ JausAddress NodeManagerComponent::checkInLocalComponent(int cmptId)
 	
 	// Setup query address
 	component->address->subsystem = this->cmpt->address->subsystem;
-	component->address->node = this->cmpt->address->subsystem;
+	component->address->node = this->cmpt->address->node;
 	component->address->component = cmptId;
 	component->address->instance = 0;
 
