@@ -236,176 +236,90 @@ std::string JausUdpInterface::toString()
 
 bool JausUdpInterface::openSocket(void)
 {
+	char categoryString[128] = {0};
 	switch(this->type)
 	{
 		case SUBSYSTEM_INTERFACE:
 			// Read Subsystem UDP Parameters
-			this->portNumber = this->configData->GetConfigDataInt("Subsystem_Communications", "JAUS_UDP_Port");
-			this->ipAddress = inetAddressGetByString((char *)this->configData->GetConfigDataString("Subsystem_Communications", "JAUS_UDP_IP").c_str());
-			
-			// TODO: Can we test this ipAddress somehow?
-			
-			if(this->ipAddress == NULL)
-			{
-				this->ipAddress = inetAddressCreate();
-				this->ipAddress->value = INADDR_ANY;
-			}
-
-			// Create Subsystem Socket
-			this->socket = multicastSocketCreate(this->portNumber, ipAddress);
-			if(!this->socket)
-			{
-				// Error creating our socket
-				char errorString[128] = {0};
-				char buf[24] = {0};
-				
-				inetAddressToString(this->ipAddress, buf);
-				sprintf(errorString, "Could not open socket: %s:%d", buf, this->portNumber);
-				ErrorEvent *e = new ErrorEvent(ErrorEvent::Configuration, __FUNCTION__, __LINE__, errorString);
-				this->eventHandler->handleEvent(e);
-
-				return false;
-			}
-			else
-			{
-				this->ipAddress = socket->address;
-				this->portNumber = socket->port;
-			}
-
-			// Setup Timeout
-			multicastSocketSetTimeout(this->socket, this->configData->GetConfigDataInt("Subsystem_Communications", "JAUS_UDP_Timeout_Sec"));
-
-			// Setup TTL
-			multicastSocketSetTTL(this->socket, this->configData->GetConfigDataInt("Subsystem_Communications", "JAUS_UDP_TTL"));
-
-			// Setup Multicast
-			if(this->configData->GetConfigDataBool("Subsystem_Communications", "JAUS_UDP_Multicast"))
-			{
-				this->multicast = true;
-				this->multicastGroup  = inetAddressGetByString((char *)this->configData->GetConfigDataString("Subsystem_Communications", "JAUS_UDP_Multicast_Group").c_str());
-				multicastSocketJoinGroup(this->socket, this->multicastGroup);
-
-				// Setup Loopback
-				multicastSocketSetLoopback(this->socket, LOOPBACK_DISABLED);
-
-				// Setup Multicast UdpData
-				multicastData.addressValue = multicastGroup->value;
-				multicastData.port = JAUS_UDP_DATA_PORT;
-			}
-			return true;
+			sprintf(categoryString, "%s", "Subsystem_Communications");
+			break;
 
 		case NODE_INTERFACE:
 			// Setup Node Configuration
-			this->portNumber = this->configData->GetConfigDataInt("Node_Communications", "JAUS_UDP_Port");
-			this->ipAddress = inetAddressGetByString((char *)this->configData->GetConfigDataString("Node_Communications", "JAUS_UDP_IP").c_str());
-			if(this->ipAddress == NULL)
-			{
-				this->ipAddress = inetAddressCreate();
-				this->ipAddress->value = INADDR_ANY;
-			}
-
-			// Create Node Socket
-			this->socket = multicastSocketCreate(this->portNumber, ipAddress);
-			if(!this->socket)
-			{
-				// Error creating our socket
-				char errorString[128] = {0};
-				char buf[24] = {0};
-				
-				inetAddressToString(this->ipAddress, buf);
-				sprintf(errorString, "Could not open socket: %s:%d", buf, this->portNumber);
-				ErrorEvent *e = new ErrorEvent(ErrorEvent::Configuration, __FUNCTION__, __LINE__, errorString);
-				this->eventHandler->handleEvent(e);
-
-				return false;
-			}
-			else
-			{
-				this->ipAddress = socket->address;
-				this->portNumber = socket->port;
-			}
-
-			// Setup Timeout
-			multicastSocketSetTimeout(this->socket, this->configData->GetConfigDataInt("Node_Communications", "JAUS_UDP_Timeout_Sec"));
-
-			// Setup TTL
-			multicastSocketSetTTL(this->socket, this->configData->GetConfigDataInt("Node_Communications", "JAUS_UDP_TTL"));
-
-			// Setup Multicast
-			if(this->configData->GetConfigDataBool("Node_Communications", "JAUS_UDP_Multicast"))
-			{
-				this->multicast = true;
-				this->multicastGroup  = inetAddressGetByString((char *)this->configData->GetConfigDataString("Node_Communications", "JAUS_UDP_Multicast_Group").c_str());
-				multicastSocketJoinGroup(this->socket, this->multicastGroup);
-
-				// Setup Loopback
-				multicastSocketSetLoopback(this->socket, LOOPBACK_DISABLED);
-
-				// Setup Multicast UdpData
-				multicastData.addressValue = multicastGroup->value;
-				multicastData.port = JAUS_UDP_DATA_PORT;
-			}
-			return true;
+			sprintf(categoryString, "%s", "Node_Communications");
+			break;
 
 		case COMPONENT_INTERFACE:
 			// Read Component Configuration
-			this->portNumber = this->configData->GetConfigDataInt("Component_Communications", "JAUS_UDP_Port");
-			this->ipAddress = inetAddressGetByString((char *)this->configData->GetConfigDataString("Component_Communications", "JAUS_UDP_IP").c_str());
-			if(this->ipAddress == NULL)
-			{
-				this->ipAddress = inetAddressCreate();
-				this->ipAddress->value = INADDR_ANY;
-			}
-
-			// Create Component Socket
-			this->socket = multicastSocketCreate(this->portNumber, ipAddress);
-			if(!this->socket)
-			{
-				// Error creating our socket
-				char errorString[128] = {0};
-				char buf[24] = {0};
-				
-				inetAddressToString(this->ipAddress, buf);
-				sprintf(errorString, "Could not open socket: %s:%d", buf, this->portNumber);
-				ErrorEvent *e = new ErrorEvent(ErrorEvent::Configuration, __FUNCTION__, __LINE__, errorString);
-				this->eventHandler->handleEvent(e);
-
-				return false;
-			}
-			else
-			{
-				this->ipAddress = socket->address;
-				this->portNumber = socket->port;
-			}
-
-			// Setup Timeout
-			multicastSocketSetTimeout(this->socket, this->configData->GetConfigDataInt("Component_Communications", "JAUS_UDP_Timeout_Sec"));
-
-			// Setup TTL
-			multicastSocketSetTTL(this->socket, this->configData->GetConfigDataInt("Component_Communications", "JAUS_UDP_TTL"));
-
-			// Setup Multicast
-			if(this->configData->GetConfigDataBool("Component_Communications", "JAUS_UDP_Multicast"))
-			{
-				this->multicast = true;
-				this->multicastGroup  = inetAddressGetByString((char *)this->configData->GetConfigDataString("Component_Communications", "JAUS_UDP_Multicast_Group").c_str());
-				multicastSocketJoinGroup(this->socket, this->multicastGroup);
-
-				// Setup Loopback
-				multicastSocketSetLoopback(this->socket, LOOPBACK_DISABLED);
-
-				// Setup Multicast UdpData
-				multicastData.addressValue = multicastGroup->value;
-				multicastData.port = JAUS_UDP_DATA_PORT;
-			}
-			return true;
+			sprintf(categoryString, "%s", "Component_Communications");
+			break;
 
 		default:
 			// Unknown type
 			// TODO: Log Error
 			return false;
-			break;
 	}
+
+	this->portNumber = this->configData->GetConfigDataInt(categoryString, "JAUS_UDP_Port");
+	this->ipAddress = inetAddressGetByString((char *)this->configData->GetConfigDataString(categoryString, "JAUS_UDP_IP").c_str());
+	if(this->ipAddress == NULL)
+	{
+		this->ipAddress = inetAddressCreate();
+		this->ipAddress->value = INADDR_ANY;
+	}
+
+	// Create Component Socket
+	this->socket = multicastSocketCreate(this->portNumber, ipAddress);
+	if(!this->socket)
+	{
+		// Error creating our socket
+		char errorString[128] = {0};
+		char buf[24] = {0};
+		
+		inetAddressToString(this->ipAddress, buf);
+		sprintf(errorString, "Could not open socket: %s:%d", buf, this->portNumber);
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::Configuration, __FUNCTION__, __LINE__, errorString);
+		this->eventHandler->handleEvent(e);
+		return false;
+	}
+	else
+	{
+		this->ipAddress = socket->address;
+		this->portNumber = socket->port;
+	}
+
+	// Setup Timeout
+	multicastSocketSetTimeout(this->socket, this->configData->GetConfigDataInt(categoryString, "JAUS_UDP_Timeout_Sec"));
+
+	// Setup TTL
+	multicastSocketSetTTL(this->socket, this->configData->GetConfigDataInt(categoryString, "JAUS_UDP_TTL"));
+
+	// Setup Multicast
+	if(this->configData->GetConfigDataBool(categoryString, "JAUS_UDP_Multicast"))
+	{
+		this->multicast = true;
+		this->multicastGroup  = inetAddressGetByString((char *)this->configData->GetConfigDataString(categoryString, "JAUS_UDP_Multicast_Group").c_str());
+		if(multicastSocketJoinGroup(this->socket, this->multicastGroup) != 0)
+		{
+			// Error joining our group
+			char errorString[128] = {0};
+			char buf[24] = {0};
+			
+			inetAddressToString(this->multicastGroup, buf);
+			sprintf(errorString, "Could not open socket: %s:%d", buf, this->portNumber);
+			ErrorEvent *e = new ErrorEvent(ErrorEvent::Configuration, __FUNCTION__, __LINE__, errorString);
+			this->eventHandler->handleEvent(e);
+			return false;
+		}
+
+		// Setup Loopback
+		multicastSocketSetLoopback(this->socket, LOOPBACK_DISABLED);
+
+		// Setup Multicast UdpData
+		multicastData.addressValue = multicastGroup->value;
+		multicastData.port = this->socket->port;
+	}
+	return true;
 }
 
 void JausUdpInterface::sendJausMessage(UdpTransportData data, JausMessage message)
@@ -413,21 +327,51 @@ void JausUdpInterface::sendJausMessage(UdpTransportData data, JausMessage messag
 	DatagramPacket packet = NULL;
 	int result;
 
-	packet = datagramPacketCreate();
-	packet->bufferSizeBytes = (int) jausMessageSize(message) + JAUS_OPC_UDP_HEADER_SIZE_BYTES;
-	packet->buffer = (unsigned char *) calloc(packet->bufferSizeBytes, 1);
-	packet->port = data.port;
-	packet->address->value = data.addressValue;
-	memset(packet->buffer, 0, packet->bufferSizeBytes);
-	
-	memcpy(packet->buffer, JAUS_OPC_UDP_HEADER, JAUS_OPC_UDP_HEADER_SIZE_BYTES);
-	if(jausMessageToBuffer(message, packet->buffer + JAUS_OPC_UDP_HEADER_SIZE_BYTES, packet->bufferSizeBytes - JAUS_OPC_UDP_HEADER_SIZE_BYTES))
+	switch(this->type)
 	{
-		result = multicastSocketSend(this->socket, packet);
-	}
+		case SUBSYSTEM_INTERFACE:
+		case NODE_INTERFACE:
+			packet = datagramPacketCreate();
+			packet->bufferSizeBytes = (int) jausMessageSize(message) + JAUS_OPC_UDP_HEADER_SIZE_BYTES;
+			packet->buffer = (unsigned char *) calloc(packet->bufferSizeBytes, 1);
+			packet->port = data.port;
+			packet->address->value = data.addressValue;
+			memset(packet->buffer, 0, packet->bufferSizeBytes);
+			
+			memcpy(packet->buffer, JAUS_OPC_UDP_HEADER, JAUS_OPC_UDP_HEADER_SIZE_BYTES);
+			if(jausMessageToBuffer(message, packet->buffer + JAUS_OPC_UDP_HEADER_SIZE_BYTES, packet->bufferSizeBytes - JAUS_OPC_UDP_HEADER_SIZE_BYTES))
+			{
+				result = multicastSocketSend(this->socket, packet);
+			}
 
-	free(packet->buffer);
-	datagramPacketDestroy(packet);
+			free(packet->buffer);
+			datagramPacketDestroy(packet);
+			return;
+
+		case COMPONENT_INTERFACE:
+			packet = datagramPacketCreate();
+			packet->bufferSizeBytes = (int) jausMessageSize(message);
+			packet->buffer = (unsigned char *) calloc(packet->bufferSizeBytes, 1);
+			packet->port = data.port;
+			packet->address->value = data.addressValue;
+			memset(packet->buffer, 0, packet->bufferSizeBytes);
+
+			if(jausMessageToBuffer(message, packet->buffer, packet->bufferSizeBytes))
+			{
+				result = multicastSocketSend(this->socket, packet);
+			}
+
+			free(packet->buffer);
+			datagramPacketDestroy(packet);
+			return;
+
+		default:
+			char errorString[128] = {0};
+			sprintf(errorString, "Unknown socket type %d\n", this->type);
+			ErrorEvent *e = new ErrorEvent(ErrorEvent::Configuration, __FUNCTION__, __LINE__, errorString);
+			this->eventHandler->handleEvent(e);
+			return;
+	}
 }
 
 void JausUdpInterface::closeSocket(void)
