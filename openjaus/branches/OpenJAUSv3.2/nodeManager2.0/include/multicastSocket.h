@@ -79,7 +79,8 @@ extern "C"
 
 typedef struct
 {
-	int descriptor;
+	int unicastSocketDescriptor;
+	int multicastSocketDescriptor;
 	unsigned short port;
 	InetAddress address;
 	struct timeval timeout;
