@@ -120,9 +120,10 @@ void multicastSocketDestroy(MulticastSocket multicastSocket)
 {
 	CLOSE_SOCKET(multicastSocket->unicastSocketDescriptor);
 
-#if defined(__linux) || defined(linux) || defined(__linux__)
-	CLOSE_SOCKET(multicastSocket->multicastSocketDescriptor);
-#endif
+	if(multicastSocket->multicastSocketDescriptor != -1)
+	{
+		CLOSE_SOCKET(multicastSocket->multicastSocketDescriptor);
+	}
 	
 	free(multicastSocket);
 
@@ -232,13 +233,10 @@ int multicastSocketReceive(MulticastSocket multicastSocket, DatagramPacket packe
 		{
 			bytesReceived = recvfrom(multicastSocket->unicastSocketDescriptor, packet->buffer, packet->bufferSizeBytes, 0, (struct sockaddr*)&fromAddress, &fromAddressLength);
 		}
-
-#if defined(__linux) || defined(linux) || defined(__linux__)	
-		if(FD_ISSET(multicastSocket->multicastSocketDescriptor, &readSet))
+		if(multicastSocket->multicastSocketDescriptor != -1 && FD_ISSET(multicastSocket->multicastSocketDescriptor, &readSet))
 		{
 			bytesReceived = recvfrom(multicastSocket->multicastSocketDescriptor, packet->buffer, packet->bufferSizeBytes, 0, (struct sockaddr*)&fromAddress, &fromAddressLength);
 		}
-#endif
 	}
 	else
 	{
