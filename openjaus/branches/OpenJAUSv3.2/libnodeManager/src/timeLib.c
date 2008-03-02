@@ -45,13 +45,9 @@
 #ifdef WIN32
 	#include <windows.h>
 #else
-//	#define HAVE_GETTIMEOFDAY
-//	#include "config.h"
+	#define HAVE_GETTIMEOFDAY
 	#include <sys/time.h>
-//	#endif
-//	#ifdef HAVE_TIME_H
-		#include <time.h>
-//	#endif
+	#include <time.h>
 #endif
 
 #include "timeLib.h"
