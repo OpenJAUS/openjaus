@@ -58,6 +58,8 @@ int main(int argc, char *args)
 	bool running = true;
 	int i = 0;
 
+	printf("\nOpenJAUS Node Manager Version %s (%s)\n\n", OJ_NODE_MANAGER_VERSION, __DATE__); 
+
 	// Setup the console window's input handle
 	handleStdin = GetStdHandle(STD_INPUT_HANDLE); 
 
@@ -127,6 +129,8 @@ int main(int argc, char *args)
 	newTermio.c_cc[VTIME] = 0;
 	newTermio.c_cc[VMIN] = 0;
 	tcsetattr(0,TCSANOW,&newTermio);
+
+	printf("\nOpenJAUS Node Manager Version %s (%s)\n\n", OJ_NODE_MANAGER_VERSION, __DATE__); 
 
 	FileLoader *configData = new FileLoader("nodeManager.conf");
 	MyHandler *handler = new MyHandler();
