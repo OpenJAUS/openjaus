@@ -205,6 +205,41 @@ static int dataToBuffer(ReportPlatformOperationalDataMessage message, unsigned c
 	return index;
 }
 
+// Returns number of bytes put into the buffer
+static int dataSize(ReportPlatformOperationalDataMessage message)
+{
+	int index = 0;
+
+	index += JAUS_BYTE_PRESENCE_VECTOR_SIZE_BYTES;
+	
+	if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_OPERATIONAL_PV_ENGINE_BIT))
+	{
+		index += JAUS_SHORT_SIZE_BYTES;
+	}
+
+	if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_OPERATIONAL_PV_ODOMETER_BIT))
+	{
+		index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
+	}
+
+	if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_OPERATIONAL_PV_BATTERY_BIT))
+	{
+		index += JAUS_BYTE_SIZE_BYTES;
+	}
+	
+	if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_OPERATIONAL_PV_FUEL_BIT))
+	{
+		index += JAUS_BYTE_SIZE_BYTES;
+	}
+	
+	if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_OPERATIONAL_PV_OIL_BIT))
+	{
+		index += JAUS_BYTE_SIZE_BYTES;
+	}
+
+	return index;
+}
+
 // ************************************************************************************************************** //
 //                                    NON-USER CONFIGURED FUNCTIONS
 // ************************************************************************************************************** //
@@ -234,7 +269,7 @@ ReportPlatformOperationalDataMessage reportPlatformOperationalDataMessageCreate(
 	message->sequenceNumber = 0;
 	
 	dataInitialize(message);
-	
+	message->dataSize = dataSize(message);
 	return message;	
 }
 
@@ -355,8 +390,8 @@ JausMessage reportPlatformOperationalDataMessageToJausMessage(ReportPlatformOper
 	jausMessage->dataFlag = message->dataFlag;
 	jausMessage->sequenceNumber = message->sequenceNumber;
 	
-	jausMessage->data = (unsigned char *)malloc(message->dataSize);
-	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, message->dataSize);
+	jausMessage->data = (unsigned char *)malloc(dataSize(message));
+	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, dataSize(message));
 	
 	return jausMessage;
 }
@@ -364,7 +399,7 @@ JausMessage reportPlatformOperationalDataMessageToJausMessage(ReportPlatformOper
 
 unsigned int reportPlatformOperationalDataMessageSize(ReportPlatformOperationalDataMessage message)
 {
-	return (unsigned int)(message->dataSize + JAUS_HEADER_SIZE_BYTES);
+	return (unsigned int)(dataSize(message) + JAUS_HEADER_SIZE_BYTES);
 }
 
 //********************* PRIVATE HEADER FUNCTIONS **********************//

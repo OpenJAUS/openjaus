@@ -296,6 +296,61 @@ static int dataToBuffer(ReportGlobalPoseMessage message, unsigned char *buffer, 
 	return index;
 }
 
+// Returns number of bytes put into the buffer
+static int dataSize(ReportGlobalPoseMessage message)
+{
+	int index = 0;
+
+	index += JAUS_SHORT_PRESENCE_VECTOR_SIZE_BYTES;
+	
+	if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_POSE_PV_LATITUDE_BIT))
+	{
+		index += JAUS_INTEGER_SIZE_BYTES;
+	}
+	
+	if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_POSE_PV_LONGITUDE_BIT))
+	{
+		index += JAUS_INTEGER_SIZE_BYTES;
+	}
+
+	if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_POSE_PV_ELEVATION_BIT))
+	{
+		index += JAUS_INTEGER_SIZE_BYTES;
+	}
+	
+	if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_POSE_PV_POSITION_RMS_BIT))
+	{
+		index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
+	}
+
+	if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_POSE_PV_ROLL_BIT))
+	{
+		index += JAUS_SHORT_SIZE_BYTES;
+	}
+	
+	if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_POSE_PV_PITCH_BIT))
+	{
+		index += JAUS_SHORT_SIZE_BYTES;
+	}
+	
+	if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_POSE_PV_YAW_BIT))
+	{
+		index += JAUS_SHORT_SIZE_BYTES;
+	}
+	
+	if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_POSE_PV_ATTITUDE_RMS_BIT))
+	{
+		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+	}
+	
+	if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_POSE_PV_TIME_STAMP_BIT))
+	{
+		index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
+	}
+
+	return index;
+}
+
 // ************************************************************************************************************** //
 //                                    NON-USER CONFIGURED FUNCTIONS
 // ************************************************************************************************************** //
@@ -325,6 +380,7 @@ ReportGlobalPoseMessage reportGlobalPoseMessageCreate(void)
 	message->sequenceNumber = 0;
 	
 	dataInitialize(message);
+	message->dataSize = dataSize(message);
 	
 	return message;	
 }
@@ -446,8 +502,8 @@ JausMessage reportGlobalPoseMessageToJausMessage(ReportGlobalPoseMessage message
 	jausMessage->dataFlag = message->dataFlag;
 	jausMessage->sequenceNumber = message->sequenceNumber;
 	
-	jausMessage->data = (unsigned char *)malloc(message->dataSize);
-	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, message->dataSize);
+	jausMessage->data = (unsigned char *)malloc(dataSize(message));
+	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, dataSize(message));
 	
 	return jausMessage;
 }
@@ -455,7 +511,7 @@ JausMessage reportGlobalPoseMessageToJausMessage(ReportGlobalPoseMessage message
 
 unsigned int reportGlobalPoseMessageSize(ReportGlobalPoseMessage message)
 {
-	return (unsigned int)(message->dataSize + JAUS_HEADER_SIZE_BYTES);
+	return (unsigned int)(dataSize(message) + JAUS_HEADER_SIZE_BYTES);
 }
 
 //********************* PRIVATE HEADER FUNCTIONS **********************//

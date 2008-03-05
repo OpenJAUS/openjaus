@@ -547,6 +547,121 @@ static int dataToBuffer(ReportPlatformSpecificationsMessage message, unsigned ch
 	return index;
 }
 
+// Returns number of bytes put into the buffer
+static int dataSize(ReportPlatformSpecificationsMessage message)
+{
+	int index = 0;
+
+	index += JAUS_INTEGER_PRESENCE_VECTOR_SIZE_BYTES;
+
+	if(jausIntegerPresenceVectorIsBitSet(message->presenceVector, JAUS_DISCRETE_PV_PLATFORM_NAME_BIT))
+	{
+		index += JAUS_PLATFORM_NAME_LENGTH_BYTES;
+	}
+
+	if(jausIntegerPresenceVectorIsBitSet(message->presenceVector, JAUS_DISCRETE_PV_FRONT_BIT))
+	{
+		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+	}
+
+	if(jausIntegerPresenceVectorIsBitSet(message->presenceVector, JAUS_DISCRETE_PV_BACK_BIT))
+	{
+		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+	}
+
+	if(jausIntegerPresenceVectorIsBitSet(message->presenceVector, JAUS_DISCRETE_PV_RIGHT_BIT))
+	{
+		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+	}
+
+	if(jausIntegerPresenceVectorIsBitSet(message->presenceVector, JAUS_DISCRETE_PV_LEFT_BIT))
+	{
+		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+	}
+
+	if(jausIntegerPresenceVectorIsBitSet(message->presenceVector, JAUS_DISCRETE_PV_BOTTOM_BIT))
+	{
+		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+	}
+
+	if(jausIntegerPresenceVectorIsBitSet(message->presenceVector, JAUS_DISCRETE_PV_TOP_BIT))
+	{
+		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+	}
+
+	if(jausIntegerPresenceVectorIsBitSet(message->presenceVector, JAUS_DISCRETE_PV_X_CG_BIT))
+	{
+		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+	}
+
+	if(jausIntegerPresenceVectorIsBitSet(message->presenceVector, JAUS_DISCRETE_PV_Y_CG_BIT))
+	{
+		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+	}
+
+	if(jausIntegerPresenceVectorIsBitSet(message->presenceVector, JAUS_DISCRETE_PV_Z_CG_BIT))
+	{
+		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+	}
+
+	if(jausIntegerPresenceVectorIsBitSet(message->presenceVector, JAUS_DISCRETE_PV_TURNING_RADIUS_BIT))
+	{
+		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+	}
+
+	if(jausIntegerPresenceVectorIsBitSet(message->presenceVector, JAUS_DISCRETE_PV_WHEEL_BASE_BIT))
+	{
+		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+	}
+
+	if(jausIntegerPresenceVectorIsBitSet(message->presenceVector, JAUS_DISCRETE_PV_TRACK_WIDTH_BIT))
+	{
+		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+	}
+
+	if(jausIntegerPresenceVectorIsBitSet(message->presenceVector, JAUS_DISCRETE_PV_PITCH_OVER_BIT))
+	{
+		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+	}
+
+	if(jausIntegerPresenceVectorIsBitSet(message->presenceVector, JAUS_DISCRETE_PV_ROLL_OVER_BIT))
+	{
+		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+	}
+
+	if(jausIntegerPresenceVectorIsBitSet(message->presenceVector, JAUS_DISCRETE_PV_MAX_VELOCITY_X_BIT))
+	{
+		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+	}
+
+	if(jausIntegerPresenceVectorIsBitSet(message->presenceVector, JAUS_DISCRETE_PV_MAX_VELOCITY_Y_BIT))
+	{
+		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+	}
+
+	if(jausIntegerPresenceVectorIsBitSet(message->presenceVector, JAUS_DISCRETE_PV_MAX_VELOCITY_Z_BIT))
+	{
+		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+	}
+
+	if(jausIntegerPresenceVectorIsBitSet(message->presenceVector, JAUS_DISCRETE_PV_MAX_ROLL_RATE_BIT))
+	{
+		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+	}
+
+	if(jausIntegerPresenceVectorIsBitSet(message->presenceVector, JAUS_DISCRETE_PV_MAX_PITCH_RATE_BIT))
+	{
+		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+	}
+
+	if(jausIntegerPresenceVectorIsBitSet(message->presenceVector, JAUS_DISCRETE_PV_MAX_YAW_RATE_BIT))
+	{
+		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+	}
+
+	return index;
+}
+
 // ************************************************************************************************************** //
 //                                    NON-USER CONFIGURED FUNCTIONS
 // ************************************************************************************************************** //
@@ -576,6 +691,7 @@ ReportPlatformSpecificationsMessage reportPlatformSpecificationsMessageCreate(vo
 	message->sequenceNumber = 0;
 	
 	dataInitialize(message);
+	message->dataSize = dataSize(message);
 	
 	return message;	
 }
@@ -697,8 +813,8 @@ JausMessage reportPlatformSpecificationsMessageToJausMessage(ReportPlatformSpeci
 	jausMessage->dataFlag = message->dataFlag;
 	jausMessage->sequenceNumber = message->sequenceNumber;
 	
-	jausMessage->data = (unsigned char *)malloc(message->dataSize);
-	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, message->dataSize);
+	jausMessage->data = (unsigned char *)malloc(dataSize(message));
+	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, dataSize(message));
 	
 	return jausMessage;
 }
@@ -706,7 +822,7 @@ JausMessage reportPlatformSpecificationsMessageToJausMessage(ReportPlatformSpeci
 
 unsigned int reportPlatformSpecificationsMessageSize(ReportPlatformSpecificationsMessage message)
 {
-	return (unsigned int)(message->dataSize + JAUS_HEADER_SIZE_BYTES);
+	return (unsigned int)(dataSize(message) + JAUS_HEADER_SIZE_BYTES);
 }
 
 //********************* PRIVATE HEADER FUNCTIONS **********************//

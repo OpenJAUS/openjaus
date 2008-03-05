@@ -295,6 +295,61 @@ static int dataToBuffer(ReportVelocityStateMessage message, unsigned char *buffe
 	return index;
 }
 
+// Returns number of bytes put into the buffer
+static int dataSize(ReportVelocityStateMessage message)
+{
+	int index = 0;
+
+	index += JAUS_SHORT_PRESENCE_VECTOR_SIZE_BYTES;
+
+	if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_VELOCITY_PV_VELOCITY_X_BIT))
+	{
+		index += JAUS_INTEGER_SIZE_BYTES;
+	}
+
+	if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_VELOCITY_PV_VELOCITY_Y_BIT))
+	{
+		index += JAUS_INTEGER_SIZE_BYTES;
+	}
+
+	if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_VELOCITY_PV_VELOCITY_Z_BIT))
+	{
+		index += JAUS_INTEGER_SIZE_BYTES;
+	}
+
+	if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_VELOCITY_PV_VELOCITY_RMS_BIT))
+	{
+		index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
+	}
+
+	if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_VELOCITY_PV_ROLL_RATE_BIT))
+	{
+		index += JAUS_SHORT_SIZE_BYTES;
+	}
+
+	if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_VELOCITY_PV_PITCH_RATE_BIT))
+	{
+		index += JAUS_SHORT_SIZE_BYTES;
+	}
+
+	if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_VELOCITY_PV_YAW_RATE_BIT))
+	{
+		index += JAUS_SHORT_SIZE_BYTES;
+	}
+
+	if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_VELOCITY_PV_RATE_RMS_BIT))
+	{
+		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+	}
+
+	if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_VELOCITY_PV_TIME_STAMP_BIT))
+	{
+		index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
+	}
+
+	return index;
+}
+
 // ************************************************************************************************************** //
 //                                    NON-USER CONFIGURED FUNCTIONS
 // ************************************************************************************************************** //
@@ -324,7 +379,8 @@ ReportVelocityStateMessage reportVelocityStateMessageCreate(void)
 	message->sequenceNumber = 0;
 	
 	dataInitialize(message);
-	
+	message->dataSize = dataSize(message);
+		
 	return message;	
 }
 
@@ -445,8 +501,8 @@ JausMessage reportVelocityStateMessageToJausMessage(ReportVelocityStateMessage m
 	jausMessage->dataFlag = message->dataFlag;
 	jausMessage->sequenceNumber = message->sequenceNumber;
 	
-	jausMessage->data = (unsigned char *)malloc(message->dataSize);
-	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, message->dataSize);
+	jausMessage->data = (unsigned char *)malloc(dataSize(message));
+	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, dataSize(message));
 	
 	return jausMessage;
 }
@@ -454,7 +510,7 @@ JausMessage reportVelocityStateMessageToJausMessage(ReportVelocityStateMessage m
 
 unsigned int reportVelocityStateMessageSize(ReportVelocityStateMessage message)
 {
-	return (unsigned int)(message->dataSize + JAUS_HEADER_SIZE_BYTES);
+	return (unsigned int)(dataSize(message) + JAUS_HEADER_SIZE_BYTES);
 }
 
 //********************* PRIVATE HEADER FUNCTIONS **********************//
