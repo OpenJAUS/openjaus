@@ -831,7 +831,7 @@ bool NodeManagerComponent::processCreateEvent(JausMessage message)
 			{
 				confirmEvent->eventId = (JausByte) nextEventId;
 				eventId[nextEventId] = true;
-				subsystemChangeList[nextEventId] = createEvent->source;
+				subsystemChangeList[nextEventId] = jausAddressClone(createEvent->source);
 				confirmEvent->responseCode = SUCCESSFUL_RESPONSE;
 			}
 			else
@@ -858,7 +858,7 @@ bool NodeManagerComponent::processCreateEvent(JausMessage message)
 			{
 				confirmEvent->eventId = (JausByte) nextEventId;
 				eventId[nextEventId] = true;
-				nodeChangeList[nextEventId] = createEvent->source;
+				nodeChangeList[nextEventId] = jausAddressClone(createEvent->source);
 				confirmEvent->responseCode = SUCCESSFUL_RESPONSE;
 			}
 			else
