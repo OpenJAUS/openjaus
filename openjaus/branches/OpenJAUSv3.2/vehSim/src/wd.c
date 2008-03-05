@@ -45,7 +45,7 @@
 #include "properties.h"
 #include "utm/utmLib.h"
 #include <jaus.h>			// JAUS message set (USER: JAUS libraries must be installed first)
-#include <nodeManager.h>	// Node managment functions for sending and receiving JAUS messages (USER: Node Manager must be installed)
+#include <nodeManagerInterface.h>	// Node managment functions for sending and receiving JAUS messages (USER: Node Manager must be installed)
 #include <pthread.h>			// Multi-threading functions (standard to unix)
 #include <stdlib.h>	
 //#include <unistd.h>				// Unix standard functions

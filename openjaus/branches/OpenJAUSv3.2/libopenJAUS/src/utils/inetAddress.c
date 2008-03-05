@@ -81,7 +81,7 @@ InetAddress inetAddressGetLocalHost(void)
 	}
 	
 	// Get the localhost entry, which allows us to connect to the loopback ip interface
-	localhost = gethostbyname("localhost");
+	localhost = gethostbyname("127.0.0.1");
 	if(localhost == NULL)
 	{
 		return NULL;

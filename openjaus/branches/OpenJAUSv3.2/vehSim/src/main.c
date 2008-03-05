@@ -9,7 +9,7 @@
 #include <time.h>
 
 #include <jaus.h>
-#include <nodeManager.h>
+#include <nodeManagerInterface.h>
 
 #if defined(WIN32)
 	#undef MOUSE_MOVED	// conflict between PDCURSES and WIN32

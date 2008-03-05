@@ -1,5 +1,5 @@
 #include <jaus.h>			// JAUS message set (USER: JAUS libraries must be installed first)
-#include <nodeManager.h>
+#include <nodeManagerInterface.h>
 #include <pthread.h>			// Multi-threading functions (standard to unix)
 #include <stdlib.h>	
 //#include <unistd.h>				// Unix standard functions
