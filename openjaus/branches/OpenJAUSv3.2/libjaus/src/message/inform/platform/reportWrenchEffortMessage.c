@@ -362,6 +362,77 @@ static int dataToBuffer(ReportWrenchEffortMessage message, unsigned char *buffer
 	return index;
 }
 
+// Returns number of bytes put into the buffer
+static int dataSize(ReportWrenchEffortMessage message)
+{
+	int index = 0;
+
+	index += JAUS_SHORT_PRESENCE_VECTOR_SIZE_BYTES;
+
+	if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_WRENCH_PV_PROPULSIVE_LINEAR_X_BIT))
+	{
+		index += JAUS_SHORT_SIZE_BYTES;
+	}
+	
+	if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_WRENCH_PV_PROPULSIVE_LINEAR_Y_BIT))
+	{
+		index += JAUS_SHORT_SIZE_BYTES;
+	}
+	
+	if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_WRENCH_PV_PROPULSIVE_LINEAR_Z_BIT))
+	{
+		index += JAUS_SHORT_SIZE_BYTES;
+	}
+
+	if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_WRENCH_PV_PROPULSIVE_ROTATIONAL_X_BIT))
+	{
+		index += JAUS_SHORT_SIZE_BYTES;
+	}
+	
+	if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_WRENCH_PV_PROPULSIVE_ROTATIONAL_Y_BIT))
+	{
+		index += JAUS_SHORT_SIZE_BYTES;
+	}
+	
+	if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_WRENCH_PV_PROPULSIVE_ROTATIONAL_Z_BIT))
+	{
+		index += JAUS_SHORT_SIZE_BYTES;
+	}
+
+	// Resistive
+	if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_WRENCH_PV_RESISTIVE_LINEAR_X_BIT))
+	{
+		index += JAUS_BYTE_SIZE_BYTES;
+	}
+	
+	if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_WRENCH_PV_RESISTIVE_LINEAR_Y_BIT))
+	{
+		index += JAUS_BYTE_SIZE_BYTES;
+	}
+	
+	if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_WRENCH_PV_RESISTIVE_LINEAR_Z_BIT))
+	{
+		index += JAUS_BYTE_SIZE_BYTES;
+	}
+
+	if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_WRENCH_PV_RESISTIVE_ROTATIONAL_X_BIT))
+	{
+		index += JAUS_BYTE_SIZE_BYTES;
+	}
+	
+	if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_WRENCH_PV_RESISTIVE_ROTATIONAL_Y_BIT))
+	{
+		index += JAUS_BYTE_SIZE_BYTES;
+	}
+	
+	if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_WRENCH_PV_RESISTIVE_ROTATIONAL_Z_BIT))
+	{
+		index += JAUS_BYTE_SIZE_BYTES;
+	}
+
+	return index;
+}
+
 // ************************************************************************************************************** //
 //                                    NON-USER CONFIGURED FUNCTIONS
 // ************************************************************************************************************** //
@@ -391,6 +462,7 @@ ReportWrenchEffortMessage reportWrenchEffortMessageCreate(void)
 	message->sequenceNumber = 0;
 	
 	dataInitialize(message);
+	message->dataSize = dataSize(message);
 	
 	return message;	
 }
@@ -512,8 +584,8 @@ JausMessage reportWrenchEffortMessageToJausMessage(ReportWrenchEffortMessage mes
 	jausMessage->dataFlag = message->dataFlag;
 	jausMessage->sequenceNumber = message->sequenceNumber;
 	
-	jausMessage->data = (unsigned char *)malloc(message->dataSize);
-	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, message->dataSize);
+	jausMessage->data = (unsigned char *)malloc(dataSize(message));
+	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, dataSize(message));
 	
 	return jausMessage;
 }
@@ -521,7 +593,7 @@ JausMessage reportWrenchEffortMessageToJausMessage(ReportWrenchEffortMessage mes
 
 unsigned int reportWrenchEffortMessageSize(ReportWrenchEffortMessage message)
 {
-	return (unsigned int)(message->dataSize + JAUS_HEADER_SIZE_BYTES);
+	return (unsigned int)(dataSize(message) + JAUS_HEADER_SIZE_BYTES);
 }
 
 //********************* PRIVATE HEADER FUNCTIONS **********************//

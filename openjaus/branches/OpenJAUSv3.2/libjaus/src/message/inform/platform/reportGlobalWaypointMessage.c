@@ -219,6 +219,42 @@ static int dataToBuffer(ReportGlobalWaypointMessage message, unsigned char *buff
 	return index;
 }
 
+// Returns number of bytes put into the buffer
+static int dataSize(ReportGlobalWaypointMessage message)
+{
+	int index = 0;
+
+	index += JAUS_BYTE_PRESENCE_VECTOR_SIZE_BYTES;
+	
+	index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+	
+	index += JAUS_INTEGER_SIZE_BYTES;
+	
+	index += JAUS_INTEGER_SIZE_BYTES;
+	
+	if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_WAYPOINT_PV_ELEVATION_BIT))
+	{
+		index += JAUS_INTEGER_SIZE_BYTES;
+	}
+
+	if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_WAYPOINT_PV_ROLL_BIT))
+	{
+		index += JAUS_SHORT_SIZE_BYTES;
+	}
+	
+	if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_WAYPOINT_PV_PITCH_BIT))
+	{
+		index += JAUS_SHORT_SIZE_BYTES;
+	}
+		
+	if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_WAYPOINT_PV_YAW_BIT))
+	{
+		index += JAUS_SHORT_SIZE_BYTES;
+	}
+
+	return index;
+}
+
 // ************************************************************************************************************** //
 //                                    NON-USER CONFIGURED FUNCTIONS
 // ************************************************************************************************************** //
@@ -248,6 +284,7 @@ ReportGlobalWaypointMessage reportGlobalWaypointMessageCreate(void)
 	message->sequenceNumber = 0;
 	
 	dataInitialize(message);
+	message->dataSize = dataSize(message);
 	
 	return message;	
 }
@@ -369,8 +406,8 @@ JausMessage reportGlobalWaypointMessageToJausMessage(ReportGlobalWaypointMessage
 	jausMessage->dataFlag = message->dataFlag;
 	jausMessage->sequenceNumber = message->sequenceNumber;
 	
-	jausMessage->data = (unsigned char *)malloc(message->dataSize);
-	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, message->dataSize);
+	jausMessage->data = (unsigned char *)malloc(dataSize(message));
+	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, dataSize(message));
 	
 	return jausMessage;
 }
@@ -378,7 +415,7 @@ JausMessage reportGlobalWaypointMessageToJausMessage(ReportGlobalWaypointMessage
 
 unsigned int reportGlobalWaypointMessageSize(ReportGlobalWaypointMessage message)
 {
-	return (unsigned int)(message->dataSize + JAUS_HEADER_SIZE_BYTES);
+	return (unsigned int)(dataSize(message) + JAUS_HEADER_SIZE_BYTES);
 }
 
 //********************* PRIVATE HEADER FUNCTIONS **********************//
