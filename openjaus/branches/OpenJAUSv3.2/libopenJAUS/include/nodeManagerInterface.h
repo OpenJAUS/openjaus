@@ -48,6 +48,8 @@
 	#define JAUS_EXPORT
 #endif
 
+#define	OJ_NODE_MANAGER_INTERFACE_VERSION	"3.2.0"
+
 #ifdef __cplusplus
 extern "C" 
 {
