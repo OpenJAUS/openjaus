@@ -119,7 +119,6 @@ static int dataToBuffer(QueryPayloadDataElementMessage message, unsigned char *b
 {
 	int index = 0;
 	int i = 0;
-	int successFlag = SUCCESS;
 	JausByte payloadInformationDataElementCount = 0;
 	int informationInterfaceNumber = 0;
 
@@ -136,9 +135,8 @@ static int dataToBuffer(QueryPayloadDataElementMessage message, unsigned char *b
 		for(i = 0; i < payloadInformationDataElementCount; i++)
 		{			
 			// get payloadDataElement identifier
-
 			// get/pack payloadDataElement index
-			successFlag = SUCCESS;
+
 			informationInterfaceNumber = message->indexes[i];
 			if(message->jausPayloadInterface && (message->jausPayloadInterface->jausInformationInterfaces->elementCount >= informationInterfaceNumber) )
 			{
@@ -148,6 +146,39 @@ static int dataToBuffer(QueryPayloadDataElementMessage message, unsigned char *b
 			else return JAUS_FALSE;
 		}
 	}
+	return index;
+}
+
+// Returns number of bytes put into the buffer
+static int dataSize(QueryPayloadDataElementMessage message)
+{
+	int index = 0;
+	int i = 0;
+	int informationInterfaceNumber = 0;
+	JausByte payloadInformationDataElementCount = 0;
+
+	// # payload interfaces
+	payloadInformationDataElementCount = message->numberInterfaces;
+	if(!payloadInformationDataElementCount)
+	{
+		return 0; // nothing to do
+	}
+	
+	index += JAUS_BYTE_SIZE_BYTES;
+	
+	for(i = 0; i < payloadInformationDataElementCount; i++)
+	{			
+		informationInterfaceNumber = message->indexes[i];
+		if(message->jausPayloadInterface && (message->jausPayloadInterface->jausInformationInterfaces->elementCount >= informationInterfaceNumber) )
+		{
+			index += JAUS_BYTE_SIZE_BYTES;
+		}
+		else
+		{
+			return 0;
+		}
+	}
+
 	return index;
 }
 
@@ -180,6 +211,7 @@ QueryPayloadDataElementMessage queryPayloadDataElementMessageCreate(void)
 	message->sequenceNumber = 0;
 	
 	dataInitialize(message);
+	message->dataSize = dataSize(message);
 	
 	return message;	
 }
@@ -302,16 +334,15 @@ JausMessage queryPayloadDataElementMessageToJausMessage(QueryPayloadDataElementM
 	jausMessage->dataFlag = message->dataFlag;
 	jausMessage->sequenceNumber = message->sequenceNumber;
 	
-	jausMessage->data = (unsigned char *)malloc(message->dataSize);
-	
-	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, message->dataSize);
+	jausMessage->data = (unsigned char *)malloc(dataSize(message));	
+	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, dataSize(message));
 		
 	return jausMessage;
 }
 
 unsigned int queryPayloadDataElementMessageSize(QueryPayloadDataElementMessage message)
 {
-	return (unsigned int)(message->dataSize + JAUS_HEADER_SIZE_BYTES);
+	return (unsigned int)(dataSize(message) + JAUS_HEADER_SIZE_BYTES);
 }
 
 //********************* PRIVATE HEADER FUNCTIONS **********************//

@@ -294,6 +294,67 @@ static int dataToBuffer(CreateEventMessage message, unsigned char *buffer, unsig
 	return index;
 }
 
+// Returns number of bytes put into the buffer
+static int dataSize(CreateEventMessage message)
+{
+	int index = 0;
+
+	// Presence Vector
+	index += JAUS_BYTE_PRESENCE_VECTOR_SIZE_BYTES;
+	
+	// Message Code
+	index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+	
+	// Event Type
+	index += JAUS_BYTE_SIZE_BYTES;
+	
+	if(jausBytePresenceVectorIsBitSet(message->presenceVector, CREATE_EVENT_PV_BOUNDARY_BIT))
+	{
+		index += JAUS_BYTE_SIZE_BYTES;
+	}
+
+	if(jausBytePresenceVectorIsBitSet(message->presenceVector, CREATE_EVENT_PV_DATA_TYPE_BIT))
+	{
+		index += JAUS_BYTE_SIZE_BYTES;
+	}
+	
+	if(jausBytePresenceVectorIsBitSet(message->presenceVector, CREATE_EVENT_PV_DATA_FIELD_BIT))
+	{
+		index += JAUS_BYTE_SIZE_BYTES;
+	}
+	
+	if(jausBytePresenceVectorIsBitSet(message->presenceVector, CREATE_EVENT_PV_LOWER_LIMIT_BIT))
+	{		
+		index += jausEventLimitByteSize(message->limitDataType);
+	}
+	
+	if(jausBytePresenceVectorIsBitSet(message->presenceVector, CREATE_EVENT_PV_UPPER_LIMIT_BIT))
+	{		
+		index += jausEventLimitByteSize(message->limitDataType);
+	}
+
+	if(jausBytePresenceVectorIsBitSet(message->presenceVector, CREATE_EVENT_PV_STATE_LIMIT_BIT))
+	{		
+		index += jausEventLimitByteSize(message->limitDataType);
+	}
+	
+	if(jausBytePresenceVectorIsBitSet(message->presenceVector, CREATE_EVENT_PV_MINIMUM_RATE_BIT))
+	{		
+		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+	}
+	
+	if(jausBytePresenceVectorIsBitSet(message->presenceVector, CREATE_EVENT_PV_REQUESTED_RATE_BIT))
+	{		
+		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+	}
+	
+	// Jaus Message
+	index += jausMessageSize(message->queryMessage);
+
+	return index;
+}
+
+
 // ************************************************************************************************************** //
 //                                    NON-USER CONFIGURED FUNCTIONS
 // ************************************************************************************************************** //
@@ -323,6 +384,7 @@ CreateEventMessage createEventMessageCreate(void)
 	message->sequenceNumber = 0;
 	
 	dataInitialize(message);
+	message->dataSize = dataSize(message);
 	
 	return message;	
 }
@@ -446,8 +508,8 @@ JausMessage createEventMessageToJausMessage(CreateEventMessage message)
 	jausMessage->dataFlag = message->dataFlag;
 	jausMessage->sequenceNumber = message->sequenceNumber;
 	
-	jausMessage->data = (unsigned char *)malloc(message->dataSize);
-	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, message->dataSize);
+	jausMessage->data = (unsigned char *)malloc(dataSize(message));
+	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, dataSize(message));
 	
 	return jausMessage;
 }
@@ -455,7 +517,7 @@ JausMessage createEventMessageToJausMessage(CreateEventMessage message)
 
 unsigned int createEventMessageSize(CreateEventMessage message)
 {
-	return (unsigned int)(message->dataSize + JAUS_HEADER_SIZE_BYTES);
+	return (unsigned int)(dataSize(message) + JAUS_HEADER_SIZE_BYTES);
 }
 
 //********************* PRIVATE HEADER FUNCTIONS **********************//

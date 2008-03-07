@@ -165,6 +165,37 @@ static int dataToBuffer(CreateVksObjectsMessage message, unsigned char *buffer, 
 	return index;
 }
 
+// Returns number of bytes put into the buffer
+static int dataSize(CreateVksObjectsMessage message)
+{
+	int index = 0;
+	int i = 0;
+	JausBoolean objectBuffered;
+	JausWorldModelVectorObject object;
+
+	// Presence Vector
+	index += JAUS_BYTE_PRESENCE_VECTOR_SIZE_BYTES;
+
+	objectBuffered = jausBytePresenceVectorIsBitSet(message->presenceVector, VKS_PV_CREATE_BUFFERED_BIT);
+	
+	// Message Properties
+	index += JAUS_BYTE_PRESENCE_VECTOR_SIZE_BYTES;
+	
+	// Local Request Id
+	index += JAUS_BYTE_SIZE_BYTES;
+
+	// Number of Objects
+	index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+	
+	for(i = 0; i < message->vectorObjects->elementCount; i++)
+	{
+		object = (JausWorldModelVectorObject) message->vectorObjects->elementData[i];
+		index += vectorObjectSizeBytes(object, objectBuffered);
+	}
+
+	return index;
+}
+
 // ************************************************************************************************************** //
 //                                    NON-USER CONFIGURED FUNCTIONS
 // ************************************************************************************************************** //
@@ -194,6 +225,7 @@ CreateVksObjectsMessage createVksObjectsMessageCreate(void)
 	message->sequenceNumber = 0;
 	
 	dataInitialize(message);
+	message->dataSize = dataSize(message);
 	
 	return message;	
 }
@@ -316,8 +348,8 @@ JausMessage createVksObjectsMessageToJausMessage(CreateVksObjectsMessage message
 	jausMessage->dataFlag = message->dataFlag;
 	jausMessage->sequenceNumber = message->sequenceNumber;
 	
-	jausMessage->data = (unsigned char *)malloc(message->dataSize);
-	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, message->dataSize);
+	jausMessage->data = (unsigned char *)malloc(dataSize(message));
+	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, dataSize(message));
 	
 	return jausMessage;
 }
@@ -325,7 +357,7 @@ JausMessage createVksObjectsMessageToJausMessage(CreateVksObjectsMessage message
 
 unsigned int createVksObjectsMessageSize(CreateVksObjectsMessage message)
 {
-	return (unsigned int)(message->dataSize + JAUS_HEADER_SIZE_BYTES);
+	return (unsigned int)(dataSize(message) + JAUS_HEADER_SIZE_BYTES);
 }
 
 //********************* PRIVATE HEADER FUNCTIONS **********************//

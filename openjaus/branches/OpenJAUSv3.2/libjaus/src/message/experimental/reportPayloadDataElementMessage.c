@@ -129,7 +129,6 @@ static int dataToBuffer(ReportPayloadDataElementMessage message, unsigned char *
 {
 	int index = 0;
 	int i = 0;
-	int successFlag = SUCCESS;
 	JausByte payloadInformationDataElementCount = 0;
 	int informationInterfaceNumber = 0;
 	JausInformationInterface informationInterface = NULL;
@@ -149,7 +148,6 @@ static int dataToBuffer(ReportPayloadDataElementMessage message, unsigned char *
 			// get payloadDataElement identifier
 
 			// get/pack payloadDataElement index
-			successFlag = SUCCESS;
 			informationInterfaceNumber = message->indexes[i];
 			if(message->jausPayloadInterface && (message->jausPayloadInterface->jausInformationInterfaces->elementCount >= informationInterfaceNumber) )
 			{
@@ -165,6 +163,42 @@ static int dataToBuffer(ReportPayloadDataElementMessage message, unsigned char *
 			index += jausInformationValueSizeBytes(informationInterface);
 		}
 	}
+	return index;
+}
+
+// Returns number of bytes put into the buffer
+static int dataSize(ReportPayloadDataElementMessage message)
+{
+	int index = 0;
+	int i = 0;
+	JausByte payloadInformationDataElementCount = 0;
+	int informationInterfaceNumber = 0;
+	JausInformationInterface informationInterface = NULL;
+
+	// Pack Message Fields to Buffer
+	// # payload interfaces
+	payloadInformationDataElementCount = message->numberInterfaces;
+	if(!payloadInformationDataElementCount) return 0; // nothing to do
+	
+	index += JAUS_BYTE_SIZE_BYTES;
+	
+	for(i = 0; i < payloadInformationDataElementCount; i++)
+	{			
+		// get payloadDataElement identifier
+
+		// get/pack payloadDataElement index
+		informationInterfaceNumber = message->indexes[i];
+		if(message->jausPayloadInterface && (message->jausPayloadInterface->jausInformationInterfaces->elementCount >= informationInterfaceNumber) )
+		{
+			index += JAUS_BYTE_SIZE_BYTES;
+		}
+		else return 0;
+		
+		// get corresponding informationInterface
+		informationInterface = (JausInformationInterface) message->jausPayloadInterface->jausInformationInterfaces->elementData[informationInterfaceNumber - 1];			
+		index += jausInformationValueSizeBytes(informationInterface);
+	}
+
 	return index;
 }
 
@@ -197,6 +231,7 @@ ReportPayloadDataElementMessage reportPayloadDataElementMessageCreate(void)
 	message->sequenceNumber = 0;
 	
 	dataInitialize(message);
+	message->dataSize = dataSize(message);
 	
 	return message;	
 }
@@ -319,16 +354,15 @@ JausMessage reportPayloadDataElementMessageToJausMessage(ReportPayloadDataElemen
 	jausMessage->dataFlag = message->dataFlag;
 	jausMessage->sequenceNumber = message->sequenceNumber;
 	
-	jausMessage->data = (unsigned char *)malloc(message->dataSize);
-	
-	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, message->dataSize);
+	jausMessage->data = (unsigned char *)malloc(dataSize(message));	
+	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, dataSize(message));
 		
 	return jausMessage;
 }
 
 unsigned int reportPayloadDataElementMessageSize(ReportPayloadDataElementMessage message)
 {
-	return (unsigned int)(message->dataSize + JAUS_HEADER_SIZE_BYTES);
+	return (unsigned int)(dataSize(message) + JAUS_HEADER_SIZE_BYTES);
 }
 
 //********************* PRIVATE HEADER FUNCTIONS **********************//
