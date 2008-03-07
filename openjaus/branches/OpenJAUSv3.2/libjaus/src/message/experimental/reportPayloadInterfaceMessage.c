@@ -596,6 +596,277 @@ static int dataToBuffer(ReportPayloadInterfaceMessage message, unsigned char *bu
 	return index;
 }
 
+// Returns number of bytes put into the buffer
+static int dataSize(ReportPayloadInterfaceMessage message)
+{
+	int index = 0, len = 0;
+	int i = 0;
+	int successFlag = SUCCESS;
+	JausByte payloadCommandInterfaceCount = 0;
+	JausByte payloadInformationInterfaceCount = 0;
+	JausByte tempByte, typeCode;
+	JausUnsignedShort tempUShort;
+	char * identifierString = NULL;
+	char * tempString = NULL;
+	JausTypeCode minValue, defaultValue, maxValue;
+
+	index += JAUS_BYTE_SIZE_BYTES;
+	
+	// # payload interfaces
+	payloadCommandInterfaceCount = message->jausPayloadInterface->jausCommandInterfaces->elementCount;
+	payloadInformationInterfaceCount = message->jausPayloadInterface->jausInformationInterfaces->elementCount;
+	
+	index += JAUS_BYTE_SIZE_BYTES;
+	
+	index += JAUS_BYTE_SIZE_BYTES;
+	
+	for(i = 0; i < payloadCommandInterfaceCount; i++)
+	{			
+		// get/pack command identifier
+		successFlag = SUCCESS;
+		identifierString = jausGetCommandInterfaceIdentifierByIndex(message->jausPayloadInterface, i + 1, &successFlag);
+		if (successFlag)
+		{
+			len = (int)strlen(identifierString);
+			index += len + 1;
+		}
+		
+		// get/pack payloadInterface type
+		successFlag = SUCCESS;
+		typeCode = jausGetCommandInterfaceTypeCode(message->jausPayloadInterface, identifierString, &successFlag);
+		if (successFlag)
+		{
+			index += JAUS_BYTE_SIZE_BYTES;
+		}
+	
+		// get/pack units
+		successFlag = SUCCESS;
+		tempByte = jausGetCommandInterfaceUnits(message->jausPayloadInterface, identifierString, &successFlag);
+		if (successFlag)
+		{
+			index += JAUS_BYTE_SIZE_BYTES;
+		}
+
+		// get/pack blocking flag
+		successFlag = SUCCESS;
+		if(jausGetCommandInterfaceBlockingFlag(message->jausPayloadInterface, identifierString, &successFlag))
+		{
+			index += JAUS_BYTE_SIZE_BYTES;
+		}
+		else if (successFlag)
+		{
+			index += JAUS_BYTE_SIZE_BYTES;				
+		}
+
+		// get/pack min/default/max values
+		successFlag = SUCCESS;
+		minValue = jausGetCommandInterfaceMin(message->jausPayloadInterface, identifierString, &successFlag);
+		if (successFlag)
+		{
+			index += jausMinMaxDefaultSizeBytes(typeCode);
+		}
+		
+		successFlag = SUCCESS;
+		defaultValue = jausGetCommandInterfaceDefault(message->jausPayloadInterface, identifierString, &successFlag);
+		if (successFlag)
+		{
+			index += jausMinMaxDefaultSizeBytes(typeCode);
+		}
+		
+		successFlag = SUCCESS;
+		maxValue = jausGetCommandInterfaceMax(message->jausPayloadInterface, identifierString, &successFlag);
+		if (successFlag)
+		{
+			index += jausMinMaxDefaultSizeBytes(typeCode);
+		}
+		
+		// get/pack enumeration length
+		successFlag = SUCCESS;
+		tempUShort = jausGetCommandInterfaceEnumerationLength(message->jausPayloadInterface, identifierString, &successFlag);
+		if (successFlag)
+		{
+			index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+		}
+		
+		// get/pack enumeration if present
+		if(tempUShort != 0)
+		{
+			tempString = jausGetCommandInterfaceEnumeration(message->jausPayloadInterface, identifierString, &successFlag);
+			index += tempUShort;
+		}
+
+		// get/pack HMI recommendation, if in PV
+		if(jausBytePresenceVectorIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_RECOMMENDATION_BIT))		
+		{
+			successFlag = SUCCESS;
+			tempByte = jausGetCommandInterfaceHmiRecommendation(message->jausPayloadInterface, identifierString, &successFlag);
+			if (successFlag)
+			{
+				index += JAUS_BYTE_SIZE_BYTES;
+			}
+		}
+		// get/pack HMI location, if in PV
+		if(jausBytePresenceVectorIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_XPOS_BIT))
+		{
+			tempUShort = jausGetCommandInterfaceHmiXPositionPixels(message->jausPayloadInterface, identifierString, &successFlag);
+			if (successFlag)
+			{
+				index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+			}
+		}
+
+		if(jausBytePresenceVectorIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_YPOS_BIT))
+		{
+			tempUShort = jausGetCommandInterfaceHmiYPositionPixels(message->jausPayloadInterface, identifierString, &successFlag);
+			if (successFlag)
+			{
+				index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+			}
+		}
+
+		if(jausBytePresenceVectorIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_WIDTH_BIT))
+		{
+			tempUShort = jausGetCommandInterfaceHmiWidthPixels(message->jausPayloadInterface, identifierString, &successFlag);
+			if (successFlag)
+			{
+				index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+			}
+		}
+
+		if(jausBytePresenceVectorIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_HEIGHT_BIT))
+		{
+			tempUShort = jausGetCommandInterfaceHmiHeightPixels(message->jausPayloadInterface, identifierString, &successFlag);
+			if (successFlag)
+			{
+				index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+			}
+		}
+	}
+
+	for(i = 0; i < payloadInformationInterfaceCount; i++)
+	{			
+		// get/pack information identifier
+		successFlag = SUCCESS;
+		identifierString = jausGetInformationInterfaceIdentifierByIndex(message->jausPayloadInterface, i + 1, &successFlag);
+		if (successFlag)
+		{
+			len = (int)strlen(identifierString);
+			index += len + 1;
+		}
+		
+		// get/pack command interface association
+		successFlag = SUCCESS;
+		tempByte = jausGetInformationInterfaceCommandInterfaceAssoc(message->jausPayloadInterface, identifierString, &successFlag);
+		if (successFlag)
+		{
+			index += JAUS_BYTE_SIZE_BYTES;
+		}
+
+		// get/pack payloadInterface type
+		successFlag = SUCCESS;
+		typeCode = jausGetInformationInterfaceTypeCode(message->jausPayloadInterface, identifierString, &successFlag);
+		if (successFlag)
+		{
+			index += JAUS_BYTE_SIZE_BYTES;
+		}
+	
+		// get/pack units
+		successFlag = SUCCESS;
+		tempByte = jausGetInformationInterfaceUnits(message->jausPayloadInterface, identifierString, &successFlag);
+		if (successFlag)
+		{
+			index += JAUS_BYTE_SIZE_BYTES;
+		}
+
+		// get/pack min/default/max values
+		successFlag = SUCCESS;
+		minValue = jausGetInformationInterfaceMin(message->jausPayloadInterface, identifierString, &successFlag);
+		if (successFlag)
+		{
+			index += jausMinMaxDefaultSizeBytes(typeCode);
+		}
+		
+		successFlag = SUCCESS;
+		defaultValue = jausGetInformationInterfaceDefault(message->jausPayloadInterface, identifierString, &successFlag);
+		if (successFlag)
+		{
+			index += jausMinMaxDefaultSizeBytes(typeCode);
+		}
+		
+		successFlag = SUCCESS;
+		maxValue = jausGetInformationInterfaceMax(message->jausPayloadInterface, identifierString, &successFlag);
+		if (successFlag)
+		{
+			index += jausMinMaxDefaultSizeBytes(typeCode);
+		}
+		
+		// get/pack enumeration length
+		successFlag = SUCCESS;
+		tempUShort = jausGetInformationInterfaceEnumerationLength(message->jausPayloadInterface, identifierString, &successFlag);
+		if (successFlag)
+		{
+			index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+		}
+		
+		// get/pack enumeration if present
+		if(tempUShort != 0)
+		{
+			tempString = jausGetInformationInterfaceEnumeration(message->jausPayloadInterface, identifierString, &successFlag);
+			index += strlen(tempString);
+		}
+
+		// get/pack HMI recommendation, if in PV
+		if(jausBytePresenceVectorIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_RECOMMENDATION_BIT))		
+		{
+			successFlag = SUCCESS;
+			tempByte = jausGetInformationInterfaceHmiRecommendation(message->jausPayloadInterface, identifierString, &successFlag);
+			if (successFlag)
+			{
+				index += JAUS_BYTE_SIZE_BYTES;
+			}
+		}
+		// get/pack HMI location, if in PV
+		if(jausBytePresenceVectorIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_XPOS_BIT))
+		{
+			tempUShort = jausGetInformationInterfaceHmiXPositionPixels(message->jausPayloadInterface, identifierString, &successFlag);
+			if (successFlag)
+			{
+				index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+			}
+		}
+
+		if(jausBytePresenceVectorIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_YPOS_BIT))
+		{
+			tempUShort = jausGetInformationInterfaceHmiYPositionPixels(message->jausPayloadInterface, identifierString, &successFlag);
+			if (successFlag)
+			{
+				index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+			}
+		}
+
+		if(jausBytePresenceVectorIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_WIDTH_BIT))
+		{
+			tempUShort = jausGetInformationInterfaceHmiWidthPixels(message->jausPayloadInterface, identifierString, &successFlag);
+			if (successFlag)
+			{
+				index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+			}
+		}
+
+		if(jausBytePresenceVectorIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_HEIGHT_BIT))
+		{
+			tempUShort = jausGetInformationInterfaceHmiHeightPixels(message->jausPayloadInterface, identifierString, &successFlag);
+			if (successFlag)
+			{
+				index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+			}
+		}
+	}
+
+	return index;
+}
+
+
 // ************************************************************************************************************** //
 //                                    NON-USER CONFIGURED FUNCTIONS
 // ************************************************************************************************************** //
@@ -625,6 +896,7 @@ ReportPayloadInterfaceMessage reportPayloadInterfaceMessageCreate(void)
 	message->sequenceNumber = 0;
 	
 	dataInitialize(message);
+	message->dataSize = dataSize(message);
 	
 	return message;	
 }
@@ -747,16 +1019,15 @@ JausMessage reportPayloadInterfaceMessageToJausMessage(ReportPayloadInterfaceMes
 	jausMessage->dataFlag = message->dataFlag;
 	jausMessage->sequenceNumber = message->sequenceNumber;
 	
-	jausMessage->data = (unsigned char *)malloc(message->dataSize);
-	
-	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, message->dataSize);
+	jausMessage->data = (unsigned char *)malloc(dataSize(message));	
+	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, dataSize(message));
 		
 	return jausMessage;
 }
 
 unsigned int reportPayloadInterfaceMessageSize(ReportPayloadInterfaceMessage message)
 {
-	return (unsigned int)(message->dataSize + JAUS_HEADER_SIZE_BYTES);
+	return (unsigned int)(dataSize(message) + JAUS_HEADER_SIZE_BYTES);
 }
 
 //********************* PRIVATE HEADER FUNCTIONS **********************//

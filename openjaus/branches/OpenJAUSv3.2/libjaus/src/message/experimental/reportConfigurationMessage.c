@@ -188,6 +188,39 @@ static int dataToBuffer(ReportConfigurationMessage message, unsigned char *buffe
 	return index;
 }
 
+// Returns number of bytes put into the buffer
+static int dataSize(ReportConfigurationMessage message)
+{
+	int index = 0;
+	int i = 0;
+	int j = 0;
+	JausNode node;
+	JausComponent component;
+
+	index += JAUS_BYTE_SIZE_BYTES;
+
+	// Loop through all nodes
+    for(i = 0; i < message->subsystem->nodes->elementCount; i++)
+	{
+		node = (JausNode)message->subsystem->nodes->elementData[i];
+		// Node Id
+		index += JAUS_BYTE_SIZE_BYTES;
+		// Number of Components
+		index += JAUS_BYTE_SIZE_BYTES;
+		
+		for(j = 0; j < node->components->elementCount; j++)
+		{
+			component = (JausComponent)node->components->elementData[j];
+			// Component Id
+			index += JAUS_BYTE_SIZE_BYTES;
+			// Component Instance
+			index += JAUS_BYTE_SIZE_BYTES;
+		}
+	}
+
+	return index;
+}
+
 // ************************************************************************************************************** //
 //                                    NON-USER CONFIGURED FUNCTIONS
 // ************************************************************************************************************** //
@@ -217,6 +250,7 @@ ReportConfigurationMessage reportConfigurationMessageCreate(void)
 	message->sequenceNumber = 0;
 	
 	dataInitialize(message);
+	message->dataSize = dataSize(message);
 	
 	return message;	
 }
@@ -339,8 +373,8 @@ JausMessage reportConfigurationMessageToJausMessage(ReportConfigurationMessage m
 	jausMessage->dataFlag = message->dataFlag;
 	jausMessage->sequenceNumber = message->sequenceNumber;
 	
-	jausMessage->data = (unsigned char *)malloc(message->dataSize);
-	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, message->dataSize);
+	jausMessage->data = (unsigned char *)malloc(dataSize(message));
+	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, dataSize(message));
 	
 	return jausMessage;
 }
@@ -348,7 +382,7 @@ JausMessage reportConfigurationMessageToJausMessage(ReportConfigurationMessage m
 
 unsigned int reportConfigurationMessageSize(ReportConfigurationMessage message)
 {
-	return (unsigned int)(message->dataSize + JAUS_HEADER_SIZE_BYTES);
+	return (unsigned int)(dataSize(message) + JAUS_HEADER_SIZE_BYTES);
 }
 
 //********************* PRIVATE HEADER FUNCTIONS **********************//

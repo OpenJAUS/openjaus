@@ -220,6 +220,59 @@ static int dataToBuffer(ReportServicesMessage message, unsigned char *buffer, un
 	return index;
 }
 
+// Returns number of bytes put into the buffer
+static int dataSize(ReportServicesMessage message)
+{
+	int index = 0;
+	int i = 0;
+	JausService service;
+	JausCommand command;
+
+    // # Services
+	index += JAUS_BYTE_SIZE_BYTES;
+
+	// Loop through all services
+    for(i = 0; i < message->jausServices->elementCount; i++)
+	{
+		service = (JausService) message->jausServices->elementData[i];
+		
+		// Service Type
+		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+		
+		// Number of Input Commands
+		index += JAUS_BYTE_SIZE_BYTES;
+		
+		// Loop through inputs
+		command = service->inputCommandList;
+		while(command)
+		{				
+			// Command Code
+			index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+			// Presence Vector
+			index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
+			
+			command = command->next;
+		}
+
+		// Number of Output Commands
+		index += JAUS_BYTE_SIZE_BYTES;
+		
+		// Loop through outputs
+		command = service->outputCommandList;
+		while(command)
+		{				
+			// Command Code
+			index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+			// Presence Vector
+			index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
+
+			command = command->next;
+		}
+	}
+
+	return index;
+}
+
 // ************************************************************************************************************** //
 //                                    NON-USER CONFIGURED FUNCTIONS
 // ************************************************************************************************************** //
@@ -249,6 +302,7 @@ ReportServicesMessage reportServicesMessageCreate(void)
 	message->sequenceNumber = 0;
 	
 	dataInitialize(message);
+	message->dataSize = dataSize(message);
 	
 	return message;	
 }
@@ -371,16 +425,15 @@ JausMessage reportServicesMessageToJausMessage(ReportServicesMessage message)
 	jausMessage->dataFlag = message->dataFlag;
 	jausMessage->sequenceNumber = message->sequenceNumber;
 	
-	jausMessage->data = (unsigned char *)malloc(message->dataSize);
-	
-	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, message->dataSize);
+	jausMessage->data = (unsigned char *)malloc(dataSize(message));
+	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, dataSize(message));
 		
 	return jausMessage;
 }
 
 unsigned int reportServicesMessageSize(ReportServicesMessage message)
 {
-	return (unsigned int)(message->dataSize + JAUS_HEADER_SIZE_BYTES);
+	return (unsigned int)(dataSize(message) + JAUS_HEADER_SIZE_BYTES);
 }
 
 //********************* PRIVATE HEADER FUNCTIONS **********************//

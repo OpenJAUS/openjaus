@@ -129,7 +129,6 @@ static int dataToBuffer(SetPayloadDataElementMessage message, unsigned char *buf
 {
 	int index = 0;
 	int i = 0;
-	int successFlag = SUCCESS;
 	JausByte payloadCommandDataElementCount = 0;
 	int commandInterfaceNumber = 0;
 	JausCommandInterface commandInterface = NULL;
@@ -149,7 +148,6 @@ static int dataToBuffer(SetPayloadDataElementMessage message, unsigned char *buf
 			// get payloadDataElement identifier
 
 			// get/pack payloadDataElement index
-			successFlag = SUCCESS;
 			commandInterfaceNumber = message->indexes[i];
 			if(message->jausPayloadInterface && (message->jausPayloadInterface->jausCommandInterfaces->elementCount >= commandInterfaceNumber) )
 			{
@@ -165,6 +163,41 @@ static int dataToBuffer(SetPayloadDataElementMessage message, unsigned char *buf
 			index += jausCommandValueSizeBytes(commandInterface);
 		}
 	}
+	return index;
+}
+
+// Returns number of bytes put into the buffer
+static int dataSize(SetPayloadDataElementMessage message)
+{
+	int index = 0;
+	int i = 0;
+	JausByte payloadCommandDataElementCount = 0;
+	int commandInterfaceNumber = 0;
+	JausCommandInterface commandInterface = NULL;
+
+	// # payload interfaces
+	payloadCommandDataElementCount = message->numberInterfaces;
+	if(!payloadCommandDataElementCount) return JAUS_FALSE; // nothing to do
+	
+	index += JAUS_BYTE_SIZE_BYTES;
+	
+	for(i = 0; i < payloadCommandDataElementCount; i++)
+	{			
+		// get payloadDataElement identifier
+
+		// get/pack payloadDataElement index
+		commandInterfaceNumber = message->indexes[i];
+		if(message->jausPayloadInterface && (message->jausPayloadInterface->jausCommandInterfaces->elementCount >= commandInterfaceNumber) )
+		{
+			index += JAUS_BYTE_SIZE_BYTES;
+		}
+		else return JAUS_FALSE;
+		
+		// get corresponding commandInterface
+		commandInterface = (JausCommandInterface) message->jausPayloadInterface->jausCommandInterfaces->elementData[commandInterfaceNumber - 1];			
+		index += jausCommandValueSizeBytes(commandInterface);
+	}
+
 	return index;
 }
 
@@ -197,6 +230,7 @@ SetPayloadDataElementMessage setPayloadDataElementMessageCreate(void)
 	message->sequenceNumber = 0;
 	
 	dataInitialize(message);
+	message->dataSize = dataSize(message);
 	
 	return message;	
 }
@@ -321,16 +355,15 @@ JausMessage setPayloadDataElementMessageToJausMessage(SetPayloadDataElementMessa
 	jausMessage->dataFlag = message->dataFlag;
 	jausMessage->sequenceNumber = message->sequenceNumber;
 	
-	jausMessage->data = (unsigned char *)malloc(message->dataSize);
-	
-	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, message->dataSize);
+	jausMessage->data = (unsigned char *)malloc(dataSize(message));
+	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, dataSize(message));
 		
 	return jausMessage;
 }
 
 unsigned int setPayloadDataElementMessageSize(SetPayloadDataElementMessage message)
 {
-	return (unsigned int)(message->dataSize + JAUS_HEADER_SIZE_BYTES);
+	return (unsigned int)(dataSize(message) + JAUS_HEADER_SIZE_BYTES);
 }
 
 //********************* PRIVATE HEADER FUNCTIONS **********************//

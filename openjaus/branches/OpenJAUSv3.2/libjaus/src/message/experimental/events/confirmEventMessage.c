@@ -162,6 +162,31 @@ static int dataToBuffer(ConfirmEventMessage message, unsigned char *buffer, unsi
 	return index;
 }
 
+// Returns number of bytes put into the buffer
+static int dataSize(ConfirmEventMessage message)
+{
+	int index = 0;
+
+	// Presence Vector
+	index += JAUS_BYTE_PRESENCE_VECTOR_SIZE_BYTES;
+
+	// Message Code
+	index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;		
+
+	// Event Id
+	index += JAUS_BYTE_SIZE_BYTES;
+
+	if(jausBytePresenceVectorIsBitSet(message->presenceVector, CONFIRM_EVENT_PV_PERIODIC_RATE_BIT))
+	{		
+		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+	}
+
+	// Response Code
+	index += JAUS_BYTE_SIZE_BYTES;		
+
+	return index;
+}
+
 // ************************************************************************************************************** //
 //                                    NON-USER CONFIGURED FUNCTIONS
 // ************************************************************************************************************** //
@@ -191,6 +216,7 @@ ConfirmEventMessage confirmEventMessageCreate(void)
 	message->sequenceNumber = 0;
 	
 	dataInitialize(message);
+	message->dataSize = dataSize(message);
 	
 	return message;	
 }
@@ -313,8 +339,8 @@ JausMessage confirmEventMessageToJausMessage(ConfirmEventMessage message)
 	jausMessage->dataFlag = message->dataFlag;
 	jausMessage->sequenceNumber = message->sequenceNumber;
 	
-	jausMessage->data = (unsigned char *)malloc(message->dataSize);
-	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, message->dataSize);
+	jausMessage->data = (unsigned char *)malloc(dataSize(message));
+	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, dataSize(message));
 	
 	return jausMessage;
 }
@@ -322,7 +348,7 @@ JausMessage confirmEventMessageToJausMessage(ConfirmEventMessage message)
 
 unsigned int confirmEventMessageSize(ConfirmEventMessage message)
 {
-	return (unsigned int)(message->dataSize + JAUS_HEADER_SIZE_BYTES);
+	return (unsigned int)(dataSize(message) + JAUS_HEADER_SIZE_BYTES);
 }
 
 //********************* PRIVATE HEADER FUNCTIONS **********************//
