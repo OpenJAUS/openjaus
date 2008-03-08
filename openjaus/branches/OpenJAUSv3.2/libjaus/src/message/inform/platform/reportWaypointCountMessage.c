@@ -102,6 +102,12 @@ static int dataToBuffer(ReportWaypointCountMessage message, unsigned char *buffe
 	return index;
 }
 
+static int dataSize(ReportWaypointCountMessage message)
+{
+	// Constant Size
+	return maxDataSizeBytes;
+}
+
 // ************************************************************************************************************** //
 //                                    NON-USER CONFIGURED FUNCTIONS
 // ************************************************************************************************************** //
@@ -252,7 +258,7 @@ JausMessage reportWaypointCountMessageToJausMessage(ReportWaypointCountMessage m
 	jausMessage->dataFlag = message->dataFlag;
 	jausMessage->sequenceNumber = message->sequenceNumber;
 	
-	jausMessage->data = (unsigned char *)malloc(message->dataSize);
+	jausMessage->data = (unsigned char *)malloc(dataSize(message));
 	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, message->dataSize);
 	
 	return jausMessage;
@@ -261,7 +267,7 @@ JausMessage reportWaypointCountMessageToJausMessage(ReportWaypointCountMessage m
 
 unsigned int reportWaypointCountMessageSize(ReportWaypointCountMessage message)
 {
-	return (unsigned int)(message->dataSize + JAUS_HEADER_SIZE_BYTES);
+	return (unsigned int)(dataSize(message) + JAUS_HEADER_SIZE_BYTES);
 }
 
 //********************* PRIVATE HEADER FUNCTIONS **********************//

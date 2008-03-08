@@ -111,6 +111,11 @@ static int dataToBuffer(ActivateServiceConnectionMessage message, unsigned char 
 	return index;
 }
 
+static int dataSize(ActivateServiceConnectionMessage message)
+{
+	return maxDataSizeBytes;
+}
+
 // ************************************************************************************************************** //
 //                                    NON-USER CONFIGURED FUNCTIONS
 // ************************************************************************************************************** //
@@ -261,7 +266,7 @@ JausMessage activateServiceConnectionMessageToJausMessage(ActivateServiceConnect
 	jausMessage->dataFlag = message->dataFlag;
 	jausMessage->sequenceNumber = message->sequenceNumber;
 	
-	jausMessage->data = (unsigned char *)malloc(message->dataSize);
+	jausMessage->data = (unsigned char *)malloc(dataSize(message));
 	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, message->dataSize);
 	
 	return jausMessage;
@@ -270,7 +275,7 @@ JausMessage activateServiceConnectionMessageToJausMessage(ActivateServiceConnect
 
 unsigned int activateServiceConnectionMessageSize(ActivateServiceConnectionMessage message)
 {
-	return (unsigned int)(message->dataSize + JAUS_HEADER_SIZE_BYTES);
+	return (unsigned int)(dataSize(message) + JAUS_HEADER_SIZE_BYTES);
 }
 
 //********************* PRIVATE HEADER FUNCTIONS **********************//

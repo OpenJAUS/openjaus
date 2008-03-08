@@ -139,6 +139,25 @@ static int dataToBuffer(ReportVksObjectsCreationMessage message, unsigned char *
 	return index;
 }
 
+static int dataSize(ReportVksObjectsCreationMessage message)
+{
+	int index = 0;
+	unsigned short i = 0;
+
+	// Request Id
+	index += JAUS_BYTE_SIZE_BYTES;
+
+	// Object Count
+	index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+			
+	// Object Ids
+	for(i = 0; i < message->objectCount; i++)
+	{
+		index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
+	}
+	return index;
+}
+
 // ************************************************************************************************************** //
 //                                    NON-USER CONFIGURED FUNCTIONS
 // ************************************************************************************************************** //
@@ -290,7 +309,7 @@ JausMessage reportVksObjectsCreationMessageToJausMessage(ReportVksObjectsCreatio
 	jausMessage->dataFlag = message->dataFlag;
 	jausMessage->sequenceNumber = message->sequenceNumber;
 	
-	jausMessage->data = (unsigned char *)malloc(message->dataSize);
+	jausMessage->data = (unsigned char *)malloc(dataSize(message));
 	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, message->dataSize);
 	
 	return jausMessage;
@@ -299,7 +318,7 @@ JausMessage reportVksObjectsCreationMessageToJausMessage(ReportVksObjectsCreatio
 
 unsigned int reportVksObjectsCreationMessageSize(ReportVksObjectsCreationMessage message)
 {
-	return (unsigned int)(message->dataSize + JAUS_HEADER_SIZE_BYTES);
+	return (unsigned int)(dataSize(message) + JAUS_HEADER_SIZE_BYTES);
 }
 
 //********************* PRIVATE HEADER FUNCTIONS **********************//

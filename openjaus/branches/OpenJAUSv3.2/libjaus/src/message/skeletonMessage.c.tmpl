@@ -146,6 +146,25 @@ static int dataToBuffer(XxXxMessage message, unsigned char *buffer, unsigned int
 	return index;
 }
 
+// Returns number of bytes put into the buffer
+static int dataSize(XxXxMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
+{
+	int index = 0;
+
+	// Couple Examples from ReportGlobalPoseMessage
+	//
+	//	// PresenceVector
+	//	index += JAUS_SHORT_PRESENCE_VECTOR_SIZE_BYTES;
+	//	
+	//	if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_POSE_PV_LATITUDE_BIT))
+	//	{
+	//		// Latitude
+	//		index += JAUS_INTEGER_SIZE_BYTES;
+	//	}
+		
+	return index;
+}
+
 // ************************************************************************************************************** //
 //                                    NON-USER CONFIGURED FUNCTIONS
 // ************************************************************************************************************** //
@@ -191,11 +210,6 @@ JausBoolean xXXXMessageFromBuffer(XxXxMessage message, unsigned char* buffer, un
 {
 	int index = 0;
 	
-	if(!strncmp((char *)buffer, JAUS_UDP_HEADER, JAUS_UDP_HEADER_SIZE_BYTES)) // equals 1 if same
-	{
-		index += JAUS_UDP_HEADER_SIZE_BYTES;
-	}
-
 	if(headerFromBuffer(message, buffer+index, bufferSizeBytes-index))
 	{
 		index += JAUS_HEADER_SIZE_BYTES;
@@ -231,19 +245,6 @@ JausBoolean xXXXMessageToBuffer(XxXxMessage message, unsigned char *buffer, unsi
 		{
 			return JAUS_FALSE; // headerToXxXxBuffer failed
 		}
-	}
-}
-
-JausBoolean xXXXMessageToUdpBuffer(XxXxMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
-{
-	if(bufferSizeBytes < xXXXMessageUdpSize(message))
-	{
-		return JAUS_FALSE; // improper size
-	}
-	else
-	{
-		strncpy((char *)buffer, JAUS_UDP_HEADER, JAUS_UDP_HEADER_SIZE_BYTES); //copies the UDP header into the buffer
-		return xXXXMessageToBuffer(message, buffer+JAUS_UDP_HEADER_SIZE_BYTES, bufferSizeBytes - JAUS_UDP_HEADER_SIZE_BYTES);
 	}
 }
 
@@ -311,24 +312,18 @@ JausMessage xXXXMessageToJausMessage(XxXxMessage message)
 	*jausMessage->destination = *message->destination;
 	jausMessage->source = jausAddressCreate();
 	*jausMessage->source = *message->source;
-	jausMessage->dataSize = message->dataSize;
 	jausMessage->dataFlag = message->dataFlag;
 	jausMessage->sequenceNumber = message->sequenceNumber;
 	
-	jausMessage->data = (unsigned char *)malloc(message->dataSize);
+	jausMessage->data = (unsigned char *)malloc(dataSize(message));
 	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, message->dataSize);
 	
 	return jausMessage;
 }
 
-unsigned int xXXXMessageUdpSize(XxXxMessage message)
-{
-	return (unsigned int)(message->dataSize + JAUS_HEADER_SIZE_BYTES + JAUS_UDP_HEADER_SIZE_BYTES);
-}
-
 unsigned int xXXXMessageSize(XxXxMessage message)
 {
-	return (unsigned int)(message->dataSize + JAUS_HEADER_SIZE_BYTES);
+	return (unsigned int)(dataSize(message) + JAUS_HEADER_SIZE_BYTES);
 }
 
 //********************* PRIVATE HEADER FUNCTIONS **********************//
@@ -398,7 +393,7 @@ static JausBoolean headerToBuffer(XxXxMessage message, unsigned char *buffer, un
 		buffer[11] = (unsigned char)(message->source->subsystem & 0xFF);
 		
 		buffer[12] = (unsigned char)(message->dataSize & 0xFF);
-		buffer[13] = (unsigned char)(((message->dataFlag & 0x0F) << 4) + ((message->dataSize >> 8) & 0x0F));
+		buffer[13] = (unsigned char)((message->dataFlag & 0xFF) << 4) | (unsigned char)((message->dataSize & 0x0F00) >> 8);
 
 		buffer[14] = (unsigned char)(message->sequenceNumber & 0xFF);
 		buffer[15] = (unsigned char)((message->sequenceNumber & 0xFF00) >> 8);

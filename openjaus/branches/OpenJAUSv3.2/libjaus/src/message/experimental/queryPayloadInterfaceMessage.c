@@ -99,6 +99,12 @@ static int dataToBuffer(QueryPayloadInterfaceMessage message, unsigned char *buf
 	return index;
 }
 
+static int dataSize(QueryPayloadInterfaceMessage message)
+{
+	// Constant Size
+	return maxDataSizeBytes;
+}
+
 // ************************************************************************************************************** //
 //                                    NON-USER CONFIGURED FUNCTIONS
 // ************************************************************************************************************** //
@@ -249,7 +255,7 @@ JausMessage queryPayloadInterfaceMessageToJausMessage(QueryPayloadInterfaceMessa
 	jausMessage->dataFlag = message->dataFlag;
 	jausMessage->sequenceNumber = message->sequenceNumber;
 	
-	jausMessage->data = (unsigned char *)malloc(message->dataSize);
+	jausMessage->data = (unsigned char *)malloc(dataSize(message));
 	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, message->dataSize);
 	
 	return jausMessage;
@@ -257,7 +263,7 @@ JausMessage queryPayloadInterfaceMessageToJausMessage(QueryPayloadInterfaceMessa
 
 unsigned int queryPayloadInterfaceMessageSize(QueryPayloadInterfaceMessage message)
 {
-	return (unsigned int)(message->dataSize + JAUS_HEADER_SIZE_BYTES);
+	return (unsigned int)(dataSize(message) + JAUS_HEADER_SIZE_BYTES);
 }
 
 //********************* PRIVATE HEADER FUNCTIONS **********************//

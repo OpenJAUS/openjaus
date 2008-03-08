@@ -119,6 +119,13 @@ static int dataToBuffer(CancelEventMessage message, unsigned char *buffer, unsig
 	return index;
 }
 
+static int dataSize(CancelEventMessage message)
+{
+	// Constant Size
+	return maxDataSizeBytes;
+}
+
+
 // ************************************************************************************************************** //
 //                                    NON-USER CONFIGURED FUNCTIONS
 // ************************************************************************************************************** //
@@ -266,11 +273,10 @@ JausMessage cancelEventMessageToJausMessage(CancelEventMessage message)
 	*jausMessage->destination = *message->destination;
 	jausMessage->source = jausAddressCreate();
 	*jausMessage->source = *message->source;
-	jausMessage->dataSize = message->dataSize;
 	jausMessage->dataFlag = message->dataFlag;
 	jausMessage->sequenceNumber = message->sequenceNumber;
 	
-	jausMessage->data = (unsigned char *)malloc(message->dataSize);
+	jausMessage->data = (unsigned char *)malloc(dataSize(message));
 	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, message->dataSize);
 	
 	return jausMessage;
@@ -279,7 +285,7 @@ JausMessage cancelEventMessageToJausMessage(CancelEventMessage message)
 
 unsigned int cancelEventMessageSize(CancelEventMessage message)
 {
-	return (unsigned int)(message->dataSize + JAUS_HEADER_SIZE_BYTES);
+	return (unsigned int)(dataSize(message) + JAUS_HEADER_SIZE_BYTES);
 }
 
 //********************* PRIVATE HEADER FUNCTIONS **********************//

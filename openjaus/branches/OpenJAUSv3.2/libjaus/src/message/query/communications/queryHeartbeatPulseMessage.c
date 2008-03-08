@@ -99,6 +99,12 @@ static int dataToBuffer(QueryHeartbeatPulseMessage message, unsigned char *buffe
 	return index;
 }
 
+static int dataSize(QueryHeartbeatPulseMessage message)
+{
+	// Constant Size
+	return maxDataSizeBytes;
+}
+
 // ************************************************************************************************************** //
 //                                    NON-USER CONFIGURED FUNCTIONS
 // ************************************************************************************************************** //
@@ -249,7 +255,7 @@ JausMessage queryHeartbeatPulseMessageToJausMessage(QueryHeartbeatPulseMessage m
 	jausMessage->dataFlag = message->dataFlag;
 	jausMessage->sequenceNumber = message->sequenceNumber;
 	
-	jausMessage->data = (unsigned char *)malloc(message->dataSize);
+	jausMessage->data = (unsigned char *)malloc(dataSize(message));
 	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, message->dataSize);
 	
 	return jausMessage;
@@ -258,7 +264,7 @@ JausMessage queryHeartbeatPulseMessageToJausMessage(QueryHeartbeatPulseMessage m
 
 unsigned int queryHeartbeatPulseMessageSize(QueryHeartbeatPulseMessage message)
 {
-	return (unsigned int)(message->dataSize + JAUS_HEADER_SIZE_BYTES);
+	return (unsigned int)(dataSize(message) + JAUS_HEADER_SIZE_BYTES);
 }
 
 //********************* PRIVATE HEADER FUNCTIONS **********************//
