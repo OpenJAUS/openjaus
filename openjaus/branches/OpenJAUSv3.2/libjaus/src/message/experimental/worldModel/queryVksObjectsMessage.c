@@ -375,6 +375,126 @@ static int dataToBuffer(QueryVksObjectsMessage message, unsigned char *buffer, u
 	return index;
 }
 
+static int dataSize(QueryVksObjectsMessage message)
+{
+	unsigned int index = 0;
+	int i = 0;
+	JausWorldModelFeatureClass fcClass = NULL;
+	JausGeometryPointLLA point = NULL;
+
+	// Ensure the PV rules are met
+	// If the VKS_PV_QUERY_OBJECTS_REGION_BIT is set, then the VKS_PV_QUERY_OBJECTS_POINT_COUNT_BIT is required
+	// The VKS_PV_QUERY_OBJECTS_BUFFER_BIT cannot be set without the VKS_PV_QUERY_OBJECTS_REGION_BIT
+	if(jausBytePresenceVectorIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_REGION_BIT))
+	{
+		jausBytePresenceVectorSetBit(&message->presenceVector, VKS_PV_QUERY_OBJECTS_POINT_COUNT_BIT);
+	}
+	else
+	{
+		jausBytePresenceVectorClearBit(&message->presenceVector, VKS_PV_QUERY_OBJECTS_POINT_COUNT_BIT);
+		jausBytePresenceVectorClearBit(&message->presenceVector, VKS_PV_QUERY_OBJECTS_BUFFER_BIT);
+	}
+
+	// If the VKS_PV_QUERY_OBJECTS_FEATURE_CLASS_BIT is set or the VKS_PV_QUERY_OBJECTS_ATTRIBUTE_BIT is set, 
+	// then the VKS_PV_QUERY_OBJECTS_FC_COUNT_BIT is required
+	if(	jausBytePresenceVectorIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_ATTRIBUTE_BIT) ||
+		jausBytePresenceVectorIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_FEATURE_CLASS_BIT))
+	{
+		jausBytePresenceVectorSetBit(&message->presenceVector, VKS_PV_QUERY_OBJECTS_FC_COUNT_BIT);
+	}
+	else
+	{
+		jausBytePresenceVectorClearBit(&message->presenceVector, VKS_PV_QUERY_OBJECTS_FC_COUNT_BIT);
+	}
+
+	// Pack Message Fields to Buffer
+	// Presence Vector
+	index += JAUS_BYTE_PRESENCE_VECTOR_SIZE_BYTES;
+
+	// Response Presence Vector
+	index += JAUS_BYTE_PRESENCE_VECTOR_SIZE_BYTES;
+
+	// Request Id
+	index += JAUS_BYTE_SIZE_BYTES;
+
+	// objectCount is optional
+	if(jausBytePresenceVectorIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_ID_BIT))
+	{
+		// Object Count
+		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+				
+		// Pack Object Ids
+		for(i = 0; i < message->objectCount; i++)
+		{
+			index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
+		}
+	}
+
+	// Region is Optional
+	if(jausBytePresenceVectorIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_REGION_BIT))
+	{
+		// Region Type
+		index += JAUS_BYTE_SIZE_BYTES;
+		
+		// Buffer is Optional
+		if(jausBytePresenceVectorIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_REGION_BIT))
+		{
+			// Buffer
+			index += JAUS_FLOAT_SIZE_BYTES;
+		}
+	}
+	
+	// Feature Class Information is optional
+	if(jausBytePresenceVectorIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_FC_COUNT_BIT))
+	{
+		// Feature Class Count
+		index += JAUS_BYTE_SIZE_BYTES;
+	}			
+	
+	if(jausBytePresenceVectorIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_FEATURE_CLASS_BIT))
+	{
+		for(i = 0; i < message->queryRegion->featureClasses->elementCount; i++)
+		{
+			fcClass = (JausWorldModelFeatureClass) message->queryRegion->featureClasses->elementData[i];
+
+			// Feature Class Id
+			index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+			
+			// Attribute is Optional
+			if(jausBytePresenceVectorIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_ATTRIBUTE_BIT))
+			{
+				index += featureClassAttributeSizeBytes(fcClass->attribute);
+			}
+		}
+	}
+	else if(jausBytePresenceVectorIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_ATTRIBUTE_BIT))
+	{
+		for(i = 0; i < message->queryRegion->featureClasses->elementCount; i++)
+		{
+			fcClass = (JausWorldModelFeatureClass) message->queryRegion->featureClasses->elementData[i];
+			index += featureClassAttributeSizeBytes(fcClass->attribute);	
+		}
+	}
+	
+	// Region is optional, if VKS_PV_QUERY_OBJECTS_REGION_BIT set, points required
+	if(jausBytePresenceVectorIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_POINT_COUNT_BIT))
+	{
+		// Point Count
+		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+
+		for(i = 0; i < message->queryRegion->dataPoints->elementCount; i++)
+		{
+			//pack Latitude
+			index += JAUS_INTEGER_SIZE_BYTES;
+
+			//pack Longitude
+			index += JAUS_INTEGER_SIZE_BYTES;
+		}
+	}
+
+	return index;
+}
+
 // ************************************************************************************************************** //
 //                                    NON-USER CONFIGURED FUNCTIONS
 // ************************************************************************************************************** //
@@ -526,7 +646,7 @@ JausMessage queryVksObjectsMessageToJausMessage(QueryVksObjectsMessage message)
 	jausMessage->dataFlag = message->dataFlag;
 	jausMessage->sequenceNumber = message->sequenceNumber;
 	
-	jausMessage->data = (unsigned char *)malloc(message->dataSize);
+	jausMessage->data = (unsigned char *)malloc(dataSize(message));
 	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, message->dataSize);
 	
 	return jausMessage;
@@ -535,7 +655,7 @@ JausMessage queryVksObjectsMessageToJausMessage(QueryVksObjectsMessage message)
 
 unsigned int queryVksObjectsMessageSize(QueryVksObjectsMessage message)
 {
-	return (unsigned int)(message->dataSize + JAUS_HEADER_SIZE_BYTES);
+	return (unsigned int)(dataSize(message) + JAUS_HEADER_SIZE_BYTES);
 }
 
 //********************* PRIVATE HEADER FUNCTIONS **********************//

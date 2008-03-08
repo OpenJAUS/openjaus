@@ -135,7 +135,6 @@ static int dataToBuffer(ReportVksObjectsMessage message, unsigned char *buffer, 
 {
 	int index = 0;
 	int i = 0;
-	JausBoolean objectBuffered = JAUS_FALSE;	
 	JausWorldModelVectorObject object = NULL;
 
 	if(bufferSizeBytes >= message->dataSize)
@@ -145,19 +144,20 @@ static int dataToBuffer(ReportVksObjectsMessage message, unsigned char *buffer, 
 		if(!jausBytePresenceVectorToBuffer(message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_PRESENCE_VECTOR_SIZE_BYTES;
 
-		objectBuffered = jausBytePresenceVectorIsBitSet(message->presenceVector, VKS_PV_CREATE_BUFFERED_BIT);
-
+		// Request Id
 		if(!jausByteToBuffer(message->requestId, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
 		
 		// Actual object data is optional
 		if(!jausBytePresenceVectorIsBitSet(message->presenceVector, VKS_PV_REPORT_DATA_BIT))
 		{
+			// Object Count
 			if(!jausUnsignedShortToBuffer(message->objectCount, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 			index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
 		}
 		else
 		{
+			// Object Count
 			if(!jausUnsignedShortToBuffer((JausUnsignedShort)message->vectorObjects->elementCount, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 			index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
 
@@ -173,6 +173,44 @@ static int dataToBuffer(ReportVksObjectsMessage message, unsigned char *buffer, 
 				if(!vectorObjectToBuffer(object, buffer+index, bufferSizeBytes-index, JAUS_TRUE)) return JAUS_FALSE; 
 				index += vectorObjectSizeBytes(object, JAUS_TRUE);
 			}
+		}
+	}
+
+	return index;
+}
+
+static int dataSize(ReportVksObjectsMessage message)
+{
+	int index = 0;
+	int i = 0;
+	JausWorldModelVectorObject object = NULL;
+
+	// Presence Vector
+	index += JAUS_BYTE_PRESENCE_VECTOR_SIZE_BYTES;
+	
+	// Request Id
+	index += JAUS_BYTE_SIZE_BYTES;
+	
+	// Actual object data is optional
+	if(!jausBytePresenceVectorIsBitSet(message->presenceVector, VKS_PV_REPORT_DATA_BIT))
+	{
+		// Object Count
+		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+	}
+	else
+	{
+		// Object Count
+		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+
+		for(i = 0; i < message->vectorObjects->elementCount; i++)
+		{
+			object = (JausWorldModelVectorObject) message->vectorObjects->elementData[i];
+			
+			// Object Id
+			index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
+			
+			// Object Data
+			index += vectorObjectSizeBytes(object, JAUS_TRUE);
 		}
 	}
 
@@ -330,7 +368,7 @@ JausMessage reportVksObjectsMessageToJausMessage(ReportVksObjectsMessage message
 	jausMessage->dataFlag = message->dataFlag;
 	jausMessage->sequenceNumber = message->sequenceNumber;
 	
-	jausMessage->data = (unsigned char *)malloc(message->dataSize);
+	jausMessage->data = (unsigned char *)malloc(dataSize(message));
 	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, message->dataSize);
 	
 	return jausMessage;
@@ -339,7 +377,7 @@ JausMessage reportVksObjectsMessageToJausMessage(ReportVksObjectsMessage message
 
 unsigned int reportVksObjectsMessageSize(ReportVksObjectsMessage message)
 {
-	return (unsigned int)(message->dataSize + JAUS_HEADER_SIZE_BYTES);
+	return (unsigned int)(dataSize(message) + JAUS_HEADER_SIZE_BYTES);
 }
 
 //********************* PRIVATE HEADER FUNCTIONS **********************//

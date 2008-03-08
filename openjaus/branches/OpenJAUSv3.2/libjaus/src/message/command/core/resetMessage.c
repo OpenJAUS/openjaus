@@ -98,6 +98,12 @@ static int dataToBuffer(ResetMessage message, unsigned char *buffer, unsigned in
 	return index;
 }
 
+static int dataSize(ResetMessage message)
+{
+	// Constant Size
+	return maxDataSizeBytes;
+}
+
 // ************************************************************************************************************** //
 //                                    NON-USER CONFIGURED FUNCTIONS
 // ************************************************************************************************************** //
@@ -248,7 +254,7 @@ JausMessage resetMessageToJausMessage(ResetMessage message)
 	jausMessage->dataFlag = message->dataFlag;
 	jausMessage->sequenceNumber = message->sequenceNumber;
 	
-	jausMessage->data = (unsigned char *)malloc(message->dataSize);
+	jausMessage->data = (unsigned char *)malloc(dataSize(message));
 	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, message->dataSize);
 	
 	return jausMessage;
@@ -257,7 +263,7 @@ JausMessage resetMessageToJausMessage(ResetMessage message)
 
 unsigned int resetMessageSize(ResetMessage message)
 {
-	return (unsigned int)(message->dataSize + JAUS_HEADER_SIZE_BYTES);
+	return (unsigned int)(dataSize(message) + JAUS_HEADER_SIZE_BYTES);
 }
 
 //********************* PRIVATE HEADER FUNCTIONS **********************//

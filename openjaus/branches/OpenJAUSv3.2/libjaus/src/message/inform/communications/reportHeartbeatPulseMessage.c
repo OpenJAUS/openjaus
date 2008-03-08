@@ -70,18 +70,20 @@ static void dataInitialize(ReportHeartbeatPulseMessage message)
 // Return boolean of success
 static JausBoolean dataFromBuffer(ReportHeartbeatPulseMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
 {
-	buffer = NULL;
 	return JAUS_TRUE;
 }
 
 // Returns number of bytes put into the buffer
 static int dataToBuffer(ReportHeartbeatPulseMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
 {
-	int index = 0;
-	
 	// No Data To Pack
-	
-	return index;
+	return 0;
+}
+
+static int dataSize(ReportHeartbeatPulseMessage message)
+{
+	// Constant Size
+	return maxDataSizeBytes;
 }
 
 // ************************************************************************************************************** //
@@ -234,16 +236,15 @@ JausMessage reportHeartbeatPulseMessageToJausMessage(ReportHeartbeatPulseMessage
 	jausMessage->dataFlag = message->dataFlag;
 	jausMessage->sequenceNumber = message->sequenceNumber;
 	
-	jausMessage->data = (unsigned char *)malloc(message->dataSize);
+	jausMessage->data = (unsigned char *)malloc(dataSize(message));
 	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, message->dataSize);
 	
 	return jausMessage;
 }
 
-
 unsigned int reportHeartbeatPulseMessageSize(ReportHeartbeatPulseMessage message)
 {
-	return (unsigned int)(message->dataSize + JAUS_HEADER_SIZE_BYTES);
+	return (unsigned int)(dataSize(message) + JAUS_HEADER_SIZE_BYTES);
 }
 
 //********************* PRIVATE HEADER FUNCTIONS **********************//
