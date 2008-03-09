@@ -9,6 +9,7 @@
 #include "NodeManagerEvent.h"
 #include "SystemTreeEvent.h"
 #include "ErrorEvent.h"
+#include "JausMessageEvent.h"
 #include "jaus.h"
 
 #define	OJ_NODE_MANAGER_VERSION	"3.2.0"

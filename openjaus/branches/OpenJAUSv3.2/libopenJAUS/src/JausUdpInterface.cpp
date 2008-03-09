@@ -3,6 +3,7 @@
 #include "JausNodeCommunicationManager.h"
 #include "JausComponentCommunicationManager.h"
 #include "ErrorEvent.h"
+#include "JausMessageEvent.h"
 
 JausUdpInterface::JausUdpInterface(FileLoader *configData, EventHandler *handler, JausCommunicationManager *commMngr)
 {
@@ -327,6 +328,10 @@ void JausUdpInterface::sendJausMessage(UdpTransportData data, JausMessage messag
 	DatagramPacket packet = NULL;
 	int result;
 
+	JausMessage tempMessage = jausMessageClone(message);
+	JausMessageEvent *e = new JausMessageEvent(tempMessage, this, JausMessageEvent::Outbound);
+	this->eventHandler->handleEvent(e);
+
 	switch(this->type)
 	{
 		case SUBSYSTEM_INTERFACE:
@@ -414,15 +419,10 @@ void JausUdpInterface::recvThreadRun()
 			rxMessage = jausMessageCreate();
 			if(jausMessageFromBuffer(rxMessage, packet->buffer + index, packet->bufferSizeBytes - index))
 			{
-
-//char buf[80] = {0};
-//inetAddressToString(packet->address, buf);
-//printf("Recv %d bytes from %s:%d\n", bytesRecv, buf, packet->port);
-//jausAddressToString(rxMessage->source, buf);
-//printf("Recv %s from %s", jausMessageCommandCodeString(rxMessage), buf);
-//jausAddressToString(rxMessage->destination, buf);
-//printf(" to %s\n", buf);
-
+				JausMessage tempMessage = jausMessageClone(rxMessage);
+				JausMessageEvent *e = new JausMessageEvent(tempMessage, this, JausMessageEvent::Inbound);
+				this->eventHandler->handleEvent(e);
+				
 				// Add to transportMap
 				switch(this->type)
 				{

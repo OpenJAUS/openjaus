@@ -207,7 +207,7 @@ void lmHandlerReceiveLargeMessage(NodeManagerInterface nmi, JausMessage message)
 					{
 						tempMessage = (JausMessage)msgList->messages->elementData[index];
 						index++;
-						if(index > msgList->messages->elementCount)
+						if(index > (unsigned int) msgList->messages->elementCount)
 						{
 							// Invalid set of messages
 							//TODO: Here is when you would request a retransmittal if ACK/NAK is set and ask the sending component to resend some packets

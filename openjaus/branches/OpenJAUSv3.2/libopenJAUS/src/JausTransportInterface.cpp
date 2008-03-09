@@ -1,7 +1,7 @@
 #include "JausTransportInterface.h"
 #include "JausCommunicationManager.h"
 
-JausTransportInterface::JausTransportInterface(void) {}
+JausTransportInterface::JausTransportInterface(void){}
 
 JausTransportInterface::~JausTransportInterface(void) {}
 
