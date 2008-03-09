@@ -23,6 +23,9 @@ std::string NodeManagerEvent::toString()
 		case NodeManagerEvent::TransportEvent:
 			return "Transport Event";
 
+		case NodeManagerEvent::JausMessageEvent:
+			return "JAUS Message Event";
+
 		default:
 			return "Unknown Event";
 	}

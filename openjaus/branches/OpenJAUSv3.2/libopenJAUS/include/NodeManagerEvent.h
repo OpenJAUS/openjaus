@@ -6,7 +6,7 @@
 class NodeManagerEvent
 {
 public:
-	enum {SystemTreeEvent, ErrorEvent, TransportEvent};
+	enum {SystemTreeEvent, ErrorEvent, TransportEvent, JausMessageEvent};
 	unsigned int getType();
 	virtual std::string toString();
 	virtual ~NodeManagerEvent() = 0;

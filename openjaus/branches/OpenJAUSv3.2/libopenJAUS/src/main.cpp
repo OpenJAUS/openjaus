@@ -24,6 +24,7 @@ class MyHandler : public EventHandler
 	{
 		SystemTreeEvent *treeEvent;
 		ErrorEvent *errorEvent;
+		JausMessageEvent *messageEvent;
 
 		switch(e->getType())
 		{
@@ -36,6 +37,14 @@ class MyHandler : public EventHandler
 			case NodeManagerEvent::ErrorEvent:
 				errorEvent = (ErrorEvent *)e;
 				printf("%s\n", errorEvent->toString().c_str());
+				delete e;
+				break;
+
+			case NodeManagerEvent::JausMessageEvent:
+				messageEvent = (JausMessageEvent *)e;
+				// TODO: Make this useful somehow
+				// If you turn this on, the system gets spam-y this is just a test of the message event
+				//printf("%s\n", messageEvent->toString().c_str());
 				delete e;
 				break;
 
