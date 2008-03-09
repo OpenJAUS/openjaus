@@ -127,7 +127,8 @@ int main(int argc, char *args)
 	struct termios newTermio;
 	struct termios storedTermio;
 	bool running = true;
-	char choice = 0;
+	char choice[8] = {0};
+	int count = 0;
 	
 	tcgetattr(0,&storedTermio);
 	memcpy(&newTermio,&storedTermio,sizeof(struct termios));
@@ -149,14 +150,16 @@ int main(int argc, char *args)
 	
 	while(running)
 	{
-		choice = getc(stdin);
-		if(choice == 27) // ESC
+		bzero(choice, 8);
+		count = read(0, &choice, 8);// = getchar();
+		//printf("%d %d %d %d %d %d %d %d %d\n", count, choice[0], choice[1], choice[2], choice[3], choice[4], choice[5], choice[6], choice[7]);
+		if(count == 1 && choice[0] == 27) // ESC
 		{
 			running = false;
 		}
-		else
+		else if(count == 1)
 		{
-			parseUserInput(choice);
+			parseUserInput(choice[0]);
 		}
 		usleep((unsigned int)(0.2*1e6));
 	}
