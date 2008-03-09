@@ -31,7 +31,7 @@
  *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
  *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ****************************************************************************/
-// File Name: xXXXMessage.c
+// File Name: setJointEffortsMessage.c
 //
 // Written By: Danny Kent (jaus AT dannykent DOT com), Tom Galluzzo (galluzzo AT gmail DOT com)
 //
@@ -39,75 +39,68 @@
 //
 // Date: 08/04/06
 //
-// Description: This file defines the functionality of a XxXxMessage
+// Description: This file defines the functionality of a SetJointEffortsMessage
 
 #include <stdlib.h>
 #include <string.h>
 #include "jaus.h"
 
-static const int commandCode = JAUS_XXXX;
-static const int maxDataSizeBytes = 0;
+static const int commandCode = JAUS_SET_JOINT_EFFORTS;
+static const int maxDataSizeBytes = 4096;
 
-static JausBoolean headerFromBuffer(XxXxMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-static JausBoolean headerToBuffer(XxXxMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+static JausBoolean headerFromBuffer(SetJointEffortsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+static JausBoolean headerToBuffer(SetJointEffortsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
-static JausBoolean dataFromBuffer(XxXxMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-static int dataToBuffer(XxXxMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-static void dataInitialize(XxXxMessage message);
-static void dataDestroy(XxXxMessage message);
+static JausBoolean dataFromBuffer(SetJointEffortsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+static int dataToBuffer(SetJointEffortsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+static void dataInitialize(SetJointEffortsMessage message);
+static void dataDestroy(SetJointEffortsMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS
 // ************************************************************************************************************** //
 
 // Initializes the message-specific fields
-static void dataInitialize(XxXxMessage message)
+static void dataInitialize(SetJointEffortsMessage message)
 {
 	// Set initial values of message fields
-	// Example from ReportGlobalPoseMessage.c
-	// 
-	//	message->presenceVector = newJausShortPresenceVector();
-	//	message->latitudeDegrees = newJausDouble(0);			// Scaled Int (-90, 90)
-	//	message->longitudeDegrees = newJausDouble(0);			// Scaled Int (-180, 180)
-	//	message->elevationMeters = newJausDouble(0);			// Scaled Int (-10000, 35000)
-	//	message->positionRmsMeters = newJausDouble(0);			// Scaled UInt (0, 100)
-	//	message->rollRadians = newJausDouble(0);				// Scaled Short (-JAUS_PI, JAUS_PI)
-	//	message->pitchRadians = newJausDouble(0);				// Scaled Short (-JAUS_PI, JAUS_PI)
-	//	message->yawRadians = newJausDouble(0);					// Scaled Short (-JAUS_PI, JAUS_PI)
-	//	message->attitudeRmsRadians = newJausDouble(0);			// Scaled Short (0, JAUS_PI)
-	//	message->timeStamp = newJausUnsignedInteger(0);
-
+	message->numJoints = newJausByte(0);
+	message->jointEffort = NULL;
 }
 
 // Destructs the message-specific fields
-static void dataDestroy(XxXxMessage message)
+static void dataDestroy(SetJointEffortsMessage message)
 {
 	// Free message fields
+	if(message->jointEffort != NULL)
+	{
+		free(message->jointEffort);
+	}
 }
 
 // Return boolean of success
-static JausBoolean dataFromBuffer(XxXxMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
+static JausBoolean dataFromBuffer(SetJointEffortsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
 {
 	int index = 0;
+	int i;
+	JausUnsignedShort tempUShort;
 	
 	if(bufferSizeBytes == message->dataSize)
 	{
 		// Unpack Message Fields from Buffer
 		
-		// Couple Examples from ReportGlobalPoseMessage
-		//
-		//	if(!jausShortPresenceVectorFromBuffer(&message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		//	index += JAUS_SHORT_PRESENCE_VECTOR_SIZE_BYTES;
-		//
-		//	if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_POSE_PV_LATITUDE_BIT))
-		//	{
-		//		//unpack
-		//		if(!jausIntegerFromBuffer(&tempInt, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		//		index += JAUS_INTEGER_SIZE_BYTES;
-		//		// Scaled Int (-90, 90)			
-		//		message->latitudeDegrees = jausIntegerToDouble(tempInt, -90, 90);
-		//	}
-	
+		if(!jausByteFromBuffer(&message->numJoints, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		index += JAUS_BYTE_SIZE_BYTES;
+
+		message->jointEffort = (JausDouble *)malloc(sizeof(JausDouble)*message->numJoints);
+		
+		for(i=0; i<message->numJoints; i++)
+		{
+			if(!jausUnsignedShortFromBuffer(&tempUShort, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+			index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+			// Scaled Short (-100, 100)			
+			message->jointEffort[i] = jausUnsignedShortToDouble(tempUShort, -100, 100);
+		}
 
 		return JAUS_TRUE;
 	}
@@ -118,49 +111,39 @@ static JausBoolean dataFromBuffer(XxXxMessage message, unsigned char *buffer, un
 }
 
 // Returns number of bytes put into the buffer
-static int dataToBuffer(XxXxMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
+static int dataToBuffer(SetJointEffortsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
 {
 	int index = 0;
+	int i;
+	JausUnsignedShort tempUShort;
 
 	if(bufferSizeBytes >= message->dataSize)
 	{
 		// Pack Message Fields to Buffer
-		
-		// Couple Examples from ReportGlobalPoseMessage
-		//
-		//	if(!jausShortPresenceVectorToBuffer(message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		//	index += JAUS_SHORT_PRESENCE_VECTOR_SIZE_BYTES;
-		//	
-		//	if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_POSE_PV_LATITUDE_BIT))
-		//	{
-		//		// Scaled Int (-90, 90)			
-		//		tempInt = jausIntegerFromDouble(message->latitudeDegrees, -90, 90);
-		//
-		//		//pack
-		//		if(!jausIntegerToBuffer(tempInt, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		//		index += JAUS_INTEGER_SIZE_BYTES;
-		//	}
-		
+		if(!jausByteToBuffer(message->numJoints, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		index += JAUS_BYTE_SIZE_BYTES;
+
+		for(i=0; i<message->numJoints; i++)
+		{
+			// Scaled Short (-100, 100)			
+			tempUShort = jausUnsignedShortFromDouble(message->jointEffort[i], -100, 100);
+
+			if(!jausUnsignedShortToBuffer(tempUShort, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+			index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+		}
 	}
 
 	return index;
 }
 
 // Returns number of bytes put into the buffer
-static int dataSize(XxXxMessage message)
+static int dataSize(SetJointEffortsMessage message)
 {
 	int index = 0;
 
-	// Couple Examples from ReportGlobalPoseMessage
-	//
-	//	// PresenceVector
-	//	index += JAUS_SHORT_PRESENCE_VECTOR_SIZE_BYTES;
-	//	
-	//	if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_POSE_PV_LATITUDE_BIT))
-	//	{
-	//		// Latitude
-	//		index += JAUS_INTEGER_SIZE_BYTES;
-	//	}
+	index += JAUS_BYTE_SIZE_BYTES;
+
+	index += JAUS_UNSIGNED_SHORT_SIZE_BYTES * message->numJoints;
 		
 	return index;
 }
@@ -169,11 +152,11 @@ static int dataSize(XxXxMessage message)
 //                                    NON-USER CONFIGURED FUNCTIONS
 // ************************************************************************************************************** //
 
-XxXxMessage xXXXMessageCreate(void)
+SetJointEffortsMessage setJointEffortsMessageCreate(void)
 {
-	XxXxMessage message;
+	SetJointEffortsMessage message;
 
-	message = (XxXxMessage)malloc( sizeof(XxXxMessageStruct) );
+	message = (SetJointEffortsMessage)malloc( sizeof(SetJointEffortsMessageStruct) );
 	if(message == NULL)
 	{
 		return NULL;
@@ -199,7 +182,7 @@ XxXxMessage xXXXMessageCreate(void)
 	return message;	
 }
 
-void xXXXMessageDestroy(XxXxMessage message)
+void setJointEffortsMessageDestroy(SetJointEffortsMessage message)
 {
 	dataDestroy(message);
 	jausAddressDestroy(message->source);
@@ -207,7 +190,7 @@ void xXXXMessageDestroy(XxXxMessage message)
 	free(message);
 }
 
-JausBoolean xXXXMessageFromBuffer(XxXxMessage message, unsigned char* buffer, unsigned int bufferSizeBytes)
+JausBoolean setJointEffortsMessageFromBuffer(SetJointEffortsMessage message, unsigned char* buffer, unsigned int bufferSizeBytes)
 {
 	int index = 0;
 	
@@ -229,9 +212,9 @@ JausBoolean xXXXMessageFromBuffer(XxXxMessage message, unsigned char* buffer, un
 	}
 }
 
-JausBoolean xXXXMessageToBuffer(XxXxMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
+JausBoolean setJointEffortsMessageToBuffer(SetJointEffortsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
 {
-	if(bufferSizeBytes < xXXXMessageSize(message))
+	if(bufferSizeBytes < setJointEffortsMessageSize(message))
 	{
 		return JAUS_FALSE; //improper size	
 	}
@@ -249,9 +232,9 @@ JausBoolean xXXXMessageToBuffer(XxXxMessage message, unsigned char *buffer, unsi
 	}
 }
 
-XxXxMessage xXXXMessageFromJausMessage(JausMessage jausMessage)
+SetJointEffortsMessage setJointEffortsMessageFromJausMessage(JausMessage jausMessage)
 {
-	XxXxMessage message;
+	SetJointEffortsMessage message;
 	
 	if(jausMessage->commandCode != commandCode)
 	{
@@ -259,7 +242,7 @@ XxXxMessage xXXXMessageFromJausMessage(JausMessage jausMessage)
 	}
 	else
 	{
-		message = (XxXxMessage)malloc( sizeof(XxXxMessageStruct) );
+		message = (SetJointEffortsMessage)malloc( sizeof(SetJointEffortsMessageStruct) );
 		if(message == NULL)
 		{
 			return NULL;
@@ -292,7 +275,7 @@ XxXxMessage xXXXMessageFromJausMessage(JausMessage jausMessage)
 	}
 }
 
-JausMessage xXXXMessageToJausMessage(XxXxMessage message)
+JausMessage setJointEffortsMessageToJausMessage(SetJointEffortsMessage message)
 {
 	JausMessage jausMessage;
 	int size;
@@ -319,19 +302,19 @@ JausMessage xXXXMessageToJausMessage(XxXxMessage message)
 	
 	size = dataSize(message);
 	jausMessage->data = (unsigned char *)malloc(size);
-	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, dataSize);
+	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, size);
 	
 	return jausMessage;
 }
 
-unsigned int xXXXMessageSize(XxXxMessage message)
+unsigned int setJointEffortsMessageSize(SetJointEffortsMessage message)
 {
 	return (unsigned int)(dataSize(message) + JAUS_HEADER_SIZE_BYTES);
 }
 
 //********************* PRIVATE HEADER FUNCTIONS **********************//
 
-static JausBoolean headerFromBuffer(XxXxMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
+static JausBoolean headerFromBuffer(SetJointEffortsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
 {
 	if(bufferSizeBytes < JAUS_HEADER_SIZE_BYTES)
 	{
@@ -369,7 +352,7 @@ static JausBoolean headerFromBuffer(XxXxMessage message, unsigned char *buffer, 
 	}
 }
 
-static JausBoolean headerToBuffer(XxXxMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
+static JausBoolean headerToBuffer(SetJointEffortsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
 {
 	JausUnsignedShort *propertiesPtr = (JausUnsignedShort*)&message->properties;
 	

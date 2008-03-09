@@ -55,6 +55,7 @@
 #include "command/core/rejectComponentControlMessage.h"
 #include "command/core/setTimeMessage.h"
 #include "command/environment/selectCameraMessage.h"
+#include "command/manipulator/setJointEffortsMessage.h"
 #include "command/platform/setWrenchEffortMessage.h"
 #include "command/platform/setDiscreteDevicesMessage.h"
 #include "command/platform/setGlobalVectorMessage.h"
