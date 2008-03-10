@@ -61,6 +61,8 @@
 #include "command/manipulator/setToolPointMessage.h"
 #include "command/manipulator/setEndEffectorPoseMessage.h"
 #include "command/manipulator/setEndEffectorVelocityStateMessage.h"
+#include "command/manipulator/setJointMotionMessage.h"
+#include "command/manipulator/setEndEffectorPathMotionMessage.h"
 #include "command/platform/setWrenchEffortMessage.h"
 #include "command/platform/setDiscreteDevicesMessage.h"
 #include "command/platform/setGlobalVectorMessage.h"
