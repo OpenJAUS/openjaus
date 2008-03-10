@@ -319,7 +319,7 @@ JausMessage xXXXMessageToJausMessage(XxXxMessage message)
 	
 	size = dataSize(message);
 	jausMessage->data = (unsigned char *)malloc(size);
-	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, dataSize);
+	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, size);
 	
 	return jausMessage;
 }
