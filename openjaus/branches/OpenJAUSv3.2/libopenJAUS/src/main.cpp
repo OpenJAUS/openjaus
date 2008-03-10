@@ -137,7 +137,7 @@ int main(int argc, char *args)
 	newTermio.c_lflag &= (~ICANON);
 	newTermio.c_lflag &= (~ECHO);
 	newTermio.c_cc[VTIME] = 0;
-	newTermio.c_cc[VMIN] = 0;
+	newTermio.c_cc[VMIN] = 1;
 	tcsetattr(0,TCSANOW,&newTermio);
 
 	printf("\nOpenJAUS Node Manager Version %s (%s)\n\n", OJ_NODE_MANAGER_VERSION, __DATE__); 
@@ -151,7 +151,7 @@ int main(int argc, char *args)
 	while(running)
 	{
 		bzero(choice, 8);
-		count = read(0, &choice, 8);// = getchar();
+		count = read(0, &choice, 8);
 		//printf("%d %d %d %d %d %d %d %d %d\n", count, choice[0], choice[1], choice[2], choice[3], choice[4], choice[5], choice[6], choice[7]);
 		if(count == 1 && choice[0] == 27) // ESC
 		{
@@ -161,7 +161,6 @@ int main(int argc, char *args)
 		{
 			parseUserInput(choice[0]);
 		}
-		usleep((unsigned int)(0.2*1e6));
 	}
 
 	tcsetattr(0, TCSANOW, &storedTermio);
