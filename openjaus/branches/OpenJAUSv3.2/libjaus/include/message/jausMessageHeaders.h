@@ -76,6 +76,9 @@
 #include "inform/core/reportTimeMessage.h"
 #include "inform/communications/reportHeartbeatPulseMessage.h"
 #include "inform/environment/reportVideoFrameMessage.h"
+
+#include "inform/manipulator/reportManipulatorSpecificationsMessage.h"
+
 #include "inform/platform/reportPlatformSpecificationsMessage.h"
 #include "inform/platform/reportPlatformOperationalDataMessage.h"
 #include "inform/platform/reportGlobalPoseMessage.h"

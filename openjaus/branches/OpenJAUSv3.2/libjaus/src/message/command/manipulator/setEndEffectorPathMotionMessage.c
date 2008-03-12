@@ -166,6 +166,11 @@ static JausBoolean dataFromBuffer(SetEndEffectorPathMotionMessage message, unsig
 
 			if(!jausUnsignedIntegerFromBuffer(&tempUInt, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 			index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
+			// Scaled Short (-1, 1)			
+			message->d[pose] = jausUnsignedIntegerToDouble(tempUInt, -1, 1);
+
+			if(!jausUnsignedIntegerFromBuffer(&tempUInt, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+			index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
 			// Scaled Short (-30, 30)			
 			message->a[pose] = jausUnsignedIntegerToDouble(tempUInt, -1, 1);
 
@@ -178,11 +183,6 @@ static JausBoolean dataFromBuffer(SetEndEffectorPathMotionMessage message, unsig
 			index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
 			// Scaled Short (-1, 1)			
 			message->c[pose] = jausUnsignedIntegerToDouble(tempUInt, -1, 1);
-
-			if(!jausUnsignedIntegerFromBuffer(&tempUInt, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-			index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
-			// Scaled Short (-1, 1)			
-			message->d[pose] = jausUnsignedIntegerToDouble(tempUInt, -1, 1);
 		}
 		
 		return JAUS_TRUE;
@@ -224,6 +224,10 @@ static int dataToBuffer(SetEndEffectorPathMotionMessage message, unsigned char *
 			if(!jausUnsignedIntegerToBuffer(tempUInt, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 			index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
 
+			tempUInt = jausUnsignedIntegerFromDouble(message->d[pose], -1, 1);
+			if(!jausUnsignedIntegerToBuffer(tempUInt, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+			index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
+
 			tempUInt = jausUnsignedIntegerFromDouble(message->a[pose], -1, 1);
 			if(!jausUnsignedIntegerToBuffer(tempUInt, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 			index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
@@ -233,10 +237,6 @@ static int dataToBuffer(SetEndEffectorPathMotionMessage message, unsigned char *
 			index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
 
 			tempUInt = jausUnsignedIntegerFromDouble(message->c[pose], -1, 1);
-			if(!jausUnsignedIntegerToBuffer(tempUInt, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-			index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
-			
-			tempUInt = jausUnsignedIntegerFromDouble(message->d[pose], -1, 1);
 			if(!jausUnsignedIntegerToBuffer(tempUInt, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 			index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
 		}
