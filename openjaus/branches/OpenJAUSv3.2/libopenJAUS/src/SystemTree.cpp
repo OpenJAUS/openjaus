@@ -803,7 +803,7 @@ JausAddress SystemTree::lookUpServiceInSystem(int commandCode, int serviceType)
 			{
 				JausComponent cmpt = (JausComponent) node->components->elementData[k];
 				
-				for(int m = 0; cmpt->services->elementCount; m++)
+				for(int m = 0; m < cmpt->services->elementCount; m++)
 				{
 					JausService service = (JausService) cmpt->services->elementData[m];
 					JausCommand command = NULL;
