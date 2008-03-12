@@ -105,6 +105,11 @@ static JausBoolean dataFromBuffer(SetEndEffectorPoseMessage message, unsigned ch
 
 		if(!jausUnsignedIntegerFromBuffer(&tempUInt, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
+		// Scaled Short (-1, 1)			
+		message->d = jausUnsignedIntegerToDouble(tempUInt, -1, 1);
+
+		if(!jausUnsignedIntegerFromBuffer(&tempUInt, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
 		// Scaled Short (-30, 30)			
 		message->a = jausUnsignedIntegerToDouble(tempUInt, -1, 1);
 
@@ -117,11 +122,6 @@ static JausBoolean dataFromBuffer(SetEndEffectorPoseMessage message, unsigned ch
 		index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
 		// Scaled Short (-1, 1)			
 		message->c = jausUnsignedIntegerToDouble(tempUInt, -1, 1);
-
-		if(!jausUnsignedIntegerFromBuffer(&tempUInt, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
-		// Scaled Short (-1, 1)			
-		message->d = jausUnsignedIntegerToDouble(tempUInt, -1, 1);
 
 		return JAUS_TRUE;
 	}
@@ -153,6 +153,10 @@ static int dataToBuffer(SetEndEffectorPoseMessage message, unsigned char *buffer
 		if(!jausUnsignedIntegerToBuffer(tempUInt, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
 
+		tempUInt = jausUnsignedIntegerFromDouble(message->d, -1, 1);
+		if(!jausUnsignedIntegerToBuffer(tempUInt, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
+
 		tempUInt = jausUnsignedIntegerFromDouble(message->a, -1, 1);
 		if(!jausUnsignedIntegerToBuffer(tempUInt, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
@@ -162,10 +166,6 @@ static int dataToBuffer(SetEndEffectorPoseMessage message, unsigned char *buffer
 		index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
 
 		tempUInt = jausUnsignedIntegerFromDouble(message->c, -1, 1);
-		if(!jausUnsignedIntegerToBuffer(tempUInt, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
-		
-		tempUInt = jausUnsignedIntegerFromDouble(message->d, -1, 1);
 		if(!jausUnsignedIntegerToBuffer(tempUInt, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
 	}
