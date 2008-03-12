@@ -397,17 +397,21 @@ static int dataSize(ReportManipulatorSpecificationsMessage message)
 {
 	int index = 0;
 
-	// Couple Examples from ReportGlobalPoseMessage
-	//
-	//	// PresenceVector
-	//	index += JAUS_SHORT_PRESENCE_VECTOR_SIZE_BYTES;
-	//	
-	//	if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_POSE_PV_LATITUDE_BIT))
-	//	{
-	//		// Latitude
-	//		index += JAUS_INTEGER_SIZE_BYTES;
-	//	}
-		
+	// Num joints
+	index += JAUS_BYTE_SIZE_BYTES;
+
+	// Joint Types
+	index += message->numJoints * JAUS_BYTE_SIZE_BYTES;
+
+	// Joint offset, max, min, & max velocity
+	index += message->numJoints * 4 * JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+
+	// link lengths & twist angles
+	index += (message->numJoints - 1) * 2 * JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+
+	// Coordinate system
+	index += 7 * JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
+
 	return index;
 }
 
