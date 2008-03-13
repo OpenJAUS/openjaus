@@ -50,6 +50,8 @@ extern "C"
 #endif
 
 double getTimeSeconds(void);
+double ojGetTimeSec(void);
+void ojSleepMSec(int msec);
 
 #ifdef __cplusplus
 }
