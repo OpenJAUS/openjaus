@@ -17,13 +17,13 @@
 class NodeManager : public EventHandler
 {
 public:
-	NodeManager(FileLoader *configData, EventHandler *handler);
-	~NodeManager(void);
+	JAUS_EXPORT NodeManager(FileLoader *configData, EventHandler *handler);
+	JAUS_EXPORT ~NodeManager(void);
 
-	std::string systemTreeToString();
-	std::string systemTreeToDetailedString();
+	JAUS_EXPORT std::string systemTreeToString();
+	JAUS_EXPORT std::string systemTreeToDetailedString();
 
-	bool registerEventHandler(EventHandler *handler);
+	JAUS_EXPORT bool registerEventHandler(EventHandler *handler);
 
 private:
 	FileLoader *configData;
