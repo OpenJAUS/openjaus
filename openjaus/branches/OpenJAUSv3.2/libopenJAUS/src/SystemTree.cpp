@@ -63,13 +63,8 @@ bool SystemTree::updateSubsystemTimestamp(JausAddress address)
 
 unsigned char SystemTree::getNextInstanceId(JausAddress address)
 {
-	bool instanceAvailable[JAUS_MAXIMUM_INSTANCE_ID];
+	bool instanceAvailable[JAUS_MAXIMUM_INSTANCE_ID] = {true};
 	int i = 0;
-	
-	for(i = 0; i < JAUS_MAXIMUM_INSTANCE_ID; i++)
-	{
-		instanceAvailable[i] = true;
-	}
 	
 	// Get this node
 	JausNode node = findNode(address->subsystem, address->node);
@@ -1004,7 +999,6 @@ JausComponent SystemTree::findComponent(int subsId, int nodeId, int cmptId, int 
 	return NULL;
 }
 
-
 bool SystemTree::addComponent(JausComponent cmpt)
 {
 	return addComponent(cmpt->address->subsystem, cmpt->address->node, cmpt->address->component, cmpt->address->instance, cmpt);
@@ -1415,10 +1409,14 @@ char *SystemTree::getSubsystemIdentification(JausAddress address)
 
 char *SystemTree::getSubsystemIdentification(int subsId)
 {
+	char *string = NULL;
+
 	JausSubsystem subs = system[subsId];
 	if(subs)
 	{
-		return subs->identification;
+		string = (char *)calloc(strlen(subs->identification)+1, sizeof(char));
+		strcpy(string, subs->identification);
+		return string;
 	}
 	else
 	{
@@ -1438,10 +1436,14 @@ char *SystemTree::getNodeIdentification(JausAddress address)
 
 char *SystemTree::getNodeIdentification(int subsId, int nodeId)
 {
+	char *string = NULL;
+
 	JausNode node = findNode(subsId, nodeId);
 	if(node)
 	{
-		return node->identification;
+		string = (char *)calloc(strlen(node->identification)+1, sizeof(char));
+		strcpy(string, node->identification);
+		return string;
 	}
 	else
 	{
