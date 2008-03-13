@@ -41,53 +41,93 @@
 //
 // Description:	CIMAR timing library header file
 
-
-#ifdef WIN32
-	#include <windows.h>
-#else
-	#define HAVE_CLOCK_GETTIME
-//	#include "config.h"
-//	#ifdef HAVE_SYS_TIME_H
-		#include <sys/time.h>
-//	#endif
-//	#ifdef HAVE_TIME_H
-		#include <time.h>
-//	#endif
-#endif
-
 #include "timeLib.h"
 
 #ifdef WIN32
 
-static char init = 0;
-
-double getTimeSeconds(void)
-{
-	TIMECAPS timerInfo;
-
-	if(!init)
+	#include <windows.h>
+	
+	double getTimeSeconds(void)
 	{
-		timeGetDevCaps(&timerInfo, sizeof(TIMECAPS));
-		timeBeginPeriod(timerInfo.wPeriodMin);
+		static char init = 0;
+		static TIMECAPS timerInfo;
+		
+		if(!init)
+		{
+			timeGetDevCaps(&timerInfo, sizeof(TIMECAPS));
+			timeBeginPeriod(timerInfo.wPeriodMin);
+			init = 1;
+		}	
+		
+		return (double) (timeGetTime() / 1000.0);
 	}
 
-	return (double) (timeGetTime() / 1000.0);
-}
+	double ojGetTimeSec(void)
+	{
+		static char init = 0;
+		static TIMECAPS timerInfo;
+		
+		if(!init)
+		{
+			timeGetDevCaps(&timerInfo, sizeof(TIMECAPS));
+			timeBeginPeriod(timerInfo.wPeriodMin);
+			init = 1;
+		}	
+		
+		return (double) (timeGetTime() / 1000.0);
+	}
+	
+	void ojSleepMsec(int msec)
+	{
+		Sleep(msec);
+	}
+
 #else
-double getTimeSeconds(void)
-{
-#ifdef HAVE_GETTIMEOFDAY
-      static struct timeval time;
-      
-      gettimeofday(&time, NULL);
-      
-      return (double)time.tv_sec + (double)time.tv_usec/1.0e6;
-#elif defined(HAVE_CLOCK_GETTIME)
-      static struct timespec time;
-      
-      clock_gettime(CLOCK_REALTIME, &time);
-      
-      return (double)time.tv_sec + (double)time.tv_nsec/1.0e9;
-#endif
-}
+
+	#define HAVE_CLOCK_GETTIME
+	#include <sys/time.h>
+	#include <time.h>
+	#include <unistd.h>
+
+	double getTimeSeconds(void)
+	{
+		#ifdef HAVE_GETTIMEOFDAY
+		      static struct timeval time;
+		      
+		      gettimeofday(&time, NULL);
+		      
+		      return (double)time.tv_sec + (double)time.tv_usec/1.0e6;
+		      
+		#elif defined(HAVE_CLOCK_GETTIME)
+		      static struct timespec time;
+		      
+		      clock_gettime(CLOCK_REALTIME, &time);
+		      
+		      return (double)time.tv_sec + (double)time.tv_nsec/1.0e9;
+		#endif
+	}
+
+	double ojGetTimeSec(void)
+	{
+		#ifdef HAVE_GETTIMEOFDAY
+		      static struct timeval time;
+		      
+		      gettimeofday(&time, NULL);
+		      
+		      return (double)time.tv_sec + (double)time.tv_usec/1.0e6;
+		      
+		#elif defined(HAVE_CLOCK_GETTIME)
+		      static struct timespec time;
+		      
+		      clock_gettime(CLOCK_REALTIME, &time);
+		      
+		      return (double)time.tv_sec + (double)time.tv_nsec/1.0e9;
+		#endif
+	}
+
+	void ojSleepMsec(int msec)
+	{
+		usleep(msec * 1000);
+	}
+
 #endif
