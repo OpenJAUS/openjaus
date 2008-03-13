@@ -3,13 +3,20 @@
 
 #include <string>
 
+#ifdef WIN32
+	#define EXPORT	__declspec(dllexport)
+#else
+	#define EXPORT
+#endif
+
 class NodeManagerEvent
 {
+	
 public:
-	enum {SystemTreeEvent, ErrorEvent, TransportEvent, JausMessageEvent};
-	unsigned int getType();
-	virtual std::string toString();
-	virtual ~NodeManagerEvent() = 0;
+	EXPORT enum {SystemTreeEvent, ErrorEvent, TransportEvent, JausMessageEvent};
+	EXPORT unsigned int getType();
+	EXPORT virtual std::string toString();
+	EXPORT virtual ~NodeManagerEvent() = 0;
 
 protected:
 	unsigned int type;

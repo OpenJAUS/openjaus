@@ -27,6 +27,12 @@ using std::vector;
 using std::ios;
 using std::ifstream;
 
+#ifdef WIN32
+	#define EXPORT	__declspec(dllexport)
+#else
+	#define EXPORT
+#endif
+
 struct Config_Data_t
 {
 	string label;
@@ -50,13 +56,13 @@ public:
 	/**
 	 * @brief Constructs the File Loader
 	 */
-	FileLoader( );
-	FileLoader( string filename );
+	EXPORT FileLoader( );
+	EXPORT FileLoader( string filename );
 
 	/**
 	 * @brief Deconstructs the File Loader
 	 */
-	~FileLoader( );
+	EXPORT ~FileLoader( );
 
 	/**
 	 * @brief Loads the configuration file
@@ -64,7 +70,7 @@ public:
 	 * @param[in] filename is the name of the configuration file with extension
 	 * @return success
 	 */
-	bool load_cfg( string filename );
+	EXPORT bool load_cfg( string filename );
 
 	/**
 	 * @brief Reads a string from the config file
@@ -74,7 +80,7 @@ public:
 	 *
 	 * @return The string being searched for or "" if not found
 	 */
-	string GetConfigDataString( string header, string label );
+	EXPORT string GetConfigDataString( string header, string label );
 
 	/**
 	 * @brief Reads an int from the config file
@@ -84,7 +90,7 @@ public:
 	 *
 	 * @return The int being searched for, -1 if not found, or 0 if a string or char
 	 */
-	int GetConfigDataInt( string header, string label );
+	EXPORT int GetConfigDataInt( string header, string label );
 
 	/**
 	 * @brief Reads a float from the config file
@@ -94,7 +100,7 @@ public:
 	 *
 	 * @return The float being searched for, -1 if not found, or 0 if a string or char
 	 */
-	float GetConfigDataFloat( string header, string label );
+	EXPORT float GetConfigDataFloat( string header, string label );
 
 	/**
 	 * @brief Reads a double from the config file
@@ -104,7 +110,7 @@ public:
 	 *
 	 * @return The double being searched for, -1 if not found, or 0 if a string or char
 	 */
-	double GetConfigDataDouble( string header, string label );
+	EXPORT double GetConfigDataDouble( string header, string label );
 
 	/**
 	 * @brief Reads a vector from the config file
@@ -114,7 +120,7 @@ public:
 	 *
 	 * @return A pointer to the vector being searched for or NULL if nothing found
 	 */
-	vector< string >* GetConfigDataVector( string header, string label );
+	EXPORT vector< string >* GetConfigDataVector( string header, string label );
 	
 	/**
 	 * @brief Reads a boolean from the config file
@@ -124,6 +130,6 @@ public:
 	 *
 	 * @return true if "true" (compared case insensitve) is found, false otherwise
 	 */
-	bool GetConfigDataBool( string header, string label );
+	EXPORT bool GetConfigDataBool( string header, string label );
 };
 #endif
