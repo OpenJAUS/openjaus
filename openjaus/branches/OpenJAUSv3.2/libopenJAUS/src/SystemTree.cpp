@@ -1220,68 +1220,48 @@ bool SystemTree::replaceSubsystem(int subsystemId, JausSubsystem newSubs)
 		return true;
 	}
 
-	JausSubsystem cloneSubs = jausSubsystemCreate();
+	JausSubsystem cloneSubs = jausSubsystemClone(newSubs);
 	if(!cloneSubs)
 	{
 		return false;
 	}
-	cloneSubs->id = currentSubs->id;
 	
 	size_t stringLength = strlen(currentSubs->identification) + 1;
 	cloneSubs->identification = (char *) realloc(cloneSubs->identification, stringLength);
 	sprintf(cloneSubs->identification, "%s", currentSubs->identification);
 	
-	for(int i = 0; i < newSubs->nodes->elementCount; i++)
+	for(int i = 0; i < cloneSubs->nodes->elementCount; i++)
 	{
-		JausNode newNode = (JausNode)newSubs->nodes->elementData[i];
-		JausNode addNode = findNode(newNode);
-		if(addNode)
+		JausNode cloneNode = (JausNode)cloneSubs->nodes->elementData[i];
+		JausNode currentNode = findNode(cloneNode);
+		if(currentNode)
 		{
-			// Compare current with new
-			if(addNode->identification)
+			size_t stringLength = strlen(currentNode->identification) + 1;
+			cloneNode->identification = (char *) realloc(cloneNode->identification, stringLength);
+			sprintf(cloneNode->identification, "%s", currentNode->identification);
+			
+			for(int i = 0; i < cloneNode->components->elementCount; i++)
 			{
-				size_t stringLength = strlen(addNode->identification) + 1;
-				newNode->identification = (char *)malloc(stringLength);
-				sprintf(newNode->identification, "%s", addNode->identification);
-			}
-
-			for(int j = 0; j < newNode->components->elementCount; j++)
-			{
-				JausComponent newCmpt = (JausComponent) newNode->components->elementData[j];
-				JausComponent addCmpt = findComponent(newCmpt->address);
-				if(addCmpt)
+				JausComponent cloneCmpt = (JausComponent)cloneNode->components->elementData[i];
+				JausComponent currentCmpt = findComponent(cloneCmpt);
+				if(currentCmpt)
 				{
-					if(addCmpt->identification)
-					{
-						size_t stringLength = strlen(addCmpt->identification) + 1;
-						newCmpt->identification = (char *)malloc(stringLength);
-						sprintf(newCmpt->identification, "%s", addCmpt->identification);
-					}
-
-					jausServicesDestroy(newCmpt->services);
-					newCmpt->services = jausServicesClone(addCmpt->services);
-					newCmpt->node = addNode;
-					jausArrayAdd(addNode->components, addCmpt);
-				}
-				else
-				{
-					// addCmpt doesn't exist, just add it
-					addCmpt = jausComponentClone(addCmpt);
-					addCmpt->node = addNode;
-					jausArrayAdd(addNode->components, addCmpt);
+					size_t stringLength = strlen(currentCmpt->identification) + 1;
+					cloneCmpt->identification = (char *) realloc(cloneCmpt->identification, stringLength);
+					sprintf(cloneCmpt->identification, "%s", currentNode->identification);
 				}
 			}
-		}
-		else
-		{
-			// Doesn't exist so just add the new one
-			addNode = jausNodeClone(newNode);
-			addNode->subsystem = cloneSubs;
-			jausArrayAdd(cloneSubs->nodes, addNode);
 		}
 	}
 	removeSubsystem(subsystemId);
-	addSubsystem(cloneSubs);
+
+	system[subsystemId] = cloneSubs;
+	subsystemCount++;
+
+	//char string[1024] = {0};
+	//jausSubsystemTableToString(cloneSubs, string);
+	//printf("Replaced Subsystem: \n%s\n", string);
+	
 	return true;
 }
 
