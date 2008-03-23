@@ -86,35 +86,19 @@ typedef struct
 
 	// MESSAGE DATA MEMBERS GO HERE
 	
-	// Example from ReportGlobalPoseMessage
-	//
-	//	JausShortPresenceVector presenceVector;
-	//	JausDouble latitudeDegrees;				// Scaled Int (-90, 90)
-	//	JausDouble longitudeDegrees;			// Scaled Int (-180, 180)
-	//	JausDouble elevationMeters;				// Scaled Int (-10000, 35000)
-	//	JausDouble positionRmsMeters;			// Scaled UInt (0, 100)
-	//	JausDouble rollRadians;					// Scaled Short (-JAUS_PI, JAUS_PI)
-	//	JausDouble pitchRadians;				// Scaled Short (-JAUS_PI, JAUS_PI)
-	//	JausDouble yawRadians;					// Scaled Short (-JAUS_PI, JAUS_PI)
-	//	JausDouble attitudeRmsRadians;			// Scaled Short (0, JAUS_PI)
-	//	JausUnsignedInteger timeStamp;	
-	
 }QueryManipulatorSpecificationsMessageStruct;
 
 typedef QueryManipulatorSpecificationsMessageStruct* QueryManipulatorSpecificationsMessage;
 
-QueryManipulatorSpecificationsMessage queryManipulatorSpecificationsMessageCreate(void);
-void queryManipulatorSpecificationsMessageDestroy(QueryManipulatorSpecificationsMessage);
+JAUS_EXPORT QueryManipulatorSpecificationsMessage queryManipulatorSpecificationsMessageCreate(void);
+JAUS_EXPORT void queryManipulatorSpecificationsMessageDestroy(QueryManipulatorSpecificationsMessage);
 
-JausBoolean queryManipulatorSpecificationsMessageFromBuffer(QueryManipulatorSpecificationsMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean queryManipulatorSpecificationsMessageToBuffer(QueryManipulatorSpecificationsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean queryManipulatorSpecificationsMessageFromBuffer(QueryManipulatorSpecificationsMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean queryManipulatorSpecificationsMessageToBuffer(QueryManipulatorSpecificationsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
+JAUS_EXPORT QueryManipulatorSpecificationsMessage queryManipulatorSpecificationsMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage queryManipulatorSpecificationsMessageToJausMessage(QueryManipulatorSpecificationsMessage message);
 
-QueryManipulatorSpecificationsMessage queryManipulatorSpecificationsMessageFromJausMessage(JausMessage jausMessage);
-JausMessage queryManipulatorSpecificationsMessageToJausMessage(QueryManipulatorSpecificationsMessage message);
-
-
-unsigned int queryManipulatorSpecificationsMessageSize(QueryManipulatorSpecificationsMessage message);
-
+JAUS_EXPORT unsigned int queryManipulatorSpecificationsMessageSize(QueryManipulatorSpecificationsMessage message);
 
 #endif // QUERY_MANIPULATOR_SPECIFICATIONS_MESSAGE_H

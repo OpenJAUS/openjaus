@@ -95,8 +95,8 @@ JAUS_EXPORT JausBoolean jausTimeToString(JausTime time, char *buffer, size_t buf
 JAUS_EXPORT JausBoolean jausTimeStampFromBuffer(JausTime input, unsigned char *buf, unsigned int bufferSizeBytes);
 JAUS_EXPORT JausBoolean jausTimeStampToBuffer(JausTime input, unsigned char *buf, unsigned int bufferSizeBytes);
 
-JAUS_EXPORT JausBoolean jausDataStampFromBuffer(JausTime input, unsigned char *buf, unsigned int bufferSizeBytes);
-JAUS_EXPORT JausBoolean jausDataStampToBuffer(JausTime input, unsigned char *buf, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean jausDateStampFromBuffer(JausTime input, unsigned char *buf, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean jausDateStampToBuffer(JausTime input, unsigned char *buf, unsigned int bufferSizeBytes);
 
 JAUS_EXPORT JausUnsignedInteger jausTimeGetTimeStamp(JausTime time);
 JAUS_EXPORT JausUnsignedShort jausTimeGetDateStamp(JausTime time);

@@ -46,14 +46,6 @@
 
 #include "jaus.h"
 
-#define JAUS_SC_SUCCESSFUL				0
-#define JAUS_SC_NODE_NOT_CAPABLE		1
-#define JAUS_SC_COMPONENT_NOT_CAPABLE	2
-#define JAUS_SC_INSUFFICIENT_AUTHORITY	3
-#define JAUS_SC_CONNECTION_REFUSED		4
-#define JAUS_SC_INVALID_PARAMETER		5
-#define JAUS_SC_COMMAND_NOT_SUPPORTED	6
-
 typedef struct
 {
 	// Include all parameters from a JausMessage structure:
@@ -95,8 +87,14 @@ typedef struct
 	JausUnsignedShort serviceConnectionCommandCode;
 	JausByte instanceId;
 	JausDouble confirmedPeriodicUpdateRateHertz;
-	JausByte responseCode;
-	
+	enum {	JAUS_SC_SUCCESSFUL = 0,
+			JAUS_SC_NODE_NOT_CAPABLE = 1,
+			JAUS_SC_COMPONENT_NOT_CAPABLE = 2,
+			JAUS_SC_INSUFFICIENT_AUTHORITY = 3,
+			JAUS_SC_CONNECTION_REFUSED = 4,
+			JAUS_SC_INVALID_PARAMETER = 5,
+			JAUS_SC_COMMAND_NOT_SUPPORTED = 6} responseCode;
+
 }ConfirmServiceConnectionMessageStruct;
 
 typedef ConfirmServiceConnectionMessageStruct* ConfirmServiceConnectionMessage;

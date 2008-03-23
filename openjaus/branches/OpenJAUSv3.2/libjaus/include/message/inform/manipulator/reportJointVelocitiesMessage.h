@@ -92,18 +92,15 @@ typedef struct
 
 typedef ReportJointVelocitiesMessageStruct* ReportJointVelocitiesMessage;
 
-ReportJointVelocitiesMessage reportJointVelocitiesMessageCreate(void);
-void reportJointVelocitiesMessageDestroy(ReportJointVelocitiesMessage);
+JAUS_EXPORT ReportJointVelocitiesMessage reportJointVelocitiesMessageCreate(void);
+JAUS_EXPORT void reportJointVelocitiesMessageDestroy(ReportJointVelocitiesMessage);
 
-JausBoolean reportJointVelocitiesMessageFromBuffer(ReportJointVelocitiesMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean reportJointVelocitiesMessageToBuffer(ReportJointVelocitiesMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean reportJointVelocitiesMessageFromBuffer(ReportJointVelocitiesMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean reportJointVelocitiesMessageToBuffer(ReportJointVelocitiesMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
+JAUS_EXPORT ReportJointVelocitiesMessage reportJointVelocitiesMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage reportJointVelocitiesMessageToJausMessage(ReportJointVelocitiesMessage message);
 
-ReportJointVelocitiesMessage reportJointVelocitiesMessageFromJausMessage(JausMessage jausMessage);
-JausMessage reportJointVelocitiesMessageToJausMessage(ReportJointVelocitiesMessage message);
-
-
-unsigned int reportJointVelocitiesMessageSize(ReportJointVelocitiesMessage message);
-
+JAUS_EXPORT unsigned int reportJointVelocitiesMessageSize(ReportJointVelocitiesMessage message);
 
 #endif // REPORT_JOINT_VELOCITIES_MESSAGE_H

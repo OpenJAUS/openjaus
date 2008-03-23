@@ -92,18 +92,15 @@ typedef struct
 
 typedef SetJointVelocitiesMessageStruct* SetJointVelocitiesMessage;
 
-SetJointVelocitiesMessage setJointVelocitiesMessageCreate(void);
-void setJointVelocitiesMessageDestroy(SetJointVelocitiesMessage);
+JAUS_EXPORT SetJointVelocitiesMessage setJointVelocitiesMessageCreate(void);
+JAUS_EXPORT void setJointVelocitiesMessageDestroy(SetJointVelocitiesMessage);
 
-JausBoolean setJointVelocitiesMessageFromBuffer(SetJointVelocitiesMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean setJointVelocitiesMessageToBuffer(SetJointVelocitiesMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean setJointVelocitiesMessageFromBuffer(SetJointVelocitiesMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean setJointVelocitiesMessageToBuffer(SetJointVelocitiesMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
+JAUS_EXPORT SetJointVelocitiesMessage setJointVelocitiesMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage setJointVelocitiesMessageToJausMessage(SetJointVelocitiesMessage message);
 
-SetJointVelocitiesMessage setJointVelocitiesMessageFromJausMessage(JausMessage jausMessage);
-JausMessage setJointVelocitiesMessageToJausMessage(SetJointVelocitiesMessage message);
-
-
-unsigned int setJointVelocitiesMessageSize(SetJointVelocitiesMessage message);
-
+JAUS_EXPORT unsigned int setJointVelocitiesMessageSize(SetJointVelocitiesMessage message);
 
 #endif // SET_JOINT_VELOCITIES_MESSAGE_H

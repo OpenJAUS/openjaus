@@ -92,18 +92,15 @@ typedef struct
 
 typedef SetJointPositionsMessageStruct* SetJointPositionsMessage;
 
-SetJointPositionsMessage setJointPositionsMessageCreate(void);
-void setJointPositionsMessageDestroy(SetJointPositionsMessage);
+JAUS_EXPORT SetJointPositionsMessage setJointPositionsMessageCreate(void);
+JAUS_EXPORT void setJointPositionsMessageDestroy(SetJointPositionsMessage);
 
-JausBoolean setJointPositionsMessageFromBuffer(SetJointPositionsMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean setJointPositionsMessageToBuffer(SetJointPositionsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean setJointPositionsMessageFromBuffer(SetJointPositionsMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean setJointPositionsMessageToBuffer(SetJointPositionsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
+JAUS_EXPORT SetJointPositionsMessage setJointPositionsMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage setJointPositionsMessageToJausMessage(SetJointPositionsMessage message);
 
-SetJointPositionsMessage setJointPositionsMessageFromJausMessage(JausMessage jausMessage);
-JausMessage setJointPositionsMessageToJausMessage(SetJointPositionsMessage message);
-
-
-unsigned int setJointPositionsMessageSize(SetJointPositionsMessage message);
-
+JAUS_EXPORT unsigned int setJointPositionsMessageSize(SetJointPositionsMessage message);
 
 #endif // SET_JOINT_POSITIONS_MESSAGE_H

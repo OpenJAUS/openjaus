@@ -117,3 +117,33 @@ JausUnsignedShort jausUnsignedShortFromDouble(double value, double min, double m
 	return newJausUnsignedShort((unsigned short)((value - bias)/scaleFactor + 0.5));
 }
 
+JausBoolean jausUnsignedShortIsBitSet(JausUnsignedShort input, int bit)
+{
+	return (input & (0x01 << bit)) > 0 ? JAUS_TRUE : JAUS_FALSE;
+}
+
+JausBoolean jausUnsignedShortSetBit(JausUnsignedShort *input, int bit)
+{
+	if(JAUS_SHORT_SIZE_BYTES*8 < bit) // 8 bits per byte
+	{
+		return JAUS_FALSE;
+	}
+	else
+	{
+		*input |= 0x01 << bit;
+		return JAUS_TRUE;
+	}
+}
+
+JausBoolean jausUnsignedShortClearBit(JausUnsignedShort *input, int bit)
+{
+	if(JAUS_SHORT_SIZE_BYTES*8 < bit) // 8 bits per byte
+	{
+		return JAUS_FALSE;
+	}
+	else
+	{
+		 *input &= ~(0x01 << bit);
+		return JAUS_TRUE;
+	}
+}

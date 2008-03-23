@@ -106,7 +106,7 @@ typedef struct
 	JausDouble pitchRadians;				// Scaled Short (-JAUS_PI, JAUS_PI)
 	JausDouble yawRadians;					// Scaled Short (-JAUS_PI, JAUS_PI)
 	JausDouble attitudeRmsRadians;			// Scaled Short (0, JAUS_PI)
-	JausUnsignedInteger timeStamp;
+	JausTime time;
 	
 }ReportGlobalPoseMessageStruct;
 

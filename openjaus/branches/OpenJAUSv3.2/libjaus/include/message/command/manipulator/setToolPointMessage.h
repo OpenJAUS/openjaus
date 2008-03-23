@@ -92,18 +92,15 @@ typedef struct
 
 typedef SetToolPointMessageStruct* SetToolPointMessage;
 
-SetToolPointMessage setToolPointMessageCreate(void);
-void setToolPointMessageDestroy(SetToolPointMessage);
+JAUS_EXPORT SetToolPointMessage setToolPointMessageCreate(void);
+JAUS_EXPORT void setToolPointMessageDestroy(SetToolPointMessage);
 
-JausBoolean setToolPointMessageFromBuffer(SetToolPointMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean setToolPointMessageToBuffer(SetToolPointMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean setToolPointMessageFromBuffer(SetToolPointMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean setToolPointMessageToBuffer(SetToolPointMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
+JAUS_EXPORT SetToolPointMessage setToolPointMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage setToolPointMessageToJausMessage(SetToolPointMessage message);
 
-SetToolPointMessage setToolPointMessageFromJausMessage(JausMessage jausMessage);
-JausMessage setToolPointMessageToJausMessage(SetToolPointMessage message);
-
-
-unsigned int setToolPointMessageSize(SetToolPointMessage message);
-
+JAUS_EXPORT unsigned int setToolPointMessageSize(SetToolPointMessage message);
 
 #endif // SET_TOOL_POINT_MESSAGE_H

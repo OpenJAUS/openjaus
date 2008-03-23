@@ -63,4 +63,8 @@ JAUS_EXPORT JausBoolean jausUnsignedShortToBuffer(JausUnsignedShort input, unsig
 JAUS_EXPORT double jausUnsignedShortToDouble(JausUnsignedShort input, double min, double max);
 JAUS_EXPORT JausUnsignedShort jausUnsignedShortFromDouble(double value, double min, double max);
 
+JAUS_EXPORT JausBoolean jausUnsignedShortIsBitSet(JausUnsignedShort input, int bit);
+JAUS_EXPORT JausBoolean jausUnsignedShortSetBit(JausUnsignedShort *input, int bit);
+JAUS_EXPORT JausBoolean jausUnsignedShortClearBit(JausUnsignedShort *input, int bit);
+
 #endif // JAUS_UNSIGNED_SHORT_H

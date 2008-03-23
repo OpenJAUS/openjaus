@@ -92,18 +92,15 @@ typedef struct
 
 typedef SetDataLinkSelectMessageStruct* SetDataLinkSelectMessage;
 
-SetDataLinkSelectMessage setDataLinkSelectMessageCreate(void);
-void setDataLinkSelectMessageDestroy(SetDataLinkSelectMessage);
+JAUS_EXPORT SetDataLinkSelectMessage setDataLinkSelectMessageCreate(void);
+JAUS_EXPORT void setDataLinkSelectMessageDestroy(SetDataLinkSelectMessage);
 
-JausBoolean setDataLinkSelectMessageFromBuffer(SetDataLinkSelectMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean setDataLinkSelectMessageToBuffer(SetDataLinkSelectMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean setDataLinkSelectMessageFromBuffer(SetDataLinkSelectMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean setDataLinkSelectMessageToBuffer(SetDataLinkSelectMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
+JAUS_EXPORT SetDataLinkSelectMessage setDataLinkSelectMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage setDataLinkSelectMessageToJausMessage(SetDataLinkSelectMessage message);
 
-SetDataLinkSelectMessage setDataLinkSelectMessageFromJausMessage(JausMessage jausMessage);
-JausMessage setDataLinkSelectMessageToJausMessage(SetDataLinkSelectMessage message);
-
-
-unsigned int setDataLinkSelectMessageSize(SetDataLinkSelectMessage message);
-
+JAUS_EXPORT unsigned int setDataLinkSelectMessageSize(SetDataLinkSelectMessage message);
 
 #endif // SET_DATA_LINK_SELECT_MESSAGE_H

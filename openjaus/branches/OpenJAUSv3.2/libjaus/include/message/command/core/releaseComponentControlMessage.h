@@ -46,10 +46,6 @@
 
 #include "jaus.h"
 
-#define JAUS_RESPONSE_CODE_CONTROL_ACCEPTED			0
-#define JAUS_RESPONSE_CODE_CONTROL_NOT_SUPPORTED	1
-#define JAUS_RESPONSE_CODE_CONTROL_NOT_ACCEPTED		2
-
 typedef struct
 {
 	// Include all parameters from a JausMessage structure:

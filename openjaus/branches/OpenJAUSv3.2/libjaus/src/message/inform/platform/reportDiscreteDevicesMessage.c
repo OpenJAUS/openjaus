@@ -66,16 +66,29 @@ static void dataInitialize(ReportDiscreteDevicesMessage message)
 {
 	// Set initial values of message fields
 	message->presenceVector = newJausBytePresenceVector();
-	message->mainPropulsion = newJausByte(0);
-	message->parkingBrakeHorn = newJausByte(0);
 	message->gear = newJausByte(0);
 	message->transferCase = newJausByte(0);
+
+	// Main Propulsion
+	message->mainPropulsion = JAUS_FALSE;
+	message->mainFuelSupply = JAUS_FALSE;
+	message->auxFuelSupply = JAUS_FALSE;
+	message->powerAuxDevices = JAUS_FALSE;
+	message->startingDevice = JAUS_FALSE;
+	message->coldStart = JAUS_FALSE;
+	message->automaticStart = JAUS_FALSE;
+	message->automaticStop = JAUS_FALSE;
+
+	// Parking, Brake and Horn
+	message->parkingBrake = JAUS_FALSE;
+	message->horn = JAUS_FALSE;
 }
 
 // Return boolean of success
 static JausBoolean dataFromBuffer(ReportDiscreteDevicesMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
 {
 	int index = 0;
+	JausByte tempByte;
 	
 	if(bufferSizeBytes == message->dataSize)
 	{
@@ -87,15 +100,27 @@ static JausBoolean dataFromBuffer(ReportDiscreteDevicesMessage message, unsigned
 		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_DEVICES_PV_PROPULSION_BIT))
 		{
 			//unpack
-			if(!jausByteFromBuffer(&message->mainPropulsion, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+			if(!jausByteFromBuffer(&tempByte, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 			index += JAUS_BYTE_SIZE_BYTES;
+
+			message->mainPropulsion = jausByteIsBitSet(tempByte, JAUS_DEVICES_PROPULSION_BF_MAIN_POWER_BIT)? JAUS_TRUE : JAUS_FALSE;
+			message->mainFuelSupply = jausByteIsBitSet(tempByte, JAUS_DEVICES_PROPULSION_BF_MAIN_FUEL_BIT)? JAUS_TRUE : JAUS_FALSE;
+			message->auxFuelSupply = jausByteIsBitSet(tempByte, JAUS_DEVICES_PROPULSION_BF_AUXILARY_FUEL_BIT)? JAUS_TRUE : JAUS_FALSE;
+			message->powerAuxDevices = jausByteIsBitSet(tempByte, JAUS_DEVICES_PROPULSION_BF_AUXILARY_POWER_BIT)? JAUS_TRUE : JAUS_FALSE;
+			message->startingDevice = jausByteIsBitSet(tempByte, JAUS_DEVICES_PROPULSION_BF_STARTING_DEVICE_BIT)? JAUS_TRUE : JAUS_FALSE;
+			message->coldStart = jausByteIsBitSet(tempByte, JAUS_DEVICES_PROPULSION_BF_COLD_START_BIT)? JAUS_TRUE : JAUS_FALSE;
+			message->automaticStart = jausByteIsBitSet(tempByte, JAUS_DEVICES_PROPULSION_BF_AUTO_START_BIT)? JAUS_TRUE : JAUS_FALSE;
+			message->automaticStop = jausByteIsBitSet(tempByte, JAUS_DEVICES_PROPULSION_BF_AUTO_SHUTDOWN_BIT)? JAUS_TRUE : JAUS_FALSE;
 		}
 		
 		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_DEVICES_PV_PARKING_BIT))
 		{
 			//unpack
-			if(!jausByteFromBuffer(&message->parkingBrakeHorn, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+			if(!jausByteFromBuffer(&tempByte, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 			index += JAUS_BYTE_SIZE_BYTES;
+
+			message->parkingBrake = jausByteIsBitSet(tempByte, JAUS_DEVICES_OTHER_BF_PARKING_BRAKE_BIT)? JAUS_TRUE : JAUS_FALSE;
+			message->horn = jausByteIsBitSet(tempByte, JAUS_DEVICES_OTHER_BF_HORN_BIT)? JAUS_TRUE : JAUS_FALSE;
 		}
 
 		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_DEVICES_PV_GEAR_BIT))
@@ -124,6 +149,7 @@ static JausBoolean dataFromBuffer(ReportDiscreteDevicesMessage message, unsigned
 static int dataToBuffer(ReportDiscreteDevicesMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
 {
 	int index = 0;
+	JausByte tempByte = 0;
 
 	if(bufferSizeBytes >= message->dataSize)
 	{
@@ -134,24 +160,42 @@ static int dataToBuffer(ReportDiscreteDevicesMessage message, unsigned char *buf
 		
 		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_DEVICES_PV_PROPULSION_BIT))
 		{
-			if(!jausByteToBuffer(message->mainPropulsion, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+			tempByte = 0;
+			if(message->mainPropulsion) jausByteSetBit(&tempByte, JAUS_DEVICES_PROPULSION_BF_MAIN_POWER_BIT);
+			if(message->mainFuelSupply) jausByteSetBit(&tempByte, JAUS_DEVICES_PROPULSION_BF_MAIN_FUEL_BIT);
+			if(message->auxFuelSupply) jausByteSetBit(&tempByte, JAUS_DEVICES_PROPULSION_BF_AUXILARY_FUEL_BIT);
+			if(message->powerAuxDevices) jausByteSetBit(&tempByte, JAUS_DEVICES_PROPULSION_BF_AUXILARY_POWER_BIT);
+			if(message->startingDevice) jausByteSetBit(&tempByte, JAUS_DEVICES_PROPULSION_BF_STARTING_DEVICE_BIT);
+			if(message->coldStart) jausByteSetBit(&tempByte, JAUS_DEVICES_PROPULSION_BF_COLD_START_BIT);
+			if(message->automaticStart) jausByteSetBit(&tempByte, JAUS_DEVICES_PROPULSION_BF_AUTO_START_BIT);
+			if(message->automaticStop) jausByteSetBit(&tempByte, JAUS_DEVICES_PROPULSION_BF_AUTO_SHUTDOWN_BIT);
+
+			//pack
+			if(!jausByteToBuffer(tempByte, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 			index += JAUS_BYTE_SIZE_BYTES;
 		}
 		
 		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_DEVICES_PV_PARKING_BIT))
 		{
-			if(!jausByteToBuffer(message->parkingBrakeHorn, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+			tempByte = 0;
+			if(message->parkingBrake) jausByteSetBit(&tempByte, JAUS_DEVICES_OTHER_BF_PARKING_BRAKE_BIT);
+			if(message->horn) jausByteSetBit(&tempByte, JAUS_DEVICES_OTHER_BF_HORN_BIT);
+
+			//pack
+			if(!jausByteToBuffer(tempByte, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 			index += JAUS_BYTE_SIZE_BYTES;
 		}
 
 		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_DEVICES_PV_GEAR_BIT))
 		{
+			//pack
 			if(!jausByteToBuffer(message->gear, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 			index += JAUS_BYTE_SIZE_BYTES;
 		}
 
 		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_DEVICES_PV_TRANSFER_BIT))
 		{
+			//pack
 			if(!jausByteToBuffer(message->transferCase, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 			index += JAUS_BYTE_SIZE_BYTES;
 		}

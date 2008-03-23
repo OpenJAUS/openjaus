@@ -107,7 +107,7 @@ static JausBoolean dataFromBuffer(ReportPlatformSpecificationsMessage message, u
 			// unpack string of length JAUS_PLATFORM_NAME_LENGTH_BYTES
 			if(bufferSizeBytes-index < JAUS_PLATFORM_NAME_LENGTH_BYTES) return JAUS_FALSE;
 			
-			memcpy(&message->platformName, buffer+index, JAUS_PLATFORM_NAME_LENGTH_BYTES);
+			memcpy(message->platformName, buffer+index, JAUS_PLATFORM_NAME_LENGTH_BYTES);
 			index += JAUS_PLATFORM_NAME_LENGTH_BYTES;
 		}
 		
@@ -338,7 +338,7 @@ static int dataToBuffer(ReportPlatformSpecificationsMessage message, unsigned ch
 			// pack string of length JAUS_PLATFORM_NAME_LENGTH_BYTES
 			if(bufferSizeBytes-index < JAUS_PLATFORM_NAME_LENGTH_BYTES) return JAUS_FALSE;
 			
-			memcpy(buffer+index, &message->platformName, JAUS_PLATFORM_NAME_LENGTH_BYTES);
+			memcpy(buffer+index, message->platformName, JAUS_PLATFORM_NAME_LENGTH_BYTES);
 			index += JAUS_PLATFORM_NAME_LENGTH_BYTES;
 		}
 

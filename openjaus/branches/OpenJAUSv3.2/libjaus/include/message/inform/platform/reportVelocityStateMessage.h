@@ -106,7 +106,7 @@ typedef struct
 	JausDouble pitchRateRps;	// Scaled Short (-32.767, 32.767) 	Rps = Radians per Second
 	JausDouble yawRateRps;		// Scaled Short (-32.767, 32.767) 	Rps = Radians per Second
 	JausDouble rateRmsRps;		// Scaled UShort (0, JAUS_PI) 		Rps = Radians per Second
-	JausUnsignedInteger timeStamp;
+	JausTime time;
 	
 }ReportVelocityStateMessageStruct;
 

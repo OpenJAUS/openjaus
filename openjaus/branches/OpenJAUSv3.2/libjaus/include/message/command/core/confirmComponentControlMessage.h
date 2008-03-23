@@ -46,9 +46,15 @@
 
 #include "jaus.h"
 
-#define JAUS_RESPONSE_CODE_CONTROL_ACCEPTED			0
-#define JAUS_RESPONSE_CODE_CONTROL_NOT_SUPPORTED	1
-#define JAUS_RESPONSE_CODE_CONTROL_NOT_ACCEPTED		2
+#ifndef JAUS_CONTROL_RESPONSE_ENUM
+#define JAUS_CONTROL_RESPONSE_ENUM
+typedef enum 
+{
+	JAUS_CONTROL_ACCEPTED = 0,
+	JAUS_CONTROL_NOT_SUPPORTED = 1,
+	JAUS_CONTROL_NOT_ACCEPTED = 2
+} JausControlResponseEnum;
+#endif
 
 typedef struct
 {
@@ -87,9 +93,9 @@ typedef struct
 	JausUnsignedInteger dataFlag;
 	
 	JausUnsignedShort sequenceNumber;
-
-	JausByte responseCode;
 	
+	JausControlResponseEnum responseCode;
+
 }ConfirmComponentControlMessageStruct;
 
 typedef ConfirmComponentControlMessageStruct* ConfirmComponentControlMessage;

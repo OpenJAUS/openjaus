@@ -46,6 +46,11 @@
 
 #include "jaus.h"
 
+#ifndef JAUS_CLEAR_EMERGENCY_BF
+#define JAUS_CLEAR_EMERGENCY_BF
+#define JAUS_CLEAR_EMERGENCY_BF_CLEAR_EMERGENCY_BIT 0
+#endif
+
 typedef struct
 {
 	// Include all parameters from a JausMessage structure:
@@ -84,7 +89,7 @@ typedef struct
 	
 	JausUnsignedShort sequenceNumber;
 
-	JausUnsignedShort emergencyCode;
+	JausBoolean clearEmergency;
 	
 }ClearEmergencyMessageStruct;
 

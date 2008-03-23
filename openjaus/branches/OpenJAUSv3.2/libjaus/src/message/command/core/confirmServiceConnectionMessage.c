@@ -65,11 +65,12 @@ static void dataInitialize(ConfirmServiceConnectionMessage message);
 static void dataInitialize(ConfirmServiceConnectionMessage message)
 {
 	message->properties.scFlag = JAUS_SERVICE_CONNECTION_MESSAGE;
+	
 	// Set initial values of message fields
-	message->serviceConnectionCommandCode = 	newJausUnsignedShort(0);
+	message->serviceConnectionCommandCode = newJausUnsignedShort(0);
 	message->instanceId = newJausByte(0);
 	message->confirmedPeriodicUpdateRateHertz = newJausDouble(0);
-	message->responseCode = newJausByte(JAUS_SC_COMMAND_NOT_SUPPORTED);
+	message->responseCode = JAUS_SC_COMMAND_NOT_SUPPORTED;
 }
 
 // Return boolean of success
@@ -93,7 +94,7 @@ static JausBoolean dataFromBuffer(ConfirmServiceConnectionMessage message, unsig
 		// Scaled Int to double,  0 min, 1092 max
 		message->confirmedPeriodicUpdateRateHertz = jausUnsignedShortToDouble(tempUShort, 0, 1092);
 		
-		if(!jausByteFromBuffer(&message->responseCode, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		if(!jausByteFromBuffer(&((JausByte)message->responseCode), buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
 			
 		return JAUS_TRUE;
@@ -125,7 +126,7 @@ static int dataToBuffer(ConfirmServiceConnectionMessage message, unsigned char *
 		if(!jausUnsignedShortToBuffer(tempUShort, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
 		
-		if(!jausByteToBuffer(message->responseCode, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		if(!jausByteToBuffer(((JausByte)message->responseCode), buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
 
 	}

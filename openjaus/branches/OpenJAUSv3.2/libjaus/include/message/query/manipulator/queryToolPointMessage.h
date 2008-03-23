@@ -86,35 +86,19 @@ typedef struct
 
 	// MESSAGE DATA MEMBERS GO HERE
 	
-	// Example from ReportGlobalPoseMessage
-	//
-	//	JausShortPresenceVector presenceVector;
-	//	JausDouble latitudeDegrees;				// Scaled Int (-90, 90)
-	//	JausDouble longitudeDegrees;			// Scaled Int (-180, 180)
-	//	JausDouble elevationMeters;				// Scaled Int (-10000, 35000)
-	//	JausDouble positionRmsMeters;			// Scaled UInt (0, 100)
-	//	JausDouble rollRadians;					// Scaled Short (-JAUS_PI, JAUS_PI)
-	//	JausDouble pitchRadians;				// Scaled Short (-JAUS_PI, JAUS_PI)
-	//	JausDouble yawRadians;					// Scaled Short (-JAUS_PI, JAUS_PI)
-	//	JausDouble attitudeRmsRadians;			// Scaled Short (0, JAUS_PI)
-	//	JausUnsignedInteger timeStamp;	
-	
 }QueryToolPointMessageStruct;
 
 typedef QueryToolPointMessageStruct* QueryToolPointMessage;
 
-QueryToolPointMessage queryToolPointMessageCreate(void);
-void queryToolPointMessageDestroy(QueryToolPointMessage);
+JAUS_EXPORT QueryToolPointMessage queryToolPointMessageCreate(void);
+JAUS_EXPORT void queryToolPointMessageDestroy(QueryToolPointMessage);
 
-JausBoolean queryToolPointMessageFromBuffer(QueryToolPointMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean queryToolPointMessageToBuffer(QueryToolPointMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean queryToolPointMessageFromBuffer(QueryToolPointMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean queryToolPointMessageToBuffer(QueryToolPointMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
+JAUS_EXPORT QueryToolPointMessage queryToolPointMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage queryToolPointMessageToJausMessage(QueryToolPointMessage message);
 
-QueryToolPointMessage queryToolPointMessageFromJausMessage(JausMessage jausMessage);
-JausMessage queryToolPointMessageToJausMessage(QueryToolPointMessage message);
-
-
-unsigned int queryToolPointMessageSize(QueryToolPointMessage message);
-
+JAUS_EXPORT unsigned int queryToolPointMessageSize(QueryToolPointMessage message);
 
 #endif // QUERY_TOOL_POINT_MESSAGE_H

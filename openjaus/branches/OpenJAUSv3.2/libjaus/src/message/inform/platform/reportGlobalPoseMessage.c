@@ -56,6 +56,7 @@ static JausBoolean headerToBuffer(ReportGlobalPoseMessage message, unsigned char
 static JausBoolean dataFromBuffer(ReportGlobalPoseMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static int dataToBuffer(ReportGlobalPoseMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(ReportGlobalPoseMessage message);
+static void dataDestroy(ReportGlobalPoseMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS
@@ -74,7 +75,14 @@ static void dataInitialize(ReportGlobalPoseMessage message)
 	message->pitchRadians = newJausDouble(0);				// Scaled Short (-JAUS_PI, JAUS_PI)
 	message->yawRadians = newJausDouble(0);					// Scaled Short (-JAUS_PI, JAUS_PI)
 	message->attitudeRmsRadians = newJausDouble(0);			// Scaled Short (0, JAUS_PI)
-	message->timeStamp = newJausUnsignedInteger(0);
+	message->time = jausTimeCreate();
+}
+
+// Destructs the message-specific fields
+static void dataDestroy(ReportGlobalPoseMessage message)
+{
+	// Free message fields
+	jausTimeDestroy(message->time);
 }
 
 // Return boolean of success
@@ -176,8 +184,8 @@ static JausBoolean dataFromBuffer(ReportGlobalPoseMessage message, unsigned char
 		if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_POSE_PV_TIME_STAMP_BIT))
 		{
 			//unpack
-			if(!jausUnsignedIntegerFromBuffer(&message->timeStamp, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-			index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
+			if(!jausTimeStampFromBuffer(message->time,  buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+			index += JAUS_TIME_STAMP_SIZE_BYTES;
 		}
 		return JAUS_TRUE;
 	}
@@ -288,8 +296,8 @@ static int dataToBuffer(ReportGlobalPoseMessage message, unsigned char *buffer, 
 		if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_POSE_PV_TIME_STAMP_BIT))
 		{
 			//unpack
-			if(!jausUnsignedIntegerToBuffer(message->timeStamp, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-			index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
+			if(!jausTimeStampToBuffer(message->time,  buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+			index += JAUS_TIME_STAMP_SIZE_BYTES;
 		}
 	}
 
@@ -345,7 +353,7 @@ static int dataSize(ReportGlobalPoseMessage message)
 	
 	if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_POSE_PV_TIME_STAMP_BIT))
 	{
-		index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
+		index += JAUS_TIME_STAMP_SIZE_BYTES;
 	}
 
 	return index;
@@ -387,6 +395,7 @@ ReportGlobalPoseMessage reportGlobalPoseMessageCreate(void)
 
 void reportGlobalPoseMessageDestroy(ReportGlobalPoseMessage message)
 {
+	dataDestroy(message);
 	jausAddressDestroy(message->source);
 	jausAddressDestroy(message->destination);
 	free(message);

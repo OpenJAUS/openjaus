@@ -92,18 +92,15 @@ typedef struct
 
 typedef SetJointEffortsMessageStruct* SetJointEffortsMessage;
 
-SetJointEffortsMessage setJointEffortsMessageCreate(void);
-void setJointEffortsMessageDestroy(SetJointEffortsMessage);
+JAUS_EXPORT SetJointEffortsMessage setJointEffortsMessageCreate(void);
+JAUS_EXPORT void setJointEffortsMessageDestroy(SetJointEffortsMessage);
 
-JausBoolean setJointEffortsMessageFromBuffer(SetJointEffortsMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean setJointEffortsMessageToBuffer(SetJointEffortsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean setJointEffortsMessageFromBuffer(SetJointEffortsMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean setJointEffortsMessageToBuffer(SetJointEffortsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
+JAUS_EXPORT SetJointEffortsMessage setJointEffortsMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage setJointEffortsMessageToJausMessage(SetJointEffortsMessage message);
 
-SetJointEffortsMessage setJointEffortsMessageFromJausMessage(JausMessage jausMessage);
-JausMessage setJointEffortsMessageToJausMessage(SetJointEffortsMessage message);
-
-
-unsigned int setJointEffortsMessageSize(SetJointEffortsMessage message);
-
+JAUS_EXPORT unsigned int setJointEffortsMessageSize(SetJointEffortsMessage message);
 
 #endif // SET_JOINT_EFFORTS_MESSAGE_H

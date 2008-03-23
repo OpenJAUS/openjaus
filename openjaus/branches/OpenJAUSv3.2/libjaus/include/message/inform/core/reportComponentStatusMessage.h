@@ -90,7 +90,7 @@ typedef struct
 	JausUnsignedShort sequenceNumber;
 
 	// MESSAGE DATA MEMBERS GO HERE
-	JausByte primaryStatusCode;
+	JausState primaryStatusCode;
 	JausUnsignedInteger secondaryStatusCode;
 	
 }ReportComponentStatusMessageStruct;

@@ -54,22 +54,22 @@
 #define JAUS_DEVICES_PV_TRANSFER_BIT	3
 #endif
 
-#ifndef JAUS_DEVICES_PROPULSION
-#define JAUS_DEVICES_PROPULSION
-#define JAUS_DEVICES_PROPULSION_MAIN_POWER      0
-#define JAUS_DEVICES_PROPULSION_MAIN_FUEL       1
-#define JAUS_DEVICES_PROPULSION_AUXILARY_FUEL   2
-#define JAUS_DEVICES_PROPULSION_AUXILARY_POWER  3
-#define JAUS_DEVICES_PROPULSION_STARTING_DEVICE 4
-#define JAUS_DEVICES_PROPULSION_COLD_START      5
-#define JAUS_DEVICES_PROPULSION_AUTO_START      6
-#define JAUS_DEVICES_PROPULSION_AUTO_SHUTDOWN   7
+#ifndef JAUS_DEVICES_PROPULSION_BF
+#define JAUS_DEVICES_PROPULSION_BF
+#define JAUS_DEVICES_PROPULSION_BF_MAIN_POWER_BIT		0
+#define JAUS_DEVICES_PROPULSION_BF_MAIN_FUEL_BIT		1
+#define JAUS_DEVICES_PROPULSION_BF_AUXILARY_FUEL_BIT	2
+#define JAUS_DEVICES_PROPULSION_BF_AUXILARY_POWER_BIT	3
+#define JAUS_DEVICES_PROPULSION_BF_STARTING_DEVICE_BIT	4
+#define JAUS_DEVICES_PROPULSION_BF_COLD_START_BIT		5
+#define JAUS_DEVICES_PROPULSION_BF_AUTO_START_BIT		6
+#define JAUS_DEVICES_PROPULSION_BF_AUTO_SHUTDOWN_BIT	7
 #endif
 
-#ifndef JAUS_DEVICES_OTHER
-#define JAUS_DEVICES_OTHER
-#define JAUS_DEVICES_OTHER_PARKING_BRAKE        0
-#define JAUS_DEVICES_OTHER_HORN                 1
+#ifndef JAUS_DEVICES_OTHER_BF
+#define JAUS_DEVICES_OTHER_BF
+#define JAUS_DEVICES_OTHER_BF_PARKING_BRAKE_BIT	0
+#define JAUS_DEVICES_OTHER_BF_HORN_BIT			1
 #endif
 
 typedef struct
@@ -111,11 +111,23 @@ typedef struct
 	JausUnsignedShort sequenceNumber;
 
 	JausBytePresenceVector presenceVector;
-	JausByte mainPropulsion;
-	JausByte parkingBrakeHorn;
 	JausByte gear;
 	JausByte transferCase;
 	
+	// Main Propulsion
+	JausBoolean mainPropulsion;
+	JausBoolean mainFuelSupply;
+	JausBoolean auxFuelSupply;
+	JausBoolean powerAuxDevices;
+	JausBoolean startingDevice;
+	JausBoolean coldStart;
+	JausBoolean automaticStart;
+	JausBoolean automaticStop;
+
+	// Parking, Brake and Horn
+	JausBoolean parkingBrake;
+	JausBoolean horn;
+
 }SetDiscreteDevicesMessageStruct;
 
 typedef SetDiscreteDevicesMessageStruct* SetDiscreteDevicesMessage;
