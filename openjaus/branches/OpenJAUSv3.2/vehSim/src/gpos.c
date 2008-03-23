@@ -409,7 +409,7 @@ void gposReadyState(void)
 	gposMessage->rollRadians = 0.0;
 	gposMessage->pitchRadians = 0.0;
 	gposMessage->attitudeRmsRadians = 0.05;
-	gposMessage->timeStamp = 0;
+	jausTimeSetCurrentTime(gposMessage->time);
 
 	// Send message
 	if(scManagerQueryActiveMessage(gposNmi, JAUS_REPORT_GLOBAL_POSE))
