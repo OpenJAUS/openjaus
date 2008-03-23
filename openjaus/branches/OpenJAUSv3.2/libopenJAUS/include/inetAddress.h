@@ -46,6 +46,7 @@
 #define INET_ADDRESS_H
 
 #ifdef WIN32
+	#define JAUS_EXPORT	__declspec(dllexport)
 	#include <winsock2.h>
 	#include <ws2tcpip.h>
     #ifndef socklen_t
@@ -53,7 +54,9 @@
     #endif
 	#define CLOSE_SOCKET closesocket
 	typedef unsigned int size_t;
+	#define JAUS_EXPORT	__declspec(dllexport)
 #elif defined(__linux) || defined(linux) || defined(__linux__)
+	#define JAUS_EXPORT
 	#include <unistd.h>
 	#include <sys/socket.h>
 	#include <netdb.h>
@@ -62,6 +65,7 @@
 	#include <netinet/in.h>
 	#include <sys/types.h>
 	#define CLOSE_SOCKET close
+	#define JAUS_EXPORT
 #else
 	#error "No Socket implementation defined for this platform."
 #endif
@@ -78,12 +82,12 @@ typedef struct
 
 typedef InetAddressStruct *InetAddress;
 
-InetAddress inetAddressCreate(void);
-void inetAddressDestroy(InetAddress);
-InetAddress inetAddressGetLocalHost(void);
-InetAddress inetAddressGetByName(char *);
-InetAddress inetAddressGetByString(char *);
-int inetAddressToString(InetAddress, char *);
+JAUS_EXPORT InetAddress inetAddressCreate(void);
+JAUS_EXPORT void inetAddressDestroy(InetAddress);
+JAUS_EXPORT InetAddress inetAddressGetLocalHost(void);
+JAUS_EXPORT InetAddress inetAddressGetByName(char *);
+JAUS_EXPORT InetAddress inetAddressGetByString(char *);
+JAUS_EXPORT int inetAddressToString(InetAddress, char *);
 
 #ifdef __cplusplus
 }

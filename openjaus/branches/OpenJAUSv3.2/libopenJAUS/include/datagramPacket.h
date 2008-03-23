@@ -68,6 +68,12 @@
 
 #include "inetAddress.h"
 
+#ifdef WIN32
+	#define JAUS_EXPORT	__declspec(dllexport)
+#else
+	#define JAUS_EXPORT
+#endif
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -77,7 +83,7 @@ typedef struct
 {
 	unsigned char *buffer;
 
-#ifdef __LINUX
+#if defined(__linux) || defined(linux) || defined(__linux__)
 	size_t bufferSizeBytes;
 #else
 	int bufferSizeBytes;
@@ -89,8 +95,8 @@ typedef struct
 
 typedef DatagramPacketStruct *DatagramPacket;
 
-DatagramPacket datagramPacketCreate(void);
-void datagramPacketDestroy(DatagramPacket);
+JAUS_EXPORT DatagramPacket datagramPacketCreate(void);
+JAUS_EXPORT void datagramPacketDestroy(DatagramPacket);
 
 #ifdef __cplusplus
 }

@@ -90,15 +90,14 @@ typedef struct
 
 typedef MulticastSocketStruct *MulticastSocket;
 
-MulticastSocket multicastSocketCreate(short, InetAddress ipAdress);
-void multicastSocketDestroy(MulticastSocket);
-//int multicastSocketSetNetIf(MulticastSocket, NetworkInterface);
-int multicastSocketJoinGroup(MulticastSocket, InetAddress);
-int multicastSocketSend(MulticastSocket, DatagramPacket);
-int multicastSocketReceive(MulticastSocket multicastSocket, DatagramPacket packet);
-int multicastSocketSetTTL(MulticastSocket multicastSocket, unsigned int ttl);
-int multicastSocketSetLoopback(MulticastSocket multicastSocket, unsigned int loop);
-void multicastSocketSetTimeout(MulticastSocket multicastSocket, double timeoutSec);
+JAUS_EXPORT MulticastSocket multicastSocketCreate(short, InetAddress ipAdress);
+JAUS_EXPORT void multicastSocketDestroy(MulticastSocket);
+JAUS_EXPORT int multicastSocketJoinGroup(MulticastSocket, InetAddress);
+JAUS_EXPORT int multicastSocketSend(MulticastSocket, DatagramPacket);
+JAUS_EXPORT int multicastSocketReceive(MulticastSocket multicastSocket, DatagramPacket packet);
+JAUS_EXPORT int multicastSocketSetTTL(MulticastSocket multicastSocket, unsigned int ttl);
+JAUS_EXPORT int multicastSocketSetLoopback(MulticastSocket multicastSocket, unsigned int loop);
+JAUS_EXPORT void multicastSocketSetTimeout(MulticastSocket multicastSocket, double timeoutSec);
 
 
 #ifdef __cplusplus
