@@ -974,7 +974,7 @@ bool CommunicatorComponent::processRequestComponentControl(JausMessage message)
 			confirmComponentControl = confirmComponentControlMessageCreate();
 			jausAddressCopy(confirmComponentControl->source, cmpt->address);
 			jausAddressCopy(confirmComponentControl->destination, message->source);
-			confirmComponentControl->responseCode = JAUS_RESPONSE_CODE_CONTROL_ACCEPTED;
+			confirmComponentControl->responseCode = JAUS_CONTROL_ACCEPTED;
 			txMessage = confirmComponentControlMessageToJausMessage(confirmComponentControl); 
 			if(txMessage)
 			{
@@ -1009,7 +1009,7 @@ bool CommunicatorComponent::processRequestComponentControl(JausMessage message)
 				confirmComponentControl = confirmComponentControlMessageCreate();
 				jausAddressCopy(confirmComponentControl->source, cmpt->address);
 				jausAddressCopy(confirmComponentControl->destination, message->source);
-				confirmComponentControl->responseCode = JAUS_RESPONSE_CODE_CONTROL_ACCEPTED;
+				confirmComponentControl->responseCode = JAUS_CONTROL_ACCEPTED;
 				txMessage = confirmComponentControlMessageToJausMessage(confirmComponentControl); 
 				if(txMessage)
 				{
@@ -1025,7 +1025,7 @@ bool CommunicatorComponent::processRequestComponentControl(JausMessage message)
 		confirmComponentControl = confirmComponentControlMessageCreate();
 		jausAddressCopy(confirmComponentControl->source, cmpt->address);
 		jausAddressCopy(confirmComponentControl->destination, message->source);
-		confirmComponentControl->responseCode = JAUS_RESPONSE_CODE_CONTROL_ACCEPTED;
+		confirmComponentControl->responseCode = JAUS_CONTROL_ACCEPTED;
 		txMessage = confirmComponentControlMessageToJausMessage(confirmComponentControl); 
 		if(txMessage)
 		{

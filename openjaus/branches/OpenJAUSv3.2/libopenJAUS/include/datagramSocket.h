@@ -69,6 +69,12 @@
 #include "inetAddress.h"
 #include "datagramPacket.h"
 
+#ifdef WIN32
+	#define JAUS_EXPORT	__declspec(dllexport)
+#else
+	#define JAUS_EXPORT
+#endif
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -85,16 +91,16 @@ typedef struct
 
 typedef DatagramSocketStruct *DatagramSocket;
 
-DatagramSocket datagramSocketCreate(short, InetAddress);
-void datagramSocketDestroy(DatagramSocket);
+JAUS_EXPORT DatagramSocket datagramSocketCreate(short, InetAddress);
+JAUS_EXPORT void datagramSocketDestroy(DatagramSocket);
 
-void datagramSocketSetSendBufferSize(DatagramSocket, int);
-int datagramSocketGetSendBufferSize(DatagramSocket);
-void datagramSocketSetRecvBufferSize(DatagramSocket, int);
-int datagramSocketGetRecvBufferSize(DatagramSocket);
-int datagramSocketSend(DatagramSocket, DatagramPacket);
-int datagramSocketReceive(DatagramSocket, DatagramPacket);
-void datagramSocketSetTimeout(DatagramSocket, double);
+JAUS_EXPORT void datagramSocketSetSendBufferSize(DatagramSocket, int);
+JAUS_EXPORT int datagramSocketGetSendBufferSize(DatagramSocket);
+JAUS_EXPORT void datagramSocketSetRecvBufferSize(DatagramSocket, int);
+JAUS_EXPORT int datagramSocketGetRecvBufferSize(DatagramSocket);
+JAUS_EXPORT int datagramSocketSend(DatagramSocket, DatagramPacket);
+JAUS_EXPORT int datagramSocketReceive(DatagramSocket, DatagramPacket);
+JAUS_EXPORT void datagramSocketSetTimeout(DatagramSocket, double);
 
 #ifdef __cplusplus
 }
