@@ -56,6 +56,7 @@ static JausBoolean headerToBuffer(SetTimeMessage message, unsigned char *buffer,
 static JausBoolean dataFromBuffer(SetTimeMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static int dataToBuffer(SetTimeMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(SetTimeMessage message);
+static void dataDestroy(SetTimeMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS
@@ -66,9 +67,16 @@ static void dataInitialize(SetTimeMessage message)
 {
 	// Set initial values of message fields
 	message->presenceVector = newJausBytePresenceVector();
-	message->timeStamp = newJausUnsignedInteger(0);
-	message->dateStamp = newJausUnsignedShort(0);
+	message->time = jausTimeCreate();
 }
+
+// Destructs the message-specific fields
+static void dataDestroy(SetTimeMessage message)
+{
+	// Free message fields
+	jausTimeDestroy(message->time);
+}
+
 
 // Return boolean of success
 static JausBoolean dataFromBuffer(SetTimeMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
@@ -79,20 +87,19 @@ static JausBoolean dataFromBuffer(SetTimeMessage message, unsigned char *buffer,
 	{
 		// Unpack Message Fields from Buffer
 		// Unpack according to Presence Vector
-		
 		if(!jausBytePresenceVectorFromBuffer(&message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_PRESENCE_VECTOR_SIZE_BYTES;
 		
 		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_TIME_PV_TIME_STAMP_BIT))
 		{
-			if(!jausUnsignedIntegerFromBuffer(&message->timeStamp,  buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-			index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
+			if(!jausTimeStampFromBuffer(message->time,  buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+			index += JAUS_TIME_STAMP_SIZE_BYTES;
 		}
 
 		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_TIME_PV_DATE_STAMP_BIT))
 		{
-			if(!jausUnsignedShortFromBuffer(&message->dateStamp,  buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-			index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+			if(!jausDateStampFromBuffer(message->time,  buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+			index += JAUS_DATE_STAMP_SIZE_BYTES;
 		}
 	
 		return JAUS_TRUE;
@@ -117,14 +124,14 @@ static int dataToBuffer(SetTimeMessage message, unsigned char *buffer, unsigned 
 		
 		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_TIME_PV_TIME_STAMP_BIT))
 		{
-			if(!jausUnsignedIntegerToBuffer(message->timeStamp,  buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-			index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
+			if(!jausTimeStampToBuffer(message->time,  buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+			index += JAUS_TIME_STAMP_SIZE_BYTES;
 		}
 
 		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_TIME_PV_DATE_STAMP_BIT))
 		{
-			if(!jausUnsignedShortToBuffer(message->dateStamp,  buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-			index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+			if(!jausDateStampToBuffer(message->time,  buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+			index += JAUS_DATE_STAMP_SIZE_BYTES;
 		}
 	}
 
@@ -136,15 +143,15 @@ static int dataSize(SetTimeMessage message)
 	int index = 0;
 
 	index += JAUS_BYTE_PRESENCE_VECTOR_SIZE_BYTES;
-		
+	
 	if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_TIME_PV_TIME_STAMP_BIT))
 	{
-		index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
+		index += JAUS_TIME_STAMP_SIZE_BYTES;
 	}
 
 	if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_TIME_PV_DATE_STAMP_BIT))
 	{
-		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+		index += JAUS_DATE_STAMP_SIZE_BYTES;
 	}
 
 	return index;	
@@ -185,6 +192,7 @@ SetTimeMessage setTimeMessageCreate(void)
 
 void setTimeMessageDestroy(SetTimeMessage message)
 {
+	dataDestroy(message);
 	jausAddressDestroy(message->source);
 	jausAddressDestroy(message->destination);
 	free(message);

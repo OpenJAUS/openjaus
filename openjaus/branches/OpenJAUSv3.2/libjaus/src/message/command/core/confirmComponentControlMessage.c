@@ -65,7 +65,7 @@ static void dataInitialize(ConfirmComponentControlMessage message);
 static void dataInitialize(ConfirmComponentControlMessage message)
 {
 	// Set initial values of message fields
-	message->responseCode = newJausByte(0);
+	message->responseCode = JAUS_CONTROL_ACCEPTED;
 }
 
 // Return boolean of success
@@ -76,7 +76,7 @@ static JausBoolean dataFromBuffer(ConfirmComponentControlMessage message, unsign
 	if(bufferSizeBytes == message->dataSize)
 	{
 		// Unpack Message Fields from Buffer
-		if(!jausByteFromBuffer(&message->responseCode, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		if(!jausByteFromBuffer(&((JausByte)message->responseCode), buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
 		
 		return JAUS_TRUE;
@@ -95,7 +95,7 @@ static int dataToBuffer(ConfirmComponentControlMessage message, unsigned char *b
 	if(bufferSizeBytes >= message->dataSize)
 	{
 		// Pack Message Fields to Buffer
-		if(!jausByteToBuffer(message->responseCode, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		if(!jausByteToBuffer(((JausByte)message->responseCode), buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
 		
 	}

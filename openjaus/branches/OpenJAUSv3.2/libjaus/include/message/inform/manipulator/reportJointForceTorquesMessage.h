@@ -92,18 +92,15 @@ typedef struct
 
 typedef ReportJointForceTorquesMessageStruct* ReportJointForceTorquesMessage;
 
-ReportJointForceTorquesMessage reportJointForceTorquesMessageCreate(void);
-void reportJointForceTorquesMessageDestroy(ReportJointForceTorquesMessage);
+JAUS_EXPORT ReportJointForceTorquesMessage reportJointForceTorquesMessageCreate(void);
+JAUS_EXPORT void reportJointForceTorquesMessageDestroy(ReportJointForceTorquesMessage);
 
-JausBoolean reportJointForceTorquesMessageFromBuffer(ReportJointForceTorquesMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean reportJointForceTorquesMessageToBuffer(ReportJointForceTorquesMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean reportJointForceTorquesMessageFromBuffer(ReportJointForceTorquesMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean reportJointForceTorquesMessageToBuffer(ReportJointForceTorquesMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
+JAUS_EXPORT ReportJointForceTorquesMessage reportJointForceTorquesMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage reportJointForceTorquesMessageToJausMessage(ReportJointForceTorquesMessage message);
 
-ReportJointForceTorquesMessage reportJointForceTorquesMessageFromJausMessage(JausMessage jausMessage);
-JausMessage reportJointForceTorquesMessageToJausMessage(ReportJointForceTorquesMessage message);
-
-
-unsigned int reportJointForceTorquesMessageSize(ReportJointForceTorquesMessage message);
-
+JAUS_EXPORT unsigned int reportJointForceTorquesMessageSize(ReportJointForceTorquesMessage message);
 
 #endif // REPORT_JOINT_FORCE_TORQUES_MESSAGE_H

@@ -46,6 +46,16 @@
 
 #include "jaus.h"
 
+#ifndef JAUS_DATA_LINK_ENUM
+#define JAUS_DATA_LINK_ENUM
+typedef enum 
+{	
+	JAUS_DATA_LINK_OFF = 0,
+	JAUS_DATA_LINK_ON = 1,
+	JAUS_DATA_LINK_STANDBY = 2
+} JausDataLinkEnum;
+#endif
+
 typedef struct
 {
 	// Include all parameters from a JausMessage structure:
@@ -85,25 +95,21 @@ typedef struct
 	JausUnsignedShort sequenceNumber;
 
 	// MESSAGE DATA MEMBERS GO HERE
-	
-	JausByte state;
-		
+	JausDataLinkEnum state;
+
 }SetDataLinkStatusMessageStruct;
 
 typedef SetDataLinkStatusMessageStruct* SetDataLinkStatusMessage;
 
-SetDataLinkStatusMessage setDataLinkStatusMessageCreate(void);
-void setDataLinkStatusMessageDestroy(SetDataLinkStatusMessage);
+JAUS_EXPORT SetDataLinkStatusMessage setDataLinkStatusMessageCreate(void);
+JAUS_EXPORT void setDataLinkStatusMessageDestroy(SetDataLinkStatusMessage);
 
-JausBoolean setDataLinkStatusMessageFromBuffer(SetDataLinkStatusMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean setDataLinkStatusMessageToBuffer(SetDataLinkStatusMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean setDataLinkStatusMessageFromBuffer(SetDataLinkStatusMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean setDataLinkStatusMessageToBuffer(SetDataLinkStatusMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
+JAUS_EXPORT SetDataLinkStatusMessage setDataLinkStatusMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage setDataLinkStatusMessageToJausMessage(SetDataLinkStatusMessage message);
 
-SetDataLinkStatusMessage setDataLinkStatusMessageFromJausMessage(JausMessage jausMessage);
-JausMessage setDataLinkStatusMessageToJausMessage(SetDataLinkStatusMessage message);
-
-
-unsigned int setDataLinkStatusMessageSize(SetDataLinkStatusMessage message);
-
+JAUS_EXPORT unsigned int setDataLinkStatusMessageSize(SetDataLinkStatusMessage message);
 
 #endif // SET_DATA_LINK_STATUS_MESSAGE_H

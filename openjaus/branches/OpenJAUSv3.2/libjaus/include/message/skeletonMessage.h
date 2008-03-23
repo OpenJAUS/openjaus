@@ -103,18 +103,15 @@ typedef struct
 
 typedef XxXxMessageStruct* XxXxMessage;
 
-XxXxMessage xXXXMessageCreate(void);
-void xXXXMessageDestroy(XxXxMessage);
+JAUS_EXPORT XxXxMessage xXXXMessageCreate(void);
+JAUS_EXPORT void xXXXMessageDestroy(XxXxMessage);
 
-JausBoolean xXXXMessageFromBuffer(XxXxMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean xXXXMessageToBuffer(XxXxMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean xXXXMessageFromBuffer(XxXxMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean xXXXMessageToBuffer(XxXxMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
+JAUS_EXPORT XxXxMessage xXXXMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage xXXXMessageToJausMessage(XxXxMessage message);
 
-XxXxMessage xXXXMessageFromJausMessage(JausMessage jausMessage);
-JausMessage xXXXMessageToJausMessage(XxXxMessage message);
-
-
-unsigned int xXXXMessageSize(XxXxMessage message);
-
+JAUS_EXPORT unsigned int xXXXMessageSize(XxXxMessage message);
 
 #endif // XXXX_MESSAGE_H

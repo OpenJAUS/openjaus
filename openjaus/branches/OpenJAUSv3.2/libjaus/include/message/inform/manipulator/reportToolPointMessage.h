@@ -92,18 +92,15 @@ typedef struct
 
 typedef ReportToolPointMessageStruct* ReportToolPointMessage;
 
-ReportToolPointMessage reportToolPointMessageCreate(void);
-void reportToolPointMessageDestroy(ReportToolPointMessage);
+JAUS_EXPORT ReportToolPointMessage reportToolPointMessageCreate(void);
+JAUS_EXPORT void reportToolPointMessageDestroy(ReportToolPointMessage);
 
-JausBoolean reportToolPointMessageFromBuffer(ReportToolPointMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean reportToolPointMessageToBuffer(ReportToolPointMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean reportToolPointMessageFromBuffer(ReportToolPointMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean reportToolPointMessageToBuffer(ReportToolPointMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
+JAUS_EXPORT ReportToolPointMessage reportToolPointMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage reportToolPointMessageToJausMessage(ReportToolPointMessage message);
 
-ReportToolPointMessage reportToolPointMessageFromJausMessage(JausMessage jausMessage);
-JausMessage reportToolPointMessageToJausMessage(ReportToolPointMessage message);
-
-
-unsigned int reportToolPointMessageSize(ReportToolPointMessage message);
-
+JAUS_EXPORT unsigned int reportToolPointMessageSize(ReportToolPointMessage message);
 
 #endif // REPORT_TOOL_POINT_MESSAGE_H

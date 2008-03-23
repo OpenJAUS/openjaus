@@ -65,7 +65,7 @@ static void dataInitialize(ReportComponentStatusMessage message);
 static void dataInitialize(ReportComponentStatusMessage message)
 {
 	// Set initial values of message fields
-	message->primaryStatusCode = newJausByte(0);
+	message->primaryStatusCode = JAUS_UNDEFINED_STATE;
 	message->secondaryStatusCode = newJausUnsignedInteger(0);
 }
 
@@ -77,10 +77,10 @@ static JausBoolean dataFromBuffer(ReportComponentStatusMessage message, unsigned
 	if(bufferSizeBytes == message->dataSize)
 	{
 		// Unpack Message Fields from Buffer
-		if(!jausByteFromBuffer( &(message->primaryStatusCode), buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		if(!jausByteFromBuffer(&((JausByte)message->primaryStatusCode), buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
 
-		if(!jausUnsignedIntegerFromBuffer( &(message->secondaryStatusCode), buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		if(!jausUnsignedIntegerFromBuffer(&(message->secondaryStatusCode), buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
 		
 		return JAUS_TRUE;
@@ -99,7 +99,7 @@ static int dataToBuffer(ReportComponentStatusMessage message, unsigned char *buf
 	if(bufferSizeBytes >= message->dataSize)
 	{
 		// Pack Message Fields to Buffer
-		if(!jausByteToBuffer(message->primaryStatusCode, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		if(!jausByteToBuffer(((JausByte)message->primaryStatusCode), buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
 
 		if(!jausUnsignedIntegerToBuffer(message->secondaryStatusCode, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;

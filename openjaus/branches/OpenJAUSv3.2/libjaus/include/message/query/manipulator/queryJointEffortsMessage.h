@@ -85,36 +85,20 @@ typedef struct
 	JausUnsignedShort sequenceNumber;
 
 	// MESSAGE DATA MEMBERS GO HERE
-	
-	// Example from ReportGlobalPoseMessage
-	//
-	//	JausShortPresenceVector presenceVector;
-	//	JausDouble latitudeDegrees;				// Scaled Int (-90, 90)
-	//	JausDouble longitudeDegrees;			// Scaled Int (-180, 180)
-	//	JausDouble elevationMeters;				// Scaled Int (-10000, 35000)
-	//	JausDouble positionRmsMeters;			// Scaled UInt (0, 100)
-	//	JausDouble rollRadians;					// Scaled Short (-JAUS_PI, JAUS_PI)
-	//	JausDouble pitchRadians;				// Scaled Short (-JAUS_PI, JAUS_PI)
-	//	JausDouble yawRadians;					// Scaled Short (-JAUS_PI, JAUS_PI)
-	//	JausDouble attitudeRmsRadians;			// Scaled Short (0, JAUS_PI)
-	//	JausUnsignedInteger timeStamp;	
-	
+		
 }QueryJointEffortsMessageStruct;
 
 typedef QueryJointEffortsMessageStruct* QueryJointEffortsMessage;
 
-QueryJointEffortsMessage queryJointEffortsMessageCreate(void);
-void queryJointEffortsMessageDestroy(QueryJointEffortsMessage);
+JAUS_EXPORT QueryJointEffortsMessage queryJointEffortsMessageCreate(void);
+JAUS_EXPORT void queryJointEffortsMessageDestroy(QueryJointEffortsMessage);
 
-JausBoolean queryJointEffortsMessageFromBuffer(QueryJointEffortsMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean queryJointEffortsMessageToBuffer(QueryJointEffortsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean queryJointEffortsMessageFromBuffer(QueryJointEffortsMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean queryJointEffortsMessageToBuffer(QueryJointEffortsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
+JAUS_EXPORT QueryJointEffortsMessage queryJointEffortsMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage queryJointEffortsMessageToJausMessage(QueryJointEffortsMessage message);
 
-QueryJointEffortsMessage queryJointEffortsMessageFromJausMessage(JausMessage jausMessage);
-JausMessage queryJointEffortsMessageToJausMessage(QueryJointEffortsMessage message);
-
-
-unsigned int queryJointEffortsMessageSize(QueryJointEffortsMessage message);
-
+JAUS_EXPORT unsigned int queryJointEffortsMessageSize(QueryJointEffortsMessage message);
 
 #endif // QUERY_JOINT_EFFORTS_MESSAGE_H

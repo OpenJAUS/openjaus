@@ -92,18 +92,15 @@ typedef struct
 
 typedef ReportJointEffortsMessageStruct* ReportJointEffortsMessage;
 
-ReportJointEffortsMessage reportJointEffortsMessageCreate(void);
-void reportJointEffortsMessageDestroy(ReportJointEffortsMessage);
+JAUS_EXPORT ReportJointEffortsMessage reportJointEffortsMessageCreate(void);
+JAUS_EXPORT void reportJointEffortsMessageDestroy(ReportJointEffortsMessage);
 
-JausBoolean reportJointEffortsMessageFromBuffer(ReportJointEffortsMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean reportJointEffortsMessageToBuffer(ReportJointEffortsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean reportJointEffortsMessageFromBuffer(ReportJointEffortsMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean reportJointEffortsMessageToBuffer(ReportJointEffortsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
+JAUS_EXPORT ReportJointEffortsMessage reportJointEffortsMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage reportJointEffortsMessageToJausMessage(ReportJointEffortsMessage message);
 
-ReportJointEffortsMessage reportJointEffortsMessageFromJausMessage(JausMessage jausMessage);
-JausMessage reportJointEffortsMessageToJausMessage(ReportJointEffortsMessage message);
-
-
-unsigned int reportJointEffortsMessageSize(ReportJointEffortsMessage message);
-
+JAUS_EXPORT unsigned int reportJointEffortsMessageSize(ReportJointEffortsMessage message);
 
 #endif // REPORT_JOINT_EFFORTS_MESSAGE_H

@@ -92,18 +92,15 @@ typedef struct
 
 typedef ReportJointPositionsMessageStruct* ReportJointPositionsMessage;
 
-ReportJointPositionsMessage reportJointPositionsMessageCreate(void);
-void reportJointPositionsMessageDestroy(ReportJointPositionsMessage);
+JAUS_EXPORT ReportJointPositionsMessage reportJointPositionsMessageCreate(void);
+JAUS_EXPORT void reportJointPositionsMessageDestroy(ReportJointPositionsMessage);
 
-JausBoolean reportJointPositionsMessageFromBuffer(ReportJointPositionsMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean reportJointPositionsMessageToBuffer(ReportJointPositionsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean reportJointPositionsMessageFromBuffer(ReportJointPositionsMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean reportJointPositionsMessageToBuffer(ReportJointPositionsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
+JAUS_EXPORT ReportJointPositionsMessage reportJointPositionsMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage reportJointPositionsMessageToJausMessage(ReportJointPositionsMessage message);
 
-ReportJointPositionsMessage reportJointPositionsMessageFromJausMessage(JausMessage jausMessage);
-JausMessage reportJointPositionsMessageToJausMessage(ReportJointPositionsMessage message);
-
-
-unsigned int reportJointPositionsMessageSize(ReportJointPositionsMessage message);
-
+JAUS_EXPORT unsigned int reportJointPositionsMessageSize(ReportJointPositionsMessage message);
 
 #endif // REPORT_JOINT_POSITIONS_MESSAGE_H

@@ -98,18 +98,15 @@ typedef struct
 
 typedef SetJointMotionMessageStruct* SetJointMotionMessage;
 
-SetJointMotionMessage setJointMotionMessageCreate(void);
-void setJointMotionMessageDestroy(SetJointMotionMessage);
+JAUS_EXPORT SetJointMotionMessage setJointMotionMessageCreate(void);
+JAUS_EXPORT void setJointMotionMessageDestroy(SetJointMotionMessage);
 
-JausBoolean setJointMotionMessageFromBuffer(SetJointMotionMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean setJointMotionMessageToBuffer(SetJointMotionMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean setJointMotionMessageFromBuffer(SetJointMotionMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean setJointMotionMessageToBuffer(SetJointMotionMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
+JAUS_EXPORT SetJointMotionMessage setJointMotionMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage setJointMotionMessageToJausMessage(SetJointMotionMessage message);
 
-SetJointMotionMessage setJointMotionMessageFromJausMessage(JausMessage jausMessage);
-JausMessage setJointMotionMessageToJausMessage(SetJointMotionMessage message);
-
-
-unsigned int setJointMotionMessageSize(SetJointMotionMessage message);
-
+JAUS_EXPORT unsigned int setJointMotionMessageSize(SetJointMotionMessage message);
 
 #endif // SET_JOINT_MOTION_MESSAGE_H

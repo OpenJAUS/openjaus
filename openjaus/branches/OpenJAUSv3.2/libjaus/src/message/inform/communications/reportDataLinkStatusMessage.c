@@ -65,7 +65,7 @@ static void dataInitialize(ReportDataLinkStatusMessage message)
 {
 
 	message->dataLinkId = newJausByte(0); 
-	message->dataLinkState = newJausByte(1); // Data link on by default
+	message->dataLinkState = JAUS_DATA_LINK_ON; // Data link on by default
 }
 
 // Destructs the message-specific fields
@@ -84,7 +84,7 @@ static JausBoolean dataFromBuffer(ReportDataLinkStatusMessage message, unsigned 
 		if(!jausByteFromBuffer(&message->dataLinkId, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
 	
-		if(!jausByteFromBuffer(&message->dataLinkState, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		if(!jausByteFromBuffer(&((JausByte)message->dataLinkState), buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
 
 		return JAUS_TRUE;
@@ -106,7 +106,7 @@ static int dataToBuffer(ReportDataLinkStatusMessage message, unsigned char *buff
 		if(!jausByteToBuffer(message->dataLinkId, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
 
-		if(!jausByteToBuffer(message->dataLinkState, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		if(!jausByteToBuffer(((JausByte)message->dataLinkState), buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
 		
 	}

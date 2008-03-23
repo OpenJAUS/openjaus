@@ -97,18 +97,15 @@ typedef struct
 
 typedef SetEndEffectorPoseMessageStruct* SetEndEffectorPoseMessage;
 
-SetEndEffectorPoseMessage setEndEffectorPoseMessageCreate(void);
-void setEndEffectorPoseMessageDestroy(SetEndEffectorPoseMessage);
+JAUS_EXPORT SetEndEffectorPoseMessage setEndEffectorPoseMessageCreate(void);
+JAUS_EXPORT void setEndEffectorPoseMessageDestroy(SetEndEffectorPoseMessage);
 
-JausBoolean setEndEffectorPoseMessageFromBuffer(SetEndEffectorPoseMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean setEndEffectorPoseMessageToBuffer(SetEndEffectorPoseMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean setEndEffectorPoseMessageFromBuffer(SetEndEffectorPoseMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean setEndEffectorPoseMessageToBuffer(SetEndEffectorPoseMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
+JAUS_EXPORT SetEndEffectorPoseMessage setEndEffectorPoseMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage setEndEffectorPoseMessageToJausMessage(SetEndEffectorPoseMessage message);
 
-SetEndEffectorPoseMessage setEndEffectorPoseMessageFromJausMessage(JausMessage jausMessage);
-JausMessage setEndEffectorPoseMessageToJausMessage(SetEndEffectorPoseMessage message);
-
-
-unsigned int setEndEffectorPoseMessageSize(SetEndEffectorPoseMessage message);
-
+JAUS_EXPORT unsigned int setEndEffectorPoseMessageSize(SetEndEffectorPoseMessage message);
 
 #endif // SET_END_EFFECTOR_POSE_MESSAGE_H

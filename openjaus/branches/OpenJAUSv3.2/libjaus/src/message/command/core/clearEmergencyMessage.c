@@ -65,20 +65,23 @@ static void dataInitialize(ClearEmergencyMessage message);
 static void dataInitialize(ClearEmergencyMessage message)
 {
 	// Set initial values of message fields
-	message->emergencyCode = newJausUnsignedShort(0);
+	message->clearEmergency = JAUS_FALSE;
 }
 
 // Return boolean of success
 static JausBoolean dataFromBuffer(ClearEmergencyMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
 {
 	int index = 0;
-	
+	JausUnsignedShort emergencyCode = 0;
+
 	if(bufferSizeBytes == message->dataSize)
 	{
 		// Unpack Message Fields from Buffer
-		if(!jausUnsignedShortFromBuffer(&message->emergencyCode, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		if(!jausUnsignedShortFromBuffer(&emergencyCode, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
-		
+
+		message->clearEmergency = jausUnsignedShortIsBitSet(emergencyCode, JAUS_CLEAR_EMERGENCY_BF_CLEAR_EMERGENCY_BIT)? JAUS_TRUE : JAUS_FALSE;
+
 		return JAUS_TRUE;
 	}
 	else
@@ -91,11 +94,14 @@ static JausBoolean dataFromBuffer(ClearEmergencyMessage message, unsigned char *
 static int dataToBuffer(ClearEmergencyMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
 {
 	int index = 0;
+	JausUnsignedShort emergencyCode = 0;
 
 	if(bufferSizeBytes >= message->dataSize)
 	{
 		// Pack Message Fields to Buffer
-		if(!jausUnsignedShortToBuffer(message->emergencyCode, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		if(message->clearEmergency) jausUnsignedShortSetBit(&emergencyCode, JAUS_CLEAR_EMERGENCY_BF_CLEAR_EMERGENCY_BIT);
+		
+		if(!jausUnsignedShortToBuffer(emergencyCode, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
 	}
 

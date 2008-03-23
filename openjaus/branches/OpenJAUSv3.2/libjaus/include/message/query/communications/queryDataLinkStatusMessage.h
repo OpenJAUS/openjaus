@@ -92,18 +92,15 @@ typedef struct
 
 typedef QueryDataLinkStatusMessageStruct* QueryDataLinkStatusMessage;
 
-QueryDataLinkStatusMessage queryDataLinkStatusMessageCreate(void);
-void queryDataLinkStatusMessageDestroy(QueryDataLinkStatusMessage);
+JAUS_EXPORT QueryDataLinkStatusMessage queryDataLinkStatusMessageCreate(void);
+JAUS_EXPORT void queryDataLinkStatusMessageDestroy(QueryDataLinkStatusMessage);
 
-JausBoolean queryDataLinkStatusMessageFromBuffer(QueryDataLinkStatusMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean queryDataLinkStatusMessageToBuffer(QueryDataLinkStatusMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean queryDataLinkStatusMessageFromBuffer(QueryDataLinkStatusMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean queryDataLinkStatusMessageToBuffer(QueryDataLinkStatusMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
+JAUS_EXPORT QueryDataLinkStatusMessage queryDataLinkStatusMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage queryDataLinkStatusMessageToJausMessage(QueryDataLinkStatusMessage message);
 
-QueryDataLinkStatusMessage queryDataLinkStatusMessageFromJausMessage(JausMessage jausMessage);
-JausMessage queryDataLinkStatusMessageToJausMessage(QueryDataLinkStatusMessage message);
-
-
-unsigned int queryDataLinkStatusMessageSize(QueryDataLinkStatusMessage message);
-
+JAUS_EXPORT unsigned int queryDataLinkStatusMessageSize(QueryDataLinkStatusMessage message);
 
 #endif // QUERY_DATA_LINK_STATUS_MESSAGE_H

@@ -46,6 +46,16 @@
 
 #include "jaus.h"
 
+#ifndef JAUS_DATA_LINK_ENUM
+#define JAUS_DATA_LINK_ENUM
+typedef enum 
+{	
+	JAUS_DATA_LINK_OFF = 0,
+	JAUS_DATA_LINK_ON = 1,
+	JAUS_DATA_LINK_STANDBY = 2
+} JausDataLinkEnum;
+#endif
+
 typedef struct
 {
 	// Include all parameters from a JausMessage structure:
@@ -87,24 +97,21 @@ typedef struct
 	// MESSAGE DATA MEMBERS GO HERE
 	
 	JausByte dataLinkId;
-	JausByte dataLinkState;
+	JausDataLinkEnum dataLinkState;
 		
 }ReportDataLinkStatusMessageStruct;
 
 typedef ReportDataLinkStatusMessageStruct* ReportDataLinkStatusMessage;
 
-ReportDataLinkStatusMessage reportDataLinkStatusMessageCreate(void);
-void reportDataLinkStatusMessageDestroy(ReportDataLinkStatusMessage);
+JAUS_EXPORT ReportDataLinkStatusMessage reportDataLinkStatusMessageCreate(void);
+JAUS_EXPORT void reportDataLinkStatusMessageDestroy(ReportDataLinkStatusMessage);
 
-JausBoolean reportDataLinkStatusMessageFromBuffer(ReportDataLinkStatusMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean reportDataLinkStatusMessageToBuffer(ReportDataLinkStatusMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean reportDataLinkStatusMessageFromBuffer(ReportDataLinkStatusMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean reportDataLinkStatusMessageToBuffer(ReportDataLinkStatusMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
+JAUS_EXPORT ReportDataLinkStatusMessage reportDataLinkStatusMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage reportDataLinkStatusMessageToJausMessage(ReportDataLinkStatusMessage message);
 
-ReportDataLinkStatusMessage reportDataLinkStatusMessageFromJausMessage(JausMessage jausMessage);
-JausMessage reportDataLinkStatusMessageToJausMessage(ReportDataLinkStatusMessage message);
-
-
-unsigned int reportDataLinkStatusMessageSize(ReportDataLinkStatusMessage message);
-
+JAUS_EXPORT unsigned int reportDataLinkStatusMessageSize(ReportDataLinkStatusMessage message);
 
 #endif // REPORT_DATA_LINK_STATUS_MESSAGE_H

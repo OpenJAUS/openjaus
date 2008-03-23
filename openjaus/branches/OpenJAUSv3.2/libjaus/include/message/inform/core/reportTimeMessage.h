@@ -92,9 +92,8 @@ typedef struct
 
 	// MESSAGE DATA MEMBERS GO HERE
 	JausBytePresenceVector presenceVector;
-	JausUnsignedInteger timeStamp;
-	JausUnsignedShort dateStamp;
-	
+	JausTime time;
+
 }ReportTimeMessageStruct;
 
 typedef ReportTimeMessageStruct* ReportTimeMessage;

@@ -56,6 +56,7 @@ static JausBoolean headerToBuffer(ReportVelocityStateMessage message, unsigned c
 static JausBoolean dataFromBuffer(ReportVelocityStateMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static int dataToBuffer(ReportVelocityStateMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(ReportVelocityStateMessage message);
+static void dataDestroy(ReportVelocityStateMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS
@@ -74,7 +75,14 @@ static void dataInitialize(ReportVelocityStateMessage message)
 	message->pitchRateRps = newJausDouble(0);	// Scaled Short (-32.767, 32.767) 	Rps = Radians per Second
 	message->yawRateRps = newJausDouble(0);		// Scaled Short (-32.767, 32.767) 	Rps = Radians per Second
 	message->rateRmsRps = newJausDouble(0);		// Scaled UShort (0, JAUS_PI) 		Rps = Radians per Second
-	message->timeStamp = newJausUnsignedInteger(0);
+	message->time = jausTimeCreate();
+}
+
+// Destructs the message-specific fields
+static void dataDestroy(ReportVelocityStateMessage message)
+{
+	// Free message fields
+	jausTimeDestroy(message->time);
 }
 
 // Return boolean of success
@@ -177,8 +185,8 @@ static JausBoolean dataFromBuffer(ReportVelocityStateMessage message, unsigned c
 		if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_VELOCITY_PV_TIME_STAMP_BIT))
 		{
 			//unpack
-			if(!jausUnsignedIntegerFromBuffer(&message->timeStamp, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-			index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
+			if(!jausTimeStampFromBuffer(message->time,  buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+			index += JAUS_TIME_STAMP_SIZE_BYTES;
 		}
 		return JAUS_TRUE;
 	}
@@ -287,8 +295,8 @@ static int dataToBuffer(ReportVelocityStateMessage message, unsigned char *buffe
 		if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_VELOCITY_PV_TIME_STAMP_BIT))
 		{
 			//pack
-			if(!jausUnsignedIntegerToBuffer(message->timeStamp, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-			index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
+			if(!jausTimeStampToBuffer(message->time,  buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+			index += JAUS_TIME_STAMP_SIZE_BYTES;
 		}
 	}
 
@@ -344,7 +352,7 @@ static int dataSize(ReportVelocityStateMessage message)
 
 	if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_VELOCITY_PV_TIME_STAMP_BIT))
 	{
-		index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
+		index += JAUS_TIME_STAMP_SIZE_BYTES;
 	}
 
 	return index;
@@ -386,6 +394,7 @@ ReportVelocityStateMessage reportVelocityStateMessageCreate(void)
 
 void reportVelocityStateMessageDestroy(ReportVelocityStateMessage message)
 {
+	dataDestroy(message);
 	jausAddressDestroy(message->source);
 	jausAddressDestroy(message->destination);
 	free(message);

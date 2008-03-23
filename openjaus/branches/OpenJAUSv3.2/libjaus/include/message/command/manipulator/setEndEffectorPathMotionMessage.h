@@ -98,18 +98,15 @@ typedef struct
 
 typedef SetEndEffectorPathMotionMessageStruct* SetEndEffectorPathMotionMessage;
 
-SetEndEffectorPathMotionMessage setEndEffectorPathMotionMessageCreate(void);
-void setEndEffectorPathMotionMessageDestroy(SetEndEffectorPathMotionMessage);
+JAUS_EXPORT SetEndEffectorPathMotionMessage setEndEffectorPathMotionMessageCreate(void);
+JAUS_EXPORT void setEndEffectorPathMotionMessageDestroy(SetEndEffectorPathMotionMessage);
 
-JausBoolean setEndEffectorPathMotionMessageFromBuffer(SetEndEffectorPathMotionMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JausBoolean setEndEffectorPathMotionMessageToBuffer(SetEndEffectorPathMotionMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean setEndEffectorPathMotionMessageFromBuffer(SetEndEffectorPathMotionMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean setEndEffectorPathMotionMessageToBuffer(SetEndEffectorPathMotionMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
+JAUS_EXPORT SetEndEffectorPathMotionMessage setEndEffectorPathMotionMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage setEndEffectorPathMotionMessageToJausMessage(SetEndEffectorPathMotionMessage message);
 
-SetEndEffectorPathMotionMessage setEndEffectorPathMotionMessageFromJausMessage(JausMessage jausMessage);
-JausMessage setEndEffectorPathMotionMessageToJausMessage(SetEndEffectorPathMotionMessage message);
-
-
-unsigned int setEndEffectorPathMotionMessageSize(SetEndEffectorPathMotionMessage message);
-
+JAUS_EXPORT unsigned int setEndEffectorPathMotionMessageSize(SetEndEffectorPathMotionMessage message);
 
 #endif // SET_END_EFFECTOR_PATH_MOTION_MESSAGE_H

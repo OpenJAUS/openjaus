@@ -46,6 +46,11 @@
 
 #include "jaus.h"
 
+#ifndef JAUS_SET_EMERGENCY_BF
+#define JAUS_SET_EMERGENCY_BF
+#define JAUS_SET_EMERGENCY_BF_TRANSITION_TO_EMERGENCY_BIT 0
+#endif
+
 typedef struct
 {
 	// Include all parameters from a JausMessage structure:
@@ -85,7 +90,7 @@ typedef struct
 	JausUnsignedShort sequenceNumber;
 
 	// MESSAGE DATA MEMBERS GO HERE
-	JausUnsignedShort emergencyCode;
+	JausBoolean transitionToEmergency;
 	
 }SetEmergencyMessageStruct;
 
