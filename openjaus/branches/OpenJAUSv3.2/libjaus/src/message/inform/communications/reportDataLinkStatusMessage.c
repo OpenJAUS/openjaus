@@ -78,13 +78,15 @@ static void dataDestroy(ReportDataLinkStatusMessage message)
 static JausBoolean dataFromBuffer(ReportDataLinkStatusMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
 {
 	int index = 0;
+	JausByte temp;
 	
 	if(bufferSizeBytes == message->dataSize)
 	{
 		if(!jausByteFromBuffer(&message->dataLinkId, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
 	
-		if(!jausByteFromBuffer(&((JausByte)message->dataLinkState), buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		temp = (message->dataLinkState < 0) ? JAUS_BYTE_MIN_VALUE : (JausByte)message->dataLinkState;
+		if(!jausByteFromBuffer(&temp, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
 
 		return JAUS_TRUE;
