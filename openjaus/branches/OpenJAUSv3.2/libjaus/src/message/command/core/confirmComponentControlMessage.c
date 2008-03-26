@@ -72,11 +72,13 @@ static void dataInitialize(ConfirmComponentControlMessage message)
 static JausBoolean dataFromBuffer(ConfirmComponentControlMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
 {
 	int index = 0;
+	JausByte temp;
 	
 	if(bufferSizeBytes == message->dataSize)
 	{
 		// Unpack Message Fields from Buffer
-		if(!jausByteFromBuffer(&((JausByte)message->responseCode), buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		temp = (message->responseCode < 0) ? JAUS_BYTE_MIN_VALUE : (JausByte)message->responseCode;
+		if(!jausByteFromBuffer(&temp, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
 		
 		return JAUS_TRUE;

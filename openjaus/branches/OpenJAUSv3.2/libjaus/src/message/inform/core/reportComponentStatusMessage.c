@@ -73,11 +73,13 @@ static void dataInitialize(ReportComponentStatusMessage message)
 static JausBoolean dataFromBuffer(ReportComponentStatusMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
 {
 	int index = 0;
+	JausByte temp;
 	
 	if(bufferSizeBytes == message->dataSize)
 	{
 		// Unpack Message Fields from Buffer
-		if(!jausByteFromBuffer(&((JausByte)message->primaryStatusCode), buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		temp = (message->primaryStatusCode < 0) ? JAUS_BYTE_MIN_VALUE : (JausByte)message->primaryStatusCode;
+		if(!jausByteFromBuffer(&temp, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
 
 		if(!jausUnsignedIntegerFromBuffer(&(message->secondaryStatusCode), buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;

@@ -81,6 +81,7 @@ static void dataDestroy(SetCameraFormatOptionsMessage message)
 static JausBoolean dataFromBuffer(SetCameraFormatOptionsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
 {
 	int index = 0;
+	JausByte temp;
 
 	if(bufferSizeBytes == message->dataSize)
 	{
@@ -96,14 +97,16 @@ static JausBoolean dataFromBuffer(SetCameraFormatOptionsMessage message, unsigne
 		// AudioFormat
 		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_CAMERA_FORMAT_OPTIONS_PV_AUDIO_FORMAT_BIT))
 		{
-			if(!jausByteFromBuffer(&((JausByte)message->audioFormat), buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+			temp = (message->audioFormat < 0) ? JAUS_BYTE_MIN_VALUE : (JausByte)message->audioFormat;
+			if(!jausByteFromBuffer(&temp, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 			index += JAUS_BYTE_SIZE_BYTES;
 		}
 
 		// AudioFormat
 		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_CAMERA_FORMAT_OPTIONS_PV_IMAGE_FORMAT_BIT))
 		{
-			if(!jausByteFromBuffer(&((JausByte)message->imageFormat), buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+			temp = (message->imageFormat < 0) ? JAUS_BYTE_MIN_VALUE : (JausByte)message->imageFormat;
+			if(!jausByteFromBuffer(&temp, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 			index += JAUS_BYTE_SIZE_BYTES;
 		}
 
