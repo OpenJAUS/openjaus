@@ -71,9 +71,13 @@
 #include "command/platform/setWrenchEffortMessage.h"
 #include "command/platform/setDiscreteDevicesMessage.h"
 #include "command/platform/setGlobalVectorMessage.h"
+#include "command/platform/setLocalVectorMessage.h"
 #include "command/platform/setTravelSpeedMessage.h"
 #include "command/platform/setGlobalWaypointMessage.h"
+#include "command/platform/setLocalWaypointMessage.h"
 #include "command/platform/setVelocityStateMessage.h"
+#include "command/platform/setGlobalPathSegmentMessage.h"
+#include "command/platform/setLocalPathSegmentMessage.h"
 
 // Inform Class
 #include "inform/core/reportComponentAuthorityMessage.h"
