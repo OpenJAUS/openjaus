@@ -31,7 +31,7 @@
  *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
  *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ****************************************************************************/
-// File Name: setLocalVectorMessage.h
+// File Name: reportLocalPoseMessage.h
 //
 // Written By: Danny Kent (jaus AT dannykent DOT com), Tom Galluzzo 
 //
@@ -39,13 +39,25 @@
 //
 // Date: 08/04/06
 //
-// Description: This file defines the attributes of a SetLocalVectorMessage
+// Description: This file defines the attributes of a ReportLocalPoseMessage
 
-#ifndef SET_LOCAL_VECTOR_MESSAGE_H
-#define SET_LOCAL_VECTOR_MESSAGE_H
+#ifndef REPORT_LOCAL_POSE_MESSAGE_H
+#define REPORT_LOCAL_POSE_MESSAGE_H
 
 #include "jaus.h"
 
+#ifndef JAUS_LOCAL_POSE_PV
+#define JAUS_LOCAL_POSE_PV
+#define JAUS_LOCAL_POSE_PV_X_BIT		0
+#define JAUS_LOCAL_POSE_PV_Y_BIT		1
+#define JAUS_LOCAL_POSE_PV_Z_BIT		2
+#define JAUS_LOCAL_POSE_PV_POSITION_RMS_BIT	3
+#define JAUS_LOCAL_POSE_PV_ROLL_BIT			4
+#define JAUS_LOCAL_POSE_PV_PITCH_BIT			5
+#define JAUS_LOCAL_POSE_PV_YAW_BIT			6
+#define JAUS_LOCAL_POSE_PV_ATTITUDE_RMS_BIT	7
+#define JAUS_LOCAL_POSE_PV_TIME_STAMP_BIT		8
+#endif
 
 typedef struct
 {
@@ -85,22 +97,30 @@ typedef struct
 	
 	JausUnsignedShort sequenceNumber;
 
-	JausDouble speedMps; 		// Scaled Unsigned Int (0, 10000) Mps = Meters Per Second
-	JausDouble headingRadians; 	// Scaled Short (-JAUS_PI, JAUS_PI)
-		
-}SetLocalVectorMessageStruct;
+	JausShortPresenceVector presenceVector;
+	JausDouble xM;				// Scaled Int (-100000, 100000)
+	JausDouble yM;			// Scaled Int (-100000, 100000)
+	JausDouble zM;				// Scaled Int (-10000, 35000)
+	JausDouble positionRmsMeters;			// Scaled UInt (0, 100)
+	JausDouble rollRadians;					// Scaled Short (-JAUS_PI, JAUS_PI)
+	JausDouble pitchRadians;				// Scaled Short (-JAUS_PI, JAUS_PI)
+	JausDouble yawRadians;					// Scaled Short (-JAUS_PI, JAUS_PI)
+	JausDouble attitudeRmsRadians;			// Scaled Short (0, JAUS_PI)
+	JausTime time;
+	
+}ReportLocalPoseMessageStruct;
 
-typedef SetLocalVectorMessageStruct* SetLocalVectorMessage;
+typedef ReportLocalPoseMessageStruct* ReportLocalPoseMessage;
 
-JAUS_EXPORT SetLocalVectorMessage setLocalVectorMessageCreate(void);
-JAUS_EXPORT void setLocalVectorMessageDestroy(SetLocalVectorMessage);
+JAUS_EXPORT ReportLocalPoseMessage reportLocalPoseMessageCreate(void);
+JAUS_EXPORT void reportLocalPoseMessageDestroy(ReportLocalPoseMessage);
 
-JAUS_EXPORT JausBoolean setLocalVectorMessageFromBuffer(SetLocalVectorMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JAUS_EXPORT JausBoolean setLocalVectorMessageToBuffer(SetLocalVectorMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean reportLocalPoseMessageFromBuffer(ReportLocalPoseMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean reportLocalPoseMessageToBuffer(ReportLocalPoseMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
-JAUS_EXPORT SetLocalVectorMessage setLocalVectorMessageFromJausMessage(JausMessage jausMessage);
-JAUS_EXPORT JausMessage setLocalVectorMessageToJausMessage(SetLocalVectorMessage message);
+JAUS_EXPORT ReportLocalPoseMessage reportLocalPoseMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage reportLocalPoseMessageToJausMessage(ReportLocalPoseMessage message);
 
-JAUS_EXPORT unsigned int setLocalVectorMessageSize(SetLocalVectorMessage message);
+JAUS_EXPORT unsigned int reportLocalPoseMessageSize(ReportLocalPoseMessage message);
 
-#endif // SET_LOCAL_VECTOR_MESSAGE_H
+#endif // REPORT_LOCAL_POSE_MESSAGE_H

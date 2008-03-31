@@ -31,7 +31,7 @@
  *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
  *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ****************************************************************************/
-// File Name: setLocalVectorMessage.h
+// File Name: reportPathSegmentCountMessage.h
 //
 // Written By: Danny Kent (jaus AT dannykent DOT com), Tom Galluzzo 
 //
@@ -39,13 +39,12 @@
 //
 // Date: 08/04/06
 //
-// Description: This file defines the attributes of a SetLocalVectorMessage
+// Description: This file defines the attributes of a ReportPathSegmentCountMessage
 
-#ifndef SET_LOCAL_VECTOR_MESSAGE_H
-#define SET_LOCAL_VECTOR_MESSAGE_H
+#ifndef REPORT_PATH_SEGMENT_COUNT_MESSAGE_H
+#define REPORT_PATH_SEGMENT_COUNT_MESSAGE_H
 
 #include "jaus.h"
-
 
 typedef struct
 {
@@ -85,22 +84,21 @@ typedef struct
 	
 	JausUnsignedShort sequenceNumber;
 
-	JausDouble speedMps; 		// Scaled Unsigned Int (0, 10000) Mps = Meters Per Second
-	JausDouble headingRadians; 	// Scaled Short (-JAUS_PI, JAUS_PI)
-		
-}SetLocalVectorMessageStruct;
+	JausUnsignedShort pathSegmentCount;
+	
+}ReportPathSegmentCountMessageStruct;
 
-typedef SetLocalVectorMessageStruct* SetLocalVectorMessage;
+typedef ReportPathSegmentCountMessageStruct* ReportPathSegmentCountMessage;
 
-JAUS_EXPORT SetLocalVectorMessage setLocalVectorMessageCreate(void);
-JAUS_EXPORT void setLocalVectorMessageDestroy(SetLocalVectorMessage);
+JAUS_EXPORT ReportPathSegmentCountMessage reportPathSegmentCountMessageCreate(void);
+JAUS_EXPORT void reportPathSegmentCountMessageDestroy(ReportPathSegmentCountMessage);
 
-JAUS_EXPORT JausBoolean setLocalVectorMessageFromBuffer(SetLocalVectorMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JAUS_EXPORT JausBoolean setLocalVectorMessageToBuffer(SetLocalVectorMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean reportPathSegmentCountMessageFromBuffer(ReportPathSegmentCountMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean reportPathSegmentCountMessageToBuffer(ReportPathSegmentCountMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
-JAUS_EXPORT SetLocalVectorMessage setLocalVectorMessageFromJausMessage(JausMessage jausMessage);
-JAUS_EXPORT JausMessage setLocalVectorMessageToJausMessage(SetLocalVectorMessage message);
+JAUS_EXPORT ReportPathSegmentCountMessage reportPathSegmentCountMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage reportPathSegmentCountMessageToJausMessage(ReportPathSegmentCountMessage message);
 
-JAUS_EXPORT unsigned int setLocalVectorMessageSize(SetLocalVectorMessage message);
+JAUS_EXPORT unsigned int reportPathSegmentCountMessageSize(ReportPathSegmentCountMessage message);
 
-#endif // SET_LOCAL_VECTOR_MESSAGE_H
+#endif // REPORT_PATH_SEGMENT_COUNT_MESSAGE_H
