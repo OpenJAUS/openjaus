@@ -59,15 +59,15 @@ JausBoolean jausUnsignedShortFromBuffer(JausUnsignedShort *jUShort, unsigned cha
 		return JAUS_FALSE;
 	else
 	{
-		if(isHostBigEndian())
+#ifdef JAUS_BIG_ENDIAN
+		// swap bytes
+		for(i = 0; i < JAUS_UNSIGNED_SHORT_SIZE_BYTES; i++)
 		{
-			// swap bytes
-			for(i = 0; i < JAUS_UNSIGNED_SHORT_SIZE_BYTES; i++)
-				tempUShort += (buf[i] << (JAUS_UNSIGNED_SHORT_SIZE_BYTES-i-1)*8);
+			tempUShort += (buf[i] << (JAUS_UNSIGNED_SHORT_SIZE_BYTES-i-1)*8);
 		}
-		else
-			memcpy(&(tempUShort), buf, JAUS_UNSIGNED_SHORT_SIZE_BYTES);
-	
+#else
+		memcpy(&(tempUShort), buf, JAUS_UNSIGNED_SHORT_SIZE_BYTES);
+#endif	
 		*jUShort = newJausUnsignedShort(tempUShort);
 		return JAUS_TRUE;
 	}
@@ -81,15 +81,15 @@ JausBoolean jausUnsignedShortToBuffer(JausUnsignedShort input, unsigned char *bu
 		return JAUS_FALSE;
 	else
 	{
-		if(isHostBigEndian())
+#ifdef JAUS_BIG_ENDIAN
+		// swap bytes
+		for (i = 0; i < JAUS_UNSIGNED_SHORT_SIZE_BYTES; i++)
 		{
-			// swap bytes
-			for (i = 0; i < JAUS_UNSIGNED_SHORT_SIZE_BYTES; i++)
-				buf[i] = ((input >> (JAUS_UNSIGNED_SHORT_SIZE_BYTES-i-1)*8) & 0xFF); // 8 bits per byte
+			buf[i] = ((input >> (JAUS_UNSIGNED_SHORT_SIZE_BYTES-i-1)*8) & 0xFF); // 8 bits per byte
 		}
-		else
-			memcpy(buf, &input, JAUS_UNSIGNED_SHORT_SIZE_BYTES);
-		
+#else
+		memcpy(buf, &input, JAUS_UNSIGNED_SHORT_SIZE_BYTES);
+#endif	
 		return JAUS_TRUE;
 	}
 }
@@ -124,7 +124,7 @@ JausBoolean jausUnsignedShortIsBitSet(JausUnsignedShort input, int bit)
 
 JausBoolean jausUnsignedShortSetBit(JausUnsignedShort *input, int bit)
 {
-	if(JAUS_SHORT_SIZE_BYTES*8 < bit) // 8 bits per byte
+	if(JAUS_UNSIGNED_SHORT_SIZE_BYTES*8 < bit) // 8 bits per byte
 	{
 		return JAUS_FALSE;
 	}
@@ -137,7 +137,7 @@ JausBoolean jausUnsignedShortSetBit(JausUnsignedShort *input, int bit)
 
 JausBoolean jausUnsignedShortClearBit(JausUnsignedShort *input, int bit)
 {
-	if(JAUS_SHORT_SIZE_BYTES*8 < bit) // 8 bits per byte
+	if(JAUS_UNSIGNED_SHORT_SIZE_BYTES*8 < bit) // 8 bits per byte
 	{
 		return JAUS_FALSE;
 	}

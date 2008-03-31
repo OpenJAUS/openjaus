@@ -59,15 +59,13 @@ JausBoolean jausUnsignedLongFromBuffer(JausUnsignedLong *jULong, unsigned char *
 		return JAUS_FALSE;
 	else
 	{
-		if(isHostBigEndian())
-		{
-			// swap bytes
-			for(i = 0; i < JAUS_UNSIGNED_LONG_SIZE_BYTES; i++)
-				tempULong += (buf[i] << (JAUS_UNSIGNED_LONG_SIZE_BYTES-i-1)*8);
-		}
-		else
-			memcpy(&(tempULong), buf, JAUS_UNSIGNED_LONG_SIZE_BYTES);
-	
+#ifdef JAUS_BIG_ENDIAN
+		// swap bytes
+		for(i = 0; i < JAUS_UNSIGNED_LONG_SIZE_BYTES; i++)
+			tempULong += (buf[i] << (JAUS_UNSIGNED_LONG_SIZE_BYTES-i-1)*8);
+#else
+		memcpy(&(tempULong), buf, JAUS_UNSIGNED_LONG_SIZE_BYTES);
+#endif	
 		*jULong = newJausUnsignedLong(tempULong);
 		return JAUS_TRUE;
 	}
@@ -80,15 +78,13 @@ JausBoolean jausUnsignedLongToBuffer(JausUnsignedLong input, unsigned char *buf,
 		return JAUS_FALSE;
 	else
 	{
-		if(isHostBigEndian())
-		{
-			// swap bytes
-			for (i = 0; i < JAUS_UNSIGNED_LONG_SIZE_BYTES; i++)
-				buf[i] = (unsigned int)((input >> (JAUS_UNSIGNED_LONG_SIZE_BYTES-i-1)*8) & 0xFF); // 8 bits per byte
-		}
-		else
-			memcpy(buf, &input, JAUS_UNSIGNED_LONG_SIZE_BYTES);
-		
+#ifdef JAUS_BIG_ENDIAN
+		// swap bytes
+		for (i = 0; i < JAUS_UNSIGNED_LONG_SIZE_BYTES; i++)
+			buf[i] = (unsigned int)((input >> (JAUS_UNSIGNED_LONG_SIZE_BYTES-i-1)*8) & 0xFF); // 8 bits per byte
+#else
+		memcpy(buf, &input, JAUS_UNSIGNED_LONG_SIZE_BYTES);
+#endif		
 		return JAUS_TRUE;
 	}
 }
@@ -115,3 +111,4 @@ JausUnsignedLong jausUnsignedLongFromDouble(double value, double min, double max
 	// calculate rounded integer value
 	return newJausUnsignedLong((unsigned long)((value - bias)/scaleFactor + 0.5));
 }
+

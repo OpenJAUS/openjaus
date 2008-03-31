@@ -52,7 +52,7 @@ JausShortPresenceVector newJausShortPresenceVector(void)
 {
 	JausShortPresenceVector vector;
 	
-	vector = newJausUnsignedShort(0);
+	vector = newJausUnsignedShort(0xFFFF);
 	
 	return vector;
 }
@@ -69,31 +69,15 @@ JausBoolean jausShortPresenceVectorToBuffer(JausShortPresenceVector input, unsig
 
 JausBoolean jausShortPresenceVectorIsBitSet(JausShortPresenceVector input, int bit)
 {
-	return (input & (0x01 << bit)) > 0 ? JAUS_TRUE : JAUS_FALSE;
+	return jausUnsignedShortIsBitSet(input, bit);
 }
 
 JausBoolean jausShortPresenceVectorSetBit(JausShortPresenceVector *input, int bit)
 {
-	if(JAUS_SHORT_SIZE_BYTES*8 < bit) // 8 bits per byte
-	{
-		return JAUS_FALSE;
-	}
-	else
-	{
-		*input |= 0x01 << bit;
-		return JAUS_TRUE;
-	}
+	return jausUnsignedShortSetBit(input, bit);
 }
 
 JausBoolean jausShortPresenceVectorClearBit(JausShortPresenceVector *input, int bit)
 {
-	if(JAUS_SHORT_SIZE_BYTES*8 < bit) // 8 bits per byte
-	{
-		return JAUS_FALSE;
-	}
-	else
-	{
-		 *input &= ~(0x01 << bit);
-		return JAUS_TRUE;
-	}
+	return jausUnsignedShortClearBit(input, bit);
 }

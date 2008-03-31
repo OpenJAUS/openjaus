@@ -78,7 +78,7 @@ static JausBoolean dataFromBuffer(ConfirmServiceConnectionMessage message, unsig
 {
 	int index = 0;
 	JausUnsignedShort tempUShort;
-	JausByte temp;
+	JausByte tempByte = 0;
 
 	if(bufferSizeBytes == message->dataSize)
 	{
@@ -95,9 +95,10 @@ static JausBoolean dataFromBuffer(ConfirmServiceConnectionMessage message, unsig
 		// Scaled Int to double,  0 min, 1092 max
 		message->confirmedPeriodicUpdateRateHertz = jausUnsignedShortToDouble(tempUShort, 0, 1092);
 		
-		temp = (message->responseCode < 0) ? JAUS_BYTE_MIN_VALUE : (JausByte)message->responseCode;
-		if(!jausByteFromBuffer(&temp, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		if(!jausByteFromBuffer(&tempByte, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
+
+		message->responseCode= (tempByte < 0) ? JAUS_BYTE_MIN_VALUE : tempByte;
 			
 		return JAUS_TRUE;
 	}

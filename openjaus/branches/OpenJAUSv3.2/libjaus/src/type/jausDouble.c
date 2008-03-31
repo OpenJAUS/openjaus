@@ -62,20 +62,16 @@ JausBoolean jausDoubleFromBuffer(JausDouble *jDouble, unsigned char *buf, unsign
 	}
 	else
 	{
-		if(isHostBigEndian())
+#ifdef JAUS_BIG_ENDIAN
+		// swap bytes
+		for(i = 0; i < JAUS_DOUBLE_SIZE_BYTES; i++)
 		{
-			// swap bytes
-			for(i = 0; i < JAUS_DOUBLE_SIZE_BYTES; i++)
-			{
-				tempLong += (buf[i] << (JAUS_DOUBLE_SIZE_BYTES-i-1)*8);
-			}
-			memcpy(&(tempDouble), &(tempLong), JAUS_DOUBLE_SIZE_BYTES);
+			tempLong += (buf[i] << (JAUS_DOUBLE_SIZE_BYTES-i-1)*8);
 		}
-		else
-		{
-			memcpy(&tempDouble, buf, JAUS_DOUBLE_SIZE_BYTES);
-		}
-		
+		memcpy(&(tempDouble), &(tempLong), JAUS_DOUBLE_SIZE_BYTES);
+#else
+		memcpy(&tempDouble, buf, JAUS_DOUBLE_SIZE_BYTES);
+#endif
 		*jDouble = newJausDouble(tempDouble);
 		return JAUS_TRUE;
 	}
@@ -84,7 +80,7 @@ JausBoolean jausDoubleFromBuffer(JausDouble *jDouble, unsigned char *buf, unsign
 JausBoolean jausDoubleToBuffer(JausDouble input, unsigned char *buf, unsigned int bufferSizeBytes)
 {
 	int i = 0;
-	unsigned long tempLong;
+	unsigned long tempLong = 0;
 
 	if(bufferSizeBytes < JAUS_DOUBLE_SIZE_BYTES)
 	{
@@ -92,21 +88,17 @@ JausBoolean jausDoubleToBuffer(JausDouble input, unsigned char *buf, unsigned in
 	}
 	else
 	{
-		
-		if(isHostBigEndian())
+#ifdef JAUS_BIG_ENDIAN
+		memcpy(&(tempLong), &(input), JAUS_DOUBLE_SIZE_BYTES);
+		// swap bytes
+		for (i = 0; i < JAUS_DOUBLE_SIZE_BYTES; i++)
 		{
-			memcpy(&(tempLong), &(input), JAUS_DOUBLE_SIZE_BYTES);
-			// swap bytes
-			for (i = 0; i < JAUS_DOUBLE_SIZE_BYTES; i++)
-			{
-				buf[i] = (unsigned char)((tempLong >> (JAUS_DOUBLE_SIZE_BYTES-i-1)*8) & 0xFF); // 8 bits per byte
-			}
+			buf[i] = (unsigned char)((tempLong >> (JAUS_DOUBLE_SIZE_BYTES-i-1)*8) & 0xFF); // 8 bits per byte
 		}
-		else
-		{
-			memcpy(buf, &(input), JAUS_DOUBLE_SIZE_BYTES);
-		}
-			
+#else
+		memcpy(buf, &(input), JAUS_DOUBLE_SIZE_BYTES);
+#endif
+	
 		return JAUS_TRUE;
 	}
 }
