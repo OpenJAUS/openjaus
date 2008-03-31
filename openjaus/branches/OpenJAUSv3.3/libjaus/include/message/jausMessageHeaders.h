@@ -78,6 +78,12 @@
 #include "command/platform/setVelocityStateMessage.h"
 #include "command/platform/setGlobalPathSegmentMessage.h"
 #include "command/platform/setLocalPathSegmentMessage.h"
+#include "command/world model/createVksObjectsMessage.h"
+#include "command/world model/deleteVksObjectsMessage.h"
+#include "command/payload/setPayloadDataElementMessage.h"
+#include "command/event/cancelEventMessage.h"
+#include "command/event/confirmEventMessage.h"
+#include "command/event/createEventMessage.h"
 
 // Inform Class
 #include "inform/core/reportComponentAuthorityMessage.h"
@@ -115,6 +121,15 @@
 #include "inform/platform/reportPathSegmentCountMessage.h"
 #include "inform/platform/reportGlobalPathSegmentMessage.h"
 #include "inform/platform/reportLocalPathSegmentMessage.h"
+#include "inform/dynamic configuration/reportIdentificationMessage.h"
+#include "inform/dynamic configuration/reportConfigurationMessage.h"
+#include "inform/dynamic configuration/reportServicesMessage.h"
+#include "inform/payload/reportPayloadDataElementMessage.h"
+#include "inform/payload/reportPayloadInterfaceMessage.h"
+#include "inform/world model/reportVksBoundsMessage.h"
+#include "inform/world model/reportVksFeatureClassMetadataMessage.h"
+#include "inform/world model/reportVksObjectsCreationMessage.h"
+#include "inform/world model/reportVksObjectsMessage.h"
 
 // Query Class
 #include "query/core/queryComponentAuthorityMessage.h"
@@ -152,36 +167,16 @@
 #include "query/platform/queryGlobalPathSegmentMessage.h"
 #include "query/platform/queryLocalPathSegmentMessage.h"
 #include "query/communications/queryHeartbeatPulseMessage.h"
+#include "query/dynamic configuration/queryIdentificationMessage.h"
+#include "query/dynamic configuration/queryConfigurationMessage.h"
+#include "query/dynamic configuration/queryServicesMessage.h"
+#include "query/payload/queryPayloadDataElementMessage.h"
+#include "query/payload/queryPayloadInterfaceMessage.h"
+#include "query/world model/queryVksBoundsMessage.h"
+#include "query/world model/queryVksFeatureClassMetadataMessage.h"
+#include "query/world model/queryVksObjectsMessage.h"
 
 // Experimental
-#include "experimental/queryIdentificationMessage.h"
-#include "experimental/reportIdentificationMessage.h"
-#include "experimental/queryConfigurationMessage.h"
-#include "experimental/reportConfigurationMessage.h"
-#include "experimental/configurationChangedEventSetupMessage.h"
-#include "experimental/configurationChangedEventNotificationMessage.h"
-#include "experimental/queryServicesMessage.h"
-#include "experimental/reportServicesMessage.h"
-#include "experimental/queryPayloadDataElementMessage.h"
-#include "experimental/queryPayloadInterfaceMessage.h"
-#include "experimental/reportPayloadDataElementMessage.h"
-#include "experimental/reportPayloadInterfaceMessage.h"
-#include "experimental/setPayloadDataElementMessage.h"
 
-// Experimental/WorldModel
-#include "experimental/worldModel/createVksObjectsMessage.h"
-#include "experimental/worldModel/deleteVksObjectsMessage.h"
-#include "experimental/worldModel/queryVksBoundsMessage.h"
-#include "experimental/worldModel/queryVksFeatureClassMetadataMessage.h"
-#include "experimental/worldModel/queryVksObjectsMessage.h"
-#include "experimental/worldModel/reportVksBoundsMessage.h"
-#include "experimental/worldModel/reportVksFeatureClassMetadataMessage.h"
-#include "experimental/worldModel/reportVksObjectsCreationMessage.h"
-#include "experimental/worldModel/reportVksObjectsMessage.h"
-
-// Experimental/Events
-#include "experimental/events/cancelEventMessage.h"
-#include "experimental/events/confirmEventMessage.h"
-#include "experimental/events/createEventMessage.h"
 
 #endif //JAUS_MESSAGE_HEADERS_H
