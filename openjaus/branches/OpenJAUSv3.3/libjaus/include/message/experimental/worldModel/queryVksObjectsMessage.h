@@ -102,8 +102,8 @@ typedef struct
 	JausUnsignedShort sequenceNumber;
 
 	// MESSAGE DATA MEMBERS GO HERE
-	JausBytePresenceVector presenceVector;				// 1: Presence Vector
-	JausBytePresenceVector responsePresenceVector;		// 2: Presence Vector to be used in response (defines the data requested)
+	JausByte presenceVector;				// 1: Presence Vector
+	JausByte responsePresenceVector;		// 2: Presence Vector to be used in response (defines the data requested)
 	JausByte requestId;									// 3: Local Request Id
 	JausUnsignedShort objectCount;						// 4: Count of specific object ids requested
 	JausUnsignedInteger *objectIds;						// 5: Array of specific object ids

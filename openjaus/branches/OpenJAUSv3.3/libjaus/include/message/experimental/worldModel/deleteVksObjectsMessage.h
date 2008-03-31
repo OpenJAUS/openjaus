@@ -102,7 +102,7 @@ typedef struct
 	JausUnsignedShort sequenceNumber;
 
 	// MESSAGE DATA MEMBERS GO HERE
-	JausBytePresenceVector presenceVector;	// 1: Presence Vector
+	JausByte presenceVector;	// 1: Presence Vector
 	JausByte requestId;						// 2: Id to respond to this message with
 	JausUnsignedShort objectCount;			// 3: Count of specific object ids to delete
 	JausUnsignedInteger *objectIds;			// 4: Array of specific object ids

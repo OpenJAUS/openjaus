@@ -109,7 +109,7 @@ typedef struct
 	
 	JausUnsignedShort sequenceNumber;
 
-	JausIntegerPresenceVector presenceVector;
+	JausUnsignedInteger presenceVector;
 	
 }QueryPlatformSpecificationsMessageStruct;
 

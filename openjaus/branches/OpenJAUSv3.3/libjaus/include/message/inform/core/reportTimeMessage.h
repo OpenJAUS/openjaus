@@ -91,7 +91,7 @@ typedef struct
 	JausUnsignedShort sequenceNumber;
 
 	// MESSAGE DATA MEMBERS GO HERE
-	JausBytePresenceVector presenceVector;
+	JausByte presenceVector;
 	JausTime time;
 
 }ReportTimeMessageStruct;

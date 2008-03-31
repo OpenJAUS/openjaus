@@ -84,7 +84,7 @@ typedef struct
 	
 	JausUnsignedShort sequenceNumber;
 
-	JausBytePresenceVector presenceVector;
+	JausByte presenceVector;
 	
 }QueryGlobalVectorMessageStruct;
 

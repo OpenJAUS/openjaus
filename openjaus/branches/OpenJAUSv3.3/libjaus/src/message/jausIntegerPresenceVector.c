@@ -48,36 +48,36 @@
 
 #include "jaus.h"
 
-JausIntegerPresenceVector newJausIntegerPresenceVector(void)
+JausUnsignedInteger newJausUnsignedInteger(void)
 {
-	JausIntegerPresenceVector vector;
+	JausUnsignedInteger vector;
 	
 	vector = newJausUnsignedInteger(0xFFFFFFFF);
 	
 	return vector;
 }
 
-JausBoolean jausIntegerPresenceVectorFromBuffer(JausIntegerPresenceVector *input, unsigned char *buf, unsigned int bufferSizeBytes)
+JausBoolean jausUnsignedIntegerFromBuffer(JausUnsignedInteger *input, unsigned char *buf, unsigned int bufferSizeBytes)
 {
 	return jausUnsignedIntegerFromBuffer(input, buf, bufferSizeBytes);
 }
 
-JausBoolean jausIntegerPresenceVectorToBuffer(JausIntegerPresenceVector input, unsigned char *buf, unsigned int bufferSizeBytes)
+JausBoolean jausUnsignedIntegerToBuffer(JausUnsignedInteger input, unsigned char *buf, unsigned int bufferSizeBytes)
 {
 	return jausUnsignedIntegerToBuffer(input, buf, bufferSizeBytes);
 }
 
-JausBoolean jausIntegerPresenceVectorIsBitSet(JausIntegerPresenceVector input, int bit)
+JausBoolean jausUnsignedIntegerIsBitSet(JausUnsignedInteger input, int bit)
 {
 	return jausUnsignedIntegerIsBitSet(input, bit);
 }
 
-JausBoolean jausIntegerPresenceVectorSetBit(JausIntegerPresenceVector *input, int bit)
+JausBoolean jausUnsignedIntegerSetBit(JausUnsignedInteger *input, int bit)
 {
 	return jausUnsignedIntegerSetBit(input, bit);
 }
 
-JausBoolean jausIntegerPresenceVectorClearBit(JausIntegerPresenceVector *input, int bit)
+JausBoolean jausUnsignedIntegerClearBit(JausUnsignedInteger *input, int bit)
 {
 	return jausUnsignedIntegerClearBit(input, bit);
 }

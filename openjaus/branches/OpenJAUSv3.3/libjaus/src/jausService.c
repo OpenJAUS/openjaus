@@ -172,7 +172,7 @@ JausCommand jausCommandCreate(void)
 	if(command)
 	{
 		command->commandCode = newJausUnsignedShort(0);				// Command Code (default to zero)
-		command->presenceVector = newJausIntegerPresenceVector();	// Presence Vector
+		command->presenceVector = newJausUnsignedInteger(JAUS_INTEGER_PRESENCE_VECTOR_ALL_ON);	// Presence Vector
 		return command;
 	}
 	else
@@ -261,7 +261,7 @@ JausBoolean jausServiceAddCoreServices(JausArray jausServices)
 	}
 }
 
-JausBoolean jausServiceAddInputCommand(JausService service, JausUnsignedShort commandCode, JausIntegerPresenceVector presenceVector)
+JausBoolean jausServiceAddInputCommand(JausService service, JausUnsignedShort commandCode, JausUnsignedInteger presenceVector)
 {
 	JausCommand command;
 	JausCommand tempCommand;
@@ -296,7 +296,7 @@ JausBoolean jausServiceAddInputCommand(JausService service, JausUnsignedShort co
 	}
 }
 
-JausBoolean jausServiceAddOutputCommand(JausService service, JausUnsignedShort commandCode, JausIntegerPresenceVector presenceVector)
+JausBoolean jausServiceAddOutputCommand(JausService service, JausUnsignedShort commandCode, JausUnsignedInteger presenceVector)
 {
 	JausCommand command;
 	JausCommand tempCommand;

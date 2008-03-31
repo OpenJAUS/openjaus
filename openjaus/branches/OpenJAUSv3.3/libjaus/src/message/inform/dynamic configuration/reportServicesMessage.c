@@ -86,7 +86,7 @@ static JausBoolean dataFromBuffer(ReportServicesMessage message, unsigned char *
 	JausService tempService;
 	JausUnsignedShort tempCommandCode;
 	JausUnsignedShort tempUShort;
-	JausIntegerPresenceVector tempPresenceVector;
+	JausUnsignedInteger tempPresenceVector;
 	
 	if(bufferSizeBytes == message->dataSize)
 	{

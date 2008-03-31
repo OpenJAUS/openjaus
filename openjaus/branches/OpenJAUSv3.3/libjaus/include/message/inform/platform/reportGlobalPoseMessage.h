@@ -97,7 +97,7 @@ typedef struct
 	
 	JausUnsignedShort sequenceNumber;
 
-	JausShortPresenceVector presenceVector;
+	JausUnsignedShort presenceVector;
 	JausDouble latitudeDegrees;				// Scaled Int (-90, 90)
 	JausDouble longitudeDegrees;			// Scaled Int (-180, 180)
 	JausDouble elevationMeters;				// Scaled Int (-10000, 35000)

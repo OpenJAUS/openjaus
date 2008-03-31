@@ -53,6 +53,8 @@
 #define JAUS_UNSIGNED_SHORT_MAX_VALUE 	65535
 #define JAUS_UNSIGNED_SHORT_MIN_VALUE 	0
 
+#define JAUS_SHORT_PRESENCE_VECTOR_ALL_ON 	65535
+
 typedef unsigned short JausUnsignedShort;
 
 JAUS_EXPORT JausUnsignedShort newJausUnsignedShort(unsigned short val);

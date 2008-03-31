@@ -92,7 +92,7 @@ typedef struct
 	
 	JausUnsignedShort sequenceNumber;
 
-	JausBytePresenceVector presenceVector;
+	JausByte presenceVector;
 	JausUnsignedShort waypointNumber;
 	JausDouble xM;				// Scaled Integer (-100000, 100000)
 	JausDouble yM; 				// Scaled Integer (-100000, 100000)

@@ -65,7 +65,7 @@ static void dataInitialize(ReportGlobalWaypointMessage message);
 static void dataInitialize(ReportGlobalWaypointMessage message)
 {
 	// Set initial values of message fields
-	message->presenceVector = newJausBytePresenceVector ();
+	message->presenceVector = newJausByte(JAUS_BYTE_PRESENCE_VECTOR_ALL_ON);
 	message->waypointNumber = newJausUnsignedShort(0);
 	message->latitudeDegrees = newJausDouble(0);	// Scaled Integer (-90, 90)
 	message->longitudeDegrees = newJausDouble(0); 	// Scaled Integer (-180, 180)
@@ -86,8 +86,8 @@ static JausBoolean dataFromBuffer(ReportGlobalWaypointMessage message, unsigned 
 	{
 		// Unpack Message Fields from Buffer
 		// Use Presence Vector
-		if(!jausBytePresenceVectorFromBuffer(&message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_BYTE_PRESENCE_VECTOR_SIZE_BYTES;
+		if(!jausByteFromBuffer(&message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		index += JAUS_BYTE_SIZE_BYTES;
 		
 		if(!jausUnsignedShortFromBuffer(&message->waypointNumber, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
@@ -104,7 +104,7 @@ static JausBoolean dataFromBuffer(ReportGlobalWaypointMessage message, unsigned 
 		index += JAUS_INTEGER_SIZE_BYTES;
 		message->longitudeDegrees = jausIntegerToDouble(tempInteger, -180, 180);
 
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_WAYPOINT_PV_ELEVATION_BIT))
+		if(jausByteIsBitSet(message->presenceVector, JAUS_WAYPOINT_PV_ELEVATION_BIT))
 		{
 			//unpack
 			//JausDouble elevationMeters	// Scaled Integer (-10000, 35000)
@@ -114,7 +114,7 @@ static JausBoolean dataFromBuffer(ReportGlobalWaypointMessage message, unsigned 
 			message->elevationMeters = jausIntegerToDouble(tempInteger, -10000, 35000);
 		}
 
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_WAYPOINT_PV_ROLL_BIT))
+		if(jausByteIsBitSet(message->presenceVector, JAUS_WAYPOINT_PV_ROLL_BIT))
 		{
 			//unpack
 			//JausDouble rollRadians // Scaled Short (-JAUS_PI, JAUS_PI)
@@ -124,7 +124,7 @@ static JausBoolean dataFromBuffer(ReportGlobalWaypointMessage message, unsigned 
 			message->rollRadians = jausShortToDouble(tempShort, -JAUS_PI, JAUS_PI);
 		}
 		
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_WAYPOINT_PV_PITCH_BIT))
+		if(jausByteIsBitSet(message->presenceVector, JAUS_WAYPOINT_PV_PITCH_BIT))
 		{
 			//unpack
 			//JausDouble pitchRadians;		// Scaled Short (-JAUS_PI, JAUS_PI)
@@ -134,7 +134,7 @@ static JausBoolean dataFromBuffer(ReportGlobalWaypointMessage message, unsigned 
 			message->pitchRadians = jausShortToDouble(tempShort, -JAUS_PI, JAUS_PI);
 		}
 			
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_WAYPOINT_PV_YAW_BIT))
+		if(jausByteIsBitSet(message->presenceVector, JAUS_WAYPOINT_PV_YAW_BIT))
 		{
 			//unpack
 			//JausDouble yawRadians;			// Scaled Short (-JAUS_PI, JAUS_PI)
@@ -162,8 +162,8 @@ static int dataToBuffer(ReportGlobalWaypointMessage message, unsigned char *buff
 	{
 		// Pack Message Fields to Buffer
 		// Use Presence Vector
-		if(!jausBytePresenceVectorToBuffer(message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_BYTE_PRESENCE_VECTOR_SIZE_BYTES;
+		if(!jausByteToBuffer(message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		index += JAUS_BYTE_SIZE_BYTES;
 		
 		if(!jausUnsignedShortToBuffer(message->waypointNumber, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
@@ -180,7 +180,7 @@ static int dataToBuffer(ReportGlobalWaypointMessage message, unsigned char *buff
 		if(!jausIntegerToBuffer(tempInteger, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_INTEGER_SIZE_BYTES;
 		
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_WAYPOINT_PV_ELEVATION_BIT))
+		if(jausByteIsBitSet(message->presenceVector, JAUS_WAYPOINT_PV_ELEVATION_BIT))
 		{
 			//pack
 			//JausDouble elevationMeters	// Scaled Integer (-10000, 35000)
@@ -189,7 +189,7 @@ static int dataToBuffer(ReportGlobalWaypointMessage message, unsigned char *buff
 			index += JAUS_INTEGER_SIZE_BYTES;
 		}
 
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_WAYPOINT_PV_ROLL_BIT))
+		if(jausByteIsBitSet(message->presenceVector, JAUS_WAYPOINT_PV_ROLL_BIT))
 		{
 			//pack
 			//JausDouble rollRadians // Scaled Short (-JAUS_PI, JAUS_PI)
@@ -198,7 +198,7 @@ static int dataToBuffer(ReportGlobalWaypointMessage message, unsigned char *buff
 			index += JAUS_SHORT_SIZE_BYTES;
 		}
 		
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_WAYPOINT_PV_PITCH_BIT))
+		if(jausByteIsBitSet(message->presenceVector, JAUS_WAYPOINT_PV_PITCH_BIT))
 		{
 			//pack
 			//JausDouble pitchRadians;		// Scaled Short (-JAUS_PI, JAUS_PI)
@@ -207,7 +207,7 @@ static int dataToBuffer(ReportGlobalWaypointMessage message, unsigned char *buff
 			index += JAUS_SHORT_SIZE_BYTES;
 		}
 			
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_WAYPOINT_PV_YAW_BIT))
+		if(jausByteIsBitSet(message->presenceVector, JAUS_WAYPOINT_PV_YAW_BIT))
 		{
 			//pack
 			//JausDouble yawRadians;			// Scaled Short (-JAUS_PI, JAUS_PI)
@@ -224,7 +224,7 @@ static int dataSize(ReportGlobalWaypointMessage message)
 {
 	int index = 0;
 
-	index += JAUS_BYTE_PRESENCE_VECTOR_SIZE_BYTES;
+	index += JAUS_BYTE_SIZE_BYTES;
 	
 	index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
 	
@@ -232,22 +232,22 @@ static int dataSize(ReportGlobalWaypointMessage message)
 	
 	index += JAUS_INTEGER_SIZE_BYTES;
 	
-	if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_WAYPOINT_PV_ELEVATION_BIT))
+	if(jausByteIsBitSet(message->presenceVector, JAUS_WAYPOINT_PV_ELEVATION_BIT))
 	{
 		index += JAUS_INTEGER_SIZE_BYTES;
 	}
 
-	if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_WAYPOINT_PV_ROLL_BIT))
+	if(jausByteIsBitSet(message->presenceVector, JAUS_WAYPOINT_PV_ROLL_BIT))
 	{
 		index += JAUS_SHORT_SIZE_BYTES;
 	}
 	
-	if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_WAYPOINT_PV_PITCH_BIT))
+	if(jausByteIsBitSet(message->presenceVector, JAUS_WAYPOINT_PV_PITCH_BIT))
 	{
 		index += JAUS_SHORT_SIZE_BYTES;
 	}
 		
-	if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_WAYPOINT_PV_YAW_BIT))
+	if(jausByteIsBitSet(message->presenceVector, JAUS_WAYPOINT_PV_YAW_BIT))
 	{
 		index += JAUS_SHORT_SIZE_BYTES;
 	}

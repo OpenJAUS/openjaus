@@ -159,7 +159,7 @@ static JausBoolean dataFromBuffer(ReportPayloadInterfaceMessage message, unsigne
 			}
 
 			// unpack/set HMI recommendation, if in PV
-			if(jausBytePresenceVectorIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_RECOMMENDATION_BIT))		
+			if(jausByteIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_RECOMMENDATION_BIT))		
 			{
 				if(!jausByteFromBuffer(&tempByte, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 				jausSetCommandInterfaceHmiRecommendation(message->jausPayloadInterface, identifierString, tempByte);
@@ -168,22 +168,22 @@ static JausBoolean dataFromBuffer(ReportPayloadInterfaceMessage message, unsigne
 			
 			// unpack/set HMI location, if in PV
 			tempUShort = index; // set to test if any new parameters were available
-			if(jausBytePresenceVectorIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_XPOS_BIT))
+			if(jausByteIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_XPOS_BIT))
 			{
 				if(!jausUnsignedShortFromBuffer(&tempX, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 				index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
 			}			
-			if(jausBytePresenceVectorIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_YPOS_BIT))
+			if(jausByteIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_YPOS_BIT))
 			{
 				if(!jausUnsignedShortFromBuffer(&tempY, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 				index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
 			}			
-			if(jausBytePresenceVectorIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_WIDTH_BIT))
+			if(jausByteIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_WIDTH_BIT))
 			{
 				if(!jausUnsignedShortFromBuffer(&tempW, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 				index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
 			}			
-			if(jausBytePresenceVectorIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_HEIGHT_BIT))
+			if(jausByteIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_HEIGHT_BIT))
 			{
 				if(!jausUnsignedShortFromBuffer(&tempH, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 				index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
@@ -248,7 +248,7 @@ static JausBoolean dataFromBuffer(ReportPayloadInterfaceMessage message, unsigne
 			}
 
 			// unpack/set HMI recommendation, if in PV
-			if(jausBytePresenceVectorIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_RECOMMENDATION_BIT))		
+			if(jausByteIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_RECOMMENDATION_BIT))		
 			{
 				if(!jausByteFromBuffer(&tempByte, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 				jausSetInformationInterfaceHmiRecommendation(message->jausPayloadInterface, identifierString, tempByte);
@@ -257,22 +257,22 @@ static JausBoolean dataFromBuffer(ReportPayloadInterfaceMessage message, unsigne
 			
 			// unpack/set HMI location, if in PV
 			tempUShort = index; // set to test if any new parameters were available
-			if(jausBytePresenceVectorIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_XPOS_BIT))
+			if(jausByteIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_XPOS_BIT))
 			{
 				if(!jausUnsignedShortFromBuffer(&tempX, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 				index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
 			}			
-			if(jausBytePresenceVectorIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_YPOS_BIT))
+			if(jausByteIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_YPOS_BIT))
 			{
 				if(!jausUnsignedShortFromBuffer(&tempY, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 				index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
 			}			
-			if(jausBytePresenceVectorIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_WIDTH_BIT))
+			if(jausByteIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_WIDTH_BIT))
 			{
 				if(!jausUnsignedShortFromBuffer(&tempW, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 				index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
 			}			
-			if(jausBytePresenceVectorIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_HEIGHT_BIT))
+			if(jausByteIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_HEIGHT_BIT))
 			{
 				if(!jausUnsignedShortFromBuffer(&tempH, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 				index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
@@ -407,7 +407,7 @@ static int dataToBuffer(ReportPayloadInterfaceMessage message, unsigned char *bu
 			}
 
 			// get/pack HMI recommendation, if in PV
-			if(jausBytePresenceVectorIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_RECOMMENDATION_BIT))		
+			if(jausByteIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_RECOMMENDATION_BIT))		
 			{
 				successFlag = SUCCESS;
 				tempByte = jausGetCommandInterfaceHmiRecommendation(message->jausPayloadInterface, identifierString, &successFlag);
@@ -418,7 +418,7 @@ static int dataToBuffer(ReportPayloadInterfaceMessage message, unsigned char *bu
 				}
 			}
 			// get/pack HMI location, if in PV
-			if(jausBytePresenceVectorIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_XPOS_BIT))
+			if(jausByteIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_XPOS_BIT))
 			{
 				tempUShort = jausGetCommandInterfaceHmiXPositionPixels(message->jausPayloadInterface, identifierString, &successFlag);
 				if (successFlag)
@@ -428,7 +428,7 @@ static int dataToBuffer(ReportPayloadInterfaceMessage message, unsigned char *bu
 				}
 			}
 
-			if(jausBytePresenceVectorIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_YPOS_BIT))
+			if(jausByteIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_YPOS_BIT))
 			{
 				tempUShort = jausGetCommandInterfaceHmiYPositionPixels(message->jausPayloadInterface, identifierString, &successFlag);
 				if (successFlag)
@@ -438,7 +438,7 @@ static int dataToBuffer(ReportPayloadInterfaceMessage message, unsigned char *bu
 				}
 			}
 
-			if(jausBytePresenceVectorIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_WIDTH_BIT))
+			if(jausByteIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_WIDTH_BIT))
 			{
 				tempUShort = jausGetCommandInterfaceHmiWidthPixels(message->jausPayloadInterface, identifierString, &successFlag);
 				if (successFlag)
@@ -448,7 +448,7 @@ static int dataToBuffer(ReportPayloadInterfaceMessage message, unsigned char *bu
 				}
 			}
 
-			if(jausBytePresenceVectorIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_HEIGHT_BIT))
+			if(jausByteIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_HEIGHT_BIT))
 			{
 				tempUShort = jausGetCommandInterfaceHmiHeightPixels(message->jausPayloadInterface, identifierString, &successFlag);
 				if (successFlag)
@@ -541,7 +541,7 @@ static int dataToBuffer(ReportPayloadInterfaceMessage message, unsigned char *bu
 			}
 
 			// get/pack HMI recommendation, if in PV
-			if(jausBytePresenceVectorIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_RECOMMENDATION_BIT))		
+			if(jausByteIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_RECOMMENDATION_BIT))		
 			{
 				successFlag = SUCCESS;
 				tempByte = jausGetInformationInterfaceHmiRecommendation(message->jausPayloadInterface, identifierString, &successFlag);
@@ -552,7 +552,7 @@ static int dataToBuffer(ReportPayloadInterfaceMessage message, unsigned char *bu
 				}
 			}
 			// get/pack HMI location, if in PV
-			if(jausBytePresenceVectorIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_XPOS_BIT))
+			if(jausByteIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_XPOS_BIT))
 			{
 				tempUShort = jausGetInformationInterfaceHmiXPositionPixels(message->jausPayloadInterface, identifierString, &successFlag);
 				if (successFlag)
@@ -562,7 +562,7 @@ static int dataToBuffer(ReportPayloadInterfaceMessage message, unsigned char *bu
 				}
 			}
 
-			if(jausBytePresenceVectorIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_YPOS_BIT))
+			if(jausByteIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_YPOS_BIT))
 			{
 				tempUShort = jausGetInformationInterfaceHmiYPositionPixels(message->jausPayloadInterface, identifierString, &successFlag);
 				if (successFlag)
@@ -572,7 +572,7 @@ static int dataToBuffer(ReportPayloadInterfaceMessage message, unsigned char *bu
 				}
 			}
 
-			if(jausBytePresenceVectorIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_WIDTH_BIT))
+			if(jausByteIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_WIDTH_BIT))
 			{
 				tempUShort = jausGetInformationInterfaceHmiWidthPixels(message->jausPayloadInterface, identifierString, &successFlag);
 				if (successFlag)
@@ -582,7 +582,7 @@ static int dataToBuffer(ReportPayloadInterfaceMessage message, unsigned char *bu
 				}
 			}
 
-			if(jausBytePresenceVectorIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_HEIGHT_BIT))
+			if(jausByteIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_HEIGHT_BIT))
 			{
 				tempUShort = jausGetInformationInterfaceHmiHeightPixels(message->jausPayloadInterface, identifierString, &successFlag);
 				if (successFlag)
@@ -696,7 +696,7 @@ static int dataSize(ReportPayloadInterfaceMessage message)
 		}
 
 		// get/pack HMI recommendation, if in PV
-		if(jausBytePresenceVectorIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_RECOMMENDATION_BIT))		
+		if(jausByteIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_RECOMMENDATION_BIT))		
 		{
 			successFlag = SUCCESS;
 			tempByte = jausGetCommandInterfaceHmiRecommendation(message->jausPayloadInterface, identifierString, &successFlag);
@@ -706,7 +706,7 @@ static int dataSize(ReportPayloadInterfaceMessage message)
 			}
 		}
 		// get/pack HMI location, if in PV
-		if(jausBytePresenceVectorIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_XPOS_BIT))
+		if(jausByteIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_XPOS_BIT))
 		{
 			tempUShort = jausGetCommandInterfaceHmiXPositionPixels(message->jausPayloadInterface, identifierString, &successFlag);
 			if (successFlag)
@@ -715,7 +715,7 @@ static int dataSize(ReportPayloadInterfaceMessage message)
 			}
 		}
 
-		if(jausBytePresenceVectorIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_YPOS_BIT))
+		if(jausByteIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_YPOS_BIT))
 		{
 			tempUShort = jausGetCommandInterfaceHmiYPositionPixels(message->jausPayloadInterface, identifierString, &successFlag);
 			if (successFlag)
@@ -724,7 +724,7 @@ static int dataSize(ReportPayloadInterfaceMessage message)
 			}
 		}
 
-		if(jausBytePresenceVectorIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_WIDTH_BIT))
+		if(jausByteIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_WIDTH_BIT))
 		{
 			tempUShort = jausGetCommandInterfaceHmiWidthPixels(message->jausPayloadInterface, identifierString, &successFlag);
 			if (successFlag)
@@ -733,7 +733,7 @@ static int dataSize(ReportPayloadInterfaceMessage message)
 			}
 		}
 
-		if(jausBytePresenceVectorIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_HEIGHT_BIT))
+		if(jausByteIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_HEIGHT_BIT))
 		{
 			tempUShort = jausGetCommandInterfaceHmiHeightPixels(message->jausPayloadInterface, identifierString, &successFlag);
 			if (successFlag)
@@ -816,7 +816,7 @@ static int dataSize(ReportPayloadInterfaceMessage message)
 		}
 
 		// get/pack HMI recommendation, if in PV
-		if(jausBytePresenceVectorIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_RECOMMENDATION_BIT))		
+		if(jausByteIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_RECOMMENDATION_BIT))		
 		{
 			successFlag = SUCCESS;
 			tempByte = jausGetInformationInterfaceHmiRecommendation(message->jausPayloadInterface, identifierString, &successFlag);
@@ -826,7 +826,7 @@ static int dataSize(ReportPayloadInterfaceMessage message)
 			}
 		}
 		// get/pack HMI location, if in PV
-		if(jausBytePresenceVectorIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_XPOS_BIT))
+		if(jausByteIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_XPOS_BIT))
 		{
 			tempUShort = jausGetInformationInterfaceHmiXPositionPixels(message->jausPayloadInterface, identifierString, &successFlag);
 			if (successFlag)
@@ -835,7 +835,7 @@ static int dataSize(ReportPayloadInterfaceMessage message)
 			}
 		}
 
-		if(jausBytePresenceVectorIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_YPOS_BIT))
+		if(jausByteIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_YPOS_BIT))
 		{
 			tempUShort = jausGetInformationInterfaceHmiYPositionPixels(message->jausPayloadInterface, identifierString, &successFlag);
 			if (successFlag)
@@ -844,7 +844,7 @@ static int dataSize(ReportPayloadInterfaceMessage message)
 			}
 		}
 
-		if(jausBytePresenceVectorIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_WIDTH_BIT))
+		if(jausByteIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_WIDTH_BIT))
 		{
 			tempUShort = jausGetInformationInterfaceHmiWidthPixels(message->jausPayloadInterface, identifierString, &successFlag);
 			if (successFlag)
@@ -853,7 +853,7 @@ static int dataSize(ReportPayloadInterfaceMessage message)
 			}
 		}
 
-		if(jausBytePresenceVectorIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_HEIGHT_BIT))
+		if(jausByteIsBitSet(message->jausPayloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_HEIGHT_BIT))
 		{
 			tempUShort = jausGetInformationInterfaceHmiHeightPixels(message->jausPayloadInterface, identifierString, &successFlag);
 			if (successFlag)

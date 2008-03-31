@@ -93,7 +93,7 @@ typedef struct
 	
 	JausUnsignedShort sequenceNumber;
 
-	JausBytePresenceVector presenceVector;
+	JausByte presenceVector;
 	JausDouble speedMps; 		// Scaled Unsigned Short (0, 10000) Mps = Meters Per Second
 	JausDouble altitudeMeters; 	// Scaled Integer (-10000, 35000)  
 	JausDouble headingRadians; 	// Scaled Short (-JAUS_PI, JAUS_PI)

@@ -64,7 +64,7 @@ static void dataDestroy(SetCameraFormatOptionsMessage message);
 static void dataInitialize(SetCameraFormatOptionsMessage message)
 {
 	// Set initial values of message fields
-	message->presenceVector = newJausBytePresenceVector();
+	message->presenceVector = newJausByte(JAUS_BYTE_PRESENCE_VECTOR_ALL_ON);
 	message->cameraID = newJausByte(0);
 	message->audioFormat = UnusedAudioFormat;
 	message->imageFormat = UnusedImageFormat;
@@ -87,15 +87,15 @@ static JausBoolean dataFromBuffer(SetCameraFormatOptionsMessage message, unsigne
 	{
 		// Unpack Message Fields from Buffer
 		// Presence Vector		
-		if(!jausBytePresenceVectorFromBuffer(&message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_BYTE_PRESENCE_VECTOR_SIZE_BYTES;
+		if(!jausByteFromBuffer(&message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		index += JAUS_BYTE_SIZE_BYTES;
 	
 		// CameraID
 		if(!jausByteFromBuffer(&message->cameraID, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
 	
 		// AudioFormat
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_CAMERA_FORMAT_OPTIONS_PV_AUDIO_FORMAT_BIT))
+		if(jausByteIsBitSet(message->presenceVector, JAUS_CAMERA_FORMAT_OPTIONS_PV_AUDIO_FORMAT_BIT))
 		{
 			if(!jausByteFromBuffer(&tempByte, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 			index += JAUS_BYTE_SIZE_BYTES;
@@ -104,7 +104,7 @@ static JausBoolean dataFromBuffer(SetCameraFormatOptionsMessage message, unsigne
 		}
 
 		// ImageFormat
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_CAMERA_FORMAT_OPTIONS_PV_IMAGE_FORMAT_BIT))
+		if(jausByteIsBitSet(message->presenceVector, JAUS_CAMERA_FORMAT_OPTIONS_PV_IMAGE_FORMAT_BIT))
 		{
 			if(!jausByteFromBuffer(&tempByte, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 			index += JAUS_BYTE_SIZE_BYTES;
@@ -113,7 +113,7 @@ static JausBoolean dataFromBuffer(SetCameraFormatOptionsMessage message, unsigne
 		}
 
 		// FormatOptions
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_CAMERA_FORMAT_OPTIONS_PV_FORMAT_OPTION_BIT))
+		if(jausByteIsBitSet(message->presenceVector, JAUS_CAMERA_FORMAT_OPTIONS_PV_FORMAT_OPTION_BIT))
 		{
 			if(!jausUnsignedIntegerFromBuffer(&message->formatOption, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 			index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
@@ -137,29 +137,29 @@ static int dataToBuffer(SetCameraFormatOptionsMessage message, unsigned char *bu
 		// Pack Message Fields to Buffer
 		
 		// Presence Vector		
-		if(!jausBytePresenceVectorToBuffer(message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_BYTE_PRESENCE_VECTOR_SIZE_BYTES;
+		if(!jausByteToBuffer(message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		index += JAUS_BYTE_SIZE_BYTES;
 	
 		// CameraID
 		if(!jausByteToBuffer(message->cameraID, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
 	
 		// AudioFormat
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_CAMERA_FORMAT_OPTIONS_PV_AUDIO_FORMAT_BIT))
+		if(jausByteIsBitSet(message->presenceVector, JAUS_CAMERA_FORMAT_OPTIONS_PV_AUDIO_FORMAT_BIT))
 		{
 			if(!jausByteToBuffer(((JausByte)message->audioFormat), buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 			index += JAUS_BYTE_SIZE_BYTES;
 		}
 
 		// AudioFormat
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_CAMERA_FORMAT_OPTIONS_PV_IMAGE_FORMAT_BIT))
+		if(jausByteIsBitSet(message->presenceVector, JAUS_CAMERA_FORMAT_OPTIONS_PV_IMAGE_FORMAT_BIT))
 		{
 			if(!jausByteToBuffer(((JausByte)message->imageFormat), buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 			index += JAUS_BYTE_SIZE_BYTES;
 		}
 
 		// FormatOptions
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_CAMERA_FORMAT_OPTIONS_PV_FORMAT_OPTION_BIT))
+		if(jausByteIsBitSet(message->presenceVector, JAUS_CAMERA_FORMAT_OPTIONS_PV_FORMAT_OPTION_BIT))
 		{
 			if(!jausUnsignedIntegerToBuffer(message->formatOption, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 			index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
@@ -175,25 +175,25 @@ static int dataSize(SetCameraFormatOptionsMessage message)
 	int index = 0;
 
 	// Presence Vector		
-	index += JAUS_BYTE_PRESENCE_VECTOR_SIZE_BYTES;
+	index += JAUS_BYTE_SIZE_BYTES;
 
 	// CameraID
 	index += JAUS_BYTE_SIZE_BYTES;
 
 	// AudioFormat
-	if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_CAMERA_FORMAT_OPTIONS_PV_AUDIO_FORMAT_BIT))
+	if(jausByteIsBitSet(message->presenceVector, JAUS_CAMERA_FORMAT_OPTIONS_PV_AUDIO_FORMAT_BIT))
 	{
 		index += JAUS_BYTE_SIZE_BYTES;
 	}
 
 	// AudioFormat
-	if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_CAMERA_FORMAT_OPTIONS_PV_IMAGE_FORMAT_BIT))
+	if(jausByteIsBitSet(message->presenceVector, JAUS_CAMERA_FORMAT_OPTIONS_PV_IMAGE_FORMAT_BIT))
 	{
 		index += JAUS_BYTE_SIZE_BYTES;
 	}
 
 	// FormatOptions
-	if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_CAMERA_FORMAT_OPTIONS_PV_FORMAT_OPTION_BIT))
+	if(jausByteIsBitSet(message->presenceVector, JAUS_CAMERA_FORMAT_OPTIONS_PV_FORMAT_OPTION_BIT))
 	{
 		index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
 	}

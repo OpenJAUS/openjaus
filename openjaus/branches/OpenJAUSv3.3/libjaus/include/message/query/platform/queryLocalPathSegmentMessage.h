@@ -85,7 +85,7 @@ typedef struct
 	JausUnsignedShort sequenceNumber;
 
 	JausUnsignedShort pathSegmentNumber;
-	JausBytePresenceVector presenceVector;
+	JausByte presenceVector;
 	
 }QueryLocalPathSegmentMessageStruct;
 

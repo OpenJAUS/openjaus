@@ -48,36 +48,36 @@
 
 #include "jaus.h"
 
-JausShortPresenceVector newJausShortPresenceVector(void)
+JausUnsignedShort newJausUnsignedShort(void)
 {
-	JausShortPresenceVector vector;
+	JausUnsignedShort vector;
 	
 	vector = newJausUnsignedShort(0xFFFF);
 	
 	return vector;
 }
 
-JausBoolean jausShortPresenceVectorFromBuffer(JausShortPresenceVector *input, unsigned char *buf, unsigned int bufferSizeBytes)
+JausBoolean jausUnsignedShortFromBuffer(JausUnsignedShort *input, unsigned char *buf, unsigned int bufferSizeBytes)
 {
 	return jausUnsignedShortFromBuffer(input, buf, bufferSizeBytes);
 }
 
-JausBoolean jausShortPresenceVectorToBuffer(JausShortPresenceVector input, unsigned char *buf, unsigned int bufferSizeBytes)
+JausBoolean jausUnsignedShortToBuffer(JausUnsignedShort input, unsigned char *buf, unsigned int bufferSizeBytes)
 {
 	return jausUnsignedShortToBuffer(input, buf, bufferSizeBytes);
 }
 
-JausBoolean jausShortPresenceVectorIsBitSet(JausShortPresenceVector input, int bit)
+JausBoolean jausUnsignedShortIsBitSet(JausUnsignedShort input, int bit)
 {
 	return jausUnsignedShortIsBitSet(input, bit);
 }
 
-JausBoolean jausShortPresenceVectorSetBit(JausShortPresenceVector *input, int bit)
+JausBoolean jausUnsignedShortSetBit(JausUnsignedShort *input, int bit)
 {
 	return jausUnsignedShortSetBit(input, bit);
 }
 
-JausBoolean jausShortPresenceVectorClearBit(JausShortPresenceVector *input, int bit)
+JausBoolean jausUnsignedShortClearBit(JausUnsignedShort *input, int bit)
 {
 	return jausUnsignedShortClearBit(input, bit);
 }

@@ -130,7 +130,7 @@ typedef union
 
 typedef struct
 {
-	JausBytePresenceVector presenceVector;	
+	JausByte presenceVector;	
 	JausArray jausCommandInterfaces;		// Dynamic Array of command interfaces
 	JausArray jausInformationInterfaces;	// Dynamic Array of information interfaces
 }JausPayloadInterfaceStruct;

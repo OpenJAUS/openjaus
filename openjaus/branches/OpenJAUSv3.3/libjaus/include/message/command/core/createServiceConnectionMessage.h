@@ -86,7 +86,7 @@ typedef struct
 
 	JausUnsignedShort serviceConnectionCommandCode;
 	JausDouble requestedPeriodicUpdateRateHertz; //scaled int Hertz
-	JausIntegerPresenceVector presenceVector;
+	JausUnsignedInteger presenceVector;
 	
 }CreateServiceConnectionMessageStruct;
 

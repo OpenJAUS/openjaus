@@ -65,7 +65,7 @@ static void dataInitialize(SetWrenchEffortMessage message);
 static void dataInitialize(SetWrenchEffortMessage message)
 {
 	// Set initial values of message fields
-	message->presenceVector = newJausShortPresenceVector();
+	message->presenceVector = newJausUnsignedShort(JAUS_SHORT_PRESENCE_VECTOR_ALL_ON);
 
 	message->propulsiveLinearEffortXPercent = newJausDouble(0);		// Scaled Short (-100, 100)
 	message->propulsiveLinearEffortYPercent = newJausDouble(0);		// Scaled Short (-100, 100)
@@ -93,10 +93,10 @@ static JausBoolean dataFromBuffer(SetWrenchEffortMessage message, unsigned char 
 	{
 		// Unpack Message Fields from Buffer
 		// Unpack according to presence vector
-		if(!jausShortPresenceVectorFromBuffer(&message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_SHORT_PRESENCE_VECTOR_SIZE_BYTES;
+		if(!jausUnsignedShortFromBuffer(&message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
 
-		if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_WRENCH_PV_PROPULSIVE_LINEAR_X_BIT))
+		if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_WRENCH_PV_PROPULSIVE_LINEAR_X_BIT))
 		{
 			// unpack propulsive linear effort X
 			if(!jausShortFromBuffer(&tempShort, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -106,7 +106,7 @@ static JausBoolean dataFromBuffer(SetWrenchEffortMessage message, unsigned char 
 			message->propulsiveLinearEffortXPercent = jausShortToDouble(tempShort, -100, 100);
 		}
 		
-		if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_WRENCH_PV_PROPULSIVE_LINEAR_Y_BIT))
+		if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_WRENCH_PV_PROPULSIVE_LINEAR_Y_BIT))
 		{
 			// unpack propulsive linear effort Y
 			if(!jausShortFromBuffer(&tempShort, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -116,7 +116,7 @@ static JausBoolean dataFromBuffer(SetWrenchEffortMessage message, unsigned char 
 			message->propulsiveLinearEffortYPercent = jausShortToDouble(tempShort, -100, 100);
 		}
 		
-		if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_WRENCH_PV_PROPULSIVE_LINEAR_Z_BIT))
+		if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_WRENCH_PV_PROPULSIVE_LINEAR_Z_BIT))
 		{
 			// unpack propulsive linear effort Z
 			if(!jausShortFromBuffer(&tempShort, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -126,7 +126,7 @@ static JausBoolean dataFromBuffer(SetWrenchEffortMessage message, unsigned char 
 			message->propulsiveLinearEffortZPercent = jausShortToDouble(tempShort, -100, 100);
 		}
 
-		if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_WRENCH_PV_PROPULSIVE_ROTATIONAL_X_BIT))
+		if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_WRENCH_PV_PROPULSIVE_ROTATIONAL_X_BIT))
 		{
 			// unpack propulsive rotational effort X
 			if(!jausShortFromBuffer(&tempShort, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -136,7 +136,7 @@ static JausBoolean dataFromBuffer(SetWrenchEffortMessage message, unsigned char 
 			message->propulsiveRotationalEffortXPercent = jausShortToDouble(tempShort, -100, 100);
 		}
 		
-		if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_WRENCH_PV_PROPULSIVE_ROTATIONAL_Y_BIT))
+		if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_WRENCH_PV_PROPULSIVE_ROTATIONAL_Y_BIT))
 		{
 			// unpack propulsive rotational effort Y
 			if(!jausShortFromBuffer(&tempShort, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -146,7 +146,7 @@ static JausBoolean dataFromBuffer(SetWrenchEffortMessage message, unsigned char 
 			message->propulsiveRotationalEffortYPercent = jausShortToDouble(tempShort, -100, 100);
 		}
 		
-		if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_WRENCH_PV_PROPULSIVE_ROTATIONAL_Z_BIT))
+		if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_WRENCH_PV_PROPULSIVE_ROTATIONAL_Z_BIT))
 		{
 			// unpack propulsive rotational effort Z
 			if(!jausShortFromBuffer(&tempShort, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -157,7 +157,7 @@ static JausBoolean dataFromBuffer(SetWrenchEffortMessage message, unsigned char 
 		}
 
 		// Resistive
-		if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_WRENCH_PV_RESISTIVE_LINEAR_X_BIT))
+		if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_WRENCH_PV_RESISTIVE_LINEAR_X_BIT))
 		{
 			// unpack resistive linear effort X
 			if(!jausByteFromBuffer(&tempByte, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -167,7 +167,7 @@ static JausBoolean dataFromBuffer(SetWrenchEffortMessage message, unsigned char 
 			message->resistiveLinearEffortXPercent = jausByteToDouble(tempByte, 0, 100);
 		}
 		
-		if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_WRENCH_PV_RESISTIVE_LINEAR_Y_BIT))
+		if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_WRENCH_PV_RESISTIVE_LINEAR_Y_BIT))
 		{
 			// unpack resistive linear effort Y
 			if(!jausByteFromBuffer(&tempByte, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -177,7 +177,7 @@ static JausBoolean dataFromBuffer(SetWrenchEffortMessage message, unsigned char 
 			message->resistiveLinearEffortYPercent = jausByteToDouble(tempByte, 0, 100);
 		}
 		
-		if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_WRENCH_PV_RESISTIVE_LINEAR_Z_BIT))
+		if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_WRENCH_PV_RESISTIVE_LINEAR_Z_BIT))
 		{
 			// unpack resistive linear effort Z
 			if(!jausByteFromBuffer(&tempByte, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -187,7 +187,7 @@ static JausBoolean dataFromBuffer(SetWrenchEffortMessage message, unsigned char 
 			message->resistiveLinearEffortZPercent = jausByteToDouble(tempByte, 0, 100);
 		}
 
-		if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_WRENCH_PV_RESISTIVE_ROTATIONAL_X_BIT))
+		if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_WRENCH_PV_RESISTIVE_ROTATIONAL_X_BIT))
 		{
 			// unpack resistive rotational effort X
 			if(!jausByteFromBuffer(&tempByte, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -197,7 +197,7 @@ static JausBoolean dataFromBuffer(SetWrenchEffortMessage message, unsigned char 
 			message->resistiveRotationalEffortXPercent = jausByteToDouble(tempByte, 0, 100);
 		}
 		
-		if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_WRENCH_PV_RESISTIVE_ROTATIONAL_Y_BIT))
+		if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_WRENCH_PV_RESISTIVE_ROTATIONAL_Y_BIT))
 		{
 			// unpack resistive rotational effort Y
 			if(!jausByteFromBuffer(&tempByte, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -207,7 +207,7 @@ static JausBoolean dataFromBuffer(SetWrenchEffortMessage message, unsigned char 
 			message->resistiveRotationalEffortYPercent = jausByteToDouble(tempByte, 0, 100);
 		}
 		
-		if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_WRENCH_PV_RESISTIVE_ROTATIONAL_Z_BIT))
+		if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_WRENCH_PV_RESISTIVE_ROTATIONAL_Z_BIT))
 		{
 			// unpack resistive rotational effort Z
 			if(!jausByteFromBuffer(&tempByte, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -236,10 +236,10 @@ static int dataToBuffer(SetWrenchEffortMessage message, unsigned char *buffer, u
 	{
 		// Pack Message Fields to Buffer
 		// Pack according to Presence Vector
-		if(!jausShortPresenceVectorToBuffer(message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_SHORT_PRESENCE_VECTOR_SIZE_BYTES;
+		if(!jausUnsignedShortToBuffer(message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
 
-		if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_WRENCH_PV_PROPULSIVE_LINEAR_X_BIT))
+		if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_WRENCH_PV_PROPULSIVE_LINEAR_X_BIT))
 		{
 			// Scaled Short (-100, 100)
 			tempShort = jausShortFromDouble(message->propulsiveLinearEffortXPercent, -100, 100);
@@ -249,7 +249,7 @@ static int dataToBuffer(SetWrenchEffortMessage message, unsigned char *buffer, u
 			index += JAUS_SHORT_SIZE_BYTES;
 		}
 		
-		if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_WRENCH_PV_PROPULSIVE_LINEAR_Y_BIT))
+		if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_WRENCH_PV_PROPULSIVE_LINEAR_Y_BIT))
 		{
 			// Scaled Short (-100, 100)
 			tempShort = jausShortFromDouble(message->propulsiveLinearEffortYPercent, -100, 100);
@@ -259,7 +259,7 @@ static int dataToBuffer(SetWrenchEffortMessage message, unsigned char *buffer, u
 			index += JAUS_SHORT_SIZE_BYTES;
 		}
 		
-		if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_WRENCH_PV_PROPULSIVE_LINEAR_Z_BIT))
+		if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_WRENCH_PV_PROPULSIVE_LINEAR_Z_BIT))
 		{
 			// Scaled Short (-100, 100)
 			tempShort = jausShortFromDouble(message->propulsiveLinearEffortZPercent, -100, 100);
@@ -269,7 +269,7 @@ static int dataToBuffer(SetWrenchEffortMessage message, unsigned char *buffer, u
 			index += JAUS_SHORT_SIZE_BYTES;
 		}
 
-		if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_WRENCH_PV_PROPULSIVE_ROTATIONAL_X_BIT))
+		if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_WRENCH_PV_PROPULSIVE_ROTATIONAL_X_BIT))
 		{
 			// Scaled Short (-100, 100)
 			tempShort = jausShortFromDouble(message->propulsiveRotationalEffortXPercent, -100, 100);
@@ -279,7 +279,7 @@ static int dataToBuffer(SetWrenchEffortMessage message, unsigned char *buffer, u
 			index += JAUS_SHORT_SIZE_BYTES;
 		}
 		
-		if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_WRENCH_PV_PROPULSIVE_ROTATIONAL_Y_BIT))
+		if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_WRENCH_PV_PROPULSIVE_ROTATIONAL_Y_BIT))
 		{
 			// Scaled Short (-100, 100)
 			tempShort = jausShortFromDouble(message->propulsiveRotationalEffortYPercent, -100, 100);
@@ -289,7 +289,7 @@ static int dataToBuffer(SetWrenchEffortMessage message, unsigned char *buffer, u
 			index += JAUS_SHORT_SIZE_BYTES;
 		}
 		
-		if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_WRENCH_PV_PROPULSIVE_ROTATIONAL_Z_BIT))
+		if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_WRENCH_PV_PROPULSIVE_ROTATIONAL_Z_BIT))
 		{
 			// Scaled Short (-100, 100)
 			tempShort = jausShortFromDouble(message->propulsiveRotationalEffortZPercent, -100, 100);
@@ -300,7 +300,7 @@ static int dataToBuffer(SetWrenchEffortMessage message, unsigned char *buffer, u
 		}
 
 		// Resistive
-		if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_WRENCH_PV_RESISTIVE_LINEAR_X_BIT))
+		if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_WRENCH_PV_RESISTIVE_LINEAR_X_BIT))
 		{
 			// Scaled Byte (0, 100)
 			tempByte = jausByteFromDouble(message->resistiveLinearEffortXPercent, 0, 100);
@@ -310,7 +310,7 @@ static int dataToBuffer(SetWrenchEffortMessage message, unsigned char *buffer, u
 			index += JAUS_BYTE_SIZE_BYTES;
 		}
 		
-		if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_WRENCH_PV_RESISTIVE_LINEAR_Y_BIT))
+		if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_WRENCH_PV_RESISTIVE_LINEAR_Y_BIT))
 		{
 			// Scaled Byte (0, 100)
 			tempByte = jausByteFromDouble(message->resistiveLinearEffortYPercent, 0, 100);
@@ -320,7 +320,7 @@ static int dataToBuffer(SetWrenchEffortMessage message, unsigned char *buffer, u
 			index += JAUS_BYTE_SIZE_BYTES;
 		}
 		
-		if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_WRENCH_PV_RESISTIVE_LINEAR_Z_BIT))
+		if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_WRENCH_PV_RESISTIVE_LINEAR_Z_BIT))
 		{
 			// Scaled Byte (0, 100)
 			tempByte = jausByteFromDouble(message->resistiveLinearEffortZPercent, 0, 100);
@@ -330,7 +330,7 @@ static int dataToBuffer(SetWrenchEffortMessage message, unsigned char *buffer, u
 			index += JAUS_BYTE_SIZE_BYTES;
 		}
 
-		if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_WRENCH_PV_RESISTIVE_ROTATIONAL_X_BIT))
+		if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_WRENCH_PV_RESISTIVE_ROTATIONAL_X_BIT))
 		{
 			// Scaled Byte (0, 100)
 			tempByte = jausByteFromDouble(message->resistiveRotationalEffortXPercent, 0, 100);
@@ -340,7 +340,7 @@ static int dataToBuffer(SetWrenchEffortMessage message, unsigned char *buffer, u
 			index += JAUS_BYTE_SIZE_BYTES;
 		}
 		
-		if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_WRENCH_PV_RESISTIVE_ROTATIONAL_Y_BIT))
+		if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_WRENCH_PV_RESISTIVE_ROTATIONAL_Y_BIT))
 		{
 			// Scaled Byte (0, 100)
 			tempByte = jausByteFromDouble(message->resistiveRotationalEffortYPercent, 0, 100);
@@ -350,7 +350,7 @@ static int dataToBuffer(SetWrenchEffortMessage message, unsigned char *buffer, u
 			index += JAUS_BYTE_SIZE_BYTES;
 		}
 		
-		if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_WRENCH_PV_RESISTIVE_ROTATIONAL_Z_BIT))
+		if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_WRENCH_PV_RESISTIVE_ROTATIONAL_Z_BIT))
 		{
 			// Scaled Byte (0, 100)
 			tempByte = jausByteFromDouble(message->resistiveRotationalEffortZPercent, 0, 100);
@@ -367,64 +367,64 @@ static int dataSize(SetWrenchEffortMessage message)
 {
 	int index = 0;
 	
-	index += JAUS_SHORT_PRESENCE_VECTOR_SIZE_BYTES;
+	index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
 
-	if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_WRENCH_PV_PROPULSIVE_LINEAR_X_BIT))
+	if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_WRENCH_PV_PROPULSIVE_LINEAR_X_BIT))
 	{
 		index += JAUS_SHORT_SIZE_BYTES;
 	}
 			
-	if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_WRENCH_PV_PROPULSIVE_LINEAR_Y_BIT))
+	if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_WRENCH_PV_PROPULSIVE_LINEAR_Y_BIT))
 	{
 		index += JAUS_SHORT_SIZE_BYTES;
 	}
 	
-	if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_WRENCH_PV_PROPULSIVE_LINEAR_Z_BIT))
-	{
-		index += JAUS_SHORT_SIZE_BYTES;
-	}
-
-	if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_WRENCH_PV_PROPULSIVE_ROTATIONAL_X_BIT))
-	{
-		index += JAUS_SHORT_SIZE_BYTES;
-	}
-	
-	if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_WRENCH_PV_PROPULSIVE_ROTATIONAL_Y_BIT))
-	{
-		index += JAUS_SHORT_SIZE_BYTES;
-	}
-	
-	if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_WRENCH_PV_PROPULSIVE_ROTATIONAL_Z_BIT))
+	if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_WRENCH_PV_PROPULSIVE_LINEAR_Z_BIT))
 	{
 		index += JAUS_SHORT_SIZE_BYTES;
 	}
 
-	if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_WRENCH_PV_RESISTIVE_LINEAR_X_BIT))
+	if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_WRENCH_PV_PROPULSIVE_ROTATIONAL_X_BIT))
+	{
+		index += JAUS_SHORT_SIZE_BYTES;
+	}
+	
+	if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_WRENCH_PV_PROPULSIVE_ROTATIONAL_Y_BIT))
+	{
+		index += JAUS_SHORT_SIZE_BYTES;
+	}
+	
+	if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_WRENCH_PV_PROPULSIVE_ROTATIONAL_Z_BIT))
+	{
+		index += JAUS_SHORT_SIZE_BYTES;
+	}
+
+	if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_WRENCH_PV_RESISTIVE_LINEAR_X_BIT))
 	{
 		index += JAUS_BYTE_SIZE_BYTES;
 	}
 	
-	if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_WRENCH_PV_RESISTIVE_LINEAR_Y_BIT))
+	if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_WRENCH_PV_RESISTIVE_LINEAR_Y_BIT))
 	{
 		index += JAUS_BYTE_SIZE_BYTES;
 	}
 	
-	if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_WRENCH_PV_RESISTIVE_LINEAR_Z_BIT))
+	if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_WRENCH_PV_RESISTIVE_LINEAR_Z_BIT))
 	{
 		index += JAUS_BYTE_SIZE_BYTES;
 	}
 
-	if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_WRENCH_PV_RESISTIVE_ROTATIONAL_X_BIT))
+	if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_WRENCH_PV_RESISTIVE_ROTATIONAL_X_BIT))
 	{
 		index += JAUS_BYTE_SIZE_BYTES;
 	}
 	
-	if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_WRENCH_PV_RESISTIVE_ROTATIONAL_Y_BIT))
+	if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_WRENCH_PV_RESISTIVE_ROTATIONAL_Y_BIT))
 	{
 		index += JAUS_BYTE_SIZE_BYTES;
 	}
 	
-	if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_WRENCH_PV_RESISTIVE_ROTATIONAL_Z_BIT))
+	if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_WRENCH_PV_RESISTIVE_ROTATIONAL_Z_BIT))
 	{
 		index += JAUS_BYTE_SIZE_BYTES;
 	}

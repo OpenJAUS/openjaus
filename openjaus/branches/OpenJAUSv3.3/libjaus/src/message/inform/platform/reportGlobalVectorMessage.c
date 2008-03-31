@@ -65,7 +65,7 @@ static void dataInitialize(ReportGlobalVectorMessage message);
 static void dataInitialize(ReportGlobalVectorMessage message)
 {
 	// Set initial values of message fields
-	message->presenceVector = newJausBytePresenceVector();
+	message->presenceVector = newJausByte(JAUS_BYTE_PRESENCE_VECTOR_ALL_ON);
 	
 	message->speedMps = newJausDouble(0); 		// Scaled Unsigned Short (0, 10000) Mps = Meters Per Second
 	message->altitudeMeters = newJausDouble(0); // Scaled Integer (-10000, 35000)  
@@ -86,10 +86,10 @@ static JausBoolean dataFromBuffer(ReportGlobalVectorMessage message, unsigned ch
 	{
 		// Unpack Message Fields from Buffer
 		// Unpack according to presence vector
-		if(!jausBytePresenceVectorFromBuffer(&message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_BYTE_PRESENCE_VECTOR_SIZE_BYTES;
+		if(!jausByteFromBuffer(&message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		index += JAUS_BYTE_SIZE_BYTES;
 		
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_VECTOR_PV_SPEED_BIT))
+		if(jausByteIsBitSet(message->presenceVector, JAUS_VECTOR_PV_SPEED_BIT))
 		{
 			// unpack
 			if(!jausUnsignedShortFromBuffer(&tempUShort, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -99,7 +99,7 @@ static JausBoolean dataFromBuffer(ReportGlobalVectorMessage message, unsigned ch
 			message->speedMps = jausUnsignedShortToDouble(tempUShort, 0, 10000);
 		}
 
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_VECTOR_PV_ALTITUDE_BIT))
+		if(jausByteIsBitSet(message->presenceVector, JAUS_VECTOR_PV_ALTITUDE_BIT))
 		{
 			// unpack
 			if(!jausIntegerFromBuffer(&tempInteger, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -109,7 +109,7 @@ static JausBoolean dataFromBuffer(ReportGlobalVectorMessage message, unsigned ch
 			message->altitudeMeters = jausIntegerToDouble(tempInteger, -10000, 35000);
 		}
 
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_VECTOR_PV_HEADING_BIT))
+		if(jausByteIsBitSet(message->presenceVector, JAUS_VECTOR_PV_HEADING_BIT))
 		{
 			// unpack
 			if(!jausShortFromBuffer(&tempShort, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -120,7 +120,7 @@ static JausBoolean dataFromBuffer(ReportGlobalVectorMessage message, unsigned ch
 
 		}
 
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_VECTOR_PV_ROLL_BIT))
+		if(jausByteIsBitSet(message->presenceVector, JAUS_VECTOR_PV_ROLL_BIT))
 		{
 			// unpack
 			if(!jausShortFromBuffer(&tempShort, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -131,7 +131,7 @@ static JausBoolean dataFromBuffer(ReportGlobalVectorMessage message, unsigned ch
 
 		}
 
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_VECTOR_PV_PITCH_BIT))
+		if(jausByteIsBitSet(message->presenceVector, JAUS_VECTOR_PV_PITCH_BIT))
 		{
 			// unpack
 			if(!jausShortFromBuffer(&tempShort, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -161,10 +161,10 @@ static int dataToBuffer(ReportGlobalVectorMessage message, unsigned char *buffer
 	{
 		// Pack Message Fields to Buffer
 		// Pack according to presence vector
-		if(!jausBytePresenceVectorToBuffer(message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_BYTE_PRESENCE_VECTOR_SIZE_BYTES;
+		if(!jausByteToBuffer(message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		index += JAUS_BYTE_SIZE_BYTES;
 		
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_VECTOR_PV_SPEED_BIT))
+		if(jausByteIsBitSet(message->presenceVector, JAUS_VECTOR_PV_SPEED_BIT))
 		{
 			// Scaled Unsigned Short (0, 10000)
 			tempUShort = jausUnsignedShortFromDouble(message->speedMps, 0, 10000);
@@ -174,7 +174,7 @@ static int dataToBuffer(ReportGlobalVectorMessage message, unsigned char *buffer
 			index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
 		}
 
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_VECTOR_PV_ALTITUDE_BIT))
+		if(jausByteIsBitSet(message->presenceVector, JAUS_VECTOR_PV_ALTITUDE_BIT))
 		{
 			// Scaled Integer (-10000, 35000)  
 			tempInteger = jausIntegerFromDouble(message->altitudeMeters, -10000, 35000);
@@ -184,7 +184,7 @@ static int dataToBuffer(ReportGlobalVectorMessage message, unsigned char *buffer
 			index += JAUS_INTEGER_SIZE_BYTES;
 		}
 
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_VECTOR_PV_HEADING_BIT))
+		if(jausByteIsBitSet(message->presenceVector, JAUS_VECTOR_PV_HEADING_BIT))
 		{
 			// Scaled Short (-JAUS_PI, JAUS_PI)
 			tempShort = jausShortFromDouble(message->headingRadians, -JAUS_PI, JAUS_PI);
@@ -195,7 +195,7 @@ static int dataToBuffer(ReportGlobalVectorMessage message, unsigned char *buffer
 			
 		}
 
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_VECTOR_PV_ROLL_BIT))
+		if(jausByteIsBitSet(message->presenceVector, JAUS_VECTOR_PV_ROLL_BIT))
 		{
 			// Scaled Short (-JAUS_PI, JAUS_PI)
 			tempShort = jausShortFromDouble(message->rollRadians, -JAUS_PI, JAUS_PI);
@@ -205,7 +205,7 @@ static int dataToBuffer(ReportGlobalVectorMessage message, unsigned char *buffer
 			index += JAUS_SHORT_SIZE_BYTES;
 		}
 
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_VECTOR_PV_PITCH_BIT))
+		if(jausByteIsBitSet(message->presenceVector, JAUS_VECTOR_PV_PITCH_BIT))
 		{
 			// Scaled Short (-JAUS_PI, JAUS_PI)
 			tempShort = jausShortFromDouble(message->pitchRadians, -JAUS_PI, JAUS_PI);
@@ -225,29 +225,29 @@ static int dataSize(ReportGlobalVectorMessage message)
 {
 	int index = 0;
 
-	index += JAUS_BYTE_PRESENCE_VECTOR_SIZE_BYTES;
+	index += JAUS_BYTE_SIZE_BYTES;
 	
-	if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_VECTOR_PV_SPEED_BIT))
+	if(jausByteIsBitSet(message->presenceVector, JAUS_VECTOR_PV_SPEED_BIT))
 	{
 		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
 	}
 
-	if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_VECTOR_PV_ALTITUDE_BIT))
+	if(jausByteIsBitSet(message->presenceVector, JAUS_VECTOR_PV_ALTITUDE_BIT))
 	{
 		index += JAUS_INTEGER_SIZE_BYTES;
 	}
 
-	if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_VECTOR_PV_HEADING_BIT))
+	if(jausByteIsBitSet(message->presenceVector, JAUS_VECTOR_PV_HEADING_BIT))
 	{
 		index += JAUS_SHORT_SIZE_BYTES;
 	}
 
-	if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_VECTOR_PV_ROLL_BIT))
+	if(jausByteIsBitSet(message->presenceVector, JAUS_VECTOR_PV_ROLL_BIT))
 	{
 		index += JAUS_SHORT_SIZE_BYTES;
 	}
 
-	if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_VECTOR_PV_PITCH_BIT))
+	if(jausByteIsBitSet(message->presenceVector, JAUS_VECTOR_PV_PITCH_BIT))
 	{
 		index += JAUS_SHORT_SIZE_BYTES;
 	}

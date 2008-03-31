@@ -93,8 +93,8 @@ typedef struct
 	JausUnsignedShort sequenceNumber;
 
 	// MESSAGE DATA MEMBERS GO HERE
-	JausBytePresenceVector presenceVector;		// presenceVector
-	JausBytePresenceVector messageProperties; 	// Bit Field, use Presence Vector for ease
+	JausByte presenceVector;		// presenceVector
+	JausByte messageProperties; 	// Bit Field, use Presence Vector for ease
 	JausByte requestId;							// Local Request ID
 	JausArray vectorObjects;						// Dynamic Array of Vector Objects
 }CreateVksObjectsMessageStruct;

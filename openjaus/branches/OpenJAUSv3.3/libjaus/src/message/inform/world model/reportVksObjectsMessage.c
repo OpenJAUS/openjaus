@@ -65,7 +65,7 @@ static void dataInitialize(ReportVksObjectsMessage message)
 {
 	message->properties.expFlag = JAUS_EXPERIMENTAL_MESSAGE;
 	// Set initial values of message fields
-	message->presenceVector = newJausBytePresenceVector();
+	message->presenceVector = newJausByte(JAUS_BYTE_PRESENCE_VECTOR_ALL_ON);
 	message->requestId = newJausByte(0);
 	message->objectCount = newJausUnsignedShort(0);
 	message->vectorObjects = jausArrayCreate();
@@ -90,8 +90,8 @@ static JausBoolean dataFromBuffer(ReportVksObjectsMessage message, unsigned char
 	{
 		// Unpack Message Fields from Buffer
 		// Presence Vector
-		if(!jausBytePresenceVectorFromBuffer(&message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_BYTE_PRESENCE_VECTOR_SIZE_BYTES;
+		if(!jausByteFromBuffer(&message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		index += JAUS_BYTE_SIZE_BYTES;
 
 		// Request Id
 		if(!jausByteFromBuffer(&message->requestId, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -102,7 +102,7 @@ static JausBoolean dataFromBuffer(ReportVksObjectsMessage message, unsigned char
 		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
 		
 		// Actual object data is optional
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, VKS_PV_REPORT_DATA_BIT))
+		if(jausByteIsBitSet(message->presenceVector, VKS_PV_REPORT_DATA_BIT))
 		{
 			message->vectorObjects = jausArrayCreate();
 			if(!message->vectorObjects) return JAUS_FALSE;
@@ -141,15 +141,15 @@ static int dataToBuffer(ReportVksObjectsMessage message, unsigned char *buffer, 
 	{
 		// Pack Message Fields to Buffer
 		// Presence Vector
-		if(!jausBytePresenceVectorToBuffer(message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_BYTE_PRESENCE_VECTOR_SIZE_BYTES;
+		if(!jausByteToBuffer(message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		index += JAUS_BYTE_SIZE_BYTES;
 
 		// Request Id
 		if(!jausByteToBuffer(message->requestId, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
 		
 		// Actual object data is optional
-		if(!jausBytePresenceVectorIsBitSet(message->presenceVector, VKS_PV_REPORT_DATA_BIT))
+		if(!jausByteIsBitSet(message->presenceVector, VKS_PV_REPORT_DATA_BIT))
 		{
 			// Object Count
 			if(!jausUnsignedShortToBuffer(message->objectCount, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -186,13 +186,13 @@ static int dataSize(ReportVksObjectsMessage message)
 	JausWorldModelVectorObject object = NULL;
 
 	// Presence Vector
-	index += JAUS_BYTE_PRESENCE_VECTOR_SIZE_BYTES;
+	index += JAUS_BYTE_SIZE_BYTES;
 	
 	// Request Id
 	index += JAUS_BYTE_SIZE_BYTES;
 	
 	// Actual object data is optional
-	if(!jausBytePresenceVectorIsBitSet(message->presenceVector, VKS_PV_REPORT_DATA_BIT))
+	if(!jausByteIsBitSet(message->presenceVector, VKS_PV_REPORT_DATA_BIT))
 	{
 		// Object Count
 		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;

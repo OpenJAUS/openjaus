@@ -101,7 +101,7 @@ typedef struct
 	JausUnsignedShort sequenceNumber;
 
 	// Message Fields:
-	JausShortPresenceVector presenceVector;
+	JausUnsignedShort presenceVector;
 	JausDouble propulsiveLinearEffortXPercent;		// Scaled Short (-100, 100)
 	JausDouble propulsiveLinearEffortYPercent;		// Scaled Short (-100, 100)
 	JausDouble propulsiveLinearEffortZPercent;		// Scaled Short (-100, 100)

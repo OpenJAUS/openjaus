@@ -93,7 +93,7 @@ typedef struct
 	
 	JausUnsignedShort sequenceNumber;
 
-	JausBytePresenceVector presenceVector;
+	JausByte presenceVector;
 	JausDouble engineTemperatureCelsius;	// Scaled Short (-75, 180)
 	JausUnsignedInteger odometerMeters;
 	JausDouble batteryVoltagePercent;		// Scaled Byte (0, 127)

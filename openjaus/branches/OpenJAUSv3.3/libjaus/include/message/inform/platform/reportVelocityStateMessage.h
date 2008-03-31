@@ -97,7 +97,7 @@ typedef struct
 	
 	JausUnsignedShort sequenceNumber;
 
-	JausShortPresenceVector presenceVector;
+	JausUnsignedShort presenceVector;
 	JausDouble velocityXMps;	// Scaled Int (-65.534, 65.534) 	Mps = Meters per Second
 	JausDouble velocityYMps;	// Scaled Int (-65.534, 65.534) 	Mps = Meters per Second
 	JausDouble velocityZMps;	// Scaled Int (-65.534, 65.534) 	Mps = Meters per Secon

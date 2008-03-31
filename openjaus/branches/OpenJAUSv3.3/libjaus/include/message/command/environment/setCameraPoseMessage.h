@@ -114,7 +114,7 @@ typedef struct
 	JausUnsignedShort sequenceNumber;
 
 	// MESSAGE DATA MEMBERS GO HERE
-	JausBytePresenceVector presenceVector;
+	JausByte presenceVector;
 	JausByte cameraID;
 	JausCameraPoseModeEnum xLinearMode;
 	JausCameraPoseModeEnum yLinearMode;

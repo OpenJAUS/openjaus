@@ -66,7 +66,7 @@ static void dataInitialize(QueryGlobalPathSegmentMessage message)
 {
 	// Set initial values of message fields
 	message->pathSegmentNumber = newJausUnsignedShort(0);
-	message->presenceVector = newJausBytePresenceVector();
+	message->presenceVector = newJausByte(JAUS_BYTE_PRESENCE_VECTOR_ALL_ON);
 }
 
 // Return boolean of success
@@ -80,8 +80,8 @@ static JausBoolean dataFromBuffer(QueryGlobalPathSegmentMessage message, unsigne
 		if(!jausUnsignedShortFromBuffer(&message->pathSegmentNumber, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
 
-		if(!jausBytePresenceVectorFromBuffer(&message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_BYTE_PRESENCE_VECTOR_SIZE_BYTES;
+		if(!jausByteFromBuffer(&message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		index += JAUS_BYTE_SIZE_BYTES;
 
 		return JAUS_TRUE;
 	}
@@ -102,8 +102,8 @@ static int dataToBuffer(QueryGlobalPathSegmentMessage message, unsigned char *bu
 		if(!jausUnsignedShortToBuffer(message->pathSegmentNumber, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
 
-		if(!jausBytePresenceVectorToBuffer(message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_BYTE_PRESENCE_VECTOR_SIZE_BYTES;
+		if(!jausByteToBuffer(message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		index += JAUS_BYTE_SIZE_BYTES;
 	}
 
 	return index;

@@ -65,7 +65,7 @@ static void dataInitialize(SetGlobalPathSegmentMessage message);
 static void dataInitialize(SetGlobalPathSegmentMessage message)
 {
 	// Set initial values of message fields
-	message->presenceVector = newJausBytePresenceVector ();
+	message->presenceVector = newJausByte(JAUS_BYTE_PRESENCE_VECTOR_ALL_ON);
 	message->pathSegmentNumber = newJausUnsignedShort(0);
 	message->p1LatitudeDeg = newJausDouble(0);	// Scaled Integer (-90, 90)
 	message->p1LongitudeDeg = newJausDouble(0); 	// Scaled Integer (-180, 180)
@@ -87,8 +87,8 @@ static JausBoolean dataFromBuffer(SetGlobalPathSegmentMessage message, unsigned 
 	{
 		// Unpack Message Fields from Buffer
 		// Use Presence Vector
-		if(!jausBytePresenceVectorFromBuffer(&message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_BYTE_PRESENCE_VECTOR_SIZE_BYTES;
+		if(!jausByteFromBuffer(&message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		index += JAUS_BYTE_SIZE_BYTES;
 		
 		if(!jausUnsignedShortFromBuffer(&message->pathSegmentNumber, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
@@ -105,7 +105,7 @@ static JausBoolean dataFromBuffer(SetGlobalPathSegmentMessage message, unsigned 
 		index += JAUS_INTEGER_SIZE_BYTES;
 		message->p1LongitudeDeg = jausIntegerToDouble(tempInteger, -180, 180);
 
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_PATH_SEGMENT_PV_P1_ALTITUDE_BIT))
+		if(jausByteIsBitSet(message->presenceVector, JAUS_PATH_SEGMENT_PV_P1_ALTITUDE_BIT))
 		{
 			//unpack
 			//JausDouble p1AltitudeM	// Scaled Integer (-10000, 35000)
@@ -127,7 +127,7 @@ static JausBoolean dataFromBuffer(SetGlobalPathSegmentMessage message, unsigned 
 		index += JAUS_INTEGER_SIZE_BYTES;
 		message->p2LongitudeDeg = jausIntegerToDouble(tempInteger, -180, 180);
 
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_PATH_SEGMENT_PV_P2_ALTITUDE_BIT))
+		if(jausByteIsBitSet(message->presenceVector, JAUS_PATH_SEGMENT_PV_P2_ALTITUDE_BIT))
 		{
 			//unpack
 			//JausDouble p2AltitudeM	// Scaled Integer (-10000, 35000)
@@ -160,8 +160,8 @@ static int dataToBuffer(SetGlobalPathSegmentMessage message, unsigned char *buff
 	{
 		// Pack Message Fields to Buffer
 		// Use Presence Vector
-		if(!jausBytePresenceVectorToBuffer(message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_BYTE_PRESENCE_VECTOR_SIZE_BYTES;
+		if(!jausByteToBuffer(message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		index += JAUS_BYTE_SIZE_BYTES;
 		
 		if(!jausUnsignedShortToBuffer(message->pathSegmentNumber, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
@@ -178,7 +178,7 @@ static int dataToBuffer(SetGlobalPathSegmentMessage message, unsigned char *buff
 		if(!jausIntegerToBuffer(tempInteger, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_INTEGER_SIZE_BYTES;
 		
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_PATH_SEGMENT_PV_P1_ALTITUDE_BIT))
+		if(jausByteIsBitSet(message->presenceVector, JAUS_PATH_SEGMENT_PV_P1_ALTITUDE_BIT))
 		{
 			//pack
 			//JausDouble p1AltitudeM	// Scaled Integer (-10000, 35000)
@@ -198,7 +198,7 @@ static int dataToBuffer(SetGlobalPathSegmentMessage message, unsigned char *buff
 		if(!jausIntegerToBuffer(tempInteger, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_INTEGER_SIZE_BYTES;
 		
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_PATH_SEGMENT_PV_P2_ALTITUDE_BIT))
+		if(jausByteIsBitSet(message->presenceVector, JAUS_PATH_SEGMENT_PV_P2_ALTITUDE_BIT))
 		{
 			//pack
 			//JausDouble p2AltitudeM	// Scaled Integer (-10000, 35000)
@@ -219,7 +219,7 @@ static int dataSize(SetGlobalPathSegmentMessage message)
 {
 	int index = 0;
 
-	index += JAUS_BYTE_PRESENCE_VECTOR_SIZE_BYTES;
+	index += JAUS_BYTE_SIZE_BYTES;
 		
 	index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
 		
@@ -227,7 +227,7 @@ static int dataSize(SetGlobalPathSegmentMessage message)
 		
 	index += JAUS_INTEGER_SIZE_BYTES;
 		
-	if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_PATH_SEGMENT_PV_P1_ALTITUDE_BIT))
+	if(jausByteIsBitSet(message->presenceVector, JAUS_PATH_SEGMENT_PV_P1_ALTITUDE_BIT))
 	{
 		index += JAUS_INTEGER_SIZE_BYTES;
 	}
@@ -236,7 +236,7 @@ static int dataSize(SetGlobalPathSegmentMessage message)
 		
 	index += JAUS_INTEGER_SIZE_BYTES;
 		
-	if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_PATH_SEGMENT_PV_P2_ALTITUDE_BIT))
+	if(jausByteIsBitSet(message->presenceVector, JAUS_PATH_SEGMENT_PV_P2_ALTITUDE_BIT))
 	{
 		index += JAUS_INTEGER_SIZE_BYTES;
 	}

@@ -65,8 +65,8 @@ static void dataInitialize(CreateVksObjectsMessage message)
 {
 	message->properties.expFlag = JAUS_EXPERIMENTAL_MESSAGE;
 	// Set initial values of message fields
-	message->presenceVector = newJausBytePresenceVector();		// presenceVector
-	message->messageProperties = newJausBytePresenceVector(); 	// Bit Field, use Presence Vector for ease
+	message->presenceVector = newJausByte(JAUS_BYTE_PRESENCE_VECTOR_ALL_ON);		// presenceVector
+	message->messageProperties = newJausByte(JAUS_BYTE_PRESENCE_VECTOR_ALL_ON); 	// Bit Field, use Presence Vector for ease
 	message->requestId = newJausByte(0);						// Local Request ID
 	message->vectorObjects = jausArrayCreate();					// Dynamic Array of Vector Objects
 }
@@ -91,14 +91,14 @@ static JausBoolean dataFromBuffer(CreateVksObjectsMessage message, unsigned char
 	{
 		// Unpack Message Fields from Buffer
 		// Presence Vector
-		if(!jausBytePresenceVectorFromBuffer(&message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_BYTE_PRESENCE_VECTOR_SIZE_BYTES;
+		if(!jausByteFromBuffer(&message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		index += JAUS_BYTE_SIZE_BYTES;
 	
-		objectBuffered = jausBytePresenceVectorIsBitSet(message->presenceVector, VKS_PV_CREATE_BUFFERED_BIT);
+		objectBuffered = jausByteIsBitSet(message->presenceVector, VKS_PV_CREATE_BUFFERED_BIT);
 		
 		// Message Properties
-		if(!jausBytePresenceVectorFromBuffer(&message->messageProperties, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_BYTE_PRESENCE_VECTOR_SIZE_BYTES;
+		if(!jausByteFromBuffer(&message->messageProperties, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		index += JAUS_BYTE_SIZE_BYTES;
 
 		// Local Request Id
 		if(!jausByteFromBuffer(&message->requestId, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -138,14 +138,14 @@ static int dataToBuffer(CreateVksObjectsMessage message, unsigned char *buffer, 
 	{
 		// Pack Message Fields to Buffer
 		// Presence Vector
-		if(!jausBytePresenceVectorToBuffer(message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_BYTE_PRESENCE_VECTOR_SIZE_BYTES;
+		if(!jausByteToBuffer(message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		index += JAUS_BYTE_SIZE_BYTES;
 	
-		objectBuffered = jausBytePresenceVectorIsBitSet(message->presenceVector, VKS_PV_CREATE_BUFFERED_BIT);
+		objectBuffered = jausByteIsBitSet(message->presenceVector, VKS_PV_CREATE_BUFFERED_BIT);
 		
 		// Message Properties
-		if(!jausBytePresenceVectorToBuffer(message->messageProperties, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_BYTE_PRESENCE_VECTOR_SIZE_BYTES;
+		if(!jausByteToBuffer(message->messageProperties, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		index += JAUS_BYTE_SIZE_BYTES;
 		
 		// Local Request Id
 		if(!jausByteToBuffer(message->requestId, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -174,12 +174,12 @@ static int dataSize(CreateVksObjectsMessage message)
 	JausWorldModelVectorObject object;
 
 	// Presence Vector
-	index += JAUS_BYTE_PRESENCE_VECTOR_SIZE_BYTES;
+	index += JAUS_BYTE_SIZE_BYTES;
 
-	objectBuffered = jausBytePresenceVectorIsBitSet(message->presenceVector, VKS_PV_CREATE_BUFFERED_BIT);
+	objectBuffered = jausByteIsBitSet(message->presenceVector, VKS_PV_CREATE_BUFFERED_BIT);
 	
 	// Message Properties
-	index += JAUS_BYTE_PRESENCE_VECTOR_SIZE_BYTES;
+	index += JAUS_BYTE_SIZE_BYTES;
 	
 	// Local Request Id
 	index += JAUS_BYTE_SIZE_BYTES;

@@ -90,7 +90,7 @@ typedef struct
 	
 	JausUnsignedShort sequenceNumber;
 
-	JausBytePresenceVector presenceVector;
+	JausByte presenceVector;
 	JausTime time;
 	
 }SetTimeMessageStruct;

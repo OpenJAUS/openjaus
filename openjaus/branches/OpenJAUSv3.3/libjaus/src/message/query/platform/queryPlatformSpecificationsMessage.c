@@ -65,7 +65,7 @@ static void dataInitialize(QueryPlatformSpecificationsMessage message);
 static void dataInitialize(QueryPlatformSpecificationsMessage message)
 {
 	// Set initial values of message fields
-	message->presenceVector = newJausIntegerPresenceVector();
+	message->presenceVector = newJausUnsignedInteger(JAUS_INTEGER_PRESENCE_VECTOR_ALL_ON);
 }
 
 // Return boolean of success
@@ -76,8 +76,8 @@ static JausBoolean dataFromBuffer(QueryPlatformSpecificationsMessage message, un
 	if(bufferSizeBytes == message->dataSize)
 	{
 		// Unpack Message Fields from Buffer
-		if(!jausIntegerPresenceVectorFromBuffer(&message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_INTEGER_PRESENCE_VECTOR_SIZE_BYTES;
+		if(!jausUnsignedIntegerFromBuffer(&message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
 		
 		return JAUS_TRUE;
 	}
@@ -95,8 +95,8 @@ static int dataToBuffer(QueryPlatformSpecificationsMessage message, unsigned cha
 	if(bufferSizeBytes >= message->dataSize)
 	{
 		// Pack Message Fields to Buffer
-		if(!jausIntegerPresenceVectorToBuffer(message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_INTEGER_PRESENCE_VECTOR_SIZE_BYTES;
+		if(!jausUnsignedIntegerToBuffer(message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
 	}
 
 	return index;

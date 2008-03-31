@@ -53,6 +53,8 @@
 #define JAUS_BYTE_MAX_VALUE 255
 #define JAUS_BYTE_MIN_VALUE 0
 
+#define JAUS_BYTE_PRESENCE_VECTOR_ALL_ON	255
+
 typedef unsigned char JausByte;
 
 JAUS_EXPORT JausByte newJausByte(unsigned char val);

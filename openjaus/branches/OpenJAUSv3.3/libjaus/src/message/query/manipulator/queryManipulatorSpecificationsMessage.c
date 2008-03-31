@@ -66,7 +66,7 @@ static void dataInitialize(QueryManipulatorSpecificationsMessage message)
 	// Set initial values of message fields
 	// Example from ReportGlobalPoseMessage.c
 	// 
-	//	message->presenceVector = newJausShortPresenceVector();
+	//	message->presenceVector = newJausUnsignedShort(JAUS_SHORT_PRESENCE_VECTOR_ALL_ON);
 	//	message->latitudeDegrees = newJausDouble(0);			// Scaled Int (-90, 90)
 	//	message->longitudeDegrees = newJausDouble(0);			// Scaled Int (-180, 180)
 	//	message->elevationMeters = newJausDouble(0);			// Scaled Int (-10000, 35000)
@@ -96,10 +96,10 @@ static JausBoolean dataFromBuffer(QueryManipulatorSpecificationsMessage message,
 		
 		// Couple Examples from ReportGlobalPoseMessage
 		//
-		//	if(!jausShortPresenceVectorFromBuffer(&message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		//	index += JAUS_SHORT_PRESENCE_VECTOR_SIZE_BYTES;
+		//	if(!jausUnsignedShortFromBuffer(&message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		//	index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
 		//
-		//	if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_POSE_PV_LATITUDE_BIT))
+		//	if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_POSE_PV_LATITUDE_BIT))
 		//	{
 		//		//unpack
 		//		if(!jausIntegerFromBuffer(&tempInt, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -128,10 +128,10 @@ static int dataToBuffer(QueryManipulatorSpecificationsMessage message, unsigned 
 		
 		// Couple Examples from ReportGlobalPoseMessage
 		//
-		//	if(!jausShortPresenceVectorToBuffer(message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		//	index += JAUS_SHORT_PRESENCE_VECTOR_SIZE_BYTES;
+		//	if(!jausUnsignedShortToBuffer(message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		//	index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
 		//	
-		//	if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_POSE_PV_LATITUDE_BIT))
+		//	if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_POSE_PV_LATITUDE_BIT))
 		//	{
 		//		// Scaled Int (-90, 90)			
 		//		tempInt = jausIntegerFromDouble(message->latitudeDegrees, -90, 90);
@@ -154,9 +154,9 @@ static int dataSize(QueryManipulatorSpecificationsMessage message)
 	// Couple Examples from ReportGlobalPoseMessage
 	//
 	//	// PresenceVector
-	//	index += JAUS_SHORT_PRESENCE_VECTOR_SIZE_BYTES;
+	//	index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
 	//	
-	//	if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_POSE_PV_LATITUDE_BIT))
+	//	if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_POSE_PV_LATITUDE_BIT))
 	//	{
 	//		// Latitude
 	//		index += JAUS_INTEGER_SIZE_BYTES;
