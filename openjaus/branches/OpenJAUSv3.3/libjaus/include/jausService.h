@@ -58,7 +58,7 @@
 struct JausCommandStruct
 {
 	JausUnsignedShort commandCode;		
-	JausIntegerPresenceVector presenceVector;
+	JausUnsignedInteger presenceVector;
 	
 	struct JausCommandStruct *next;			
 };
@@ -107,9 +107,9 @@ JAUS_EXPORT JausBoolean jausServiceAddCoreServices(JausArray jausServices);
 
 JAUS_EXPORT JausService jausServiceCreateService(JausUnsignedShort serviceType);
 
-JAUS_EXPORT JausBoolean jausServiceAddInputCommand(JausService service, JausUnsignedShort commandCode, JausIntegerPresenceVector presenceVector);
+JAUS_EXPORT JausBoolean jausServiceAddInputCommand(JausService service, JausUnsignedShort commandCode, JausUnsignedInteger presenceVector);
 
-JAUS_EXPORT JausBoolean jausServiceAddOutputCommand(JausService service, JausUnsignedShort commandCode, JausIntegerPresenceVector presenceVector);
+JAUS_EXPORT JausBoolean jausServiceAddOutputCommand(JausService service, JausUnsignedShort commandCode, JausUnsignedInteger presenceVector);
 
 JAUS_EXPORT JausBoolean jausServiceAddService(JausArray jausServices, JausService service);
 

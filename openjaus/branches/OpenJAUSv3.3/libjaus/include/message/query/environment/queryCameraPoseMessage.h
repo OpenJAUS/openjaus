@@ -85,7 +85,7 @@ typedef struct
 	JausUnsignedShort sequenceNumber;
 
 	// MESSAGE DATA MEMBERS GO HERE
-	JausShortPresenceVector presenceVector;
+	JausUnsignedShort presenceVector;
 	JausByte cameraID;
 	
 }QueryCameraPoseMessageStruct;

@@ -64,7 +64,7 @@ static void dataDestroy(SetCameraPoseMessage message);
 static void dataInitialize(SetCameraPoseMessage message)
 {
 	// Set initial values of message fields
-	message->presenceVector = newJausBytePresenceVector();
+	message->presenceVector = newJausByte(JAUS_BYTE_PRESENCE_VECTOR_ALL_ON);
 	message->cameraID = newJausByte(0);
 	message->xLinearMode = POSITION_MODE;
 	message->yLinearMode = POSITION_MODE;
@@ -97,8 +97,8 @@ static JausBoolean dataFromBuffer(SetCameraPoseMessage message, unsigned char *b
 	{
 		// Unpack Message Fields from Buffer
 		// Unpack according to presence vector
-		if(!jausBytePresenceVectorFromBuffer(&message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_BYTE_PRESENCE_VECTOR_SIZE_BYTES;
+		if(!jausByteFromBuffer(&message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		index += JAUS_BYTE_SIZE_BYTES;
 		
 		//cameraID
 		if(!jausByteFromBuffer(&message->cameraID, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -117,7 +117,7 @@ static JausBoolean dataFromBuffer(SetCameraPoseMessage message, unsigned char *b
 		message->zAngularMode = jausByteIsBitSet(tempByte, JAUS_CAMERA_POSE_MODE_BF_Z_ANGULAR_BIT)? RATE_MODE : POSITION_MODE;
 
 		//xLinearPositionOrRatePercent
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_CAMERA_POSE_PV_X_LINEAR_BIT))
+		if(jausByteIsBitSet(message->presenceVector, JAUS_CAMERA_POSE_PV_X_LINEAR_BIT))
 		{
 			//unpack
 			if(!jausShortFromBuffer(&tempShort, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -128,7 +128,7 @@ static JausBoolean dataFromBuffer(SetCameraPoseMessage message, unsigned char *b
 		}
 
 		//yLinearPositionOrRatePercent
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_CAMERA_POSE_PV_Y_LINEAR_BIT))
+		if(jausByteIsBitSet(message->presenceVector, JAUS_CAMERA_POSE_PV_Y_LINEAR_BIT))
 		{
 			//unpack
 			if(!jausShortFromBuffer(&tempShort, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -139,7 +139,7 @@ static JausBoolean dataFromBuffer(SetCameraPoseMessage message, unsigned char *b
 		}
 
 		//zLinearPositionOrRatePercent
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_CAMERA_POSE_PV_Z_LINEAR_BIT))
+		if(jausByteIsBitSet(message->presenceVector, JAUS_CAMERA_POSE_PV_Z_LINEAR_BIT))
 		{
 			//unpack
 			if(!jausShortFromBuffer(&tempShort, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -150,7 +150,7 @@ static JausBoolean dataFromBuffer(SetCameraPoseMessage message, unsigned char *b
 		}
 		
 		//xAngularPositionOrRatePercent
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_CAMERA_POSE_PV_X_ANGULAR_BIT))
+		if(jausByteIsBitSet(message->presenceVector, JAUS_CAMERA_POSE_PV_X_ANGULAR_BIT))
 		{
 			//unpack
 			if(!jausShortFromBuffer(&tempShort, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -161,7 +161,7 @@ static JausBoolean dataFromBuffer(SetCameraPoseMessage message, unsigned char *b
 		}
 
 		//yAngularPositionOrRatePercent
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_CAMERA_POSE_PV_Y_ANGULAR_BIT))
+		if(jausByteIsBitSet(message->presenceVector, JAUS_CAMERA_POSE_PV_Y_ANGULAR_BIT))
 		{
 			//unpack
 			if(!jausShortFromBuffer(&tempShort, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -172,7 +172,7 @@ static JausBoolean dataFromBuffer(SetCameraPoseMessage message, unsigned char *b
 		}
 
 		//zAngularPositionOrRatePercent
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_CAMERA_POSE_PV_Z_ANGULAR_BIT))
+		if(jausByteIsBitSet(message->presenceVector, JAUS_CAMERA_POSE_PV_Z_ANGULAR_BIT))
 		{
 			//unpack
 			if(!jausShortFromBuffer(&tempShort, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -201,8 +201,8 @@ static int dataToBuffer(SetCameraPoseMessage message, unsigned char *buffer, uns
 	{
 		// Pack Message Fields to Buffer
 		// Pack according to presence vector
-		if(!jausBytePresenceVectorToBuffer(message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_BYTE_PRESENCE_VECTOR_SIZE_BYTES;
+		if(!jausByteToBuffer(message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		index += JAUS_BYTE_SIZE_BYTES;
 		
 		//cameraID
 		if(!jausByteToBuffer(message->cameraID, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -222,7 +222,7 @@ static int dataToBuffer(SetCameraPoseMessage message, unsigned char *buffer, uns
 		index += JAUS_BYTE_SIZE_BYTES;
 		
 		//xLinearPositionOrRatePercent
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_CAMERA_POSE_PV_X_LINEAR_BIT))
+		if(jausByteIsBitSet(message->presenceVector, JAUS_CAMERA_POSE_PV_X_LINEAR_BIT))
 		{
 			// Scaled Short (0, 100)
 			tempShort = jausShortFromDouble(message->xLinearPositionOrRatePercent, 0, 100);
@@ -233,7 +233,7 @@ static int dataToBuffer(SetCameraPoseMessage message, unsigned char *buffer, uns
 		}
 
 		//yLinearPositionOrRatePercent
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_CAMERA_POSE_PV_Y_LINEAR_BIT))
+		if(jausByteIsBitSet(message->presenceVector, JAUS_CAMERA_POSE_PV_Y_LINEAR_BIT))
 		{
 			// Scaled Short (0, 100)
 			tempShort = jausShortFromDouble(message->yLinearPositionOrRatePercent, 0, 100);
@@ -244,7 +244,7 @@ static int dataToBuffer(SetCameraPoseMessage message, unsigned char *buffer, uns
 		}
 
 		//zLinearPositionOrRatePercent
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_CAMERA_POSE_PV_Z_LINEAR_BIT))
+		if(jausByteIsBitSet(message->presenceVector, JAUS_CAMERA_POSE_PV_Z_LINEAR_BIT))
 		{
 			// Scaled Short (0, 100)
 			tempShort = jausShortFromDouble(message->zLinearPositionOrRatePercent, 0, 100);
@@ -255,7 +255,7 @@ static int dataToBuffer(SetCameraPoseMessage message, unsigned char *buffer, uns
 		}
 		
 		//xAngularPositionOrRatePercent
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_CAMERA_POSE_PV_X_ANGULAR_BIT))
+		if(jausByteIsBitSet(message->presenceVector, JAUS_CAMERA_POSE_PV_X_ANGULAR_BIT))
 		{
 			// Scaled Short (0, 100)
 			tempShort = jausShortFromDouble(message->xAngularPositionOrRatePercent, 0, 100);
@@ -266,7 +266,7 @@ static int dataToBuffer(SetCameraPoseMessage message, unsigned char *buffer, uns
 		}
 
 		//yAngularPositionOrRatePercent
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_CAMERA_POSE_PV_Y_ANGULAR_BIT))
+		if(jausByteIsBitSet(message->presenceVector, JAUS_CAMERA_POSE_PV_Y_ANGULAR_BIT))
 		{
 			// Scaled Short (0, 100)
 			tempShort = jausShortFromDouble(message->yAngularPositionOrRatePercent, 0, 100);
@@ -277,7 +277,7 @@ static int dataToBuffer(SetCameraPoseMessage message, unsigned char *buffer, uns
 		}
 
 		//zAngularPositionOrRatePercent
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_CAMERA_POSE_PV_Z_ANGULAR_BIT))
+		if(jausByteIsBitSet(message->presenceVector, JAUS_CAMERA_POSE_PV_Z_ANGULAR_BIT))
 		{
 			// Scaled Short (0, 100)
 			tempShort = jausShortFromDouble(message->zAngularPositionOrRatePercent, 0, 100);
@@ -297,7 +297,7 @@ static int dataSize(SetCameraPoseMessage message)
 	int index = 0;
 
 	// presence vector
-	index += JAUS_BYTE_PRESENCE_VECTOR_SIZE_BYTES;
+	index += JAUS_BYTE_SIZE_BYTES;
 	
 	//cameraID
 	index += JAUS_BYTE_SIZE_BYTES;
@@ -306,37 +306,37 @@ static int dataSize(SetCameraPoseMessage message)
 	index += JAUS_BYTE_SIZE_BYTES;
 	
 	//xLinearPositionOrRatePercent
-	if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_CAMERA_POSE_PV_X_LINEAR_BIT))
+	if(jausByteIsBitSet(message->presenceVector, JAUS_CAMERA_POSE_PV_X_LINEAR_BIT))
 	{
 		index += JAUS_SHORT_SIZE_BYTES;
 	}
 
 	//yLinearPositionOrRatePercent
-	if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_CAMERA_POSE_PV_Y_LINEAR_BIT))
+	if(jausByteIsBitSet(message->presenceVector, JAUS_CAMERA_POSE_PV_Y_LINEAR_BIT))
 	{
 		index += JAUS_SHORT_SIZE_BYTES;
 	}
 
 	//zLinearPositionOrRatePercent
-	if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_CAMERA_POSE_PV_Z_LINEAR_BIT))
+	if(jausByteIsBitSet(message->presenceVector, JAUS_CAMERA_POSE_PV_Z_LINEAR_BIT))
 	{
 		index += JAUS_SHORT_SIZE_BYTES;
 	}
 	
 	//xAngularPositionOrRatePercent
-	if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_CAMERA_POSE_PV_X_ANGULAR_BIT))
+	if(jausByteIsBitSet(message->presenceVector, JAUS_CAMERA_POSE_PV_X_ANGULAR_BIT))
 	{
 		index += JAUS_SHORT_SIZE_BYTES;
 	}
 
 	//yAngularPositionOrRatePercent
-	if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_CAMERA_POSE_PV_Y_ANGULAR_BIT))
+	if(jausByteIsBitSet(message->presenceVector, JAUS_CAMERA_POSE_PV_Y_ANGULAR_BIT))
 	{
 		index += JAUS_SHORT_SIZE_BYTES;
 	}
 
 	//zAngularPositionOrRatePercent
-	if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_CAMERA_POSE_PV_Z_ANGULAR_BIT))
+	if(jausByteIsBitSet(message->presenceVector, JAUS_CAMERA_POSE_PV_Z_ANGULAR_BIT))
 	{
 		index += JAUS_SHORT_SIZE_BYTES;
 	}

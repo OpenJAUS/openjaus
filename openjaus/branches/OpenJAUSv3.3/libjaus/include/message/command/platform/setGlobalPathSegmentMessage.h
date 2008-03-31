@@ -90,7 +90,7 @@ typedef struct
 	
 	JausUnsignedShort sequenceNumber;
 
-	JausBytePresenceVector presenceVector;
+	JausByte presenceVector;
 	JausUnsignedShort pathSegmentNumber;
 	JausDouble p1LatitudeDeg;		// Scaled Integer (-90, 90)
 	JausDouble p1LongitudeDeg; 	// Scaled Integer (-180, 180)

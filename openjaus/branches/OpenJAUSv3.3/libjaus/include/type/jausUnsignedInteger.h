@@ -53,6 +53,8 @@
 #define JAUS_UNSIGNED_INTEGER_MAX_VALUE 	4294967295L
 #define JAUS_UNSIGNED_INTEGER_MIN_VALUE 	0
 
+#define JAUS_INTEGER_PRESENCE_VECTOR_ALL_ON 	4294967295L
+
 typedef unsigned int JausUnsignedInteger;
 
 JAUS_EXPORT JausUnsignedInteger newJausUnsignedInteger(unsigned int val);

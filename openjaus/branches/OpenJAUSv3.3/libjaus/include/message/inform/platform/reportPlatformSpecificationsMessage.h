@@ -111,7 +111,7 @@ typedef struct
 	
 	JausUnsignedShort sequenceNumber;
 
-	JausIntegerPresenceVector presenceVector;
+	JausUnsignedInteger presenceVector;
 	char platformName[JAUS_PLATFORM_NAME_LENGTH_BYTES];
 	JausDouble frontMeters;			// Scaled Unsigned Short (0, 32.767)
 	JausDouble backMeters;			// Scaled Unsigned Short (0, 32.767)

@@ -96,7 +96,7 @@ typedef struct
 	JausUnsignedShort sequenceNumber;
 
 	// MESSAGE DATA MEMBERS GO HERE
-	JausBytePresenceVector presenceVector;
+	JausByte presenceVector;
 	JausTime time;
 	JausDouble rangeMeters;				// Scaled Int (-10,000, 10,000)
 	JausDouble rangeErrorMeters;		// Scaled UInt (0, 1000)

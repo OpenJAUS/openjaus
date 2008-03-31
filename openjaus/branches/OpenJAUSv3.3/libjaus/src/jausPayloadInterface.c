@@ -542,7 +542,7 @@ JausBoolean jausSetCommandInterfaceHmiRecommendation(JausPayloadInterface payloa
 	if( (commandInterface = jausCommandInterfaceRetrieve(payloadInterface, identifier) ) )
 	{
 		commandInterface->hmiRecommendation = hmiRecommendation;
-		jausBytePresenceVectorSetBit(&payloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_RECOMMENDATION_BIT);//update PV
+		jausByteSetBit(&payloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_RECOMMENDATION_BIT);//update PV
 		return JAUS_TRUE;
 	}
 	else
@@ -580,10 +580,10 @@ JausBoolean jausSetCommandInterfaceHmiParameters(JausPayloadInterface payloadInt
 		commandInterface->hmiRecommendedPositionWidthPixels = widthPixels;
 		commandInterface->hmiRecommendedPositionHeightPixels = heightPixels;
 		//update PV
-		jausBytePresenceVectorSetBit(&payloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_XPOS_BIT);
-		jausBytePresenceVectorSetBit(&payloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_YPOS_BIT);
-		jausBytePresenceVectorSetBit(&payloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_WIDTH_BIT);
-		jausBytePresenceVectorSetBit(&payloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_HEIGHT_BIT);
+		jausByteSetBit(&payloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_XPOS_BIT);
+		jausByteSetBit(&payloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_YPOS_BIT);
+		jausByteSetBit(&payloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_WIDTH_BIT);
+		jausByteSetBit(&payloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_HEIGHT_BIT);
 		return JAUS_TRUE;
 	}
 	else
@@ -861,7 +861,7 @@ JausBoolean jausSetInformationInterfaceHmiRecommendation(JausPayloadInterface pa
 	if( (informationInterface = jausInformationInterfaceRetrieve(payloadInterface, identifier) ) )
 	{
 		informationInterface->hmiRecommendation = hmiRecommendation;
-		jausBytePresenceVectorSetBit(&payloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_RECOMMENDATION_BIT);//update PV
+		jausByteSetBit(&payloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_RECOMMENDATION_BIT);//update PV
 		return JAUS_TRUE;
 	}
 	else
@@ -899,10 +899,10 @@ JausBoolean jausSetInformationInterfaceHmiParameters(JausPayloadInterface payloa
 		informationInterface->hmiRecommendedPositionWidthPixels = widthPixels;
 		informationInterface->hmiRecommendedPositionHeightPixels = heightPixels;
 		//update PV
-		jausBytePresenceVectorSetBit(&payloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_XPOS_BIT);
-		jausBytePresenceVectorSetBit(&payloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_YPOS_BIT);
-		jausBytePresenceVectorSetBit(&payloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_WIDTH_BIT);
-		jausBytePresenceVectorSetBit(&payloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_HEIGHT_BIT);
+		jausByteSetBit(&payloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_XPOS_BIT);
+		jausByteSetBit(&payloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_YPOS_BIT);
+		jausByteSetBit(&payloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_WIDTH_BIT);
+		jausByteSetBit(&payloadInterface->presenceVector, JAUS_PAYLOAD_INTERFACE_PV_HMI_HEIGHT_BIT);
 		return JAUS_TRUE;
 	}
 	else

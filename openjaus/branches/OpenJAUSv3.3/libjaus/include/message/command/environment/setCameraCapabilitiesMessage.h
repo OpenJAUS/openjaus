@@ -125,7 +125,7 @@ typedef struct
 	JausUnsignedShort sequenceNumber;
 
 	// MESSAGE DATA MEMBERS GO HERE
-	JausShortPresenceVector presenceVector;
+	JausUnsignedShort presenceVector;
 	JausByte cameraID;
 	JausDouble horizontalFovRadians;		// Scaled UShort (0, JAUS_PI) 
 	JausDouble verticalFovRadians;			// Scaled UShort (0, JAUS_PI) 

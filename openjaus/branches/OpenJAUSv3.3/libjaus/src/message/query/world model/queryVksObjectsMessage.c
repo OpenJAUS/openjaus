@@ -65,8 +65,8 @@ static void dataInitialize(QueryVksObjectsMessage message)
 {
 	message->properties.expFlag = JAUS_EXPERIMENTAL_MESSAGE;
 	// Set initial values of message fields
-	message->presenceVector = newJausBytePresenceVector();
-	message->responsePresenceVector = newJausBytePresenceVector();
+	message->presenceVector = newJausByte(JAUS_BYTE_PRESENCE_VECTOR_ALL_ON);
+	message->responsePresenceVector = newJausByte(JAUS_BYTE_PRESENCE_VECTOR_ALL_ON);
 	message->requestId = newJausByte(0);
 	message->objectCount = newJausUnsignedShort(0);
 	message->objectIds = NULL;
@@ -98,19 +98,19 @@ static JausBoolean dataFromBuffer(QueryVksObjectsMessage message, unsigned char 
 	{
 		// Unpack Message Fields from Buffer
 		// Presence Vector
-		if(!jausBytePresenceVectorFromBuffer(&message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_BYTE_PRESENCE_VECTOR_SIZE_BYTES;
+		if(!jausByteFromBuffer(&message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		index += JAUS_BYTE_SIZE_BYTES;
 	
 		// Response Presence Vector
-		if(!jausBytePresenceVectorFromBuffer(&message->responsePresenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_BYTE_PRESENCE_VECTOR_SIZE_BYTES;
+		if(!jausByteFromBuffer(&message->responsePresenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		index += JAUS_BYTE_SIZE_BYTES;
 	
 		// Request Id
 		if(!jausByteFromBuffer(&message->requestId, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
 		
 		// Test if objectCount is specified
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_ID_BIT))
+		if(jausByteIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_ID_BIT))
 		{
 			// Request Id
 			if(!jausUnsignedShortFromBuffer(&message->objectCount, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -136,14 +136,14 @@ static JausBoolean dataFromBuffer(QueryVksObjectsMessage message, unsigned char 
 		if(!message->queryRegion) return JAUS_FALSE;
 					
 		// Test if a queryRegion is specified
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_REGION_BIT))
+		if(jausByteIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_REGION_BIT))
 		{
 			// Unpack Region Type
 			if(!jausByteFromBuffer(&message->queryRegion->type, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 			index += JAUS_BYTE_SIZE_BYTES;
 			
 			// Buffer is optional
-			if(jausBytePresenceVectorIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_REGION_BIT))
+			if(jausByteIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_REGION_BIT))
 			{
 				// Unpack Buffer
 				if(!jausFloatFromBuffer(&message->queryRegion->bufferMeters, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -152,7 +152,7 @@ static JausBoolean dataFromBuffer(QueryVksObjectsMessage message, unsigned char 
 		}
 	
 		// Test if Feature Class provided
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_FC_COUNT_BIT))
+		if(jausByteIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_FC_COUNT_BIT))
 		{
 			// FC Count
 			if(!jausByteFromBuffer(&featureClassCount, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -165,14 +165,14 @@ static JausBoolean dataFromBuffer(QueryVksObjectsMessage message, unsigned char 
 				if(!fcClass) return JAUS_FALSE;
 	
 				// This should ALWAYS be true, because VKS_PV_QUERY_OBJECTS_FC_COUNT_BIT is set
-				if(jausBytePresenceVectorIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_FEATURE_CLASS_BIT))
+				if(jausByteIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_FEATURE_CLASS_BIT))
 				{
 					// Unpack FC Id
 					if(!jausUnsignedShortFromBuffer(&fcClass->id, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 					index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
 				}
 					
-				if(jausBytePresenceVectorIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_ATTRIBUTE_BIT))
+				if(jausByteIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_ATTRIBUTE_BIT))
 				{
 					//Destroy the Attribute created by featureClassCreate
 					featureClassAttributeDestroy(fcClass->attribute);
@@ -190,7 +190,7 @@ static JausBoolean dataFromBuffer(QueryVksObjectsMessage message, unsigned char 
 		
 		// Test if region points specified
 		// This should be true if the VKS_PV_QUERY_OBJECTS_REGION_BIT is set
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_POINT_COUNT_BIT))
+		if(jausByteIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_POINT_COUNT_BIT))
 		{
 			// Unpack Point Count
 			if(!jausUnsignedShortFromBuffer(&dataPointCount, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -241,43 +241,43 @@ static int dataToBuffer(QueryVksObjectsMessage message, unsigned char *buffer, u
 		// Ensure the PV rules are met
 		// If the VKS_PV_QUERY_OBJECTS_REGION_BIT is set, then the VKS_PV_QUERY_OBJECTS_POINT_COUNT_BIT is required
 		// The VKS_PV_QUERY_OBJECTS_BUFFER_BIT cannot be set without the VKS_PV_QUERY_OBJECTS_REGION_BIT
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_REGION_BIT))
+		if(jausByteIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_REGION_BIT))
 		{
-			jausBytePresenceVectorSetBit(&message->presenceVector, VKS_PV_QUERY_OBJECTS_POINT_COUNT_BIT);
+			jausByteSetBit(&message->presenceVector, VKS_PV_QUERY_OBJECTS_POINT_COUNT_BIT);
 		}
 		else
 		{
-			jausBytePresenceVectorClearBit(&message->presenceVector, VKS_PV_QUERY_OBJECTS_POINT_COUNT_BIT);
-			jausBytePresenceVectorClearBit(&message->presenceVector, VKS_PV_QUERY_OBJECTS_BUFFER_BIT);
+			jausByteClearBit(&message->presenceVector, VKS_PV_QUERY_OBJECTS_POINT_COUNT_BIT);
+			jausByteClearBit(&message->presenceVector, VKS_PV_QUERY_OBJECTS_BUFFER_BIT);
 		}
 
 		// If the VKS_PV_QUERY_OBJECTS_FEATURE_CLASS_BIT is set or the VKS_PV_QUERY_OBJECTS_ATTRIBUTE_BIT is set, 
 		// then the VKS_PV_QUERY_OBJECTS_FC_COUNT_BIT is required
-		if(	jausBytePresenceVectorIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_ATTRIBUTE_BIT) ||
-			jausBytePresenceVectorIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_FEATURE_CLASS_BIT))
+		if(	jausByteIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_ATTRIBUTE_BIT) ||
+			jausByteIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_FEATURE_CLASS_BIT))
 		{
-			jausBytePresenceVectorSetBit(&message->presenceVector, VKS_PV_QUERY_OBJECTS_FC_COUNT_BIT);
+			jausByteSetBit(&message->presenceVector, VKS_PV_QUERY_OBJECTS_FC_COUNT_BIT);
 		}
 		else
 		{
-			jausBytePresenceVectorClearBit(&message->presenceVector, VKS_PV_QUERY_OBJECTS_FC_COUNT_BIT);
+			jausByteClearBit(&message->presenceVector, VKS_PV_QUERY_OBJECTS_FC_COUNT_BIT);
 		}
 
 		// Pack Message Fields to Buffer
 		// Presence Vector
-		if(!jausBytePresenceVectorToBuffer(message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_BYTE_PRESENCE_VECTOR_SIZE_BYTES;
+		if(!jausByteToBuffer(message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		index += JAUS_BYTE_SIZE_BYTES;
 	
 		// Response Presence Vector
-		if(!jausBytePresenceVectorToBuffer(message->responsePresenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_BYTE_PRESENCE_VECTOR_SIZE_BYTES;
+		if(!jausByteToBuffer(message->responsePresenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		index += JAUS_BYTE_SIZE_BYTES;
 	
 		// Request Id
 		if(!jausByteToBuffer(message->requestId, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
 
 		// objectCount is optional
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_ID_BIT))
+		if(jausByteIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_ID_BIT))
 		{
 			// Object Count
 			if(!jausUnsignedShortToBuffer(message->objectCount, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -292,14 +292,14 @@ static int dataToBuffer(QueryVksObjectsMessage message, unsigned char *buffer, u
 		}
 
 		// Region is Optional
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_REGION_BIT))
+		if(jausByteIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_REGION_BIT))
 		{
 			// Region Type
 			if(!jausByteToBuffer(message->queryRegion->type, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 			index += JAUS_BYTE_SIZE_BYTES;
 			
 			// Buffer is Optional
-			if(jausBytePresenceVectorIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_REGION_BIT))
+			if(jausByteIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_REGION_BIT))
 			{
 				// Buffer
 				if(!jausFloatToBuffer(message->queryRegion->bufferMeters, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -308,14 +308,14 @@ static int dataToBuffer(QueryVksObjectsMessage message, unsigned char *buffer, u
 		}
 		
 		// Feature Class Information is optional
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_FC_COUNT_BIT))
+		if(jausByteIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_FC_COUNT_BIT))
 		{
 			// Feature Class Count
 			if(!jausByteToBuffer((JausByte)message->queryRegion->featureClasses->elementCount, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 			index += JAUS_BYTE_SIZE_BYTES;
 		}			
 		
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_FEATURE_CLASS_BIT))
+		if(jausByteIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_FEATURE_CLASS_BIT))
 		{
 			for(i = 0; i < message->queryRegion->featureClasses->elementCount; i++)
 			{
@@ -326,14 +326,14 @@ static int dataToBuffer(QueryVksObjectsMessage message, unsigned char *buffer, u
 				index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
 				
 				// Attribute is Optional
-				if(jausBytePresenceVectorIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_ATTRIBUTE_BIT))
+				if(jausByteIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_ATTRIBUTE_BIT))
 				{
 					if(!featureClassAttributeToBuffer(fcClass->attribute, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 					index += featureClassAttributeSizeBytes(fcClass->attribute);
 				}
 			}
 		}
-		else if(jausBytePresenceVectorIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_ATTRIBUTE_BIT))
+		else if(jausByteIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_ATTRIBUTE_BIT))
 		{
 			for(i = 0; i < message->queryRegion->featureClasses->elementCount; i++)
 			{
@@ -345,7 +345,7 @@ static int dataToBuffer(QueryVksObjectsMessage message, unsigned char *buffer, u
 		}
 		
 		// Region is optional, if VKS_PV_QUERY_OBJECTS_REGION_BIT set, points required
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_POINT_COUNT_BIT))
+		if(jausByteIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_POINT_COUNT_BIT))
 		{
 			// Point Count
 			if(!jausUnsignedShortToBuffer((JausUnsignedShort)message->queryRegion->dataPoints->elementCount, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -385,40 +385,40 @@ static int dataSize(QueryVksObjectsMessage message)
 	// Ensure the PV rules are met
 	// If the VKS_PV_QUERY_OBJECTS_REGION_BIT is set, then the VKS_PV_QUERY_OBJECTS_POINT_COUNT_BIT is required
 	// The VKS_PV_QUERY_OBJECTS_BUFFER_BIT cannot be set without the VKS_PV_QUERY_OBJECTS_REGION_BIT
-	if(jausBytePresenceVectorIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_REGION_BIT))
+	if(jausByteIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_REGION_BIT))
 	{
-		jausBytePresenceVectorSetBit(&message->presenceVector, VKS_PV_QUERY_OBJECTS_POINT_COUNT_BIT);
+		jausByteSetBit(&message->presenceVector, VKS_PV_QUERY_OBJECTS_POINT_COUNT_BIT);
 	}
 	else
 	{
-		jausBytePresenceVectorClearBit(&message->presenceVector, VKS_PV_QUERY_OBJECTS_POINT_COUNT_BIT);
-		jausBytePresenceVectorClearBit(&message->presenceVector, VKS_PV_QUERY_OBJECTS_BUFFER_BIT);
+		jausByteClearBit(&message->presenceVector, VKS_PV_QUERY_OBJECTS_POINT_COUNT_BIT);
+		jausByteClearBit(&message->presenceVector, VKS_PV_QUERY_OBJECTS_BUFFER_BIT);
 	}
 
 	// If the VKS_PV_QUERY_OBJECTS_FEATURE_CLASS_BIT is set or the VKS_PV_QUERY_OBJECTS_ATTRIBUTE_BIT is set, 
 	// then the VKS_PV_QUERY_OBJECTS_FC_COUNT_BIT is required
-	if(	jausBytePresenceVectorIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_ATTRIBUTE_BIT) ||
-		jausBytePresenceVectorIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_FEATURE_CLASS_BIT))
+	if(	jausByteIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_ATTRIBUTE_BIT) ||
+		jausByteIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_FEATURE_CLASS_BIT))
 	{
-		jausBytePresenceVectorSetBit(&message->presenceVector, VKS_PV_QUERY_OBJECTS_FC_COUNT_BIT);
+		jausByteSetBit(&message->presenceVector, VKS_PV_QUERY_OBJECTS_FC_COUNT_BIT);
 	}
 	else
 	{
-		jausBytePresenceVectorClearBit(&message->presenceVector, VKS_PV_QUERY_OBJECTS_FC_COUNT_BIT);
+		jausByteClearBit(&message->presenceVector, VKS_PV_QUERY_OBJECTS_FC_COUNT_BIT);
 	}
 
 	// Pack Message Fields to Buffer
 	// Presence Vector
-	index += JAUS_BYTE_PRESENCE_VECTOR_SIZE_BYTES;
+	index += JAUS_BYTE_SIZE_BYTES;
 
 	// Response Presence Vector
-	index += JAUS_BYTE_PRESENCE_VECTOR_SIZE_BYTES;
+	index += JAUS_BYTE_SIZE_BYTES;
 
 	// Request Id
 	index += JAUS_BYTE_SIZE_BYTES;
 
 	// objectCount is optional
-	if(jausBytePresenceVectorIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_ID_BIT))
+	if(jausByteIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_ID_BIT))
 	{
 		// Object Count
 		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
@@ -431,13 +431,13 @@ static int dataSize(QueryVksObjectsMessage message)
 	}
 
 	// Region is Optional
-	if(jausBytePresenceVectorIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_REGION_BIT))
+	if(jausByteIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_REGION_BIT))
 	{
 		// Region Type
 		index += JAUS_BYTE_SIZE_BYTES;
 		
 		// Buffer is Optional
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_REGION_BIT))
+		if(jausByteIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_REGION_BIT))
 		{
 			// Buffer
 			index += JAUS_FLOAT_SIZE_BYTES;
@@ -445,13 +445,13 @@ static int dataSize(QueryVksObjectsMessage message)
 	}
 	
 	// Feature Class Information is optional
-	if(jausBytePresenceVectorIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_FC_COUNT_BIT))
+	if(jausByteIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_FC_COUNT_BIT))
 	{
 		// Feature Class Count
 		index += JAUS_BYTE_SIZE_BYTES;
 	}			
 	
-	if(jausBytePresenceVectorIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_FEATURE_CLASS_BIT))
+	if(jausByteIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_FEATURE_CLASS_BIT))
 	{
 		for(i = 0; i < message->queryRegion->featureClasses->elementCount; i++)
 		{
@@ -461,13 +461,13 @@ static int dataSize(QueryVksObjectsMessage message)
 			index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
 			
 			// Attribute is Optional
-			if(jausBytePresenceVectorIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_ATTRIBUTE_BIT))
+			if(jausByteIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_ATTRIBUTE_BIT))
 			{
 				index += featureClassAttributeSizeBytes(fcClass->attribute);
 			}
 		}
 	}
-	else if(jausBytePresenceVectorIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_ATTRIBUTE_BIT))
+	else if(jausByteIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_ATTRIBUTE_BIT))
 	{
 		for(i = 0; i < message->queryRegion->featureClasses->elementCount; i++)
 		{
@@ -477,7 +477,7 @@ static int dataSize(QueryVksObjectsMessage message)
 	}
 	
 	// Region is optional, if VKS_PV_QUERY_OBJECTS_REGION_BIT set, points required
-	if(jausBytePresenceVectorIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_POINT_COUNT_BIT))
+	if(jausByteIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_POINT_COUNT_BIT))
 	{
 		// Point Count
 		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;

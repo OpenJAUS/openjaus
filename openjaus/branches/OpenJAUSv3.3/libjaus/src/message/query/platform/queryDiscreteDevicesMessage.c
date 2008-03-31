@@ -65,7 +65,7 @@ static void dataInitialize(QueryDiscreteDevicesMessage message);
 static void dataInitialize(QueryDiscreteDevicesMessage message)
 {
 	// Set initial values of message fields
-	message->presenceVector = newJausBytePresenceVector();
+	message->presenceVector = newJausByte(JAUS_BYTE_PRESENCE_VECTOR_ALL_ON);
 }
 
 // Return boolean of success
@@ -76,8 +76,8 @@ static JausBoolean dataFromBuffer(QueryDiscreteDevicesMessage message, unsigned 
 	if(bufferSizeBytes == message->dataSize)
 	{
 		// Unpack Message Fields from Buffer
-		if(!jausBytePresenceVectorFromBuffer(&message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_BYTE_PRESENCE_VECTOR_SIZE_BYTES;
+		if(!jausByteFromBuffer(&message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		index += JAUS_BYTE_SIZE_BYTES;
 		
 		return JAUS_TRUE;
 	}
@@ -95,8 +95,8 @@ static int dataToBuffer(QueryDiscreteDevicesMessage message, unsigned char *buff
 	if(bufferSizeBytes >= message->dataSize)
 	{
 		// Pack Message Fields to Buffer
-		if(!jausBytePresenceVectorToBuffer(message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_BYTE_PRESENCE_VECTOR_SIZE_BYTES;
+		if(!jausByteToBuffer(message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		index += JAUS_BYTE_SIZE_BYTES;
 	}
 
 	return index;

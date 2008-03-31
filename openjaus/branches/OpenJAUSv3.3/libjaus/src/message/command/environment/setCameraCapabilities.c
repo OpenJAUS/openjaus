@@ -64,7 +64,7 @@ static void dataDestroy(SetCameraCapabilitiesMessage message);
 static void dataInitialize(SetCameraCapabilitiesMessage message)
 {
 	// Set initial values of message fields
-	message->presenceVector = newJausShortPresenceVector();
+	message->presenceVector = newJausUnsignedShort(JAUS_SHORT_PRESENCE_VECTOR_ALL_ON);
 	message->cameraID = newJausByte(0);
 	message->horizontalFovRadians = newJausDouble(0);	// Scaled UShort (0, JAUS_PI) 
 	message->verticalFovRadians = newJausDouble(0);		// Scaled UShort (0, JAUS_PI) 
@@ -118,15 +118,15 @@ static JausBoolean dataFromBuffer(SetCameraCapabilitiesMessage message, unsigned
 		// Unpack Message Fields from Buffer
 		
 		// Presence Vector
-		if(!jausShortPresenceVectorFromBuffer(&message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_SHORT_PRESENCE_VECTOR_SIZE_BYTES;
+		if(!jausUnsignedShortFromBuffer(&message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
 	
 		// CameraID
 		if(!jausByteFromBuffer(&message->cameraID, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
 
 		// Horizontal FOV
-		if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_SET_CAMERA_CAPABILITIES_PV_HORIZONTAL_FOV_BIT))
+		if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_SET_CAMERA_CAPABILITIES_PV_HORIZONTAL_FOV_BIT))
 		{
 			//unpack
 			if(!jausUnsignedShortFromBuffer(&tempUShort, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -137,7 +137,7 @@ static JausBoolean dataFromBuffer(SetCameraCapabilitiesMessage message, unsigned
 		}
 	
 		// Vertical FOV
-		if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_SET_CAMERA_CAPABILITIES_PV_VERTICAL_FOV_BIT))
+		if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_SET_CAMERA_CAPABILITIES_PV_VERTICAL_FOV_BIT))
 		{
 			//unpack
 			if(!jausUnsignedShortFromBuffer(&tempUShort, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -148,7 +148,7 @@ static JausBoolean dataFromBuffer(SetCameraCapabilitiesMessage message, unsigned
 		}
 
 		// Horizontal Resolution
-		if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_SET_CAMERA_CAPABILITIES_PV_HORIZONTAL_RESOLUTION_BIT))
+		if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_SET_CAMERA_CAPABILITIES_PV_HORIZONTAL_RESOLUTION_BIT))
 		{
 			//unpack
 			if(!jausUnsignedShortFromBuffer(&message->horizontalResolution, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -156,7 +156,7 @@ static JausBoolean dataFromBuffer(SetCameraCapabilitiesMessage message, unsigned
 		}
 
 		// Vertical Resolution
-		if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_SET_CAMERA_CAPABILITIES_PV_VERTICAL_RESOLUTION_BIT))
+		if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_SET_CAMERA_CAPABILITIES_PV_VERTICAL_RESOLUTION_BIT))
 		{
 			//unpack
 			if(!jausUnsignedShortFromBuffer(&message->verticalResolution, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -164,7 +164,7 @@ static JausBoolean dataFromBuffer(SetCameraCapabilitiesMessage message, unsigned
 		}
 
 		// Focus 
-		if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_SET_CAMERA_CAPABILITIES_PV_FOCUS_BIT))
+		if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_SET_CAMERA_CAPABILITIES_PV_FOCUS_BIT))
 		{
 			//unpack
 			if(!jausByteFromBuffer(&tempByte, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -175,7 +175,7 @@ static JausBoolean dataFromBuffer(SetCameraCapabilitiesMessage message, unsigned
 		}
 		
 		// Iris
-		if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_SET_CAMERA_CAPABILITIES_PV_IRIS_BIT))
+		if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_SET_CAMERA_CAPABILITIES_PV_IRIS_BIT))
 		{
 			//unpack
 			if(!jausByteFromBuffer(&tempByte, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -186,7 +186,7 @@ static JausBoolean dataFromBuffer(SetCameraCapabilitiesMessage message, unsigned
 		}
 
 		// Gain
-		if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_SET_CAMERA_CAPABILITIES_PV_GAIN_BIT))
+		if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_SET_CAMERA_CAPABILITIES_PV_GAIN_BIT))
 		{
 			//unpack
 			if(!jausByteFromBuffer(&tempByte, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -197,7 +197,7 @@ static JausBoolean dataFromBuffer(SetCameraCapabilitiesMessage message, unsigned
 		}
 
 		// Frame Rate
-		if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_SET_CAMERA_CAPABILITIES_PV_FRAME_RATE_BIT))
+		if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_SET_CAMERA_CAPABILITIES_PV_FRAME_RATE_BIT))
 		{
 			//unpack
 			if(!jausUnsignedShortFromBuffer(&message->frameRate, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -205,7 +205,7 @@ static JausBoolean dataFromBuffer(SetCameraCapabilitiesMessage message, unsigned
 		}
 
 		// Shutter Speed
-		if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_SET_CAMERA_CAPABILITIES_PV_FRAME_RATE_BIT))
+		if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_SET_CAMERA_CAPABILITIES_PV_FRAME_RATE_BIT))
 		{
 			//unpack
 			if(!jausUnsignedShortFromBuffer(&message->shutterSpeed, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -213,7 +213,7 @@ static JausBoolean dataFromBuffer(SetCameraCapabilitiesMessage message, unsigned
 		}
 
 		// Image Control
-		if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_SET_CAMERA_CAPABILITIES_PV_FRAME_RATE_BIT))
+		if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_SET_CAMERA_CAPABILITIES_PV_FRAME_RATE_BIT))
 		{
 			//unpack
 			if(!jausUnsignedShortFromBuffer(&imageControl, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -232,7 +232,7 @@ static JausBoolean dataFromBuffer(SetCameraCapabilitiesMessage message, unsigned
 		}
 
 		// Audio Control
-		if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_SET_CAMERA_CAPABILITIES_PV_FRAME_RATE_BIT))
+		if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_SET_CAMERA_CAPABILITIES_PV_FRAME_RATE_BIT))
 		{
 			//unpack
 			if(!jausUnsignedShortFromBuffer(&audioControl, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -270,15 +270,15 @@ static int dataToBuffer(SetCameraCapabilitiesMessage message, unsigned char *buf
 		// Pack Message Fields to Buffer
 		
 		// Presence Vector
-		if(!jausShortPresenceVectorToBuffer(message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_SHORT_PRESENCE_VECTOR_SIZE_BYTES;
+		if(!jausUnsignedShortToBuffer(message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
 	
 		// CameraID
 		if(!jausByteToBuffer(message->cameraID, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
 
 		// Horizontal FOV
-		if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_SET_CAMERA_CAPABILITIES_PV_HORIZONTAL_FOV_BIT))
+		if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_SET_CAMERA_CAPABILITIES_PV_HORIZONTAL_FOV_BIT))
 		{
 			// Scaled UShort (0, JAUS_PI)
 			tempUShort = jausUnsignedShortFromDouble(message->horizontalFovRadians, 0, JAUS_PI);
@@ -289,7 +289,7 @@ static int dataToBuffer(SetCameraCapabilitiesMessage message, unsigned char *buf
 		}
 	
 		// Vertical FOV
-		if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_SET_CAMERA_CAPABILITIES_PV_VERTICAL_FOV_BIT))
+		if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_SET_CAMERA_CAPABILITIES_PV_VERTICAL_FOV_BIT))
 		{
 			// Scaled UShort (0, JAUS_PI)
 			tempUShort = jausUnsignedShortFromDouble(message->verticalFovRadians, 0, JAUS_PI);
@@ -300,7 +300,7 @@ static int dataToBuffer(SetCameraCapabilitiesMessage message, unsigned char *buf
 		}
 
 		// Horizontal Resolution
-		if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_SET_CAMERA_CAPABILITIES_PV_HORIZONTAL_RESOLUTION_BIT))
+		if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_SET_CAMERA_CAPABILITIES_PV_HORIZONTAL_RESOLUTION_BIT))
 		{
 			//pack
 			if(!jausUnsignedShortToBuffer(message->horizontalResolution, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -308,7 +308,7 @@ static int dataToBuffer(SetCameraCapabilitiesMessage message, unsigned char *buf
 		}
 
 		// Vertical Resolution
-		if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_SET_CAMERA_CAPABILITIES_PV_VERTICAL_RESOLUTION_BIT))
+		if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_SET_CAMERA_CAPABILITIES_PV_VERTICAL_RESOLUTION_BIT))
 		{
 			//pack
 			if(!jausUnsignedShortToBuffer(message->verticalResolution, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -316,7 +316,7 @@ static int dataToBuffer(SetCameraCapabilitiesMessage message, unsigned char *buf
 		}
 
 		// Focus 
-		if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_SET_CAMERA_CAPABILITIES_PV_FOCUS_BIT))
+		if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_SET_CAMERA_CAPABILITIES_PV_FOCUS_BIT))
 		{
 			// Scaled Byte (0, 100)
 			tempByte = jausByteFromDouble(message->focusPercent, 0, 100);
@@ -327,7 +327,7 @@ static int dataToBuffer(SetCameraCapabilitiesMessage message, unsigned char *buf
 		}
 		
 		// Iris
-		if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_SET_CAMERA_CAPABILITIES_PV_IRIS_BIT))
+		if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_SET_CAMERA_CAPABILITIES_PV_IRIS_BIT))
 		{
 			// Scaled Byte (0, 100)
 			tempByte = jausByteFromDouble(message->irisPercent, 0, 100);
@@ -338,7 +338,7 @@ static int dataToBuffer(SetCameraCapabilitiesMessage message, unsigned char *buf
 		}
 
 		// Gain
-		if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_SET_CAMERA_CAPABILITIES_PV_GAIN_BIT))
+		if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_SET_CAMERA_CAPABILITIES_PV_GAIN_BIT))
 		{
 			// Scaled Byte (0, 100)
 			tempByte = jausByteFromDouble(message->gainPercent, 0, 100);
@@ -349,7 +349,7 @@ static int dataToBuffer(SetCameraCapabilitiesMessage message, unsigned char *buf
 		}
 
 		// Frame Rate
-		if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_SET_CAMERA_CAPABILITIES_PV_FRAME_RATE_BIT))
+		if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_SET_CAMERA_CAPABILITIES_PV_FRAME_RATE_BIT))
 		{
 			//pack
 			if(!jausUnsignedShortToBuffer(message->frameRate, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -357,7 +357,7 @@ static int dataToBuffer(SetCameraCapabilitiesMessage message, unsigned char *buf
 		}
 
 		// Shutter Speed
-		if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_SET_CAMERA_CAPABILITIES_PV_FRAME_RATE_BIT))
+		if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_SET_CAMERA_CAPABILITIES_PV_FRAME_RATE_BIT))
 		{
 			//pack
 			if(!jausUnsignedShortToBuffer(message->shutterSpeed, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -365,7 +365,7 @@ static int dataToBuffer(SetCameraCapabilitiesMessage message, unsigned char *buf
 		}
 
 		// Image Control
-		if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_SET_CAMERA_CAPABILITIES_PV_FRAME_RATE_BIT))
+		if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_SET_CAMERA_CAPABILITIES_PV_FRAME_RATE_BIT))
 		{
 			// Clear the imageControl field
 			imageControl = 0;
@@ -387,7 +387,7 @@ static int dataToBuffer(SetCameraCapabilitiesMessage message, unsigned char *buf
 		}
 
 		// Audio Control
-		if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_SET_CAMERA_CAPABILITIES_PV_FRAME_RATE_BIT))
+		if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_SET_CAMERA_CAPABILITIES_PV_FRAME_RATE_BIT))
 		{
 			// Clear the imageControl field
 			audioControl = 0;
@@ -416,73 +416,73 @@ static int dataSize(SetCameraCapabilitiesMessage message)
 	int index = 0;
 
 	// Presence Vector
-	index += JAUS_SHORT_PRESENCE_VECTOR_SIZE_BYTES;
+	index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
 
 	// CameraID
 	index += JAUS_BYTE_SIZE_BYTES;
 
 	// Horizontal FOV
-	if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_SET_CAMERA_CAPABILITIES_PV_HORIZONTAL_FOV_BIT))
+	if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_SET_CAMERA_CAPABILITIES_PV_HORIZONTAL_FOV_BIT))
 	{
 		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
 	}
 
 	// Vertical FOV
-	if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_SET_CAMERA_CAPABILITIES_PV_VERTICAL_FOV_BIT))
+	if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_SET_CAMERA_CAPABILITIES_PV_VERTICAL_FOV_BIT))
 	{
 		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
 	}
 
 	// Horizontal Resolution
-	if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_SET_CAMERA_CAPABILITIES_PV_HORIZONTAL_RESOLUTION_BIT))
+	if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_SET_CAMERA_CAPABILITIES_PV_HORIZONTAL_RESOLUTION_BIT))
 	{
 		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
 	}
 
 	// Vertical Resolution
-	if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_SET_CAMERA_CAPABILITIES_PV_VERTICAL_RESOLUTION_BIT))
+	if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_SET_CAMERA_CAPABILITIES_PV_VERTICAL_RESOLUTION_BIT))
 	{
 		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
 	}
 
 	// Focus 
-	if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_SET_CAMERA_CAPABILITIES_PV_FOCUS_BIT))
+	if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_SET_CAMERA_CAPABILITIES_PV_FOCUS_BIT))
 	{
 		index += JAUS_BYTE_SIZE_BYTES;
 	}
 	
 	// Iris
-	if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_SET_CAMERA_CAPABILITIES_PV_IRIS_BIT))
+	if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_SET_CAMERA_CAPABILITIES_PV_IRIS_BIT))
 	{
 		index += JAUS_BYTE_SIZE_BYTES;
 	}
 
 	// Gain
-	if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_SET_CAMERA_CAPABILITIES_PV_GAIN_BIT))
+	if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_SET_CAMERA_CAPABILITIES_PV_GAIN_BIT))
 	{
 		index += JAUS_BYTE_SIZE_BYTES;
 	}
 
 	// Frame Rate
-	if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_SET_CAMERA_CAPABILITIES_PV_FRAME_RATE_BIT))
+	if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_SET_CAMERA_CAPABILITIES_PV_FRAME_RATE_BIT))
 	{
 		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
 	}
 
 	// Shutter Speed
-	if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_SET_CAMERA_CAPABILITIES_PV_FRAME_RATE_BIT))
+	if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_SET_CAMERA_CAPABILITIES_PV_FRAME_RATE_BIT))
 	{
 		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
 	}
 
 	// Image Control
-	if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_SET_CAMERA_CAPABILITIES_PV_FRAME_RATE_BIT))
+	if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_SET_CAMERA_CAPABILITIES_PV_FRAME_RATE_BIT))
 	{
 		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
 	}
 
 	// Audio Control
-	if(jausShortPresenceVectorIsBitSet(message->presenceVector, JAUS_SET_CAMERA_CAPABILITIES_PV_FRAME_RATE_BIT))
+	if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_SET_CAMERA_CAPABILITIES_PV_FRAME_RATE_BIT))
 	{
 		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
 	}

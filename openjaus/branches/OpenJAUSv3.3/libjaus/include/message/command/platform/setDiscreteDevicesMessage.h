@@ -110,7 +110,7 @@ typedef struct
 	
 	JausUnsignedShort sequenceNumber;
 
-	JausBytePresenceVector presenceVector;
+	JausByte presenceVector;
 	JausByte gear;
 	JausByte transferCase;
 	

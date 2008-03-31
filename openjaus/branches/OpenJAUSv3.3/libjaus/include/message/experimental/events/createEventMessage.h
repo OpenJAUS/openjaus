@@ -124,7 +124,7 @@ typedef struct
 	JausUnsignedShort sequenceNumber;
 
 	// MESSAGE DATA MEMBERS GO HERE
-	JausBytePresenceVector presenceVector;	// 1: Presence Vector
+	JausByte presenceVector;	// 1: Presence Vector
 	JausUnsignedShort messageCode;			// 2: Command Code of the resulting query
 	JausByte eventType;						// 3: Enumeration of Event types
 	JausByte eventBoundary;					// 4: Enumeration of Event Boundary Conditions

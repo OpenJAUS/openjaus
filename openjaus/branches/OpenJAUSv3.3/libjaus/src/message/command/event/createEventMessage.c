@@ -67,7 +67,7 @@ static void dataInitialize(CreateEventMessage message)
 {
 	message->properties.expFlag = JAUS_EXPERIMENTAL_MESSAGE;
 	// Set initial values of message fields
-	message->presenceVector = newJausBytePresenceVector();	// 1: Presence Vector
+	message->presenceVector = newJausByte(JAUS_BYTE_PRESENCE_VECTOR_ALL_ON);	// 1: Presence Vector
 	message->messageCode = newJausUnsignedShort(0);			// 2: Command Code of the resulting query
 	message->eventType = newJausByte(0);					// 3: Enumeration of Event types
 	message->eventBoundary = newJausByte(0);				// 4: Enumeration of Event Boundary Conditions
@@ -101,8 +101,8 @@ static JausBoolean dataFromBuffer(CreateEventMessage message, unsigned char *buf
 	{
 		// Unpack Message Fields from Buffer
 		// Presence Vector
-		if(!jausBytePresenceVectorFromBuffer(&message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_BYTE_PRESENCE_VECTOR_SIZE_BYTES;
+		if(!jausByteFromBuffer(&message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		index += JAUS_BYTE_SIZE_BYTES;
 
 		// Message Code
 		if(!jausUnsignedShortFromBuffer(&message->messageCode, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -112,28 +112,28 @@ static JausBoolean dataFromBuffer(CreateEventMessage message, unsigned char *buf
 		if(!jausByteFromBuffer(&message->eventType, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
 		
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, CREATE_EVENT_PV_BOUNDARY_BIT))
+		if(jausByteIsBitSet(message->presenceVector, CREATE_EVENT_PV_BOUNDARY_BIT))
 		{
 			// Event Boundary
 			if(!jausByteFromBuffer(&message->eventBoundary, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 			index += JAUS_BYTE_SIZE_BYTES;
 		}
 
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, CREATE_EVENT_PV_DATA_TYPE_BIT))
+		if(jausByteIsBitSet(message->presenceVector, CREATE_EVENT_PV_DATA_TYPE_BIT))
 		{
 			// Data Type
 			if(!jausByteFromBuffer(&message->limitDataType, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 			index += JAUS_BYTE_SIZE_BYTES;
 		}
 		
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, CREATE_EVENT_PV_DATA_FIELD_BIT))
+		if(jausByteIsBitSet(message->presenceVector, CREATE_EVENT_PV_DATA_FIELD_BIT))
 		{
 			// Data Field
 			if(!jausByteFromBuffer(&message->limitDataField, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 			index += JAUS_BYTE_SIZE_BYTES;
 		}
 		
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, CREATE_EVENT_PV_LOWER_LIMIT_BIT))
+		if(jausByteIsBitSet(message->presenceVector, CREATE_EVENT_PV_LOWER_LIMIT_BIT))
 		{		
 			// Lower Limit
 			message->lowerLimit = jausEventLimitFromBuffer(buffer+index, bufferSizeBytes-index, message->limitDataType);
@@ -145,7 +145,7 @@ static JausBoolean dataFromBuffer(CreateEventMessage message, unsigned char *buf
 			message->lowerLimit = NULL;
 		}
 		
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, CREATE_EVENT_PV_UPPER_LIMIT_BIT))
+		if(jausByteIsBitSet(message->presenceVector, CREATE_EVENT_PV_UPPER_LIMIT_BIT))
 		{		
 			// Upper Limit
 			message->upperLimit = jausEventLimitFromBuffer(buffer+index, bufferSizeBytes-index, message->limitDataType);
@@ -157,7 +157,7 @@ static JausBoolean dataFromBuffer(CreateEventMessage message, unsigned char *buf
 			message->upperLimit = NULL;
 		}
 
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, CREATE_EVENT_PV_STATE_LIMIT_BIT))
+		if(jausByteIsBitSet(message->presenceVector, CREATE_EVENT_PV_STATE_LIMIT_BIT))
 		{		
 			// State Limit
 			message->stateLimit = jausEventLimitFromBuffer(buffer+index, bufferSizeBytes-index, message->limitDataType);
@@ -169,7 +169,7 @@ static JausBoolean dataFromBuffer(CreateEventMessage message, unsigned char *buf
 			message->stateLimit = NULL;
 		}
 		
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, CREATE_EVENT_PV_MINIMUM_RATE_BIT))
+		if(jausByteIsBitSet(message->presenceVector, CREATE_EVENT_PV_MINIMUM_RATE_BIT))
 		{		
 			// Minimum Periodic Rate 
 			if(!jausUnsignedShortFromBuffer(&tempUShort, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -179,7 +179,7 @@ static JausBoolean dataFromBuffer(CreateEventMessage message, unsigned char *buf
 			message->requestedMinimumRate = jausUnsignedShortToDouble(tempUShort, 0, 1092);
 		}
 		
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, CREATE_EVENT_PV_REQUESTED_RATE_BIT))
+		if(jausByteIsBitSet(message->presenceVector, CREATE_EVENT_PV_REQUESTED_RATE_BIT))
 		{		
 			// Periodic Rate 
 			if(!jausUnsignedShortFromBuffer(&tempUShort, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -213,8 +213,8 @@ static int dataToBuffer(CreateEventMessage message, unsigned char *buffer, unsig
 	{
 		// Unpack Message Fields from Buffer
 		// Presence Vector
-		if(!jausBytePresenceVectorToBuffer(message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_BYTE_PRESENCE_VECTOR_SIZE_BYTES;
+		if(!jausByteToBuffer(message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		index += JAUS_BYTE_SIZE_BYTES;
 		
 		// Message Code
 		if(!jausUnsignedShortToBuffer(message->messageCode, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -224,49 +224,49 @@ static int dataToBuffer(CreateEventMessage message, unsigned char *buffer, unsig
 		if(!jausByteToBuffer(message->eventType, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
 		
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, CREATE_EVENT_PV_BOUNDARY_BIT))
+		if(jausByteIsBitSet(message->presenceVector, CREATE_EVENT_PV_BOUNDARY_BIT))
 		{
 			// Event Boundary
 			if(!jausByteToBuffer(message->eventBoundary, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 			index += JAUS_BYTE_SIZE_BYTES;
 		}
 
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, CREATE_EVENT_PV_DATA_TYPE_BIT))
+		if(jausByteIsBitSet(message->presenceVector, CREATE_EVENT_PV_DATA_TYPE_BIT))
 		{
 			// Data Type
 			if(!jausByteToBuffer(message->limitDataType, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 			index += JAUS_BYTE_SIZE_BYTES;
 		}
 		
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, CREATE_EVENT_PV_DATA_FIELD_BIT))
+		if(jausByteIsBitSet(message->presenceVector, CREATE_EVENT_PV_DATA_FIELD_BIT))
 		{
 			// Data Field
 			if(!jausByteToBuffer(message->limitDataField, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 			index += JAUS_BYTE_SIZE_BYTES;
 		}
 		
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, CREATE_EVENT_PV_LOWER_LIMIT_BIT))
+		if(jausByteIsBitSet(message->presenceVector, CREATE_EVENT_PV_LOWER_LIMIT_BIT))
 		{		
 			// Lower Limit
 			if(!jausEventLimitToBuffer(message->lowerLimit, buffer+index, bufferSizeBytes-index, message->limitDataType)) return JAUS_FALSE;
 			index += jausEventLimitByteSize(message->limitDataType);
 		}
 		
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, CREATE_EVENT_PV_UPPER_LIMIT_BIT))
+		if(jausByteIsBitSet(message->presenceVector, CREATE_EVENT_PV_UPPER_LIMIT_BIT))
 		{		
 			// Upper Limit
 			if(!jausEventLimitToBuffer(message->upperLimit, buffer+index, bufferSizeBytes-index, message->limitDataType)) return JAUS_FALSE;
 			index += jausEventLimitByteSize(message->limitDataType);
 		}
 
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, CREATE_EVENT_PV_STATE_LIMIT_BIT))
+		if(jausByteIsBitSet(message->presenceVector, CREATE_EVENT_PV_STATE_LIMIT_BIT))
 		{		
 			// State Limit
 			if(!jausEventLimitToBuffer(message->stateLimit, buffer+index, bufferSizeBytes-index, message->limitDataType)) return JAUS_FALSE;
 			index += jausEventLimitByteSize(message->limitDataType);
 		}
 		
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, CREATE_EVENT_PV_MINIMUM_RATE_BIT))
+		if(jausByteIsBitSet(message->presenceVector, CREATE_EVENT_PV_MINIMUM_RATE_BIT))
 		{		
 			// Scaled Int (0, 1092);
 			tempUShort = jausUnsignedShortFromDouble(message->requestedMinimumRate, 0, 1092);
@@ -276,7 +276,7 @@ static int dataToBuffer(CreateEventMessage message, unsigned char *buffer, unsig
 			index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
 		}
 		
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, CREATE_EVENT_PV_REQUESTED_RATE_BIT))
+		if(jausByteIsBitSet(message->presenceVector, CREATE_EVENT_PV_REQUESTED_RATE_BIT))
 		{		
 			// Scaled Int (0, 1092);
 			tempUShort = jausUnsignedShortFromDouble(message->requestedUpdateRate, 0, 1092);
@@ -300,7 +300,7 @@ static int dataSize(CreateEventMessage message)
 	int index = 0;
 
 	// Presence Vector
-	index += JAUS_BYTE_PRESENCE_VECTOR_SIZE_BYTES;
+	index += JAUS_BYTE_SIZE_BYTES;
 	
 	// Message Code
 	index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
@@ -308,42 +308,42 @@ static int dataSize(CreateEventMessage message)
 	// Event Type
 	index += JAUS_BYTE_SIZE_BYTES;
 	
-	if(jausBytePresenceVectorIsBitSet(message->presenceVector, CREATE_EVENT_PV_BOUNDARY_BIT))
+	if(jausByteIsBitSet(message->presenceVector, CREATE_EVENT_PV_BOUNDARY_BIT))
 	{
 		index += JAUS_BYTE_SIZE_BYTES;
 	}
 
-	if(jausBytePresenceVectorIsBitSet(message->presenceVector, CREATE_EVENT_PV_DATA_TYPE_BIT))
+	if(jausByteIsBitSet(message->presenceVector, CREATE_EVENT_PV_DATA_TYPE_BIT))
 	{
 		index += JAUS_BYTE_SIZE_BYTES;
 	}
 	
-	if(jausBytePresenceVectorIsBitSet(message->presenceVector, CREATE_EVENT_PV_DATA_FIELD_BIT))
+	if(jausByteIsBitSet(message->presenceVector, CREATE_EVENT_PV_DATA_FIELD_BIT))
 	{
 		index += JAUS_BYTE_SIZE_BYTES;
 	}
 	
-	if(jausBytePresenceVectorIsBitSet(message->presenceVector, CREATE_EVENT_PV_LOWER_LIMIT_BIT))
+	if(jausByteIsBitSet(message->presenceVector, CREATE_EVENT_PV_LOWER_LIMIT_BIT))
 	{		
 		index += jausEventLimitByteSize(message->limitDataType);
 	}
 	
-	if(jausBytePresenceVectorIsBitSet(message->presenceVector, CREATE_EVENT_PV_UPPER_LIMIT_BIT))
+	if(jausByteIsBitSet(message->presenceVector, CREATE_EVENT_PV_UPPER_LIMIT_BIT))
 	{		
 		index += jausEventLimitByteSize(message->limitDataType);
 	}
 
-	if(jausBytePresenceVectorIsBitSet(message->presenceVector, CREATE_EVENT_PV_STATE_LIMIT_BIT))
+	if(jausByteIsBitSet(message->presenceVector, CREATE_EVENT_PV_STATE_LIMIT_BIT))
 	{		
 		index += jausEventLimitByteSize(message->limitDataType);
 	}
 	
-	if(jausBytePresenceVectorIsBitSet(message->presenceVector, CREATE_EVENT_PV_MINIMUM_RATE_BIT))
+	if(jausByteIsBitSet(message->presenceVector, CREATE_EVENT_PV_MINIMUM_RATE_BIT))
 	{		
 		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
 	}
 	
-	if(jausBytePresenceVectorIsBitSet(message->presenceVector, CREATE_EVENT_PV_REQUESTED_RATE_BIT))
+	if(jausByteIsBitSet(message->presenceVector, CREATE_EVENT_PV_REQUESTED_RATE_BIT))
 	{		
 		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
 	}

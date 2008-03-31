@@ -101,7 +101,7 @@ typedef struct
 	JausUnsignedShort sequenceNumber;
 
 	// MESSAGE DATA MEMBERS GO HERE
-	JausShortPresenceVector presenceVector;
+	JausUnsignedShort presenceVector;
 	JausByte cameraID;
 	char cameraName[JAUS_CAMERA_NAME_LENGTH_BYTES];
 	JausDouble xCameraOriginMeters;	// Scaled Short (-32.767, 32.767)

@@ -65,7 +65,7 @@ static void dataInitialize(ReportPlatformOperationalDataMessage message);
 static void dataInitialize(ReportPlatformOperationalDataMessage message)
 {
 	// Set initial values of message fields
-	message->presenceVector = newJausBytePresenceVector();
+	message->presenceVector = newJausByte(JAUS_BYTE_PRESENCE_VECTOR_ALL_ON);
 	message->engineTemperatureCelsius = newJausDouble(0);	// Scaled Short (-75, 180)
 	message->odometerMeters  = newJausUnsignedInteger(0);
 	message->batteryVoltagePercent = newJausDouble(0);		// Scaled Byte (0, 127)
@@ -84,10 +84,10 @@ static JausBoolean dataFromBuffer(ReportPlatformOperationalDataMessage message, 
 	{
 		// Unpack Message Fields from Buffer
 		// Use Presence Vector
-		if(!jausBytePresenceVectorFromBuffer(&message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_BYTE_PRESENCE_VECTOR_SIZE_BYTES;
+		if(!jausByteFromBuffer(&message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		index += JAUS_BYTE_SIZE_BYTES;
 		
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_OPERATIONAL_PV_ENGINE_BIT))
+		if(jausByteIsBitSet(message->presenceVector, JAUS_OPERATIONAL_PV_ENGINE_BIT))
 		{
 			// unpack
 			if(!jausShortFromBuffer(&tempShort, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -97,14 +97,14 @@ static JausBoolean dataFromBuffer(ReportPlatformOperationalDataMessage message, 
 			message->engineTemperatureCelsius = jausShortToDouble(tempShort, -75, 180);
 		}
 
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_OPERATIONAL_PV_ODOMETER_BIT))
+		if(jausByteIsBitSet(message->presenceVector, JAUS_OPERATIONAL_PV_ODOMETER_BIT))
 		{
 			// unpack
 			if(!jausUnsignedIntegerFromBuffer(&message->odometerMeters, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 			index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
 		}
 
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_OPERATIONAL_PV_BATTERY_BIT))
+		if(jausByteIsBitSet(message->presenceVector, JAUS_OPERATIONAL_PV_BATTERY_BIT))
 		{
 			// unpack
 			if(!jausByteFromBuffer(&tempByte, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -114,7 +114,7 @@ static JausBoolean dataFromBuffer(ReportPlatformOperationalDataMessage message, 
 			message->batteryVoltagePercent = jausByteToDouble(tempByte, 0, 127);
 		}
 
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_OPERATIONAL_PV_FUEL_BIT))
+		if(jausByteIsBitSet(message->presenceVector, JAUS_OPERATIONAL_PV_FUEL_BIT))
 		{
 			// unpack
 			if(!jausByteFromBuffer(&tempByte, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -124,7 +124,7 @@ static JausBoolean dataFromBuffer(ReportPlatformOperationalDataMessage message, 
 			message->fuelLevelPercent = jausByteToDouble(tempByte, 0, 100);
 		}
 
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_OPERATIONAL_PV_OIL_BIT))
+		if(jausByteIsBitSet(message->presenceVector, JAUS_OPERATIONAL_PV_OIL_BIT))
 		{
 			// unpack
 			if(!jausByteFromBuffer(&tempByte, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -152,10 +152,10 @@ static int dataToBuffer(ReportPlatformOperationalDataMessage message, unsigned c
 	{
 		// Pack Message Fields to Buffer
 		// Use Presence Vector
-		if(!jausBytePresenceVectorToBuffer(message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_BYTE_PRESENCE_VECTOR_SIZE_BYTES;
+		if(!jausByteToBuffer(message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		index += JAUS_BYTE_SIZE_BYTES;
 		
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_OPERATIONAL_PV_ENGINE_BIT))
+		if(jausByteIsBitSet(message->presenceVector, JAUS_OPERATIONAL_PV_ENGINE_BIT))
 		{
 			// pack
 			// Scaled Short (-75, 180)
@@ -165,13 +165,13 @@ static int dataToBuffer(ReportPlatformOperationalDataMessage message, unsigned c
 			index += JAUS_SHORT_SIZE_BYTES;
 		}
 
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_OPERATIONAL_PV_ODOMETER_BIT))
+		if(jausByteIsBitSet(message->presenceVector, JAUS_OPERATIONAL_PV_ODOMETER_BIT))
 		{
 			if(!jausUnsignedIntegerToBuffer(message->odometerMeters, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 			index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
 		}
 
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_OPERATIONAL_PV_BATTERY_BIT))
+		if(jausByteIsBitSet(message->presenceVector, JAUS_OPERATIONAL_PV_BATTERY_BIT))
 		{
 			// pack
 			// Scaled Byte (0, 127)
@@ -181,7 +181,7 @@ static int dataToBuffer(ReportPlatformOperationalDataMessage message, unsigned c
 			index += JAUS_BYTE_SIZE_BYTES;
 		}
 		
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_OPERATIONAL_PV_FUEL_BIT))
+		if(jausByteIsBitSet(message->presenceVector, JAUS_OPERATIONAL_PV_FUEL_BIT))
 		{
 			// pack
 			// Scaled Byte (0, 100)
@@ -191,7 +191,7 @@ static int dataToBuffer(ReportPlatformOperationalDataMessage message, unsigned c
 			index += JAUS_BYTE_SIZE_BYTES;
 		}
 		
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_OPERATIONAL_PV_OIL_BIT))
+		if(jausByteIsBitSet(message->presenceVector, JAUS_OPERATIONAL_PV_OIL_BIT))
 		{
 			// pack
 			// Scaled Byte (0, 127)
@@ -210,29 +210,29 @@ static int dataSize(ReportPlatformOperationalDataMessage message)
 {
 	int index = 0;
 
-	index += JAUS_BYTE_PRESENCE_VECTOR_SIZE_BYTES;
+	index += JAUS_BYTE_SIZE_BYTES;
 	
-	if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_OPERATIONAL_PV_ENGINE_BIT))
+	if(jausByteIsBitSet(message->presenceVector, JAUS_OPERATIONAL_PV_ENGINE_BIT))
 	{
 		index += JAUS_SHORT_SIZE_BYTES;
 	}
 
-	if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_OPERATIONAL_PV_ODOMETER_BIT))
+	if(jausByteIsBitSet(message->presenceVector, JAUS_OPERATIONAL_PV_ODOMETER_BIT))
 	{
 		index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
 	}
 
-	if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_OPERATIONAL_PV_BATTERY_BIT))
+	if(jausByteIsBitSet(message->presenceVector, JAUS_OPERATIONAL_PV_BATTERY_BIT))
 	{
 		index += JAUS_BYTE_SIZE_BYTES;
 	}
 	
-	if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_OPERATIONAL_PV_FUEL_BIT))
+	if(jausByteIsBitSet(message->presenceVector, JAUS_OPERATIONAL_PV_FUEL_BIT))
 	{
 		index += JAUS_BYTE_SIZE_BYTES;
 	}
 	
-	if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_OPERATIONAL_PV_OIL_BIT))
+	if(jausByteIsBitSet(message->presenceVector, JAUS_OPERATIONAL_PV_OIL_BIT))
 	{
 		index += JAUS_BYTE_SIZE_BYTES;
 	}

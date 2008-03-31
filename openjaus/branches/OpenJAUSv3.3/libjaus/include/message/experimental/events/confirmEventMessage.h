@@ -104,7 +104,7 @@ typedef struct
 	JausUnsignedShort sequenceNumber;
 
 	// MESSAGE DATA MEMBERS GO HERE
-	JausBytePresenceVector presenceVector;	// 1: Presence Vector
+	JausByte presenceVector;	// 1: Presence Vector
 	JausUnsignedShort messageCode;			// 2: Command Code of message sent in case of event occurance
 	JausByte eventId;						// 3: Event Id
 	JausDouble confirmedUpdateRate;			// 4: For Periodic Events, Scaled UnsignedShort (0, 1092)

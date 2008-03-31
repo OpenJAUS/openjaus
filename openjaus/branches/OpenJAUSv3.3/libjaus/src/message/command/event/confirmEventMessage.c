@@ -67,7 +67,7 @@ static void dataInitialize(ConfirmEventMessage message)
 {
 	message->properties.expFlag = JAUS_EXPERIMENTAL_MESSAGE;	
 	// Set initial values of message fields
-	message->presenceVector = newJausBytePresenceVector();	// 1: Presence Vector
+	message->presenceVector = newJausByte(JAUS_BYTE_PRESENCE_VECTOR_ALL_ON);	// 1: Presence Vector
 	message->messageCode = newJausUnsignedShort(0);			// 2: Command Code of message sent in case of event occurance
 	message->eventId = newJausByte(0);						// 3: Event Id
 	message->confirmedUpdateRate = newJausDouble(0);		// 4: For Periodic Events, Scaled UnsignedShort (0, 1092)
@@ -90,8 +90,8 @@ static JausBoolean dataFromBuffer(ConfirmEventMessage message, unsigned char *bu
 	{
 		// Unpack Message Fields from Buffer
 		// Presence Vector
-		if(!jausBytePresenceVectorFromBuffer(&message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_BYTE_PRESENCE_VECTOR_SIZE_BYTES;
+		if(!jausByteFromBuffer(&message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		index += JAUS_BYTE_SIZE_BYTES;
 
 		// Message Code
 		if(!jausUnsignedShortFromBuffer(&message->messageCode, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -101,7 +101,7 @@ static JausBoolean dataFromBuffer(ConfirmEventMessage message, unsigned char *bu
 		if(!jausByteFromBuffer(&message->eventId, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
 
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, CONFIRM_EVENT_PV_PERIODIC_RATE_BIT))
+		if(jausByteIsBitSet(message->presenceVector, CONFIRM_EVENT_PV_PERIODIC_RATE_BIT))
 		{		
 			// Periodic Rate 
 			if(!jausUnsignedShortFromBuffer(&tempUShort, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -133,8 +133,8 @@ static int dataToBuffer(ConfirmEventMessage message, unsigned char *buffer, unsi
 	{
 		// Pack Message Fields to Buffer
 		// Presence Vector
-		if(!jausBytePresenceVectorToBuffer(message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_BYTE_PRESENCE_VECTOR_SIZE_BYTES;
+		if(!jausByteToBuffer(message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		index += JAUS_BYTE_SIZE_BYTES;
 
 		// Message Code
 		if(!jausUnsignedShortToBuffer(message->messageCode, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -144,7 +144,7 @@ static int dataToBuffer(ConfirmEventMessage message, unsigned char *buffer, unsi
 		if(!jausByteToBuffer(message->eventId, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
 
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, CONFIRM_EVENT_PV_PERIODIC_RATE_BIT))
+		if(jausByteIsBitSet(message->presenceVector, CONFIRM_EVENT_PV_PERIODIC_RATE_BIT))
 		{		
 			// Scaled Int (0, 1092);
 			tempUShort = jausUnsignedShortFromDouble(message->confirmedUpdateRate, 0, 1092);
@@ -168,7 +168,7 @@ static int dataSize(ConfirmEventMessage message)
 	int index = 0;
 
 	// Presence Vector
-	index += JAUS_BYTE_PRESENCE_VECTOR_SIZE_BYTES;
+	index += JAUS_BYTE_SIZE_BYTES;
 
 	// Message Code
 	index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;		
@@ -176,7 +176,7 @@ static int dataSize(ConfirmEventMessage message)
 	// Event Id
 	index += JAUS_BYTE_SIZE_BYTES;
 
-	if(jausBytePresenceVectorIsBitSet(message->presenceVector, CONFIRM_EVENT_PV_PERIODIC_RATE_BIT))
+	if(jausByteIsBitSet(message->presenceVector, CONFIRM_EVENT_PV_PERIODIC_RATE_BIT))
 	{		
 		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
 	}

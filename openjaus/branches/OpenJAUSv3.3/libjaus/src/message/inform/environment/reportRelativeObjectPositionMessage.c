@@ -64,7 +64,7 @@ static void dataDestroy(ReportRelativeObjectPositionMessage message);
 static void dataInitialize(ReportRelativeObjectPositionMessage message)
 {
 	// Set initial values of message fields
-	message->presenceVector = newJausBytePresenceVector();
+	message->presenceVector = newJausByte(JAUS_BYTE_PRESENCE_VECTOR_ALL_ON);
 	message->time = jausTimeCreate();
 	message->rangeMeters = newJausDouble(0);			// Scaled Int (-10,000, 10,000)
 	message->rangeErrorMeters = newJausDouble(0);		// Scaled UInt (0, 1000)
@@ -93,13 +93,13 @@ static JausBoolean dataFromBuffer(ReportRelativeObjectPositionMessage message, u
 	if(bufferSizeBytes == message->dataSize)
 	{
 		// Unpack Message Fields from Buffer
-		if(!jausBytePresenceVectorFromBuffer(&message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_BYTE_PRESENCE_VECTOR_SIZE_BYTES;
+		if(!jausByteFromBuffer(&message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		index += JAUS_BYTE_SIZE_BYTES;
 	
 		if(!jausTimeStampFromBuffer(message->time, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_TIME_STAMP_SIZE_BYTES;
 
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_RELATIVE_OBJECT_POSITION_PV_RANGE_BIT))
+		if(jausByteIsBitSet(message->presenceVector, JAUS_RELATIVE_OBJECT_POSITION_PV_RANGE_BIT))
 		{
 			//unpack
 			if(!jausIntegerFromBuffer(&tempInt, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -109,7 +109,7 @@ static JausBoolean dataFromBuffer(ReportRelativeObjectPositionMessage message, u
 			message->rangeMeters = jausIntegerToDouble(tempInt, -10000, 10000);
 		}
 
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_RELATIVE_OBJECT_POSITION_PV_RANGE_ERROR_BIT))
+		if(jausByteIsBitSet(message->presenceVector, JAUS_RELATIVE_OBJECT_POSITION_PV_RANGE_ERROR_BIT))
 		{
 			//unpack
 			if(!jausUnsignedIntegerFromBuffer(&tempUInt, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -119,7 +119,7 @@ static JausBoolean dataFromBuffer(ReportRelativeObjectPositionMessage message, u
 			message->rangeErrorMeters = jausUnsignedIntegerToDouble(tempInt, 0, 1000);
 		}
 
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_RELATIVE_OBJECT_POSITION_PV_BEARING_BIT))
+		if(jausByteIsBitSet(message->presenceVector, JAUS_RELATIVE_OBJECT_POSITION_PV_BEARING_BIT))
 		{
 			//unpack
 			if(!jausIntegerFromBuffer(&tempInt, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -129,7 +129,7 @@ static JausBoolean dataFromBuffer(ReportRelativeObjectPositionMessage message, u
 			message->bearingRadians = jausIntegerToDouble(tempInt, -JAUS_PI, JAUS_PI);
 		}
 
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_RELATIVE_OBJECT_POSITION_PV_BEARING_ERROR_BIT))
+		if(jausByteIsBitSet(message->presenceVector, JAUS_RELATIVE_OBJECT_POSITION_PV_BEARING_ERROR_BIT))
 		{
 			//unpack
 			if(!jausUnsignedIntegerFromBuffer(&tempUInt, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -139,7 +139,7 @@ static JausBoolean dataFromBuffer(ReportRelativeObjectPositionMessage message, u
 			message->bearingErrorRadians = jausUnsignedIntegerToDouble(tempInt, 0, JAUS_PI);
 		}
 
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_RELATIVE_OBJECT_POSITION_PV_ELEVATION_BIT))
+		if(jausByteIsBitSet(message->presenceVector, JAUS_RELATIVE_OBJECT_POSITION_PV_ELEVATION_BIT))
 		{
 			//unpack
 			if(!jausIntegerFromBuffer(&tempInt, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -149,7 +149,7 @@ static JausBoolean dataFromBuffer(ReportRelativeObjectPositionMessage message, u
 			message->elevationRadians = jausIntegerToDouble(tempInt, -JAUS_PI, JAUS_PI);
 		}
 
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_RELATIVE_OBJECT_POSITION_PV_ELEVATION_ERROR_BIT))
+		if(jausByteIsBitSet(message->presenceVector, JAUS_RELATIVE_OBJECT_POSITION_PV_ELEVATION_ERROR_BIT))
 		{
 			//unpack
 			if(!jausUnsignedIntegerFromBuffer(&tempUInt, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -159,7 +159,7 @@ static JausBoolean dataFromBuffer(ReportRelativeObjectPositionMessage message, u
 			message->elevationErrorRadians = jausUnsignedIntegerToDouble(tempInt, 0, JAUS_PI);
 		}
 
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_RELATIVE_OBJECT_POSITION_PV_CONFIDENCE_BIT))
+		if(jausByteIsBitSet(message->presenceVector, JAUS_RELATIVE_OBJECT_POSITION_PV_CONFIDENCE_BIT))
 		{
 			//unpack
 			if(!jausByteFromBuffer(&message->confidence, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -185,13 +185,13 @@ static int dataToBuffer(ReportRelativeObjectPositionMessage message, unsigned ch
 	{
 		// Pack Message Fields to Buffer
 		// Unpack Message Fields from Buffer
-		if(!jausBytePresenceVectorToBuffer(message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_BYTE_PRESENCE_VECTOR_SIZE_BYTES;
+		if(!jausByteToBuffer(message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		index += JAUS_BYTE_SIZE_BYTES;
 	
 		if(!jausTimeStampToBuffer(message->time, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_TIME_STAMP_SIZE_BYTES;
 
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_RELATIVE_OBJECT_POSITION_PV_RANGE_BIT))
+		if(jausByteIsBitSet(message->presenceVector, JAUS_RELATIVE_OBJECT_POSITION_PV_RANGE_BIT))
 		{
 			// Scaled Int (-10,000, 10,000)
 			tempInt = jausIntegerFromDouble(message->rangeMeters, -10000, 10000);
@@ -201,7 +201,7 @@ static int dataToBuffer(ReportRelativeObjectPositionMessage message, unsigned ch
 			index += JAUS_INTEGER_SIZE_BYTES;
 		}
 
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_RELATIVE_OBJECT_POSITION_PV_RANGE_ERROR_BIT))
+		if(jausByteIsBitSet(message->presenceVector, JAUS_RELATIVE_OBJECT_POSITION_PV_RANGE_ERROR_BIT))
 		{
 			// Scaled UInt (0, 1000)
 			tempUInt = jausUnsignedIntegerFromDouble(message->rangeErrorMeters, 0, 1000);
@@ -211,7 +211,7 @@ static int dataToBuffer(ReportRelativeObjectPositionMessage message, unsigned ch
 			index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
 		}
 
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_RELATIVE_OBJECT_POSITION_PV_BEARING_BIT))
+		if(jausByteIsBitSet(message->presenceVector, JAUS_RELATIVE_OBJECT_POSITION_PV_BEARING_BIT))
 		{
 			// Scaled Int (-JAUS_PI, JAUS_PI)
 			tempInt = jausIntegerFromDouble(message->bearingRadians, -JAUS_PI, JAUS_PI);
@@ -221,7 +221,7 @@ static int dataToBuffer(ReportRelativeObjectPositionMessage message, unsigned ch
 			index += JAUS_INTEGER_SIZE_BYTES;
 		}
 
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_RELATIVE_OBJECT_POSITION_PV_BEARING_ERROR_BIT))
+		if(jausByteIsBitSet(message->presenceVector, JAUS_RELATIVE_OBJECT_POSITION_PV_BEARING_ERROR_BIT))
 		{
 			// Scaled UInt (0, JAUS_PI)
 			tempInt = jausUnsignedIntegerFromDouble(message->bearingErrorRadians, 0, JAUS_PI);
@@ -231,7 +231,7 @@ static int dataToBuffer(ReportRelativeObjectPositionMessage message, unsigned ch
 			index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
 		}
 
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_RELATIVE_OBJECT_POSITION_PV_ELEVATION_BIT))
+		if(jausByteIsBitSet(message->presenceVector, JAUS_RELATIVE_OBJECT_POSITION_PV_ELEVATION_BIT))
 		{
 			// Scaled Int (-JAUS_PI, JAUS_PI)
 			tempInt = jausIntegerFromDouble(message->elevationRadians, -JAUS_PI, JAUS_PI);
@@ -241,7 +241,7 @@ static int dataToBuffer(ReportRelativeObjectPositionMessage message, unsigned ch
 			index += JAUS_INTEGER_SIZE_BYTES;
 		}
 
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_RELATIVE_OBJECT_POSITION_PV_ELEVATION_ERROR_BIT))
+		if(jausByteIsBitSet(message->presenceVector, JAUS_RELATIVE_OBJECT_POSITION_PV_ELEVATION_ERROR_BIT))
 		{
 			// Scaled UInt (0, JAUS_PI)
 			tempInt = jausUnsignedIntegerFromDouble(message->elevationErrorRadians, 0, JAUS_PI);
@@ -251,7 +251,7 @@ static int dataToBuffer(ReportRelativeObjectPositionMessage message, unsigned ch
 			index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
 		}
 
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_RELATIVE_OBJECT_POSITION_PV_CONFIDENCE_BIT))
+		if(jausByteIsBitSet(message->presenceVector, JAUS_RELATIVE_OBJECT_POSITION_PV_CONFIDENCE_BIT))
 		{
 			//pack
 			if(!jausByteToBuffer(message->confidence, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -267,41 +267,41 @@ static int dataSize(ReportRelativeObjectPositionMessage message)
 {
 	int index = 0;
 
-	index += JAUS_BYTE_PRESENCE_VECTOR_SIZE_BYTES;
+	index += JAUS_BYTE_SIZE_BYTES;
 
 	index += JAUS_TIME_STAMP_SIZE_BYTES;
 
-	if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_RELATIVE_OBJECT_POSITION_PV_RANGE_BIT))
+	if(jausByteIsBitSet(message->presenceVector, JAUS_RELATIVE_OBJECT_POSITION_PV_RANGE_BIT))
 	{
 		index += JAUS_INTEGER_SIZE_BYTES;
 	}
 
-	if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_RELATIVE_OBJECT_POSITION_PV_RANGE_ERROR_BIT))
+	if(jausByteIsBitSet(message->presenceVector, JAUS_RELATIVE_OBJECT_POSITION_PV_RANGE_ERROR_BIT))
 	{
 		index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
 	}
 
-	if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_RELATIVE_OBJECT_POSITION_PV_BEARING_BIT))
+	if(jausByteIsBitSet(message->presenceVector, JAUS_RELATIVE_OBJECT_POSITION_PV_BEARING_BIT))
 	{
 		index += JAUS_INTEGER_SIZE_BYTES;
 	}
 
-	if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_RELATIVE_OBJECT_POSITION_PV_BEARING_ERROR_BIT))
+	if(jausByteIsBitSet(message->presenceVector, JAUS_RELATIVE_OBJECT_POSITION_PV_BEARING_ERROR_BIT))
 	{
 		index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
 	}
 
-	if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_RELATIVE_OBJECT_POSITION_PV_ELEVATION_BIT))
+	if(jausByteIsBitSet(message->presenceVector, JAUS_RELATIVE_OBJECT_POSITION_PV_ELEVATION_BIT))
 	{
 		index += JAUS_INTEGER_SIZE_BYTES;
 	}
 
-	if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_RELATIVE_OBJECT_POSITION_PV_ELEVATION_ERROR_BIT))
+	if(jausByteIsBitSet(message->presenceVector, JAUS_RELATIVE_OBJECT_POSITION_PV_ELEVATION_ERROR_BIT))
 	{
 		index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
 	}
 
-	if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_RELATIVE_OBJECT_POSITION_PV_CONFIDENCE_BIT))
+	if(jausByteIsBitSet(message->presenceVector, JAUS_RELATIVE_OBJECT_POSITION_PV_CONFIDENCE_BIT))
 	{
 		index += JAUS_BYTE_SIZE_BYTES;
 	}

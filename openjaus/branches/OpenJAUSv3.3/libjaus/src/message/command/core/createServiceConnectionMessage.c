@@ -68,7 +68,7 @@ static void dataInitialize(CreateServiceConnectionMessage message)
 	// Set initial values of message fields
 	message->serviceConnectionCommandCode = newJausUnsignedShort(0);
 	message->requestedPeriodicUpdateRateHertz = newJausDouble(0);
-	message->presenceVector = newJausIntegerPresenceVector();
+	message->presenceVector = newJausUnsignedInteger(JAUS_INTEGER_PRESENCE_VECTOR_ALL_ON);
 }
 
 // Return boolean of success
@@ -89,8 +89,8 @@ static JausBoolean dataFromBuffer(CreateServiceConnectionMessage message, unsign
 		// Scaled UShort to double,  0 min, 1092 max
 		message->requestedPeriodicUpdateRateHertz = jausUnsignedShortToDouble(tempUShort, 0, 1092);
 				
-		if(!jausIntegerPresenceVectorFromBuffer(&message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_INTEGER_PRESENCE_VECTOR_SIZE_BYTES;
+		if(!jausUnsignedIntegerFromBuffer(&message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
 		
 		return JAUS_TRUE;
 	}
@@ -118,8 +118,8 @@ static int dataToBuffer(CreateServiceConnectionMessage message, unsigned char *b
 		if(!jausUnsignedShortToBuffer(tempUShort, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
 		
-		if(!jausIntegerPresenceVectorToBuffer(message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_INTEGER_PRESENCE_VECTOR_SIZE_BYTES;
+		if(!jausUnsignedIntegerToBuffer(message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
 	}
 
 	return index;

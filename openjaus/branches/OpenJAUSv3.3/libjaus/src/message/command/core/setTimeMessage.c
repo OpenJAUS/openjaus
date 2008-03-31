@@ -66,7 +66,7 @@ static void dataDestroy(SetTimeMessage message);
 static void dataInitialize(SetTimeMessage message)
 {
 	// Set initial values of message fields
-	message->presenceVector = newJausBytePresenceVector();
+	message->presenceVector = newJausByte(JAUS_BYTE_PRESENCE_VECTOR_ALL_ON);
 	message->time = jausTimeCreate();
 }
 
@@ -87,16 +87,16 @@ static JausBoolean dataFromBuffer(SetTimeMessage message, unsigned char *buffer,
 	{
 		// Unpack Message Fields from Buffer
 		// Unpack according to Presence Vector
-		if(!jausBytePresenceVectorFromBuffer(&message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_BYTE_PRESENCE_VECTOR_SIZE_BYTES;
+		if(!jausByteFromBuffer(&message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		index += JAUS_BYTE_SIZE_BYTES;
 		
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_TIME_PV_TIME_STAMP_BIT))
+		if(jausByteIsBitSet(message->presenceVector, JAUS_TIME_PV_TIME_STAMP_BIT))
 		{
 			if(!jausTimeStampFromBuffer(message->time,  buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 			index += JAUS_TIME_STAMP_SIZE_BYTES;
 		}
 
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_TIME_PV_DATE_STAMP_BIT))
+		if(jausByteIsBitSet(message->presenceVector, JAUS_TIME_PV_DATE_STAMP_BIT))
 		{
 			if(!jausDateStampFromBuffer(message->time,  buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 			index += JAUS_DATE_STAMP_SIZE_BYTES;
@@ -119,16 +119,16 @@ static int dataToBuffer(SetTimeMessage message, unsigned char *buffer, unsigned 
 	{
 		// Pack Message Fields to Buffer
 		// Pack According to Presence Vector
-		if(!jausBytePresenceVectorToBuffer(message->presenceVector,  buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_BYTE_PRESENCE_VECTOR_SIZE_BYTES;
+		if(!jausByteToBuffer(message->presenceVector,  buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		index += JAUS_BYTE_SIZE_BYTES;
 		
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_TIME_PV_TIME_STAMP_BIT))
+		if(jausByteIsBitSet(message->presenceVector, JAUS_TIME_PV_TIME_STAMP_BIT))
 		{
 			if(!jausTimeStampToBuffer(message->time,  buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 			index += JAUS_TIME_STAMP_SIZE_BYTES;
 		}
 
-		if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_TIME_PV_DATE_STAMP_BIT))
+		if(jausByteIsBitSet(message->presenceVector, JAUS_TIME_PV_DATE_STAMP_BIT))
 		{
 			if(!jausDateStampToBuffer(message->time,  buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 			index += JAUS_DATE_STAMP_SIZE_BYTES;
@@ -142,14 +142,14 @@ static int dataSize(SetTimeMessage message)
 {
 	int index = 0;
 
-	index += JAUS_BYTE_PRESENCE_VECTOR_SIZE_BYTES;
+	index += JAUS_BYTE_SIZE_BYTES;
 	
-	if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_TIME_PV_TIME_STAMP_BIT))
+	if(jausByteIsBitSet(message->presenceVector, JAUS_TIME_PV_TIME_STAMP_BIT))
 	{
 		index += JAUS_TIME_STAMP_SIZE_BYTES;
 	}
 
-	if(jausBytePresenceVectorIsBitSet(message->presenceVector, JAUS_TIME_PV_DATE_STAMP_BIT))
+	if(jausByteIsBitSet(message->presenceVector, JAUS_TIME_PV_DATE_STAMP_BIT))
 	{
 		index += JAUS_DATE_STAMP_SIZE_BYTES;
 	}
