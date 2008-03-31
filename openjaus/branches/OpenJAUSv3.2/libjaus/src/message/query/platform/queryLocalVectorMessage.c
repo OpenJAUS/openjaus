@@ -31,7 +31,7 @@
  *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
  *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ****************************************************************************/
-// File Name: setLocalVectorMessage.c
+// File Name: queryLocalVectorMessage.c
 //
 // Written By: Danny Kent (jaus AT dannykent DOT com), Tom Galluzzo (galluzzo AT gmail DOT com)
 //
@@ -39,7 +39,7 @@
 //
 // Date: 08/04/06
 //
-// Description: This file defines the functionality of a SetLocalVectorMessage
+// Description: This file defines the functionality of a QueryLocalVectorMessage
 
 
 
@@ -47,51 +47,31 @@
 #include <string.h>
 #include "jaus.h"
 
-static const int commandCode = JAUS_SET_LOCAL_VECTOR;
-static const int maxDataSizeBytes = 6;
+static const int commandCode = JAUS_QUERY_LOCAL_VECTOR;
+static const int maxDataSizeBytes = 0;
 
-static JausBoolean headerFromBuffer(SetLocalVectorMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-static JausBoolean headerToBuffer(SetLocalVectorMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+static JausBoolean headerFromBuffer(QueryLocalVectorMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+static JausBoolean headerToBuffer(QueryLocalVectorMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
-static JausBoolean dataFromBuffer(SetLocalVectorMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-static int dataToBuffer(SetLocalVectorMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-static void dataInitialize(SetLocalVectorMessage message);
+static JausBoolean dataFromBuffer(QueryLocalVectorMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+static int dataToBuffer(QueryLocalVectorMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+static void dataInitialize(QueryLocalVectorMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS
 // ************************************************************************************************************** //
 
 // Initializes the message-specific fields
-static void dataInitialize(SetLocalVectorMessage message)
+static void dataInitialize(QueryLocalVectorMessage message)
 {
 	// Set initial values of message fields
-	message->speedMps = newJausDouble(0); 		// Scaled Unsigned Int (0, 10000) Mps = Meters Per Second
-	message->headingRadians = newJausDouble(0); // Scaled Short (-JAUS_PI, JAUS_PI)
 }
 
 // Return boolean of success
-static JausBoolean dataFromBuffer(SetLocalVectorMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
+static JausBoolean dataFromBuffer(QueryLocalVectorMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
 {
-	int index = 0;
-	JausInteger tempInteger;
-	JausShort tempShort;
-
 	if(bufferSizeBytes == message->dataSize)
 	{
-		// Unpack Message Fields from Buffer
-		
-		// unpack
-		if(!jausIntegerFromBuffer(&tempInteger, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_INTEGER_SIZE_BYTES;
-		// Scaled Unsigned Short (0, 10000)
-		message->speedMps = jausIntegerToDouble(tempInteger, 0, 10000);
-
-		// unpack
-		if(!jausShortFromBuffer(&tempShort, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_SHORT_SIZE_BYTES;
-		// Scaled Short (-JAUS_PI, JAUS_PI)
-		message->headingRadians = jausShortToDouble(tempShort, -JAUS_PI, JAUS_PI);
-
 		return JAUS_TRUE;
 	}
 	else
@@ -101,52 +81,27 @@ static JausBoolean dataFromBuffer(SetLocalVectorMessage message, unsigned char *
 }
 
 // Returns number of bytes put into the buffer
-static int dataToBuffer(SetLocalVectorMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
+static int dataToBuffer(QueryLocalVectorMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
 {
 	int index = 0;
-	JausInteger tempInteger;
-	JausShort tempShort;
-
-	if(bufferSizeBytes >= message->dataSize)
-	{
-		// Pack Message Fields to Buffer
-		
-		// Scaled Unsigned Short (0, 10000)
-		tempInteger = jausIntegerFromDouble(message->speedMps, 0, 10000);
-		// pack
-		if(!jausIntegerToBuffer(tempInteger, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_INTEGER_SIZE_BYTES;
-
-		// Scaled Short (-JAUS_PI, JAUS_PI)
-		tempShort = jausShortFromDouble(message->headingRadians, -JAUS_PI, JAUS_PI);
-		// pack
-		if(!jausShortToBuffer(tempShort, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_SHORT_SIZE_BYTES;
-			
-	}
 
 	return index;
 }
 
-static int dataSize(SetLocalVectorMessage message)
+static int dataSize(QueryLocalVectorMessage message)
 {
-	int index = 0;
-
-	index += JAUS_INTEGER_SIZE_BYTES;
-	index += JAUS_SHORT_SIZE_BYTES;
-
-	return index;
+	// Constant Size
+	return maxDataSizeBytes;
 }
-
 // ************************************************************************************************************** //
 //                                    NON-USER CONFIGURED FUNCTIONS
 // ************************************************************************************************************** //
 
-SetLocalVectorMessage setLocalVectorMessageCreate(void)
+QueryLocalVectorMessage queryLocalVectorMessageCreate(void)
 {
-	SetLocalVectorMessage message;
+	QueryLocalVectorMessage message;
 
-	message = (SetLocalVectorMessage)malloc( sizeof(SetLocalVectorMessageStruct) );
+	message = (QueryLocalVectorMessage)malloc( sizeof(QueryLocalVectorMessageStruct) );
 	if(message == NULL)
 	{
 		return NULL;
@@ -167,19 +122,18 @@ SetLocalVectorMessage setLocalVectorMessageCreate(void)
 	message->sequenceNumber = 0;
 	
 	dataInitialize(message);
-	message->dataSize = dataSize(message);
 	
 	return message;	
 }
 
-void setLocalVectorMessageDestroy(SetLocalVectorMessage message)
+void queryLocalVectorMessageDestroy(QueryLocalVectorMessage message)
 {
 	jausAddressDestroy(message->source);
 	jausAddressDestroy(message->destination);
 	free(message);
 }
 
-JausBoolean setLocalVectorMessageFromBuffer(SetLocalVectorMessage message, unsigned char* buffer, unsigned int bufferSizeBytes)
+JausBoolean queryLocalVectorMessageFromBuffer(QueryLocalVectorMessage message, unsigned char* buffer, unsigned int bufferSizeBytes)
 {
 	int index = 0;
 	
@@ -201,9 +155,9 @@ JausBoolean setLocalVectorMessageFromBuffer(SetLocalVectorMessage message, unsig
 	}
 }
 
-JausBoolean setLocalVectorMessageToBuffer(SetLocalVectorMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
+JausBoolean queryLocalVectorMessageToBuffer(QueryLocalVectorMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
 {
-	if(bufferSizeBytes < setLocalVectorMessageSize(message))
+	if(bufferSizeBytes < queryLocalVectorMessageSize(message))
 	{
 		return JAUS_FALSE; //improper size	
 	}
@@ -216,14 +170,14 @@ JausBoolean setLocalVectorMessageToBuffer(SetLocalVectorMessage message, unsigne
 		}
 		else
 		{
-			return JAUS_FALSE; // headerToSetLocalVectorBuffer failed
+			return JAUS_FALSE; // headerToQueryLocalVectorBuffer failed
 		}
 	}
 }
 
-SetLocalVectorMessage setLocalVectorMessageFromJausMessage(JausMessage jausMessage)
+QueryLocalVectorMessage queryLocalVectorMessageFromJausMessage(JausMessage jausMessage)
 {
-	SetLocalVectorMessage message;
+	QueryLocalVectorMessage message;
 	
 	if(jausMessage->commandCode != commandCode)
 	{
@@ -231,7 +185,7 @@ SetLocalVectorMessage setLocalVectorMessageFromJausMessage(JausMessage jausMessa
 	}
 	else
 	{
-		message = (SetLocalVectorMessage)malloc( sizeof(SetLocalVectorMessageStruct) );
+		message = (QueryLocalVectorMessage)malloc( sizeof(QueryLocalVectorMessageStruct) );
 		if(message == NULL)
 		{
 			return NULL;
@@ -264,7 +218,7 @@ SetLocalVectorMessage setLocalVectorMessageFromJausMessage(JausMessage jausMessa
 	}
 }
 
-JausMessage setLocalVectorMessageToJausMessage(SetLocalVectorMessage message)
+JausMessage queryLocalVectorMessageToJausMessage(QueryLocalVectorMessage message)
 {
 	JausMessage jausMessage;
 	
@@ -290,20 +244,20 @@ JausMessage setLocalVectorMessageToJausMessage(SetLocalVectorMessage message)
 	jausMessage->sequenceNumber = message->sequenceNumber;
 	
 	jausMessage->data = (unsigned char *)malloc(dataSize(message));
-	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, dataSize(message));
+	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, message->dataSize);
 	
 	return jausMessage;
 }
 
 
-unsigned int setLocalVectorMessageSize(SetLocalVectorMessage message)
+unsigned int queryLocalVectorMessageSize(QueryLocalVectorMessage message)
 {
 	return (unsigned int)(dataSize(message) + JAUS_HEADER_SIZE_BYTES);
 }
 
 //********************* PRIVATE HEADER FUNCTIONS **********************//
 
-static JausBoolean headerFromBuffer(SetLocalVectorMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
+static JausBoolean headerFromBuffer(QueryLocalVectorMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
 {
 	if(bufferSizeBytes < JAUS_HEADER_SIZE_BYTES)
 	{
@@ -341,7 +295,7 @@ static JausBoolean headerFromBuffer(SetLocalVectorMessage message, unsigned char
 	}
 }
 
-static JausBoolean headerToBuffer(SetLocalVectorMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
+static JausBoolean headerToBuffer(QueryLocalVectorMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
 {
 	JausUnsignedShort *propertiesPtr = (JausUnsignedShort*)&message->properties;
 	
