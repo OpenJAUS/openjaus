@@ -59,15 +59,13 @@ JausBoolean jausUnsignedIntegerFromBuffer(JausUnsignedInteger *jUint, unsigned c
 		return JAUS_FALSE;
 	else
 	{
-		if(isHostBigEndian())
-		{
-			// swap bytes
-			for(i = 0; i < JAUS_UNSIGNED_INTEGER_SIZE_BYTES; i++)
-				tempUInt += (buf[i] << (JAUS_UNSIGNED_INTEGER_SIZE_BYTES-i-1)*8);
-		}
-		else
-			memcpy(&(tempUInt), buf, JAUS_UNSIGNED_INTEGER_SIZE_BYTES);
-	
+#ifdef JAUS_BIG_ENDIAN
+		// swap bytes
+		for(i = 0; i < JAUS_UNSIGNED_INTEGER_SIZE_BYTES; i++)
+			tempUInt += (buf[i] << (JAUS_UNSIGNED_INTEGER_SIZE_BYTES-i-1)*8);
+#else
+		memcpy(&(tempUInt), buf, JAUS_UNSIGNED_INTEGER_SIZE_BYTES);
+#endif	
 		*jUint = newJausUnsignedInteger(tempUInt);
 		return JAUS_TRUE;
 	}
@@ -81,15 +79,13 @@ JausBoolean jausUnsignedIntegerToBuffer(JausUnsignedInteger input, unsigned char
 		return JAUS_FALSE;
 	else
 	{
-		if(isHostBigEndian())
-		{
-			// swap bytes
-			for (i = 0; i < JAUS_UNSIGNED_INTEGER_SIZE_BYTES; i++)
-				buf[i] = ((input >> (JAUS_UNSIGNED_INTEGER_SIZE_BYTES-i-1)*8) & 0xFF); // 8 bits per byte
-		}
-		else
-			memcpy(buf, &input, JAUS_UNSIGNED_INTEGER_SIZE_BYTES);
-		
+#ifdef JAUS_BIG_ENDIAN
+		// swap bytes
+		for (i = 0; i < JAUS_UNSIGNED_INTEGER_SIZE_BYTES; i++)
+			buf[i] = ((input >> (JAUS_UNSIGNED_INTEGER_SIZE_BYTES-i-1)*8) & 0xFF); // 8 bits per byte
+#else
+		memcpy(buf, &input, JAUS_UNSIGNED_INTEGER_SIZE_BYTES);
+#endif	
 		return JAUS_TRUE;
 	}
 }
@@ -116,3 +112,35 @@ JausUnsignedInteger jausUnsignedIntegerFromDouble(double value, double min, doub
 	// calculate rounded integer value
 	return newJausUnsignedInteger((unsigned int)((value - bias)/scaleFactor + 0.5));
 }
+
+JausBoolean jausUnsignedIntegerIsBitSet(JausUnsignedInteger input, int bit)
+{
+	return (input & (0x01 << bit)) > 0 ? JAUS_TRUE : JAUS_FALSE;
+}
+
+JausBoolean jausUnsignedIntegerSetBit(JausUnsignedInteger *input, int bit)
+{
+	if(JAUS_UNSIGNED_INTEGER_SIZE_BYTES*8 < bit) // 8 bits per byte
+	{
+		return JAUS_FALSE;
+	}
+	else
+	{
+		*input |= 0x01 << bit;
+		return JAUS_TRUE;
+	}
+}
+
+JausBoolean jausUnsignedIntegerClearBit(JausUnsignedInteger *input, int bit)
+{
+	if(JAUS_UNSIGNED_INTEGER_SIZE_BYTES*8 < bit)
+	{
+		return JAUS_FALSE;
+	}
+	else
+	{
+		*input &= ~(0x01 << bit);
+		return JAUS_TRUE;
+	}
+}
+

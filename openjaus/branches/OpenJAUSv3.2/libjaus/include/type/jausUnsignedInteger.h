@@ -63,4 +63,8 @@ JAUS_EXPORT JausBoolean jausUnsignedIntegerToBuffer(JausUnsignedInteger input, u
 JAUS_EXPORT double jausUnsignedIntegerToDouble(JausUnsignedInteger input, double min, double max);
 JAUS_EXPORT JausUnsignedInteger jausUnsignedIntegerFromDouble(double value, double min, double max);
 
+JAUS_EXPORT JausBoolean jausUnsignedIntegerIsBitSet(JausUnsignedInteger input, int bit);
+JAUS_EXPORT JausBoolean jausUnsignedIntegerSetBit(JausUnsignedInteger *input, int bit);
+JAUS_EXPORT JausBoolean jausUnsignedIntegerClearBit(JausUnsignedInteger *input, int bit);
+
 #endif // JAUS_UNSIGNED_INTEGER_H
