@@ -31,7 +31,7 @@
  *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
  *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ****************************************************************************/
-// File Name: setLocalVectorMessage.h
+// File Name: reportLocalVectorMessage.h
 //
 // Written By: Danny Kent (jaus AT dannykent DOT com), Tom Galluzzo 
 //
@@ -39,10 +39,10 @@
 //
 // Date: 08/04/06
 //
-// Description: This file defines the attributes of a SetLocalVectorMessage
+// Description: This file defines the attributes of a ReportLocalVectorMessage
 
-#ifndef SET_LOCAL_VECTOR_MESSAGE_H
-#define SET_LOCAL_VECTOR_MESSAGE_H
+#ifndef REPORT_LOCAL_VECTOR_MESSAGE_H
+#define REPORT_LOCAL_VECTOR_MESSAGE_H
 
 #include "jaus.h"
 
@@ -88,19 +88,19 @@ typedef struct
 	JausDouble speedMps; 		// Scaled Unsigned Int (0, 10000) Mps = Meters Per Second
 	JausDouble headingRadians; 	// Scaled Short (-JAUS_PI, JAUS_PI)
 		
-}SetLocalVectorMessageStruct;
+}ReportLocalVectorMessageStruct;
 
-typedef SetLocalVectorMessageStruct* SetLocalVectorMessage;
+typedef ReportLocalVectorMessageStruct* ReportLocalVectorMessage;
 
-JAUS_EXPORT SetLocalVectorMessage setLocalVectorMessageCreate(void);
-JAUS_EXPORT void setLocalVectorMessageDestroy(SetLocalVectorMessage);
+JAUS_EXPORT ReportLocalVectorMessage reportLocalVectorMessageCreate(void);
+JAUS_EXPORT void reportLocalVectorMessageDestroy(ReportLocalVectorMessage);
 
-JAUS_EXPORT JausBoolean setLocalVectorMessageFromBuffer(SetLocalVectorMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JAUS_EXPORT JausBoolean setLocalVectorMessageToBuffer(SetLocalVectorMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean reportLocalVectorMessageFromBuffer(ReportLocalVectorMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean reportLocalVectorMessageToBuffer(ReportLocalVectorMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
-JAUS_EXPORT SetLocalVectorMessage setLocalVectorMessageFromJausMessage(JausMessage jausMessage);
-JAUS_EXPORT JausMessage setLocalVectorMessageToJausMessage(SetLocalVectorMessage message);
+JAUS_EXPORT ReportLocalVectorMessage reportLocalVectorMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage reportLocalVectorMessageToJausMessage(ReportLocalVectorMessage message);
 
-JAUS_EXPORT unsigned int setLocalVectorMessageSize(SetLocalVectorMessage message);
+JAUS_EXPORT unsigned int reportLocalVectorMessageSize(ReportLocalVectorMessage message);
 
-#endif // SET_LOCAL_VECTOR_MESSAGE_H
+#endif // REPORT_LOCAL_VECTOR_MESSAGE_H

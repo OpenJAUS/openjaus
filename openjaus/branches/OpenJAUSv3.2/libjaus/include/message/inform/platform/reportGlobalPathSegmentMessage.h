@@ -31,7 +31,7 @@
  *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
  *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ****************************************************************************/
-// File Name: setLocalVectorMessage.h
+// File Name: reportGlobalPathSegmentMessage.h
 //
 // Written By: Danny Kent (jaus AT dannykent DOT com), Tom Galluzzo 
 //
@@ -39,13 +39,18 @@
 //
 // Date: 08/04/06
 //
-// Description: This file defines the attributes of a SetLocalVectorMessage
+// Description: This file defines the attributes of a ReportGlobalPathSegmentMessage
 
-#ifndef SET_LOCAL_VECTOR_MESSAGE_H
-#define SET_LOCAL_VECTOR_MESSAGE_H
+#ifndef REPORT_GLOBAL_PATH_SEGMENT_MESSAGE_H
+#define REPORT_GLOBAL_PATH_SEGMENT_MESSAGE_H
 
 #include "jaus.h"
 
+#ifndef JAUS_PATH_SEGMENT_PV
+#define JAUS_PATH_SEGMENT_PV
+#define JAUS_PATH_SEGMENT_PV_P1_ALTITUDE_BIT	0
+#define JAUS_PATH_SEGMENT_PV_P2_ALTITUDE_BIT		1
+#endif
 
 typedef struct
 {
@@ -85,22 +90,29 @@ typedef struct
 	
 	JausUnsignedShort sequenceNumber;
 
-	JausDouble speedMps; 		// Scaled Unsigned Int (0, 10000) Mps = Meters Per Second
-	JausDouble headingRadians; 	// Scaled Short (-JAUS_PI, JAUS_PI)
-		
-}SetLocalVectorMessageStruct;
+	JausBytePresenceVector presenceVector;
+	JausUnsignedShort pathSegmentNumber;
+	JausDouble p1LatitudeDeg;		// Scaled Integer (-90, 90)
+	JausDouble p1LongitudeDeg; 	// Scaled Integer (-180, 180)
+	JausDouble p1AltitudeM; 	// Scaled Integer (-10000, 35000)
+	JausDouble p2LatitudeDeg;		// Scaled Integer (-90, 90)
+	JausDouble p2LongitudeDeg; 	// Scaled Integer (-180, 180)
+	JausDouble p2AltitudeM; 	// Scaled Integer (-10000, 35000)
+	JausDouble weightingFactor; // Scaled Unsigned Short (0, 500)
+	
+}ReportGlobalPathSegmentMessageStruct;
 
-typedef SetLocalVectorMessageStruct* SetLocalVectorMessage;
+typedef ReportGlobalPathSegmentMessageStruct* ReportGlobalPathSegmentMessage;
 
-JAUS_EXPORT SetLocalVectorMessage setLocalVectorMessageCreate(void);
-JAUS_EXPORT void setLocalVectorMessageDestroy(SetLocalVectorMessage);
+JAUS_EXPORT ReportGlobalPathSegmentMessage reportGlobalPathSegmentMessageCreate(void);
+JAUS_EXPORT void reportGlobalPathSegmentMessageDestroy(ReportGlobalPathSegmentMessage);
 
-JAUS_EXPORT JausBoolean setLocalVectorMessageFromBuffer(SetLocalVectorMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JAUS_EXPORT JausBoolean setLocalVectorMessageToBuffer(SetLocalVectorMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean reportGlobalPathSegmentMessageFromBuffer(ReportGlobalPathSegmentMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean reportGlobalPathSegmentMessageToBuffer(ReportGlobalPathSegmentMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
-JAUS_EXPORT SetLocalVectorMessage setLocalVectorMessageFromJausMessage(JausMessage jausMessage);
-JAUS_EXPORT JausMessage setLocalVectorMessageToJausMessage(SetLocalVectorMessage message);
+JAUS_EXPORT ReportGlobalPathSegmentMessage reportGlobalPathSegmentMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage reportGlobalPathSegmentMessageToJausMessage(ReportGlobalPathSegmentMessage message);
 
-JAUS_EXPORT unsigned int setLocalVectorMessageSize(SetLocalVectorMessage message);
+JAUS_EXPORT unsigned int reportGlobalPathSegmentMessageSize(ReportGlobalPathSegmentMessage message);
 
-#endif // SET_LOCAL_VECTOR_MESSAGE_H
+#endif // REPORT_GLOBAL_PATH_SEGMENT_MESSAGE_H
