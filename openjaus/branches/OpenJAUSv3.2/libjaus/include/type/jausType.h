@@ -66,7 +66,5 @@
 #include "jausGeometryPointXYZ.h"
 #include "jausTime.h"
 
-int isHostBigEndian(void);
-
 #endif
 
