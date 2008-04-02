@@ -57,7 +57,7 @@ extern "C"
 
 JAUS_EXPORT double getTimeSeconds(void);
 JAUS_EXPORT double ojGetTimeSec(void);
-JAUS_EXPORT void ojSleepMSec(int msec);
+JAUS_EXPORT void ojSleepMsec(int msec);
 
 #ifdef __cplusplus
 }
