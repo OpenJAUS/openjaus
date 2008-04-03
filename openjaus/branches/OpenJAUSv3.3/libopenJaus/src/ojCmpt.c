@@ -35,7 +35,6 @@ void* ojCmptThread(void *threadData);
 OjCmpt ojCmptCreate(char *name, JausByte id, double stateFrequencyHz)
 {
 	OjCmpt ojCmpt;
-	pthread_attr_t attr;	// Thread attributed for the component threads spawned in this function
 	int i;
 
 	ojCmpt = (OjCmpt)malloc(sizeof(struct OjCmpt));
@@ -56,7 +55,7 @@ OjCmpt ojCmptCreate(char *name, JausByte id, double stateFrequencyHz)
 	ojCmpt->messageCallback = NULL;
 	ojCmpt->messageCallbackCount = 0;
 	
-	ojCmpt->run = TRUE;
+	ojCmpt->run = FALSE;
 
 	if (!jausServiceAddCoreServices(ojCmpt->jaus->services))	// Add core services
 	{
@@ -66,14 +65,25 @@ OjCmpt ojCmptCreate(char *name, JausByte id, double stateFrequencyHz)
 		return NULL;
 	}
 
+	ojCmpt->nmi = NULL;
+
+	return ojCmpt;
+}
+
+int ojCmptRun(OjCmpt ojCmpt)
+{
+	pthread_attr_t attr;	// Thread attributed for the component threads spawned in this function
+
 	ojCmpt->nmi = nodeManagerOpen(ojCmpt->jaus);
 	if(ojCmpt->nmi == NULL)
 	{
 		free(ojCmpt->jaus->identification);
 		jausComponentDestroy(ojCmpt->jaus);
 		free(ojCmpt);
-		return NULL; 
+		return -1; 
 	}
+
+	ojCmpt->run = FALSE;
 
 	pthread_attr_init(&attr);
 	pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
@@ -84,11 +94,11 @@ OjCmpt ojCmptCreate(char *name, JausByte id, double stateFrequencyHz)
 		jausComponentDestroy(ojCmpt->jaus);
 		free(ojCmpt);
 		pthread_attr_destroy(&attr);
-		return NULL;
+		return -1;
 	}
 	pthread_attr_destroy(&attr);
 
-	return ojCmpt;
+	return 0;
 }
 
 void ojCmptDestroy(OjCmpt ojCmpt)
@@ -308,7 +318,7 @@ void ojCmptDefaultMessageProcessor(OjCmpt ojCmpt, JausMessage message)
 //}
 //
 //
-////bool OpenJausComponent::addServiceCommand(ServiceCommandType direction, JausUnsignedShort id, JausUnsignedShort commandCode, JausIntegerPresenceVector presenceVector)
+////bool OpenJausComponent::addServiceCommand(ServiceCommandType direction, JausUnsignedShort id, JausUnsignedShort commandCode, JausUnsignedInteger presenceVector)
 ////{
 ////	JausService service;
 ////	

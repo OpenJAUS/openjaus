@@ -1319,8 +1319,8 @@ JausBoolean scManagerCreatePeriodicEvent(NodeManagerInterface nmi, ServiceConnec
 	// Setup the Create Event Message
 	createEvent = createEventMessageCreate();
 	jausAddressCopy(createEvent->source, nmi->cmpt->address);
-	jausBytePresenceVectorSetBit(&createEvent->presenceVector, CREATE_EVENT_PV_REQUESTED_RATE_BIT); // Set for Periodic Event, Specify the Requested Rate
-	jausBytePresenceVectorSetBit(&createEvent->presenceVector, CREATE_EVENT_PV_MINIMUM_RATE_BIT); // Set for Periodic Event, Specify the Requested Rate
+	jausByteSetBit(&createEvent->presenceVector, CREATE_EVENT_PV_REQUESTED_RATE_BIT); // Set for Periodic Event, Specify the Requested Rate
+	jausByteSetBit(&createEvent->presenceVector, CREATE_EVENT_PV_MINIMUM_RATE_BIT); // Set for Periodic Event, Specify the Requested Rate
 	createEvent->messageCode = sc->commandCode;
 	createEvent->eventType = EVENT_PERIODIC_TYPE;
 	createEvent->requestedMinimumRate = sc->requestedUpdateRateHz;

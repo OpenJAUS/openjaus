@@ -72,7 +72,7 @@ typedef struct ServiceConnectionStruct
 	double timeoutSec;
 
 	JausAddress address;
-	JausIntegerPresenceVector presenceVector;
+	JausUnsignedInteger presenceVector;
 	JausUnsignedShort commandCode;
 	JausUnsignedShort sequenceNumber;
 	JausMessage queryMessage;
