@@ -32,7 +32,7 @@ JAUS_EXPORT double ojCmptGetRateHz(OjCmpt ojCmpt);
 JAUS_EXPORT void ojCmptDefaultMessageProcessor(OjCmpt ojCmpt, JausMessage message);
 
 void addService(JausService service);
-//	int addServiceCommand(ServiceCommandType direction, JausUnsignedShort id, JausUnsignedShort commandCode, JausIntegerPresenceVector presenceVector);
+//	int addServiceCommand(ServiceCommandType direction, JausUnsignedShort id, JausUnsignedShort commandCode, JausUnsignedInteger presenceVector);
 
 
 void establishServiceConnection(ServiceConnection cmptSc);
