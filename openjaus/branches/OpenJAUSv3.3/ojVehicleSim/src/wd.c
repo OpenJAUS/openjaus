@@ -838,9 +838,9 @@ void wdStartupState(void)
 	// Setup message to be sent to the PD
 	wdWrench = setWrenchEffortMessageCreate();
 	jausAddressCopy(wdWrench->source, wd->address);
-	jausShortPresenceVectorSetBit(&wdWrench->presenceVector, JAUS_WRENCH_PV_PROPULSIVE_LINEAR_X_BIT);
-	jausShortPresenceVectorSetBit(&wdWrench->presenceVector, JAUS_WRENCH_PV_PROPULSIVE_ROTATIONAL_Z_BIT);
-	jausShortPresenceVectorSetBit(&wdWrench->presenceVector, JAUS_WRENCH_PV_RESISTIVE_LINEAR_X_BIT);
+	jausUnsignedShortSetBit(&wdWrench->presenceVector, JAUS_WRENCH_PV_PROPULSIVE_LINEAR_X_BIT);
+	jausUnsignedShortSetBit(&wdWrench->presenceVector, JAUS_WRENCH_PV_PROPULSIVE_ROTATIONAL_Z_BIT);
+	jausUnsignedShortSetBit(&wdWrench->presenceVector, JAUS_WRENCH_PV_RESISTIVE_LINEAR_X_BIT);
 
 	scManagerAddSupportedMessage(wdNmi, JAUS_REPORT_COMPONENT_STATUS);
 

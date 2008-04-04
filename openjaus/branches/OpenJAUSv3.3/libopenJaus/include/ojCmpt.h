@@ -12,6 +12,8 @@ typedef struct OjCmpt *OjCmpt;
 
 JAUS_EXPORT OjCmpt ojCmptCreate(char *name, JausByte id, double frequency);
 JAUS_EXPORT void ojCmptDestroy(OjCmpt ojCmpt);
+JAUS_EXPORT int ojCmptRun(OjCmpt ojCmpt);
+
 
 JAUS_EXPORT void ojCmptSetFrequencyHz(OjCmpt ojCmpt, double stateFrequencyHz);
 JAUS_EXPORT void ojCmptSetState(OjCmpt ojCmpt, int state);

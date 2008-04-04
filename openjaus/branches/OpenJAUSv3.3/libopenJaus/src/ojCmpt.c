@@ -83,7 +83,7 @@ int ojCmptRun(OjCmpt ojCmpt)
 		return -1; 
 	}
 
-	ojCmpt->run = FALSE;
+	ojCmpt->run = TRUE;
 
 	pthread_attr_init(&attr);
 	pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
@@ -94,7 +94,7 @@ int ojCmptRun(OjCmpt ojCmpt)
 		jausComponentDestroy(ojCmpt->jaus);
 		free(ojCmpt);
 		pthread_attr_destroy(&attr);
-		return -1;
+		return -2;
 	}
 	pthread_attr_destroy(&attr);
 

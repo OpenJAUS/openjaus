@@ -66,8 +66,14 @@ unsigned char SystemTree::getNextInstanceId(JausAddress address)
 	bool instanceAvailable[JAUS_MAXIMUM_INSTANCE_ID] = {true};
 	int i = 0;
 	
+	for(i=0; i < JAUS_MAXIMUM_INSTANCE_ID; i++)
+	{
+		instanceAvailable[i] = true;
+	}
+
 	// Get this node
 	JausNode node = findNode(address->subsystem, address->node);
+
 	if(node)
 	{
 		// We'll go through all the attached components and check for matches
