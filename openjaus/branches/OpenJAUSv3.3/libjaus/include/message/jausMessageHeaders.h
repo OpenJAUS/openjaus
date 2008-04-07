@@ -177,7 +177,5 @@
 #include "query/world model/queryVksObjectsMessage.h"
 
 // Experimental
-#include "experimental/configurationChangedEventNotificationMessage.h"
-#include "experimental/configurationChangedEventSetupMessage.h"
 
 #endif //JAUS_MESSAGE_HEADERS_H
