@@ -305,11 +305,10 @@ int ojCmptGetState(OjCmpt ojCmpt)
 	return ojCmpt->state;
 }
 
-
-int OpenJausComponent::sendMessage(OjCmpt JausMessage message)
-{
-	return nodeManagerSend(ojCmpt->nmi, message);
-}
+//int OpenJausComponent::sendMessage(OjCmpt JausMessage message)
+//{
+//	return nodeManagerSend(ojCmpt->nmi, message);
+//}
 
 //void OpenJausComponent::addService(JausService service)
 //{
