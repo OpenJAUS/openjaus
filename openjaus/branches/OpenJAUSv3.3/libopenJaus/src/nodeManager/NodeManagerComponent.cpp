@@ -34,7 +34,7 @@ NodeManagerComponent::NodeManagerComponent(FileLoader *configData, EventHandler 
 	this->type = COMPONENT_INTERFACE;
 	this->commMngr = cmptComms;
 	this->configData = configData;
-	this->name = "OpenJAUS Node Manager v2.0";
+	this->name = "OpenJAUS Node Manager";
 	this->cmptRateHz = NM_RATE_HZ;
 	this->systemTree = cmptComms->getSystemTree();
 	for(int i = 0; i < MAXIMUM_EVENT_ID; i++)

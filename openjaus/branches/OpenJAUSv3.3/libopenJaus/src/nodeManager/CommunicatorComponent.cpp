@@ -26,7 +26,7 @@ CommunicatorComponent::CommunicatorComponent(FileLoader *configData, EventHandle
 	this->type = COMPONENT_INTERFACE;
 	this->commMngr = cmptComms;
 	this->configData = configData;
-	this->name = "OpenJAUS Communicator v2.0";
+	this->name = "OpenJAUS Communicator";
 	this->cmptRateHz = COMMUNICATOR_RATE_HZ;
 	this->systemTree = cmptComms->getSystemTree();
 	for(int i = 0; i < MAXIMUM_EVENT_ID; i++)

@@ -12,7 +12,7 @@
 #include "JausMessageEvent.h"
 #include "jaus.h"
 
-#define	OJ_NODE_MANAGER_VERSION	"3.2.0"
+#define	OJ_NODE_MANAGER_VERSION	"3.3.0"
 
 class NodeManager : public EventHandler
 {

@@ -55,7 +55,6 @@ void defaultJausMessageProcessor(JausMessage message, NodeManagerInterface nmi, 
 	ReportIdentificationMessage reportIdentification;
 	QueryConfigurationMessage queryConfMsg;
 	ReportConfigurationMessage reportConfMsg;
-	ConfigurationChangedEventSetupMessage confChangeSetupMsg;
 	ConfirmServiceConnectionMessage confScMsg;
 	CreateServiceConnectionMessage createScMsg;
 	ActivateServiceConnectionMessage activateServiceConnection;
@@ -374,17 +373,18 @@ void defaultJausMessageProcessor(JausMessage message, NodeManagerInterface nmi, 
 			reportIdentificationMessageDestroy(reportIdentification);
 			
 			//TODO: Change the way the interface between the Cmpt and NM works for subsystem tables
-			
 		    switch(message->source->component)
 		    {
 		        case JAUS_NODE_MANAGER:
 		        	if(message->source->subsystem == cmpt->address->subsystem && message->source->node == cmpt->address->node)
 		        	{
-		        		// Only query config from local node manager
-						queryConfMsg = queryConfigurationMessageCreate();
-						jausAddressCopy(queryConfMsg->source, cmpt->address);
-						jausAddressCopy(queryConfMsg->destination, message->source);
-		        		queryConfMsg->queryField = JAUS_SUBSYSTEM_CONFIGURATION;		        	    
+						// TODO: Add event setup for ReportConfiguration of system tree
+						//txMessage = queryConfigurationMessageToJausMessage(queryConfMsg);
+						//nodeManagerSend(nmi, txMessage);
+						//jausMessageDestroy(txMessage);
+						//queryConfigurationMessageDestroy(queryConfMsg);
+						//jausMessageDestroy(message);
+						return;
 		        	}
 		        	else
 		        	{
@@ -395,12 +395,6 @@ void defaultJausMessageProcessor(JausMessage message, NodeManagerInterface nmi, 
 		        default: 
 		        	return; // Do not bother to query any other component for its config
 		    }
-			txMessage = queryConfigurationMessageToJausMessage(queryConfMsg);	
-			nodeManagerSend(nmi, txMessage);
-			jausMessageDestroy(txMessage);
-			
-			queryConfigurationMessageDestroy(queryConfMsg);
-			jausMessageDestroy(message);
 			break;
 			
 		case JAUS_REPORT_CONFIGURATION:
@@ -409,28 +403,16 @@ void defaultJausMessageProcessor(JausMessage message, NodeManagerInterface nmi, 
 			{
 				jausSubsystemDestroy(cmpt->node->subsystem);
 				cmpt->node->subsystem = jausSubsystemClone(reportConfMsg->subsystem);
-				//jausSubsystemTableToString(cmpt->node->subsystem, string);
-			    //printf("%s", string);
-			    
-				confChangeSetupMsg = configurationChangedEventSetupMessageCreate();
-				jausAddressCopy(confChangeSetupMsg->source, cmpt->address);
-				jausAddressCopy(confChangeSetupMsg->destination, message->source);
-				confChangeSetupMsg->notificationType = JAUS_NOTIFICATION_ALWAYS;
-				// The node manager is designed to send us a notification whenever the subsystem changes
-				txMessage = configurationChangedEventSetupMessageToJausMessage(confChangeSetupMsg);	
-				nodeManagerSend(nmi, txMessage);
-				jausMessageDestroy(txMessage);
-
-				configurationChangedEventSetupMessageDestroy(confChangeSetupMsg);
 				reportConfigurationMessageDestroy(reportConfMsg);
-				
 				scManagerProcessUpdatedSubystem(nmi, cmpt->node->subsystem);
 				
 				// Check for Controlleer
 				if(	cmpt->controller.active == JAUS_TRUE && !nodeManagerVerifyAddress(nmi, cmpt->controller.address) )
 				{
+					// TODO: Throw errors (need a way to capture errors in this library)
 					//cError("Active Component Controller (%d.%d.%d.%d) lost.\n", 
-						//cmpt->controller.address->subsystem, cmpt->controller.address->node, cmpt->controller.address->component, cmpt->controller.address->instance);
+					//		cmpt->controller.address->subsystem, cmpt->controller.address->node, 
+					//		cmpt->controller.address->component, cmpt->controller.address->instance);
 
 					// Disable Controller
 					cmpt->controller.active = JAUS_FALSE;
