@@ -56,7 +56,7 @@ extern "C"
 	#define JAUS_EXPORT
 #endif
 
-#define JAUS_LIBRARY_VERSION	"3.2.0"
+#define JAUS_LIBRARY_VERSION	"3.3.0"
 
 typedef enum
 {
