@@ -23,7 +23,7 @@ JAUS_EXPORT int ojCmptSetMainCallback(OjCmpt ojCmpt, void (*mainCallbackFunction
 JAUS_EXPORT void ojCmptSetMessageCallback(OjCmpt ojCmpt, unsigned short commandCode, void (*messageFunction)(OjCmpt, JausMessage));	// Calls method from messageHandler
 JAUS_EXPORT void ojCmptSetMessageProcessorCallback(OjCmpt ojCmpt, void (*processMessageFunction)(OjCmpt, JausMessage));	// Calls method from messageHandler
 
-JAUS_EXPORT void ojCmptSendMessage(OjCmpt ojCmpt, JausMessage message);
+JAUS_EXPORT int ojCmptSendMessage(OjCmpt ojCmpt, JausMessage message);
 
 JAUS_EXPORT char* ojCmptGetName(OjCmpt ojCmpt);
 JAUS_EXPORT JausAddress ojCmptGetAddress(OjCmpt ojCmpt);
