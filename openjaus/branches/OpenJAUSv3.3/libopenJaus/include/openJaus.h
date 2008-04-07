@@ -34,7 +34,11 @@
 #ifndef OPEN_JAUS_H
 #define OPEN_JAUS_H
 
-#include "nodeManagerInterface.h"
-#include "ojCmpt.h"
+#ifdef __cplusplus
+#include "nodeManager/NodeManager.h"
+#endif
+
+#include "nodeManagerInterface/nodeManagerInterface.h"
+#include "componentLibrary/ojCmpt.h"
 
 #endif // OPEN_JAUS_H
