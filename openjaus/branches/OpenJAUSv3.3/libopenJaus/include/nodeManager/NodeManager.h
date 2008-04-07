@@ -2,15 +2,15 @@
 #define NODEMANAGER_H
 
 #include <list>
+#include <jaus.h>
 #include "MessageRouter.h"
 #include "SystemTree.h"
 #include "FileLoader.h"
 #include "EventHandler.h"
-#include "NodeManagerEvent.h"
-#include "SystemTreeEvent.h"
-#include "ErrorEvent.h"
-#include "JausMessageEvent.h"
-#include "jaus.h"
+#include "events/NodeManagerEvent.h"
+#include "events/SystemTreeEvent.h"
+#include "events/ErrorEvent.h"
+#include "events/JausMessageEvent.h"
 
 #define	OJ_NODE_MANAGER_VERSION	"3.3.0"
 
