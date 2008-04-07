@@ -300,18 +300,17 @@ void ojCmptDefaultMessageProcessor(OjCmpt ojCmpt, JausMessage message)
 	defaultJausMessageProcessor(message, ojCmpt->nmi, ojCmpt->jaus);
 }
 
-//JausState OpenJausComponent::getState(void)
-//{
-//	return this->cmpt->state;
-//}
-//
-//
-//
-//void OpenJausComponent::sendMessage(JausMessage message)
-//{
-//	messageHandler.sendMessage(message);
-//}
-//
+int ojCmptGetState(OjCmpt ojCmpt)
+{
+	return ojCmpt->state;
+}
+
+
+int OpenJausComponent::sendMessage(OjCmpt JausMessage message)
+{
+	return nodeManagerSend(ojCmpt->nmi, message);
+}
+
 //void OpenJausComponent::addService(JausService service)
 //{
 //	jausServiceAddService(this->cmpt->services, service);
