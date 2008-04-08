@@ -224,7 +224,7 @@ static int dataToBuffer(ReportRelativeObjectPositionMessage message, unsigned ch
 		if(jausByteIsBitSet(message->presenceVector, JAUS_RELATIVE_OBJECT_POSITION_PV_BEARING_ERROR_BIT))
 		{
 			// Scaled UInt (0, JAUS_PI)
-			tempInt = jausUnsignedIntegerFromDouble(message->bearingErrorRadians, 0, JAUS_PI);
+			tempUInt = jausUnsignedIntegerFromDouble(message->bearingErrorRadians, 0, JAUS_PI);
 
 			//pack
 			if(!jausUnsignedIntegerToBuffer(tempUInt, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -244,7 +244,7 @@ static int dataToBuffer(ReportRelativeObjectPositionMessage message, unsigned ch
 		if(jausByteIsBitSet(message->presenceVector, JAUS_RELATIVE_OBJECT_POSITION_PV_ELEVATION_ERROR_BIT))
 		{
 			// Scaled UInt (0, JAUS_PI)
-			tempInt = jausUnsignedIntegerFromDouble(message->elevationErrorRadians, 0, JAUS_PI);
+			tempUInt = jausUnsignedIntegerFromDouble(message->elevationErrorRadians, 0, JAUS_PI);
 
 			//pack
 			if(!jausUnsignedIntegerToBuffer(tempUInt, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;

@@ -76,8 +76,6 @@ static void dataDestroy(QuerySelectedCameraMessage message)
 // Return boolean of success
 static JausBoolean dataFromBuffer(QuerySelectedCameraMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
 {
-	int index = 0;
-	
 	if(bufferSizeBytes == message->dataSize)
 	{
 		// No Data

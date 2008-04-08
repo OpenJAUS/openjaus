@@ -88,7 +88,7 @@ static JausBoolean dataFromBuffer(ReportDataLinkStatusMessage message, unsigned 
 		if(!jausByteFromBuffer(&tempByte, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
 
-		message->dataLinkState = (tempByte < 0) ? JAUS_BYTE_MIN_VALUE : tempByte;
+		message->dataLinkState = tempByte;
 
 		return JAUS_TRUE;
 	}

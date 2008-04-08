@@ -380,7 +380,6 @@ static int dataSize(QueryVksObjectsMessage message)
 	unsigned int index = 0;
 	int i = 0;
 	JausWorldModelFeatureClass fcClass = NULL;
-	JausGeometryPointLLA point = NULL;
 
 	// Ensure the PV rules are met
 	// If the VKS_PV_QUERY_OBJECTS_REGION_BIT is set, then the VKS_PV_QUERY_OBJECTS_POINT_COUNT_BIT is required

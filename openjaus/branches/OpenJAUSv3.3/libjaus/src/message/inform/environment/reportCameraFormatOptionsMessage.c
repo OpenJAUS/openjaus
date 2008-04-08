@@ -105,7 +105,7 @@ static JausBoolean dataFromBuffer(ReportCameraFormatOptionsMessage message, unsi
 			if(!jausByteFromBuffer(&tempByte, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 			index += JAUS_BYTE_SIZE_BYTES;
 
-			message->audioFormat[0] = (tempByte < 0) ? JAUS_BYTE_MIN_VALUE : tempByte;
+			message->audioFormat[0] = tempByte;
 		}
 
 		// Audio Format 2
@@ -114,7 +114,7 @@ static JausBoolean dataFromBuffer(ReportCameraFormatOptionsMessage message, unsi
 			if(!jausByteFromBuffer(&tempByte, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 			index += JAUS_BYTE_SIZE_BYTES;
 
-			message->audioFormat[1] = (tempByte < 0) ? JAUS_BYTE_MIN_VALUE : tempByte;
+			message->audioFormat[1] = tempByte;
 		}
 
 		// Image Format 1
@@ -123,7 +123,7 @@ static JausBoolean dataFromBuffer(ReportCameraFormatOptionsMessage message, unsi
 			if(!jausByteFromBuffer(&tempByte, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 			index += JAUS_BYTE_SIZE_BYTES;
 
-			message->imageFormat[0] = (tempByte < 0) ? JAUS_BYTE_MIN_VALUE : tempByte;
+			message->imageFormat[0] = tempByte;
 		}
 
 		// Image Format 2
@@ -132,7 +132,7 @@ static JausBoolean dataFromBuffer(ReportCameraFormatOptionsMessage message, unsi
 			if(!jausByteFromBuffer(&tempByte, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 			index += JAUS_BYTE_SIZE_BYTES;
 
-			message->imageFormat[1] = (tempByte < 0) ? JAUS_BYTE_MIN_VALUE : tempByte;
+			message->imageFormat[1] = tempByte;
 		}
 
 		// Image Format 3
@@ -141,7 +141,7 @@ static JausBoolean dataFromBuffer(ReportCameraFormatOptionsMessage message, unsi
 			if(!jausByteFromBuffer(&tempByte, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 			index += JAUS_BYTE_SIZE_BYTES;
 
-			message->imageFormat[2] = (tempByte < 0) ? JAUS_BYTE_MIN_VALUE : tempByte;
+			message->imageFormat[2] = tempByte;
 		}
 
 		// Image Format 4
@@ -150,7 +150,7 @@ static JausBoolean dataFromBuffer(ReportCameraFormatOptionsMessage message, unsi
 			if(!jausByteFromBuffer(&tempByte, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 			index += JAUS_BYTE_SIZE_BYTES;
 
-			message->imageFormat[3] = (tempByte < 0) ? JAUS_BYTE_MIN_VALUE : tempByte;
+			message->imageFormat[3] = tempByte;
 		}
 
 		// Format Option

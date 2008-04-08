@@ -52,7 +52,9 @@ JausUnsignedShort newJausUnsignedShort(unsigned short val)
 
 JausBoolean jausUnsignedShortFromBuffer(JausUnsignedShort *jUShort, unsigned char *buf, unsigned int bufferSizeBytes)
 {
+#ifdef JAUS_BIG_ENDIAN
 	int i = 0;
+#endif	
 	unsigned short tempUShort = 0;
 	
 	if(bufferSizeBytes < JAUS_UNSIGNED_SHORT_SIZE_BYTES)
@@ -75,7 +77,9 @@ JausBoolean jausUnsignedShortFromBuffer(JausUnsignedShort *jUShort, unsigned cha
 
 JausBoolean jausUnsignedShortToBuffer(JausUnsignedShort input, unsigned char *buf, unsigned int bufferSizeBytes)
 {
+#ifdef JAUS_BIG_ENDIAN
 	int i = 0;
+#endif	
 
 	if(bufferSizeBytes < JAUS_UNSIGNED_SHORT_SIZE_BYTES)
 		return JAUS_FALSE;

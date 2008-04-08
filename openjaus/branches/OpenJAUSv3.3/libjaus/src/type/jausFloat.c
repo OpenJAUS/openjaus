@@ -53,8 +53,10 @@ JausFloat newJausFloat(float val)
 // Returns success or failed
 JausBoolean jausFloatFromBuffer(JausFloat *jFloat, unsigned char *buf, unsigned int bufferSizeBytes)
 {
+#ifdef JAUS_BIG_ENDIAN
 	int i = 0;
 	unsigned int tempInt = 0;
+#endif
 	float tempFloat = 0.0;
 	
 	if(bufferSizeBytes < JAUS_FLOAT_SIZE_BYTES)
@@ -81,8 +83,10 @@ JausBoolean jausFloatFromBuffer(JausFloat *jFloat, unsigned char *buf, unsigned 
 
 JausBoolean jausFloatToBuffer(JausFloat input, unsigned char *buf, unsigned int bufferSizeBytes)
 {
+#ifdef JAUS_BIG_ENDIAN
 	int i = 0;
 	unsigned int tempInt = 0;
+#endif
 
 	if(bufferSizeBytes < JAUS_FLOAT_SIZE_BYTES)
 		return JAUS_FALSE;

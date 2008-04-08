@@ -80,7 +80,7 @@ static JausBoolean dataFromBuffer(ConfirmComponentControlMessage message, unsign
 		if(!jausByteFromBuffer(&tempByte, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
 
-		message->responseCode = (tempByte < 0) ? JAUS_BYTE_MIN_VALUE : tempByte;
+		message->responseCode = tempByte;
 		return JAUS_TRUE;
 	}
 	else

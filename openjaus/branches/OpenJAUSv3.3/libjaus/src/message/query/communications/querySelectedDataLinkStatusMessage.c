@@ -74,8 +74,6 @@ static void dataDestroy(QuerySelectedDataLinkStatusMessage message)
 // Return boolean of success
 static JausBoolean dataFromBuffer(QuerySelectedDataLinkStatusMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
 {
-	int index = 0;
-	
 	if(bufferSizeBytes == message->dataSize)
 	{
 		return JAUS_TRUE;
