@@ -1,6 +1,6 @@
-#include "CommunicatorComponent.h"
-#include "JausComponentCommunicationManager.h"
-#include "timeLib.h"
+#include "nodeManager/CommunicatorComponent.h"
+#include "nodeManager/JausComponentCommunicationManager.h"
+#include "utils/timeLib.h"
 #include "jaus.h"
 
 CommunicatorComponent::CommunicatorComponent(FileLoader *configData, EventHandler *handler, JausComponentCommunicationManager *cmptComms)

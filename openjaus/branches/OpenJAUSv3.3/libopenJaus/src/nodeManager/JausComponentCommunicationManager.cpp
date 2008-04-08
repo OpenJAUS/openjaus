@@ -1,9 +1,9 @@
-#include "JausComponentCommunicationManager.h"
-#include "NodeManagerComponent.h"
-#include "CommunicatorComponent.h"
-#include "JausUdpInterface.h"
-#include "OjApiComponentInterface.h"
-#include "OjUdpComponentInterface.h"
+#include "nodeManager/JausComponentCommunicationManager.h"
+#include "nodeManager/NodeManagerComponent.h"
+#include "nodeManager/CommunicatorComponent.h"
+#include "nodeManager/JausUdpInterface.h"
+#include "nodeManager/OjApiComponentInterface.h"
+#include "nodeManager/OjUdpComponentInterface.h"
 
 JausComponentCommunicationManager::JausComponentCommunicationManager(FileLoader *configData, MessageRouter *msgRouter, SystemTree *systemTree, EventHandler *handler)
 {

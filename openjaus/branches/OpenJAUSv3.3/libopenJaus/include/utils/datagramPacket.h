@@ -66,7 +66,7 @@
 	#error "No Socket implementation defined for this platform."
 #endif
 
-#include "inetAddress.h"
+#include "utils/inetAddress.h"
 
 #ifdef WIN32
 	#define JAUS_EXPORT	__declspec(dllexport)

@@ -1,4 +1,4 @@
-#include "JausMessageEvent.h"
+#include "nodeManager/events/JausMessageEvent.h"
 
 JausMessageEvent::JausMessageEvent(JausMessage message, JausTransportInterface *transport, unsigned char direction)
 {

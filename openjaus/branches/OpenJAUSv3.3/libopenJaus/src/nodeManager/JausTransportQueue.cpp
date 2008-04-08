@@ -10,9 +10,9 @@
  *
  */
 
-#include "JausTransportQueue.h"
-#include "JausTransportInterface.h"
-#include "JausCommunicationManager.h"
+#include "nodeManager/JausTransportQueue.h"
+#include "nodeManager/JausTransportInterface.h"
+#include "nodeManager/JausCommunicationManager.h"
 
 JausTransportQueue::JausTransportQueue(void){}
 

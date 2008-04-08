@@ -1,5 +1,5 @@
-#include "JausTransportInterface.h"
-#include "JausCommunicationManager.h"
+#include "nodeManager/JausTransportInterface.h"
+#include "nodeManager/JausCommunicationManager.h"
 
 JausTransportInterface::JausTransportInterface(void){}
 

@@ -15,7 +15,7 @@
 #include "JausComponentCommunicationManager.h"
 #include "SystemTree.h"
 #include "NodeManagerComponent.h"
-#include "datagramSocket.h"
+#include "utils/datagramSocket.h"
 
 #define OJ_UDP_INTERFACE_MESSAGE_SIZE_BYTES	8
 

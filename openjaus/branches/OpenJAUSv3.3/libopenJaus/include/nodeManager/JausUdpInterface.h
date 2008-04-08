@@ -11,10 +11,10 @@
 #endif
 
 #include "JausTransportInterface.h"
-#include "multicastSocket.h"
-#include "inetAddress.h"
-#include "datagramPacket.h"
-#include "FileLoader.h"
+#include "utils/multicastSocket.h"
+#include "utils/inetAddress.h"
+#include "utils/datagramPacket.h"
+#include "utils/FileLoader.h"
 
 #define JAUS_UDP_NAME					"JAUS UDP Interface"
 #define SOCKET_TIMEOUT_SEC				0.5

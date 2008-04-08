@@ -1,6 +1,6 @@
-#include "SystemTree.h"
-#include "timeLib.h"
-#include "SystemTreeEvent.h"
+#include "nodeManager/SystemTree.h"
+#include "utils/timeLib.h"
+#include "nodeManager/events/SystemTreeEvent.h"
 
 SystemTree::SystemTree(FileLoader *configData, EventHandler *handler)
 {

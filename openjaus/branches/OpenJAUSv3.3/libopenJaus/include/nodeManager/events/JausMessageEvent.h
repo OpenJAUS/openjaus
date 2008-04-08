@@ -2,8 +2,8 @@
 #define JAUS_MESSAGE_EVENT_H
 
 #include <string>
-#include "NodeManagerEvent.h"
-#include "JausTransportInterface.h"
+#include "nodeManager/events/NodeManagerEvent.h"
+#include "nodeManager/JausTransportInterface.h"
 
 class JausMessageEvent : public NodeManagerEvent
 {

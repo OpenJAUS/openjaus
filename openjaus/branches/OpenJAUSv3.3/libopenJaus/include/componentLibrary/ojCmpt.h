@@ -3,12 +3,17 @@
 
 #include <jaus.h>
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
 #define OJ_CMPT_MAX_STATE_COUNT			32
 #define OJ_CMPT_MIN_FREQUENCY_HZ		0.1
 #define OJ_CMPT_MAX_FREQUENCY_HZ		1000.0
 #define OJ_CMPT_DEFAULT_FREQUENCY_HZ	1.0
 
-typedef struct OjCmpt *OjCmpt;
+typedef struct OjCmptStruct *OjCmpt;
 
 JAUS_EXPORT OjCmpt ojCmptCreate(char *name, JausByte id, double frequency);
 JAUS_EXPORT void ojCmptDestroy(OjCmpt ojCmpt);
@@ -45,6 +50,10 @@ void removeScMessage(unsigned short commandCode);	// Removes service connection 
 
 int scIsActive(unsigned short commandCode);
 ServiceConnection getScSendList(unsigned short commandCode);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // OJ_CMPT_H
 

@@ -1,6 +1,6 @@
 #include <jaus.h>
-#include <nodeManagerInterface.h>
-#include "ojCmpt.h"
+#include "nodeManagerInterface/nodeManagerInterface.h"
+#include "componentLibrary/ojCmpt.h"
 
 typedef	struct 
 {
@@ -8,7 +8,7 @@ typedef	struct
 	unsigned short commandCode;
 }MessageCallback;				// An array to hold the pointers to the message callback functions
 
-struct OjCmpt
+struct OjCmptStruct
 {
 	double frequencyHz;		// Desired frequency of the component 
 	double rateHz;		// Actual running frequency of the component 
@@ -37,7 +37,7 @@ OjCmpt ojCmptCreate(char *name, JausByte id, double stateFrequencyHz)
 	OjCmpt ojCmpt;
 	int i;
 
-	ojCmpt = (OjCmpt)malloc(sizeof(struct OjCmpt));
+	ojCmpt = (OjCmpt)malloc(sizeof(struct OjCmptStruct));
 
 	ojCmpt->jaus = jausComponentCreate();
 	ojCmpt->jaus->identification = (char *)calloc(strlen(name) + 1, 1);
