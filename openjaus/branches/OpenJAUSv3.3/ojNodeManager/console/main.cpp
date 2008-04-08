@@ -1,4 +1,4 @@
-#include "NodeManager.h"
+#include "openJaus.h"
 
 #if defined(WIN32)
 	#include <windows.h>

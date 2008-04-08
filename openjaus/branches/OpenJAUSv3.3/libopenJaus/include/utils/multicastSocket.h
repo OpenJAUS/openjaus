@@ -66,8 +66,8 @@
 	#error "No Socket implementation defined for this platform."
 #endif
 
-#include "inetAddress.h"
-#include "datagramSocket.h"
+#include "utils/inetAddress.h"
+#include "utils/datagramSocket.h"
 
 #define LOOPBACK_ENABLED 1
 #define LOOPBACK_DISABLED 0

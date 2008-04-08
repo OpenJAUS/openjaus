@@ -43,7 +43,7 @@
 
 #include <stdlib.h>
 #include <pthread.h>
-#include "queue.h"
+#include "utils/queue.h"
 
 Queue queueCreate(void)
 {

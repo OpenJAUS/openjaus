@@ -1,5 +1,5 @@
-#include "JausNodeCommunicationManager.h"
-#include "JausUdpInterface.h"
+#include "nodeManager/JausNodeCommunicationManager.h"
+#include "nodeManager/JausUdpInterface.h"
 
 JausNodeCommunicationManager::JausNodeCommunicationManager(FileLoader *configData, MessageRouter *msgRouter, SystemTree *systemTree, EventHandler *handler)
 {

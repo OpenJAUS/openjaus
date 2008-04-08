@@ -1,9 +1,9 @@
-#include "JausUdpInterface.h"
-#include "JausSubsystemCommunicationManager.h"
-#include "JausNodeCommunicationManager.h"
-#include "JausComponentCommunicationManager.h"
-#include "ErrorEvent.h"
-#include "JausMessageEvent.h"
+#include "nodeManager/JausUdpInterface.h"
+#include "nodeManager/JausSubsystemCommunicationManager.h"
+#include "nodeManager/JausNodeCommunicationManager.h"
+#include "nodeManager/JausComponentCommunicationManager.h"
+#include "nodeManager/events/ErrorEvent.h"
+#include "nodeManager/events/JausMessageEvent.h"
 
 JausUdpInterface::JausUdpInterface(FileLoader *configData, EventHandler *handler, JausCommunicationManager *commMngr)
 {

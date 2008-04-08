@@ -45,7 +45,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "multicastSocket.h"
+#include "utils/multicastSocket.h"
 
 MulticastSocket multicastSocketCreate(short port, InetAddress ipAddress)
 {

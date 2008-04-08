@@ -1,5 +1,5 @@
-#include "OjUdpComponentInterface.h"
-#include "ErrorEvent.h"
+#include "nodeManager/OjUdpComponentInterface.h"
+#include "nodeManager/events/ErrorEvent.h"
 
 OjUdpComponentInterface::OjUdpComponentInterface(FileLoader *configData, EventHandler *handler, JausComponentCommunicationManager *cmptMngr)
 {

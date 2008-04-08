@@ -1,5 +1,5 @@
 
-#include "NodeManager.h"
+#include "nodeManager/NodeManager.h"
 
 NodeManager::NodeManager(FileLoader *configData, EventHandler *handler)
 {

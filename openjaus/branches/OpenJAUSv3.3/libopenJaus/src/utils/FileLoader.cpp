@@ -17,7 +17,7 @@
  * @par 10-23-2007 Danny Kent
  * - Updated for use in the NodeManager project
  */
-#include "FileLoader.h"
+#include "utils/FileLoader.h"
 
 #ifndef WIN32
 	#define stricmp(x,y) strcasecmp(x,y)

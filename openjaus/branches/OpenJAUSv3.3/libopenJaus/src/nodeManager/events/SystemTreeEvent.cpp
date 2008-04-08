@@ -1,4 +1,4 @@
-#include "SystemTreeEvent.h"
+#include "nodeManager/events/SystemTreeEvent.h"
 
 SystemTreeEvent::SystemTreeEvent(unsigned int type)
 {

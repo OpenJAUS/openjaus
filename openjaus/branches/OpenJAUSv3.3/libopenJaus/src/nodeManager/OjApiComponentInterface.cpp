@@ -1,6 +1,6 @@
-#include "OjApiComponentInterface.h"
-#include "JausComponentCommunicationManager.h"
-#include "NodeManagerComponent.h"
+#include "nodeManager/OjApiComponentInterface.h"
+#include "nodeManager/JausComponentCommunicationManager.h"
+#include "nodeManager/NodeManagerComponent.h"
 #include "jaus.h"
 
 OjApiComponentInterface::OjApiComponentInterface(FileLoader *configData, EventHandler *handler, JausComponentCommunicationManager *cmptComms)

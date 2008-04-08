@@ -1,10 +1,10 @@
-#include "NodeManagerComponent.h"
-#include "JausComponentCommunicationManager.h"
-#include "ErrorEvent.h"
-#include "EventHandler.h"
-#include "SystemTree.h"
+#include "nodeManager/NodeManagerComponent.h"
+#include "nodeManager/JausComponentCommunicationManager.h"
+#include "nodeManager/events/ErrorEvent.h"
+#include "nodeManager/EventHandler.h"
+#include "nodeManager/SystemTree.h"
 #include "jaus.h"
-#include "timeLib.h"
+#include "utils/timeLib.h"
 
 #define _USE_MATH_DEFINES
 #include <math.h>

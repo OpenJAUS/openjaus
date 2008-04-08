@@ -1,8 +1,8 @@
-#include "MessageRouter.h"
-#include "JausSubsystemCommunicationManager.h"
-#include "JausNodeCommunicationManager.h"
-#include "JausComponentCommunicationManager.h"
-#include "ErrorEvent.h"
+#include "nodeManager/MessageRouter.h"
+#include "nodeManager/JausSubsystemCommunicationManager.h"
+#include "nodeManager/JausNodeCommunicationManager.h"
+#include "nodeManager/JausComponentCommunicationManager.h"
+#include "nodeManager/events/ErrorEvent.h"
 
 MessageRouter::MessageRouter(FileLoader *configData, SystemTree *sysTree, EventHandler *handler)
 {

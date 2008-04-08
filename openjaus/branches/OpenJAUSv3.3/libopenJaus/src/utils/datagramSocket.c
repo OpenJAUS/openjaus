@@ -45,7 +45,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "datagramSocket.h"
+#include "utils/datagramSocket.h"
 
 DatagramSocket datagramSocketCreate(short port, InetAddress ipAddress)
 {

@@ -1,5 +1,5 @@
-#include "LocalComponent.h"
-#include "timeval.h"
+#include "nodeManager/LocalComponent.h"
+#include "utils/timeval.h"
 
 void LocalComponent::run()
 {

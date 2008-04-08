@@ -39,7 +39,7 @@
 // Description:	Provides the core service connection management routines
 
 #include <stdlib.h>
-#include "nodeManagerInterface.h"
+#include "nodeManagerInterface/nodeManagerInterface.h"
 
 SupportedScMessage scFindSupportedScMsgInList(SupportedScMessage, unsigned short);
 ServiceConnection scFindScInList(ServiceConnection, ServiceConnection);

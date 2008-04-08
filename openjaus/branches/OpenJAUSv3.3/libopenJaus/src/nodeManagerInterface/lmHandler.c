@@ -40,7 +40,7 @@
 //				recieved and then create a single Jaus Message from that collection
 
 #include <stdlib.h>
-#include "nodeManagerInterface.h"
+#include "nodeManagerInterface/nodeManagerInterface.h"
 
 LargeMessageHandler lmHandlerCreate(void)
 {

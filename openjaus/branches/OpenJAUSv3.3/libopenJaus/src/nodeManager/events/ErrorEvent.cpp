@@ -1,4 +1,4 @@
-#include "ErrorEvent.h"
+#include "nodeManager/events/ErrorEvent.h"
 
 
 ErrorEvent::ErrorEvent(unsigned int subType)

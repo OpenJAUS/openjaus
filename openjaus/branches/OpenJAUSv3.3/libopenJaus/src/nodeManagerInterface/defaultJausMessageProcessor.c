@@ -40,7 +40,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "nodeManagerInterface.h"
+#include "nodeManagerInterface/nodeManagerInterface.h"
 
 void defaultJausMessageProcessor(JausMessage message, NodeManagerInterface nmi, JausComponent cmpt)
 {

@@ -5,7 +5,7 @@
 #include <jaus.h>
 #include "MessageRouter.h"
 #include "SystemTree.h"
-#include "FileLoader.h"
+#include "utils/FileLoader.h"
 #include "EventHandler.h"
 #include "events/NodeManagerEvent.h"
 #include "events/SystemTreeEvent.h"

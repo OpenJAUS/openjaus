@@ -53,7 +53,7 @@
 	#define SLEEP_MS(x) usleep(x*1000)
 #endif
 
-#include "nodeManagerInterface.h"
+#include "nodeManagerInterface/nodeManagerInterface.h"
 
 #define JAUS_OPC_UDP_HEADER				"JAUS01.0"
 #define JAUS_OPC_UDP_HEADER_SIZE_BYTES	8 

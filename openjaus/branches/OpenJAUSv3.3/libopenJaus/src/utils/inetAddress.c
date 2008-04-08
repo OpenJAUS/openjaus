@@ -46,7 +46,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "inetAddress.h"
+#include "utils/inetAddress.h"
 
 InetAddress inetAddressCreate(void)
 {

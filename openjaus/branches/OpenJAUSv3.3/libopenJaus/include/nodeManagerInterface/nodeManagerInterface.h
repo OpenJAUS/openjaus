@@ -34,11 +34,11 @@
 #ifndef NODE_MANAGER_H
 #define NODE_MANAGER_H
 
-#include "datagramSocket.h"
-#include "inetAddress.h"
-#include "queue.h"
-#include "jaus.h"
-#include "timeLib.h"
+#include "utils/datagramSocket.h"
+#include "utils/inetAddress.h"
+#include "utils/queue.h"
+#include "utils/timeLib.h"
+#include <jaus.h>
 #include <pthread.h>
 #include <string.h>
 

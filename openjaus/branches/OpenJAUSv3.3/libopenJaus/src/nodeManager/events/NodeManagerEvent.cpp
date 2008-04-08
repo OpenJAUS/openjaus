@@ -1,4 +1,4 @@
-#include "NodeManagerEvent.h"
+#include "nodeManager/events/NodeManagerEvent.h"
 
 NodeManagerEvent::~NodeManagerEvent()
 {

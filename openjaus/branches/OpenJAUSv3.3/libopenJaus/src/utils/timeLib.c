@@ -41,7 +41,7 @@
 //
 // Description:	CIMAR timing library header file
 
-#include "timeLib.h"
+#include "utils/timeLib.h"
 
 #ifdef WIN32
 
