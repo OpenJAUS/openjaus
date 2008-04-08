@@ -81,7 +81,7 @@ static JausBoolean dataFromBuffer(ReportComponentStatusMessage message, unsigned
 		if(!jausByteFromBuffer(&tempByte, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
 
-		message->primaryStatusCode = (tempByte < 0) ? JAUS_BYTE_MIN_VALUE : tempByte;
+		message->primaryStatusCode = tempByte;
 
 		if(!jausUnsignedIntegerFromBuffer(&(message->secondaryStatusCode), buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;

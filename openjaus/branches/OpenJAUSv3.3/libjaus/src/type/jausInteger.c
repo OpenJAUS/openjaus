@@ -52,7 +52,9 @@ JausInteger newJausInteger(int val)
 
 JausBoolean jausIntegerFromBuffer(JausInteger *jInteger, unsigned char *buf, unsigned int bufferSizeBytes)
 {
+#ifdef JAUS_BIG_ENDIAN
 	int i = 0;
+#endif	
 	int tempInt = 0;
 	
 	if(bufferSizeBytes < JAUS_INTEGER_SIZE_BYTES)
@@ -78,7 +80,9 @@ JausBoolean jausIntegerFromBuffer(JausInteger *jInteger, unsigned char *buf, uns
 
 JausBoolean jausIntegerToBuffer(JausInteger input, unsigned char *buf, unsigned int bufferSizeBytes)
 {
+#ifdef JAUS_BIG_ENDIAN
 	int i = 0;
+#endif	
 
 	if(bufferSizeBytes < JAUS_INTEGER_SIZE_BYTES)
 	{

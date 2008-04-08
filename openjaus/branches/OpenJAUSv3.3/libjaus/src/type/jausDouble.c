@@ -52,8 +52,10 @@ JausDouble newJausDouble(double val)
 
 JausBoolean jausDoubleFromBuffer(JausDouble *jDouble, unsigned char *buf, unsigned int bufferSizeBytes)
 {
+#ifdef JAUS_BIG_ENDIAN
 	int i = 0;
 	unsigned long tempLong = 0;
+#endif	
 	double tempDouble = 0.0;
 	
 	if(bufferSizeBytes < JAUS_DOUBLE_SIZE_BYTES)
@@ -79,8 +81,10 @@ JausBoolean jausDoubleFromBuffer(JausDouble *jDouble, unsigned char *buf, unsign
 
 JausBoolean jausDoubleToBuffer(JausDouble input, unsigned char *buf, unsigned int bufferSizeBytes)
 {
+#ifdef JAUS_BIG_ENDIAN
 	int i = 0;
 	unsigned long tempLong = 0;
+#endif	
 
 	if(bufferSizeBytes < JAUS_DOUBLE_SIZE_BYTES)
 	{

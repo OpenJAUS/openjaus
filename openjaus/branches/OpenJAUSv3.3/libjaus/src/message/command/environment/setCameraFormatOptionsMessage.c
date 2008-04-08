@@ -100,7 +100,7 @@ static JausBoolean dataFromBuffer(SetCameraFormatOptionsMessage message, unsigne
 			if(!jausByteFromBuffer(&tempByte, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 			index += JAUS_BYTE_SIZE_BYTES;
 
-			message->audioFormat = (tempByte < 0) ? JAUS_BYTE_MIN_VALUE : tempByte;
+			message->audioFormat = tempByte;
 		}
 
 		// ImageFormat
@@ -109,7 +109,7 @@ static JausBoolean dataFromBuffer(SetCameraFormatOptionsMessage message, unsigne
 			if(!jausByteFromBuffer(&tempByte, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 			index += JAUS_BYTE_SIZE_BYTES;
 
-			message->imageFormat = (tempByte < 0) ? JAUS_BYTE_MIN_VALUE : tempByte;
+			message->imageFormat = tempByte;
 		}
 
 		// FormatOptions

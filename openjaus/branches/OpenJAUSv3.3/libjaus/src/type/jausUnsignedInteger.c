@@ -52,7 +52,9 @@ JausUnsignedInteger newJausUnsignedInteger(unsigned int val)
 
 JausBoolean jausUnsignedIntegerFromBuffer(JausUnsignedInteger *jUint, unsigned char *buf, unsigned int bufferSizeBytes)
 {
+#ifdef JAUS_BIG_ENDIAN
 	int i = 0;
+#endif	
 	unsigned int tempUInt = 0;
 	
 	if(bufferSizeBytes < JAUS_UNSIGNED_INTEGER_SIZE_BYTES)
@@ -73,7 +75,9 @@ JausBoolean jausUnsignedIntegerFromBuffer(JausUnsignedInteger *jUint, unsigned c
 
 JausBoolean jausUnsignedIntegerToBuffer(JausUnsignedInteger input, unsigned char *buf, unsigned int bufferSizeBytes)
 {
+#ifdef JAUS_BIG_ENDIAN
 	int i = 0;
+#endif	
 
 	if(bufferSizeBytes < JAUS_UNSIGNED_INTEGER_SIZE_BYTES)
 		return JAUS_FALSE;
