@@ -2,9 +2,8 @@
 
 exec > Makefile
 
-OPEN_JAUS_HOME=$HOME/OpenJAUSv3.3
+OPEN_JAUS_HOME=$HOME/workspace/OpenJAUSv3.3
 
-echo "EXE		= 	./bin/nodeManager"
 echo "TARGET	= 	./lib/libopenJAUS.so"
 echo "CCFLAGS	=	-Wall -fno-strict-aliasing -O2 -c -g -I ./include/ -I $OPEN_JAUS_HOME/libjaus/include/"
 echo "LFLAGS	=	-L $OPEN_JAUS_HOME/libjaus/lib/"
@@ -39,18 +38,14 @@ echo -e "\nOBJECTS =\t$OBJECTS"
 echo
 echo "default : all"
 echo
-echo "all : \$(EXE)"
+echo "all : \$(TARGET)"
 echo
 echo "clean :"
 echo "	rm -f ./Build/*.o"
 echo "	rm -f \$(TARGET)"
-echo "	rm -f \$(EXE)"
 echo
 echo "\$(TARGET) : \$(OBJECTS)"
 echo "	g++ -shared \$(LFLAGS) -o \$(TARGET) \$(OBJECTS) \$(LIBS)"
-echo
-echo "\$(EXE) : \$(TARGET) ./Build/main.o"
-echo "	g++ \$(LFLAGS) -o \$(EXE) ./Build/main.o \$(LIBS) \$(TARGET)"
 
 for cfile in $SOURCE_C_FILES
 do
