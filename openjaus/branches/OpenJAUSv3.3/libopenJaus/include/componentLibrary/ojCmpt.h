@@ -8,6 +8,13 @@ extern "C"
 {
 #endif
 
+#ifndef FALSE
+#define FALSE 0
+#endif
+#ifndef TRUE
+#define TRUE 1
+#endif
+
 #define OJ_CMPT_MAX_STATE_COUNT			32
 #define OJ_CMPT_MIN_FREQUENCY_HZ		0.1
 #define OJ_CMPT_MAX_FREQUENCY_HZ		1000.0

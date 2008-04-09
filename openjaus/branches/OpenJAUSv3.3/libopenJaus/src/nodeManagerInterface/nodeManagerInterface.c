@@ -397,7 +397,6 @@ void *heartbeatThread(void *threadArgument)
 
 void *receiveThread(void *threadArgument)
 {
-	int bufferSizeBytes = JAUS_HEADER_SIZE_BYTES + JAUS_MAX_DATA_SIZE_BYTES;
 	int index;
 	
 	NodeManagerInterface nmi = (NodeManagerInterface)threadArgument;

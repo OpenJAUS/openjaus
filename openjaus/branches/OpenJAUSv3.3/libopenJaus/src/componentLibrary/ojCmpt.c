@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include <jaus.h>
 #include "nodeManagerInterface/nodeManagerInterface.h"
 #include "componentLibrary/ojCmpt.h"
