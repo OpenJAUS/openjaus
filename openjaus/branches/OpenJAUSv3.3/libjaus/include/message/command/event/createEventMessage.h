@@ -48,19 +48,20 @@
 
 #define JAUS_CREATE_EVENT	0xF0A1
 
-// PV as defined in Events Document v1.8
+// PV as defined in v3.3
 #ifndef CREATE_EVENT_PV
-#define CREATE_EVENT_PV_BOUNDARY_BIT		0	// Field 4
-#define CREATE_EVENT_PV_DATA_TYPE_BIT		1	// Field 5
-#define CREATE_EVENT_PV_DATA_FIELD_BIT		2	// Field 6
-#define CREATE_EVENT_PV_LOWER_LIMIT_BIT		3	// Field 7
-#define CREATE_EVENT_PV_UPPER_LIMIT_BIT		4	// Field 8
-#define CREATE_EVENT_PV_STATE_LIMIT_BIT		5	// Field 9
-#define CREATE_EVENT_PV_MINIMUM_RATE_BIT	6	// Field 10
-#define CREATE_EVENT_PV_REQUESTED_RATE_BIT	7	// Field 11
+#define CREATE_EVENT_PV_BOUNDARY_BIT		0	// Field 5
+#define CREATE_EVENT_PV_DATA_FIELD_BIT		1	// Field 6
+#define CREATE_EVENT_PV_LOWER_LIMIT_BIT		2	// Field 7/8
+#define CREATE_EVENT_PV_UPPER_LIMIT_BIT		3	// Field 9/10
+#define CREATE_EVENT_PV_STATE_LIMIT_BIT		4	// Field 11/12
+#define CREATE_EVENT_PV_MINIMUM_RATE_BIT	5	// Field 13
+#define CREATE_EVENT_PV_REQUESTED_RATE_BIT	6	// Field 14
+#define CREATE_EVENT_PV_QUERY_MESSAGE_BIT	7	// Field 15/16
+
 #endif
 
-// Event Types as defined in Events Document v1.8
+// Event Types
 #ifndef EVENT_TYPES
 #define EVENT_TYPES
 #define EVENT_PERIODIC_TYPE						0
@@ -68,9 +69,10 @@
 #define EVENT_FIRST_CHANGE_TYPE					2
 #define EVENT_FIRST_CHANGE_IN_AND_OUT_TYPE		3
 #define EVENT_PERIODIC_NO_REPEAT_TYPE			4
+#define EVENT_ONE_TIME_ON_DEMAND_TYPE			5
 #endif
 
-// Event Boundaries as defined in Events Document v1.8
+// Event Boundaries
 #ifndef EVENT_BOUNDARIES
 #define EVENT_BOUNDARIES
 #define EQUAL_BOUNDARY							0
@@ -124,18 +126,18 @@ typedef struct
 	JausUnsignedShort sequenceNumber;
 
 	// MESSAGE DATA MEMBERS GO HERE
-	JausByte presenceVector;	// 1: Presence Vector
-	JausUnsignedShort messageCode;			// 2: Command Code of the resulting query
-	JausByte eventType;						// 3: Enumeration of Event types
-	JausByte eventBoundary;					// 4: Enumeration of Event Boundary Conditions
-	JausByte limitDataType;					// 5: Enumeration of data types for fields 7 & 8
-	JausByte limitDataField;				// 6: Field from Report for Limit Trigger
-	JausEventLimit lowerLimit;				// 7: Lower Event Limit
-	JausEventLimit upperLimit;				// 8: Upper Event Limit
-	JausEventLimit stateLimit;				// 9: State Event Limit used for Equal Boundary
-	JausDouble requestedMinimumRate;		// 10: For Periodic Events for unchanging value, Scaled UnsignedShort (0, 1092)
-	JausDouble requestedUpdateRate;			// 11: For Periodic Events, Scaled UnsignedShort (0, 1092)
-	JausMessage queryMessage;				// 12: Query Message (including header) to use for response
+	JausByte presenceVector;			// Presence Vector
+	JausByte requestId;					// Local request ID for use in confirm event
+	JausUnsignedShort messageCode;			// Command Code of the resulting query
+	JausByte eventType;						// Enumeration of Event types
+	JausByte eventBoundary;					// Enumeration of Event Boundary Conditions
+	JausByte limitDataField;				// Field from Report for Limit Trigger
+	JausEventLimit lowerLimit;				// Lower Event Limit
+	JausEventLimit upperLimit;				// Upper Event Limit
+	JausEventLimit stateLimit;				// State Event Limit used for Equal Boundary
+	JausDouble requestedMinimumRate;		// For Periodic Events for unchanging value, Scaled UnsignedShort (0, 1092)
+	JausDouble requestedUpdateRate;			// For Periodic Events, Scaled UnsignedShort (0, 1092)
+	JausMessage queryMessage;				// Query Message (including header) to use for response
 }CreateEventMessageStruct;
 
 typedef CreateEventMessageStruct* CreateEventMessage;
