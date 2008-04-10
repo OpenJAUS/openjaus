@@ -53,6 +53,7 @@ JausEventLimit jausEventLimitCreate()
 	if(limit)
 	{
 		memset(limit, 0, sizeof(JausEventLimitStruct));
+		limit->dataType = EVENT_LIMIT_UNDEFINED_TYPE;
 		return limit;
 	}
 	else
@@ -72,243 +73,241 @@ void jausEventLimitDestroy(JausEventLimit limit)
 }
 
 // JausEventLimit Constructor (from Buffer)
-JausEventLimit jausEventLimitFromBuffer(unsigned char *buffer, unsigned int bufferSizeBytes, JausByte dataType)
+JausBoolean jausEventLimitFromBuffer(JausEventLimit *limitPointer, unsigned char *buffer, unsigned int bufferSizeBytes)
 {
 	JausEventLimit limit;
+	JausByte tempByte;
 	int index = 0;
 
 	limit = (JausEventLimit) malloc(sizeof(JausEventLimitStruct));
+	*limitPointer = limit; 
+	
 	if(limit)
 	{
 		memset(limit, 0, sizeof(JausEventLimitStruct));
-		switch(dataType)
+
+		if(!jausByteFromBuffer(&tempByte, buffer+index, bufferSizeBytes-index))
 		{
-			case EVENT_LIMIT_BYTE_DATA:
-				if(!jausByteFromBuffer(&limit->byteValue, buffer+index, bufferSizeBytes-index))
+			*limitPointer = NULL;
+			return JAUS_FALSE;
+		}
+		limit->dataType = tempByte;
+		index += JAUS_BYTE_SIZE_BYTES;
+
+		switch(limit->dataType)
+		{
+			case EVENT_LIMIT_BYTE_TYPE:
+				if(!jausByteFromBuffer(&limit->value.byteValue, buffer+index, bufferSizeBytes-index))
 				{
-					free(limit);
-					return NULL;
+					*limitPointer = NULL;
 				}
-				return limit;
+				break;
 				
-			case EVENT_LIMIT_SHORT_DATA:
-				if(!jausShortFromBuffer(&limit->shortValue, buffer+index, bufferSizeBytes-index))
+			case EVENT_LIMIT_SHORT_TYPE:
+				if(!jausShortFromBuffer(&limit->value.shortValue, buffer+index, bufferSizeBytes-index))
 				{
-					free(limit);
-					return NULL;
+					*limitPointer = NULL;
 				}
-				return limit;
-	
-			case EVENT_LIMIT_INTEGER_DATA:
-				if(!jausIntegerFromBuffer(&limit->integerValue, buffer+index, bufferSizeBytes-index))
-				{
-					free(limit);
-					return NULL;
-				}
-				return limit;
-	
-			case EVENT_LIMIT_LONG_DATA:
-				if(!jausLongFromBuffer(&limit->longValue, buffer+index, bufferSizeBytes-index))
-				{
-					free(limit);
-					return NULL;
-				}
-				return limit;
-	
-			case EVENT_LIMIT_UNSIGNED_SHORT_DATA:
-				if(!jausUnsignedShortFromBuffer(&limit->unsignedShortValue, buffer+index, bufferSizeBytes-index))
-				{
-					free(limit);
-					return NULL;
-				}
-				return limit;
-	
-			case EVENT_LIMIT_UNSIGNED_INTEGER_DATA:
-				if(!jausUnsignedIntegerFromBuffer(&limit->unsignedIntegerValue, buffer+index, bufferSizeBytes-index))
-				{
-					free(limit);
-					return NULL;
-				}
-				return limit;
-	
-			case EVENT_LIMIT_UNSIGNED_LONG_DATA:
-				if(!jausUnsignedLongFromBuffer(&limit->unsignedLongValue, buffer+index, bufferSizeBytes-index))
-				{
-					free(limit);
-					return NULL;
-				}
-				return limit;
-	
-			case EVENT_LIMIT_FLOAT_DATA:
-				if(!jausFloatFromBuffer(&limit->floatValue, buffer+index, bufferSizeBytes-index))
-				{
-					free(limit);
-					return NULL;
-				}
-				return limit;
-	
-			case EVENT_LIMIT_DOUBLE_DATA:
-				if(!jausDoubleFromBuffer(&limit->doubleValue, buffer+index, bufferSizeBytes-index))
-				{
-					free(limit);
-					return NULL;
-				}
-				return limit;
-	
 				break;
 	
-			case EVENT_LIMIT_RGB_DATA:
-				if(!jausByteFromBuffer(&limit->rgb.redValue, buffer+index, bufferSizeBytes-index))
+			case EVENT_LIMIT_INTEGER_TYPE:
+				if(!jausIntegerFromBuffer(&limit->value.integerValue, buffer+index, bufferSizeBytes-index))
 				{
-					free(limit);
-					return NULL;
+					*limitPointer = NULL;
+				}
+				break;
+	
+			case EVENT_LIMIT_LONG_TYPE:
+				if(!jausLongFromBuffer(&limit->value.longValue, buffer+index, bufferSizeBytes-index))
+				{
+					*limitPointer = NULL;
+				}
+				break;
+	
+			case EVENT_LIMIT_UNSIGNED_SHORT_TYPE:
+				if(!jausUnsignedShortFromBuffer(&limit->value.unsignedShortValue, buffer+index, bufferSizeBytes-index))
+				{
+					*limitPointer = NULL;
+				}
+				break;
+	
+			case EVENT_LIMIT_UNSIGNED_INTEGER_TYPE:
+				if(!jausUnsignedIntegerFromBuffer(&limit->value.unsignedIntegerValue, buffer+index, bufferSizeBytes-index))
+				{
+					*limitPointer = NULL;
+				}
+				break;
+	
+			case EVENT_LIMIT_UNSIGNED_LONG_TYPE:
+				if(!jausUnsignedLongFromBuffer(&limit->value.unsignedLongValue, buffer+index, bufferSizeBytes-index))
+				{
+					*limitPointer = NULL;
+				}
+				break;
+	
+			case EVENT_LIMIT_FLOAT_TYPE:
+				if(!jausFloatFromBuffer(&limit->value.floatValue, buffer+index, bufferSizeBytes-index))
+				{
+					*limitPointer = NULL;
+				}
+				break;
+	
+			case EVENT_LIMIT_DOUBLE_TYPE:
+				if(!jausDoubleFromBuffer(&limit->value.doubleValue, buffer+index, bufferSizeBytes-index))
+				{
+					*limitPointer = NULL;
+				}
+				break;
+		
+			case EVENT_LIMIT_RGB_TYPE:
+				if(!jausByteFromBuffer(&limit->value.rgb.redValue, buffer+index, bufferSizeBytes-index))
+				{
+					*limitPointer = NULL;
 				}
 				index += JAUS_BYTE_SIZE_BYTES;
 	
-				if(!jausByteFromBuffer(&limit->rgb.greenValue, buffer+index, bufferSizeBytes-index))
+				if(!jausByteFromBuffer(&limit->value.rgb.greenValue, buffer+index, bufferSizeBytes-index))
 				{
-					free(limit);
-					return NULL;
+					*limitPointer = NULL;
 				}
 				index += JAUS_BYTE_SIZE_BYTES;
 	
-				if(!jausByteFromBuffer(&limit->rgb.blueValue, buffer+index, bufferSizeBytes-index))
+				if(!jausByteFromBuffer(&limit->value.rgb.blueValue, buffer+index, bufferSizeBytes-index))
 				{
-					free(limit);
-					return NULL;
+					*limitPointer = NULL;
 				}
 				index += JAUS_BYTE_SIZE_BYTES;
-				return limit;
+				break;
 	
 			default:
-				free(limit);
-				return NULL;
+				*limitPointer = NULL;
+				break;
 		}	
 	}
-	else
+
+	if(*limitPointer)
 	{
-		return NULL;
+		return JAUS_TRUE;
 	}
+	
+	return JAUS_FALSE;
 }
 
 // JausEventLimit To Buffer
-JausBoolean jausEventLimitToBuffer(JausEventLimit limit, unsigned char *buffer, unsigned int bufferSizeBytes, JausByte dataType)
+JausBoolean jausEventLimitToBuffer(JausEventLimit limit, unsigned char *buffer, unsigned int bufferSizeBytes)
 {
 	unsigned int index = 0;
 	if(limit)
 	{
+		if(limit->dataType < EVENT_LIMIT_BYTE_TYPE) return JAUS_FALSE;
+	
+		if(!jausByteToBuffer(limit->dataType, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		index += JAUS_BYTE_SIZE_BYTES;
+
 		// Value
-		switch(dataType)
+		switch(limit->dataType)
 		{
-			case EVENT_LIMIT_BYTE_DATA:
-				if(!jausByteToBuffer(limit->byteValue, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+			case EVENT_LIMIT_BYTE_TYPE:
+				if(!jausByteToBuffer(limit->value.byteValue, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 				return JAUS_TRUE;
 								
-			case EVENT_LIMIT_SHORT_DATA:
-				if(!jausShortToBuffer(limit->shortValue, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+			case EVENT_LIMIT_SHORT_TYPE:
+				if(!jausShortToBuffer(limit->value.shortValue, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 				return JAUS_TRUE;
 
-			case EVENT_LIMIT_INTEGER_DATA:
-				if(!jausIntegerToBuffer(limit->integerValue, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+			case EVENT_LIMIT_INTEGER_TYPE:
+				if(!jausIntegerToBuffer(limit->value.integerValue, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 				return JAUS_TRUE;
 
-			case EVENT_LIMIT_LONG_DATA:
-				if(!jausLongToBuffer(limit->longValue, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+			case EVENT_LIMIT_LONG_TYPE:
+				if(!jausLongToBuffer(limit->value.longValue, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 				return JAUS_TRUE;
 
-			case EVENT_LIMIT_UNSIGNED_SHORT_DATA:
-				if(!jausUnsignedShortToBuffer(limit->unsignedShortValue, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+			case EVENT_LIMIT_UNSIGNED_SHORT_TYPE:
+				if(!jausUnsignedShortToBuffer(limit->value.unsignedShortValue, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 				return JAUS_TRUE;
 
-			case EVENT_LIMIT_UNSIGNED_INTEGER_DATA:
-				if(!jausUnsignedIntegerToBuffer(limit->unsignedIntegerValue, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+			case EVENT_LIMIT_UNSIGNED_INTEGER_TYPE:
+				if(!jausUnsignedIntegerToBuffer(limit->value.unsignedIntegerValue, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 				return JAUS_TRUE;
 
-			case EVENT_LIMIT_UNSIGNED_LONG_DATA:
-				if(!jausUnsignedLongToBuffer(limit->unsignedLongValue, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+			case EVENT_LIMIT_UNSIGNED_LONG_TYPE:
+				if(!jausUnsignedLongToBuffer(limit->value.unsignedLongValue, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 				return JAUS_TRUE;
 
-			case EVENT_LIMIT_FLOAT_DATA:
-				if(!jausFloatToBuffer(limit->floatValue, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+			case EVENT_LIMIT_FLOAT_TYPE:
+				if(!jausFloatToBuffer(limit->value.floatValue, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 				return JAUS_TRUE;
 
-			case EVENT_LIMIT_DOUBLE_DATA:
-				if(!jausDoubleToBuffer(limit->doubleValue, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+			case EVENT_LIMIT_DOUBLE_TYPE:
+				if(!jausDoubleToBuffer(limit->value.doubleValue, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 				return JAUS_TRUE;
 
-			case EVENT_LIMIT_RGB_DATA:
-				if(!jausByteToBuffer(limit->rgb.redValue, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+			case EVENT_LIMIT_RGB_TYPE:
+				if(!jausByteToBuffer(limit->value.rgb.redValue, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 				index += JAUS_BYTE_SIZE_BYTES;
 
-				if(!jausByteToBuffer(limit->rgb.greenValue, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+				if(!jausByteToBuffer(limit->value.rgb.greenValue, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 				index += JAUS_BYTE_SIZE_BYTES;
 
-				if(!jausByteToBuffer(limit->rgb.blueValue, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+				if(!jausByteToBuffer(limit->value.rgb.blueValue, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 				return JAUS_TRUE;
 
 			default:
-				return JAUS_TRUE;
+				return JAUS_FALSE;
 		}
 	}
 	return JAUS_FALSE;	
 }
 
-unsigned int jausEventLimitByteSize(JausByte dataType)
+unsigned int jausEventLimitSize(JausEventLimit limit)
 {
 	unsigned int size = 0;
+	
+	size += JAUS_BYTE_SIZE_BYTES;
 
-	switch(dataType)
+	switch(limit->dataType)
 	{
-		case EVENT_LIMIT_BYTE_DATA:
+		case EVENT_LIMIT_BYTE_TYPE:
 			size += JAUS_BYTE_SIZE_BYTES;
-			return size;
 			break;
 			
-		case EVENT_LIMIT_SHORT_DATA:
+		case EVENT_LIMIT_SHORT_TYPE:
 			size += JAUS_SHORT_SIZE_BYTES;
-			return size;
 			break;
 
-		case EVENT_LIMIT_INTEGER_DATA:
+		case EVENT_LIMIT_INTEGER_TYPE:
 			size += JAUS_INTEGER_SIZE_BYTES;
-			return size;
 			break;
 
-		case EVENT_LIMIT_LONG_DATA:
+		case EVENT_LIMIT_LONG_TYPE:
 			size += JAUS_LONG_SIZE_BYTES;
-			return size;
 			break;
 
-		case EVENT_LIMIT_UNSIGNED_SHORT_DATA:
+		case EVENT_LIMIT_UNSIGNED_SHORT_TYPE:
 			size += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
-			return size;
 			break;
 
-		case EVENT_LIMIT_UNSIGNED_INTEGER_DATA:
+		case EVENT_LIMIT_UNSIGNED_INTEGER_TYPE:
 			size += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
-			return size;
 			break;
 
-		case EVENT_LIMIT_UNSIGNED_LONG_DATA:
+		case EVENT_LIMIT_UNSIGNED_LONG_TYPE:
 			size += JAUS_UNSIGNED_LONG_SIZE_BYTES;
-			return size;
 			break;
 
-		case EVENT_LIMIT_FLOAT_DATA:
+		case EVENT_LIMIT_FLOAT_TYPE:
 			size += JAUS_FLOAT_SIZE_BYTES;
-			return size;
 			break;
 
-		case EVENT_LIMIT_DOUBLE_DATA:
+		case EVENT_LIMIT_DOUBLE_TYPE:
 			size += JAUS_DOUBLE_SIZE_BYTES;
-			return size;
 			break;
 
-		case EVENT_LIMIT_RGB_DATA:
+		case EVENT_LIMIT_RGB_TYPE:
 			size += JAUS_BYTE_SIZE_BYTES;	// Red
 			size += JAUS_BYTE_SIZE_BYTES;	// Green
 			size += JAUS_BYTE_SIZE_BYTES;	// Blue
-			return size;
 			break;
 
 		default:
