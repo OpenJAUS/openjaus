@@ -1012,14 +1012,14 @@ void scManagerProccessCreateEvent(NodeManagerInterface nmi, CreateEventMessage m
 	ServiceConnection sc;
 	ServiceConnection newSc;
 	JausMessage txMessage;
-	ConfirmEventMessage confirmEvent;
+	ConfirmEventRequestMessage confirmEvent;
 	
 	// Look to see if the requested commandcode exists
 	supportedScMsg = scFindSupportedScMsgInList(nmi->scm->supportedScMsgList, message->messageCode);
 	if(supportedScMsg == NULL)
 	{
 		// Command Code Not Supported
-		confirmEvent = confirmEventMessageCreate();
+		confirmEvent = confirmEventRequestMessageCreate();
 		if(confirmEvent)
 		{
 			jausAddressCopy(confirmEvent->source, nmi->cmpt->address);
@@ -1029,8 +1029,8 @@ void scManagerProccessCreateEvent(NodeManagerInterface nmi, CreateEventMessage m
 			confirmEvent->eventId = 0;
 			confirmEvent->responseCode = MESSAGE_UNSUPPORTED_RESPONSE;
 			
-			txMessage = confirmEventMessageToJausMessage(confirmEvent);
-			confirmEventMessageDestroy(confirmEvent);
+			txMessage = confirmEventRequestMessageToJausMessage(confirmEvent);
+			confirmEventRequestMessageDestroy(confirmEvent);
 			
 			nodeManagerSend(nmi, txMessage);
 			jausMessageDestroy(txMessage);
@@ -1047,7 +1047,7 @@ void scManagerProccessCreateEvent(NodeManagerInterface nmi, CreateEventMessage m
 	if(newSc == NULL) 
 	{
 		// Send negative conf (could not create sc)
-		confirmEvent = confirmEventMessageCreate();
+		confirmEvent = confirmEventRequestMessageCreate();
 		if(confirmEvent)
 		{
 			jausAddressCopy(confirmEvent->source, nmi->cmpt->address);
@@ -1057,8 +1057,8 @@ void scManagerProccessCreateEvent(NodeManagerInterface nmi, CreateEventMessage m
 			confirmEvent->eventId = 0;
 			confirmEvent->responseCode = CONNECTION_REFUSED_RESPONSE;
 			
-			txMessage = confirmEventMessageToJausMessage(confirmEvent);
-			confirmEventMessageDestroy(confirmEvent);
+			txMessage = confirmEventRequestMessageToJausMessage(confirmEvent);
+			confirmEventRequestMessageDestroy(confirmEvent);
 			
 			nodeManagerSend(nmi, txMessage);
 			jausMessageDestroy(txMessage);
@@ -1089,7 +1089,7 @@ void scManagerProccessCreateEvent(NodeManagerInterface nmi, CreateEventMessage m
 	if(newSc->instanceId == -1)
 	{
 		// Send negative conf (could not create sc)
-		confirmEvent = confirmEventMessageCreate();
+		confirmEvent = confirmEventRequestMessageCreate();
 		if(confirmEvent)
 		{
 			jausAddressCopy(confirmEvent->source, nmi->cmpt->address);
@@ -1099,8 +1099,8 @@ void scManagerProccessCreateEvent(NodeManagerInterface nmi, CreateEventMessage m
 			confirmEvent->eventId = 0;
 			confirmEvent->responseCode = CONNECTION_REFUSED_RESPONSE;
 			
-			txMessage = confirmEventMessageToJausMessage(confirmEvent);
-			confirmEventMessageDestroy(confirmEvent);
+			txMessage = confirmEventRequestMessageToJausMessage(confirmEvent);
+			confirmEventRequestMessageDestroy(confirmEvent);
 			
 			nodeManagerSend(nmi, txMessage);
 			jausMessageDestroy(txMessage);
@@ -1141,7 +1141,7 @@ void scManagerProccessCreateEvent(NodeManagerInterface nmi, CreateEventMessage m
 	sc->isActive = JAUS_TRUE;
 
 	// Send confirmation
-	confirmEvent = confirmEventMessageCreate();
+	confirmEvent = confirmEventRequestMessageCreate();
 	if(confirmEvent)
 	{
 		jausAddressCopy(confirmEvent->source, nmi->cmpt->address);
@@ -1151,8 +1151,8 @@ void scManagerProccessCreateEvent(NodeManagerInterface nmi, CreateEventMessage m
 		confirmEvent->eventId = sc->instanceId;
 		confirmEvent->responseCode = SUCCESSFUL_RESPONSE;
 		
-		txMessage = confirmEventMessageToJausMessage(confirmEvent);
-		confirmEventMessageDestroy(confirmEvent);
+		txMessage = confirmEventRequestMessageToJausMessage(confirmEvent);
+		confirmEventRequestMessageDestroy(confirmEvent);
 		
 		nodeManagerSend(nmi, txMessage);
 		jausMessageDestroy(txMessage);
@@ -1163,7 +1163,7 @@ void scManagerProccessCreateEvent(NodeManagerInterface nmi, CreateEventMessage m
 	}
 }
 
-void scManagerProcessConfirmEvent(NodeManagerInterface nmi, ConfirmEventMessage message)
+void scManagerProcessConfirmEvent(NodeManagerInterface nmi, ConfirmEventRequestMessage message)
 {
 	ServiceConnection prevSc = NULL;
 	ServiceConnection sc = nmi->scm->incommingSc;

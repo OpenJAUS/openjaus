@@ -438,7 +438,7 @@ void *receiveThread(void *threadArgument)
 						if(	(message->commandCode >= JAUS_CREATE_SERVICE_CONNECTION && 
 							message->commandCode <= JAUS_TERMINATE_SERVICE_CONNECTION) ||
 							message->commandCode == JAUS_CREATE_EVENT ||
-							message->commandCode == JAUS_CONFIRM_EVENT ||
+							message->commandCode == JAUS_CONFIRM_EVENT_REQUEST ||
 							message->commandCode == JAUS_CANCEL_EVENT)
 						{
 							// This is to take Service Connection Control messages and send them on through

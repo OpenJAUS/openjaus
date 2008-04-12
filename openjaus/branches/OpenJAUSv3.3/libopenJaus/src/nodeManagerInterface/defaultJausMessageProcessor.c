@@ -60,7 +60,7 @@ void defaultJausMessageProcessor(JausMessage message, NodeManagerInterface nmi, 
 	ActivateServiceConnectionMessage activateServiceConnection;
 	SuspendServiceConnectionMessage suspendServiceConnection;
 	TerminateServiceConnectionMessage terminateServiceConnection;
-	ConfirmEventMessage confirmEvent;
+	ConfirmEventRequestMessage confirmEventRequest;
 	CreateEventMessage createEvent;
 	CancelEventMessage cancelEvent;
 	QueryServicesMessage queryServices;
@@ -474,25 +474,25 @@ void defaultJausMessageProcessor(JausMessage message, NodeManagerInterface nmi, 
 					// Don't handle other Event Types Here
 					// Error and send a refusal back
 					//cError("DefaultMessageProcessor: Warning! Received Event Message not of Periodic Type\n");
-					confirmEvent = confirmEventMessageCreate();
-					if(confirmEvent)
+					confirmEventRequest = confirmEventRequestMessageCreate();
+					if(confirmEventRequest)
 					{
-						jausAddressCopy(confirmEvent->source, cmpt->address);
-						jausAddressCopy(confirmEvent->destination, message->source);
+						jausAddressCopy(confirmEventRequest->source, cmpt->address);
+						jausAddressCopy(confirmEventRequest->destination, message->source);
 						
-						confirmEvent->messageCode = createEvent->messageCode;
-						confirmEvent->eventId = 0;
-						confirmEvent->responseCode = CONNECTION_REFUSED_RESPONSE;
+						confirmEventRequest->messageCode = createEvent->messageCode;
+						confirmEventRequest->eventId = 0;
+						confirmEventRequest->responseCode = CONNECTION_REFUSED_RESPONSE;
 						
-						txMessage = confirmEventMessageToJausMessage(confirmEvent);
-						confirmEventMessageDestroy(confirmEvent);
+						txMessage = confirmEventRequestMessageToJausMessage(confirmEventRequest);
+						confirmEventRequestMessageDestroy(confirmEventRequest);
 						
 						nodeManagerSend(nmi, txMessage);
 						jausMessageDestroy(txMessage);
 					}
 					else
 					{
-						//cError("DefaultMessageProcessor: Cannot create confirmEvent\n");
+						//cError("DefaultMessageProcessor: Cannot create confirmEventRequest\n");
 					}
 				}
 				createEventMessageDestroy(createEvent);				
@@ -504,12 +504,12 @@ void defaultJausMessageProcessor(JausMessage message, NodeManagerInterface nmi, 
 			jausMessageDestroy(message);
 			break;
 
-		case JAUS_CONFIRM_EVENT:
-			confirmEvent = confirmEventMessageFromJausMessage(message);
-			if(confirmEvent)
+		case JAUS_CONFIRM_EVENT_REQUEST:
+			confirmEventRequest = confirmEventRequestMessageFromJausMessage(message);
+			if(confirmEventRequest)
 			{
-				scManagerProcessConfirmEvent(nmi, confirmEvent);
-				confirmEventMessageDestroy(confirmEvent);
+				scManagerProcessConfirmEvent(nmi, confirmEventRequest);
+				confirmEventRequestMessageDestroy(confirmEventRequest);
 			}
 			else
 			{
