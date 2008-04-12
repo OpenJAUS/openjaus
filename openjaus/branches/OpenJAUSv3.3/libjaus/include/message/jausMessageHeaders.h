@@ -82,8 +82,10 @@
 #include "command/worldModel/deleteVksObjectsMessage.h"
 #include "command/payload/setPayloadDataElementMessage.h"
 #include "command/event/cancelEventMessage.h"
-#include "command/event/confirmEventMessage.h"
+#include "command/event/confirmEventRequestMessage.h"
 #include "command/event/createEventMessage.h"
+#include "command/event/updateEventMessage.h"
+#include "command/event/rejectEventRequestMessage.h"
 
 // Inform Class
 #include "inform/core/reportComponentAuthorityMessage.h"

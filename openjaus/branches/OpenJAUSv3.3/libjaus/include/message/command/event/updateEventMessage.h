@@ -31,7 +31,7 @@
  *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
  *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ****************************************************************************/
-// File Name: createEventMessage.h
+// File Name: updateEventMessage.h
 //
 // Written By: Danny Kent (jaus AT dannykent DOT com), Tom Galluzzo 
 //
@@ -39,23 +39,24 @@
 //
 // Date: 11/2/05
 //
-// This file defines the attributes of a CreateEventMessage
+// This file defines the attributes of a UpdateEventMessage
 
-#ifndef CREATE_EVENT_MESSAGE_H
-#define CREATE_EVENT_MESSAGE_H
+#ifndef UPDATE_EVENT_MESSAGE_H
+#define UPDATE_EVENT_MESSAGE_H
 
 #include "jaus.h"
 
 // PV as defined in v3.3
-#ifndef CREATE_EVENT_PV
-#define CREATE_EVENT_PV_BOUNDARY_BIT		0	// Field 5
-#define CREATE_EVENT_PV_DATA_FIELD_BIT		1	// Field 6
-#define CREATE_EVENT_PV_LOWER_LIMIT_BIT		2	// Field 7/8
-#define CREATE_EVENT_PV_UPPER_LIMIT_BIT		3	// Field 9/10
-#define CREATE_EVENT_PV_STATE_LIMIT_BIT		4	// Field 11/12
-#define CREATE_EVENT_PV_MINIMUM_RATE_BIT	5	// Field 13
-#define CREATE_EVENT_PV_REQUESTED_RATE_BIT	6	// Field 14
-#define CREATE_EVENT_PV_QUERY_MESSAGE_BIT	7	// Field 15/16
+#ifndef UPDATE_EVENT_PV
+#define UPDATE_EVENT_PV_BOUNDARY_BIT		0	// Field 5
+#define UPDATE_EVENT_PV_DATA_FIELD_BIT		1	// Field 6
+#define UPDATE_EVENT_PV_LOWER_LIMIT_BIT		2	// Field 7/8
+#define UPDATE_EVENT_PV_UPPER_LIMIT_BIT		3	// Field 9/10
+#define UPDATE_EVENT_PV_STATE_LIMIT_BIT		4	// Field 11/12
+#define UPDATE_EVENT_PV_MINIMUM_RATE_BIT	5	// Field 13
+#define UPDATE_EVENT_PV_REQUESTED_RATE_BIT	6	// Field 14
+#define UPDATE_EVENT_PV_QUERY_MESSAGE_BIT	7	// Field 15/16
+
 #endif
 
 // Event Types
@@ -134,20 +135,21 @@ typedef struct
 	JausEventLimit stateLimit;				// State Event Limit used for Equal Boundary
 	JausDouble requestedMinimumRate;		// For Periodic Events for unchanging value, Scaled UnsignedShort (0, 1092)
 	JausDouble requestedUpdateRate;			// For Periodic Events, Scaled UnsignedShort (0, 1092)
+	JausByte eventId;						// ID of event to be updated
 	JausMessage queryMessage;				// Query Message (including header) to use for response
-}CreateEventMessageStruct;
+}UpdateEventMessageStruct;
 
-typedef CreateEventMessageStruct* CreateEventMessage;
+typedef UpdateEventMessageStruct* UpdateEventMessage;
 
-JAUS_EXPORT CreateEventMessage createEventMessageCreate(void);
-JAUS_EXPORT void createEventMessageDestroy(CreateEventMessage);
+JAUS_EXPORT UpdateEventMessage updateEventMessageCreate(void);
+JAUS_EXPORT void updateEventMessageDestroy(UpdateEventMessage);
 
-JAUS_EXPORT JausBoolean createEventMessageFromBuffer(CreateEventMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JAUS_EXPORT JausBoolean createEventMessageToBuffer(CreateEventMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean updateEventMessageFromBuffer(UpdateEventMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean updateEventMessageToBuffer(UpdateEventMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
-JAUS_EXPORT CreateEventMessage createEventMessageFromJausMessage(JausMessage jausMessage);
-JAUS_EXPORT JausMessage createEventMessageToJausMessage(CreateEventMessage message);
+JAUS_EXPORT UpdateEventMessage updateEventMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage updateEventMessageToJausMessage(UpdateEventMessage message);
 
-JAUS_EXPORT unsigned int createEventMessageSize(CreateEventMessage message);
+JAUS_EXPORT unsigned int updateEventMessageSize(UpdateEventMessage message);
 
-#endif // CREATE_EVENT_MESSAGE_H
+#endif // UPDATE_EVENT_MESSAGE_H
