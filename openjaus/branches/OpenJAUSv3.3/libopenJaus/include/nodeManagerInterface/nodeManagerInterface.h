@@ -186,7 +186,7 @@ JAUS_EXPORT void scManagerProcessSuspendScMessage(NodeManagerInterface, SuspendS
 JAUS_EXPORT void scManagerProcessTerminateScMessage(NodeManagerInterface, TerminateServiceConnectionMessage);
 JAUS_EXPORT void scManagerProcessUpdatedSubystem(NodeManagerInterface, JausSubsystem);
 JAUS_EXPORT void scManagerProccessCreateEvent(NodeManagerInterface, CreateEventMessage);
-JAUS_EXPORT void scManagerProcessConfirmEvent(NodeManagerInterface, ConfirmEventMessage);
+JAUS_EXPORT void scManagerProcessConfirmEvent(NodeManagerInterface, ConfirmEventRequestMessage);
 JAUS_EXPORT void scManagerProcessCancelEvent(NodeManagerInterface, CancelEventMessage);
 JAUS_EXPORT JausBoolean scManagerCreatePeriodicEvent(NodeManagerInterface, ServiceConnection);
 JAUS_EXPORT JausBoolean scManagerCancelPeriodicEvent(NodeManagerInterface, ServiceConnection);

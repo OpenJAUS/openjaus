@@ -177,7 +177,7 @@ bool NodeManagerComponent::processMessage(JausMessage message)
 		case JAUS_CANCEL_EVENT:
 			return processCancelEvent(message);
 
-		case JAUS_CONFIRM_EVENT:
+		case JAUS_CONFIRM_EVENT_REQUEST:
 			return processConfirmEvent(message);
 
 		case JAUS_CREATE_EVENT:
@@ -758,60 +758,60 @@ bool NodeManagerComponent::processCreateEvent(JausMessage message)
 	// Only support Configuration Changed events
 	CreateEventMessage createEvent = NULL;
 	QueryConfigurationMessage queryConf = NULL;
-	ConfirmEventMessage confirmEvent = NULL;
+	ConfirmEventRequestMessage confirmEventRequest = NULL;
 	JausMessage txMessage = NULL;
 	int nextEventId = -1;
 	HASH_MAP <int, JausAddress>::iterator iterator;
 	
-	confirmEvent = confirmEventMessageCreate();
-	if(!confirmEvent)
+	confirmEventRequest = confirmEventRequestMessageCreate();
+	if(!confirmEventRequest)
 	{
 		//TODO: Log Error. Throw Exception
 		return false;
 	}
-	jausAddressCopy(confirmEvent->destination, message->source);
-	jausAddressCopy(confirmEvent->source, cmpt->address);
+	jausAddressCopy(confirmEventRequest->destination, message->source);
+	jausAddressCopy(confirmEventRequest->source, cmpt->address);
 	
 	createEvent = createEventMessageFromJausMessage(message);
 	if(!createEvent)
 	{
 		//TODO: Log Error. Throw Exception
-		confirmEvent->responseCode = INVALID_EVENT_RESPONSE;
-		txMessage = confirmEventMessageToJausMessage(confirmEvent);
+		confirmEventRequest->responseCode = INVALID_EVENT_RESPONSE;
+		txMessage = confirmEventRequestMessageToJausMessage(confirmEventRequest);
 		if(txMessage)
 		{
 			this->commMngr->receiveJausMessage(txMessage, this);
 		}
-		confirmEventMessageDestroy(confirmEvent);
+		confirmEventRequestMessageDestroy(confirmEventRequest);
 		return false;
 	}
 
 	if(createEvent->messageCode != JAUS_QUERY_CONFIGURATION)
 	{
 		// Currently the NM only supports configuration changed events
-		confirmEvent->responseCode = MESSAGE_UNSUPPORTED_RESPONSE;
-		txMessage = confirmEventMessageToJausMessage(confirmEvent);
+		confirmEventRequest->responseCode = MESSAGE_UNSUPPORTED_RESPONSE;
+		txMessage = confirmEventRequestMessageToJausMessage(confirmEventRequest);
 		if(txMessage)
 		{
 			this->commMngr->receiveJausMessage(txMessage, this);
 		}
-		confirmEventMessageDestroy(confirmEvent);
+		confirmEventRequestMessageDestroy(confirmEventRequest);
 		return false;
 	}
-	confirmEvent->messageCode = JAUS_REPORT_CONFIGURATION;
+	confirmEventRequest->messageCode = JAUS_REPORT_CONFIGURATION;
 
 	queryConf = queryConfigurationMessageFromJausMessage(createEvent->queryMessage);
 	if(!queryConf)
 	{
 		// ERROR: Cannot unpack query message
 		// TODO: Log Error. Throw Exception
-		confirmEvent->responseCode = INVALID_EVENT_RESPONSE;
-		txMessage = confirmEventMessageToJausMessage(confirmEvent);
+		confirmEventRequest->responseCode = INVALID_EVENT_RESPONSE;
+		txMessage = confirmEventRequestMessageToJausMessage(confirmEventRequest);
 		if(txMessage)
 		{
 			this->commMngr->receiveJausMessage(txMessage, this);
 		}
-		confirmEventMessageDestroy(confirmEvent);
+		confirmEventRequestMessageDestroy(confirmEventRequest);
 		return false;
 	}
 	
@@ -823,8 +823,8 @@ bool NodeManagerComponent::processCreateEvent(JausMessage message)
 				if(jausAddressEqual(createEvent->source, iterator->second))
 				{
 					// Event already created
-					confirmEvent->responseCode = SUCCESSFUL_RESPONSE;
-					confirmEvent->eventId = iterator->first;
+					confirmEventRequest->responseCode = SUCCESSFUL_RESPONSE;
+					confirmEventRequest->eventId = iterator->first;
 					break;
 				}
 			}
@@ -832,15 +832,15 @@ bool NodeManagerComponent::processCreateEvent(JausMessage message)
 			nextEventId = getNextEventId();
 			if(nextEventId >= 0)
 			{
-				confirmEvent->eventId = (JausByte) nextEventId;
+				confirmEventRequest->eventId = (JausByte) nextEventId;
 				eventId[nextEventId] = true;
 				subsystemChangeList[nextEventId] = jausAddressClone(createEvent->source);
-				confirmEvent->responseCode = SUCCESSFUL_RESPONSE;
+				confirmEventRequest->responseCode = SUCCESSFUL_RESPONSE;
 			}
 			else
 			{
-				confirmEvent->responseCode = CONNECTION_REFUSED_RESPONSE;
-				confirmEvent->eventId = 0;
+				confirmEventRequest->responseCode = CONNECTION_REFUSED_RESPONSE;
+				confirmEventRequest->eventId = 0;
 			}
 			break;
 		
@@ -850,8 +850,8 @@ bool NodeManagerComponent::processCreateEvent(JausMessage message)
 				if(jausAddressEqual(createEvent->source, iterator->second))
 				{
 					// Event already created
-					confirmEvent->responseCode = SUCCESSFUL_RESPONSE;
-					confirmEvent->eventId = iterator->first;
+					confirmEventRequest->responseCode = SUCCESSFUL_RESPONSE;
+					confirmEventRequest->eventId = iterator->first;
 					break;
 				}
 			}
@@ -859,33 +859,33 @@ bool NodeManagerComponent::processCreateEvent(JausMessage message)
 			nextEventId = getNextEventId();
 			if(nextEventId >= 0)
 			{
-				confirmEvent->eventId = (JausByte) nextEventId;
+				confirmEventRequest->eventId = (JausByte) nextEventId;
 				eventId[nextEventId] = true;
 				nodeChangeList[nextEventId] = jausAddressClone(createEvent->source);
-				confirmEvent->responseCode = SUCCESSFUL_RESPONSE;
+				confirmEventRequest->responseCode = SUCCESSFUL_RESPONSE;
 			}
 			else
 			{
-				confirmEvent->responseCode = CONNECTION_REFUSED_RESPONSE;
-				confirmEvent->eventId = 0;
+				confirmEventRequest->responseCode = CONNECTION_REFUSED_RESPONSE;
+				confirmEventRequest->eventId = 0;
 			}
 			break;
 
 		default:
 			// TODO: Log Error. Throw Exception.
 			// Unknown Query Type
-			confirmEvent->responseCode = INVALID_EVENT_RESPONSE;
-			txMessage = confirmEventMessageToJausMessage(confirmEvent);
+			confirmEventRequest->responseCode = INVALID_EVENT_RESPONSE;
+			txMessage = confirmEventRequestMessageToJausMessage(confirmEventRequest);
 			if(txMessage)
 			{
 				this->commMngr->receiveJausMessage(txMessage, this);
 			}
-			confirmEventMessageDestroy(confirmEvent);
+			confirmEventRequestMessageDestroy(confirmEventRequest);
 			return false;
 	}
 
 	// Send response
-	txMessage = confirmEventMessageToJausMessage(confirmEvent);
+	txMessage = confirmEventRequestMessageToJausMessage(confirmEventRequest);
 	if(txMessage)
 	{
 		this->commMngr->receiveJausMessage(txMessage, this);
@@ -1867,7 +1867,7 @@ bool NodeManagerComponent::setupJausServices()
 	jausServiceAddInputCommand(service, JAUS_REPORT_IDENTIFICATION, NO_PRESENCE_VECTOR);
 	jausServiceAddInputCommand(service, JAUS_REPORT_SERVICES, NO_PRESENCE_VECTOR);
 	jausServiceAddInputCommand(service, JAUS_CANCEL_EVENT, NO_PRESENCE_VECTOR);
-	jausServiceAddInputCommand(service, JAUS_CONFIRM_EVENT, NO_PRESENCE_VECTOR);
+	jausServiceAddInputCommand(service, JAUS_CONFIRM_EVENT_REQUEST, NO_PRESENCE_VECTOR);
 	jausServiceAddInputCommand(service, JAUS_CREATE_EVENT, NO_PRESENCE_VECTOR);
 
 	jausServiceAddOutputCommand(service, JAUS_QUERY_CONFIGURATION, NO_PRESENCE_VECTOR);
@@ -1877,7 +1877,7 @@ bool NodeManagerComponent::setupJausServices()
 	jausServiceAddOutputCommand(service, JAUS_REPORT_IDENTIFICATION, NO_PRESENCE_VECTOR);
 	jausServiceAddOutputCommand(service, JAUS_REPORT_SERVICES, NO_PRESENCE_VECTOR);
 	jausServiceAddOutputCommand(service, JAUS_CANCEL_EVENT, NO_PRESENCE_VECTOR);
-	jausServiceAddOutputCommand(service, JAUS_CONFIRM_EVENT, NO_PRESENCE_VECTOR);
+	jausServiceAddOutputCommand(service, JAUS_CONFIRM_EVENT_REQUEST, NO_PRESENCE_VECTOR);
 	jausServiceAddOutputCommand(service, JAUS_CREATE_EVENT, NO_PRESENCE_VECTOR);
 
 	// Add Node Manager Service
