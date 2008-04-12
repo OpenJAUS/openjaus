@@ -132,6 +132,8 @@
 #include "inform/worldModel/reportVksFeatureClassMetadataMessage.h"
 #include "inform/worldModel/reportVksObjectsCreationMessage.h"
 #include "inform/worldModel/reportVksObjectsMessage.h"
+#include "inform/event/reportEventsMessage.h"
+#include "inform/event/eventMessage.h"
 
 // Query Class
 #include "query/core/queryComponentAuthorityMessage.h"
@@ -177,6 +179,7 @@
 #include "query/worldModel/queryVksBoundsMessage.h"
 #include "query/worldModel/queryVksFeatureClassMetadataMessage.h"
 #include "query/worldModel/queryVksObjectsMessage.h"
+#include "query/event/queryEventsMessage.h"
 
 // Experimental
 
