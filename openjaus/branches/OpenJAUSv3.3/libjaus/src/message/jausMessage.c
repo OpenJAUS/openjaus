@@ -241,6 +241,16 @@ char *jausCommandCodeString(unsigned short commandCode)
 			return "JAUS_REJECT_COMPONENT_CONTROL";
 		case JAUS_SET_TIME:
 			return "JAUS_SET_TIME";
+		case JAUS_CREATE_EVENT:
+			return "JAUS_CREATE_EVENT";
+		case JAUS_UPDATE_EVENT:
+			return "JAUS_UPDATE_EVENT";
+		case JAUS_CANCEL_EVENT:
+			return "JAUS_CANCEL_EVENT";
+		case JAUS_CONFIRM_EVENT_REQUEST:
+			return "JAUS_CONFIRM_EVENT_REQUEST";
+		case JAUS_REJECT_EVENT_REQUEST:
+			return "JAUS_REJECT_EVENT_REQUEST";
 		case JAUS_SET_DATA_LINK_STATUS:
 			return "JAUS_SET_DATA_LINK_STATUS";
 		case JAUS_SET_DATA_LINK_SELECT:
@@ -293,6 +303,8 @@ char *jausCommandCodeString(unsigned short commandCode)
 			return "JAUS_QUERY_COMPONENT_STATUS";
 		case JAUS_QUERY_TIME:
 			return "JAUS_QUERY_TIME";
+		case JAUS_QUERY_EVENTS:
+			return "JAUS_QUERY_EVENTS";
 		case JAUS_QUERY_DATA_LINK_STATUS:
 			return "JAUS_QUERY_DATA_LINK_STATUS";
 		case JAUS_QUERY_SELECTED_DATA_LINK_STATUS:
@@ -363,6 +375,10 @@ char *jausCommandCodeString(unsigned short commandCode)
 			return "JAUS_REPORT_COMPONENT_STATUS";
 		case JAUS_REPORT_TIME:
 			return "JAUS_REPORT_TIME";
+		case JAUS_REPORT_EVENTS:
+			return "JAUS_REPORT_EVENTS";
+		case JAUS_EVENT:
+			return "JAUS_EVENT";
 		case JAUS_REPORT_DATA_LINK_STATUS:
 			return "JAUS_REPORT_DATA_LINK_STATUS";
 		case JAUS_REPORT_SELECTED_DATA_LINK_STATUS:
@@ -453,12 +469,6 @@ char *jausCommandCodeString(unsigned short commandCode)
 			return "JAUS_REPORT_SERVICES";
 		case JAUS_SET_PAYLOAD_DATA_ELEMENT:
 			return "JAUS_SET_PAYLOAD_DATA_ELEMENT";
-		case JAUS_CANCEL_EVENT:
-			return "JAUS_CANCEL_EVENT";
-		case JAUS_CONFIRM_EVENT:
-			return "JAUS_CONFIRM_EVENT";
-		case JAUS_CREATE_EVENT:
-			return "JAUS_CREATE_EVENT";
 		case JAUS_CREATE_VKS_OBJECTS:
 			return "JAUS_CREATE_VKS_OBJECTS";
 		case JAUS_DELETE_VKS_OBJECTS:
