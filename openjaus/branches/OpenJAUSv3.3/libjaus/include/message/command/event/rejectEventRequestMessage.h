@@ -31,7 +31,7 @@
  *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
  *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ****************************************************************************/
-// File Name: confirmEventMessage.h
+// File Name: rejectEventRequestMessage.h
 //
 // Written By: Danny Kent (jaus AT dannykent DOT com), Tom Galluzzo 
 //
@@ -39,24 +39,22 @@
 //
 // Date: 08/04/06
 //
-// Description: This file defines the attributes of a ConfirmEventMessage
+// Description: This file defines the attributes of a RejectEventRequestMessage
 
-#ifndef CONFIRM_EVENT_MESSAGE_H
-#define CONFIRM_EVENT_MESSAGE_H
+#ifndef REJECT_EVENT_REQUEST_MESSAGE_H
+#define REJECT_EVENT_REQUEST_MESSAGE_H
 
 #include "jaus.h"
 
-#define JAUS_CONFIRM_EVENT	0xF009
-
 // PV as defined in Events Document v1.8
-#ifndef CONFIRM_EVENT_PV
-#define CONFIRM_EVENT_PV
-#define CONFIRM_EVENT_PV_PERIODIC_RATE_BIT	0
+#ifndef REJECT_EVENT_REQUEST_PV
+#define REJECT_EVENT_REQUEST_PV
+#define REJECT_EVENT_REQUEST_PV_ERROR_MESSAGE_BIT	0
 #endif
 
 // Response Codes as defined in Events Document v1.8
-#ifndef CONFIRM_EVENT_RESPONSE_CODES
-#define CONFIRM_EVENT_RESPONSE_CODES
+#ifndef EVENT_REQUEST_RESPONSE_CODES
+#define EVENT_REQUEST_RESPONSE_CODES
 #define SUCCESSFUL_RESPONSE					0
 #define PERIODIC_UNSUPPORTED_RESPONSE		1
 #define CHANGE_BASED_UNSUPPORTED_RESPONSE	2
@@ -104,25 +102,25 @@ typedef struct
 	JausUnsignedShort sequenceNumber;
 
 	// MESSAGE DATA MEMBERS GO HERE
-	JausByte presenceVector;	// 1: Presence Vector
-	JausUnsignedShort messageCode;			// 2: Command Code of message sent in case of event occurance
-	JausByte eventId;						// 3: Event Id
-	JausDouble confirmedUpdateRate;			// 4: For Periodic Events, Scaled UnsignedShort (0, 1092)
+	JausByte presenceVector;		// 1: Presence Vector
+	JausByte requestId;				 
 	JausByte responseCode;					// 5: Enumeration of Response Types (see above)
+
+	char *errorMessage;
 	
-}ConfirmEventMessageStruct;
+}RejectEventRequestMessageStruct;
 
-typedef ConfirmEventMessageStruct* ConfirmEventMessage;
+typedef RejectEventRequestMessageStruct* RejectEventRequestMessage;
 
-JAUS_EXPORT ConfirmEventMessage confirmEventMessageCreate(void);
-JAUS_EXPORT void confirmEventMessageDestroy(ConfirmEventMessage);
+JAUS_EXPORT RejectEventRequestMessage rejectEventRequestMessageCreate(void);
+JAUS_EXPORT void rejectEventRequestMessageDestroy(RejectEventRequestMessage);
 
-JAUS_EXPORT JausBoolean confirmEventMessageFromBuffer(ConfirmEventMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JAUS_EXPORT JausBoolean confirmEventMessageToBuffer(ConfirmEventMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean rejectEventRequestMessageFromBuffer(RejectEventRequestMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean rejectEventRequestMessageToBuffer(RejectEventRequestMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
-JAUS_EXPORT ConfirmEventMessage confirmEventMessageFromJausMessage(JausMessage jausMessage);
-JAUS_EXPORT JausMessage confirmEventMessageToJausMessage(ConfirmEventMessage message);
+JAUS_EXPORT RejectEventRequestMessage rejectEventRequestMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage rejectEventRequestMessageToJausMessage(RejectEventRequestMessage message);
 
-JAUS_EXPORT unsigned int confirmEventMessageSize(ConfirmEventMessage message);
+JAUS_EXPORT unsigned int rejectEventRequestMessageSize(RejectEventRequestMessage message);
 
-#endif // CONFIRM_EVENT_MESSAGE_H
+#endif // REJECT_EVENT_REQUEST_MESSAGE_H

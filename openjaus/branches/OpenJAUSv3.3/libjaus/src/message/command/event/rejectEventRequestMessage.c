@@ -31,7 +31,7 @@
  *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
  *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ****************************************************************************/
-// File Name: cancelEventMessage.c
+// File Name: rejectEventRequestMessage.c
 //
 // Written By: Danny Kent (jaus AT dannykent DOT com), Tom Galluzzo (galluzzo AT gmail DOT com)
 //
@@ -39,71 +39,80 @@
 //
 // Date: 08/04/06
 //
-// Description: This file defines the functionality of a CancelEventMessage
+// Description: This file defines the functionality of a RejectEventRequestMessage
+
+
 
 #include <stdlib.h>
 #include <string.h>
 #include "jaus.h"
 
-static const int commandCode = JAUS_CANCEL_EVENT;
-static const int maxDataSizeBytes = 5;
+static const int commandCode = JAUS_REJECT_EVENT_REQUEST;
+static const int maxDataSizeBytes = 512000;
 
-static JausBoolean headerFromBuffer(CancelEventMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-static JausBoolean headerToBuffer(CancelEventMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+static JausBoolean headerFromBuffer(RejectEventRequestMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+static JausBoolean headerToBuffer(RejectEventRequestMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
-static JausBoolean dataFromBuffer(CancelEventMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-static int dataToBuffer(CancelEventMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-static void dataInitialize(CancelEventMessage message);
-static void dataDestroy(CancelEventMessage message);
+static JausBoolean dataFromBuffer(RejectEventRequestMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+static int dataToBuffer(RejectEventRequestMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+static void dataInitialize(RejectEventRequestMessage message);
+static void dataDestroy(RejectEventRequestMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS
 // ************************************************************************************************************** //
 
 // Initializes the message-specific fields
-static void dataInitialize(CancelEventMessage message)
+static void dataInitialize(RejectEventRequestMessage message)
 {
 	// Set initial values of message fields
-	message->presenceVector = newJausByte(JAUS_BYTE_PRESENCE_VECTOR_ALL_ON);	
-	message->requestId = newJausByte(0);	
-	message->messageCode = newJausUnsignedShort(0);
-	message->eventId = newJausByte(0);	
+	message->presenceVector = newJausByte(JAUS_BYTE_PRESENCE_VECTOR_ALL_ON);	// 1: Presence Vector
+	message->requestId = newJausByte(0);						
+	message->responseCode = newJausByte(0);					// 5: Enumeration of Response Types (see above)
+	message->errorMessage = NULL;
 }
 
 // Destructs the message-specific fields
-static void dataDestroy(CancelEventMessage message)
+static void dataDestroy(RejectEventRequestMessage message)
 {
 	// Free message fields
+	if(message->errorMessage)
+	{
+		free(message->errorMessage);
+	}
 }
 
 // Return boolean of success
-static JausBoolean dataFromBuffer(CancelEventMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
+static JausBoolean dataFromBuffer(RejectEventRequestMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
 {
 	int index = 0;
-
+	
 	if(bufferSizeBytes == message->dataSize)
 	{
 		// Unpack Message Fields from Buffer
+		// Presence Vector
 		if(!jausByteFromBuffer(&message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
 
+		// Request ID
 		if(!jausByteFromBuffer(&message->requestId, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
+		
+		// Response Code
+		if(!jausByteFromBuffer(&message->responseCode, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		index += JAUS_BYTE_SIZE_BYTES;
 
-		if(jausByteIsBitSet(message->presenceVector, CANCEL_EVENT_PV_MESSAGE_CODE_BIT))
+		if(jausByteIsBitSet(message->presenceVector, REJECT_EVENT_REQUEST_PV_ERROR_MESSAGE_BIT))
 		{
-			// Message Code
-			if(!jausUnsignedShortFromBuffer(&message->messageCode, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-			index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;		
+			message->errorMessage = (char *)malloc(bufferSizeBytes-index);
+			memcpy(message->errorMessage, buffer+index, bufferSizeBytes - index);
+			if(message->errorMessage[bufferSizeBytes - index - 1])
+			{
+				message->errorMessage = (char *)realloc(message->errorMessage, bufferSizeBytes-index);
+				message->errorMessage[bufferSizeBytes - index] = '\0';
+			}		
 		}
-		
-		if(jausByteIsBitSet(message->presenceVector, CANCEL_EVENT_PV_EVENT_ID_BIT))
-		{
-			// Event Id
-			if(!jausByteFromBuffer(&message->eventId, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-			index += JAUS_BYTE_SIZE_BYTES;
-		}
-		
+
 		return JAUS_TRUE;
 	}
 	else
@@ -113,67 +122,70 @@ static JausBoolean dataFromBuffer(CancelEventMessage message, unsigned char *buf
 }
 
 // Returns number of bytes put into the buffer
-static int dataToBuffer(CancelEventMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
+static int dataToBuffer(RejectEventRequestMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
 {
 	int index = 0;
 
 	if(bufferSizeBytes >= message->dataSize)
 	{
 		// Pack Message Fields to Buffer
+		// Presence Vector
 		if(!jausByteToBuffer(message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
 
+		// Request Id
 		if(!jausByteToBuffer(message->requestId, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
 
-		if(jausByteIsBitSet(message->presenceVector, CANCEL_EVENT_PV_MESSAGE_CODE_BIT))
+		// Response Code
+		if(!jausByteToBuffer(message->responseCode, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		index += JAUS_BYTE_SIZE_BYTES;		
+
+		if(jausByteIsBitSet(message->presenceVector, REJECT_EVENT_REQUEST_PV_ERROR_MESSAGE_BIT))
 		{
-			// Message Code
-			if(!jausUnsignedShortToBuffer(message->messageCode, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-			index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;		
-		}
-		
-		if(jausByteIsBitSet(message->presenceVector, CANCEL_EVENT_PV_EVENT_ID_BIT))
-		{
-			// Event Id
-			if(!jausByteToBuffer(message->eventId, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-			index += JAUS_BYTE_SIZE_BYTES;
-		}
+			memcpy(buffer+index, message->errorMessage, strlen(message->errorMessage)+1);
+			index += strlen(message->errorMessage)+1;		
+		}		
+
 	}
 
 	return index;
 }
 
-static int dataSize(CancelEventMessage message)
+// Returns number of bytes put into the buffer
+static int dataSize(RejectEventRequestMessage message)
 {
-	int size = 0;
-	
-	size += 2 * JAUS_BYTE_SIZE_BYTES;
-	
-	if(jausByteIsBitSet(message->presenceVector, CANCEL_EVENT_PV_MESSAGE_CODE_BIT))
-	{
-		size += JAUS_UNSIGNED_SHORT_SIZE_BYTES;		
-	}
-	
-	if(jausByteIsBitSet(message->presenceVector, CANCEL_EVENT_PV_EVENT_ID_BIT))
-	{
-		size += JAUS_BYTE_SIZE_BYTES;
-	}
+	int index = 0;
 
-	// Constant Size
-	return size;
+	// Presence Vector
+	index += JAUS_BYTE_SIZE_BYTES;
+
+	// Request ID
+	index += JAUS_BYTE_SIZE_BYTES;		
+
+	// Message Code
+	index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;		
+
+	// Response Code
+	index += JAUS_BYTE_SIZE_BYTES;		
+
+	if(jausByteIsBitSet(message->presenceVector, REJECT_EVENT_REQUEST_PV_ERROR_MESSAGE_BIT))
+	{
+		index += strlen(message->errorMessage)+1;
+	}		
+
+	return index;
 }
-
 
 // ************************************************************************************************************** //
 //                                    NON-USER CONFIGURED FUNCTIONS
 // ************************************************************************************************************** //
 
-CancelEventMessage cancelEventMessageCreate(void)
+RejectEventRequestMessage rejectEventRequestMessageCreate(void)
 {
-	CancelEventMessage message;
+	RejectEventRequestMessage message;
 
-	message = (CancelEventMessage)malloc( sizeof(CancelEventMessageStruct) );
+	message = (RejectEventRequestMessage)malloc( sizeof(RejectEventRequestMessageStruct) );
 	if(message == NULL)
 	{
 		return NULL;
@@ -194,11 +206,12 @@ CancelEventMessage cancelEventMessageCreate(void)
 	message->sequenceNumber = 0;
 	
 	dataInitialize(message);
+	message->dataSize = dataSize(message);
 	
 	return message;	
 }
 
-void cancelEventMessageDestroy(CancelEventMessage message)
+void rejectEventRequestMessageDestroy(RejectEventRequestMessage message)
 {
 	dataDestroy(message);
 	jausAddressDestroy(message->source);
@@ -206,7 +219,7 @@ void cancelEventMessageDestroy(CancelEventMessage message)
 	free(message);
 }
 
-JausBoolean cancelEventMessageFromBuffer(CancelEventMessage message, unsigned char* buffer, unsigned int bufferSizeBytes)
+JausBoolean rejectEventRequestMessageFromBuffer(RejectEventRequestMessage message, unsigned char* buffer, unsigned int bufferSizeBytes)
 {
 	int index = 0;
 	
@@ -228,9 +241,9 @@ JausBoolean cancelEventMessageFromBuffer(CancelEventMessage message, unsigned ch
 	}
 }
 
-JausBoolean cancelEventMessageToBuffer(CancelEventMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
+JausBoolean rejectEventRequestMessageToBuffer(RejectEventRequestMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
 {
-	if(bufferSizeBytes < cancelEventMessageSize(message))
+	if(bufferSizeBytes < rejectEventRequestMessageSize(message))
 	{
 		return JAUS_FALSE; //improper size	
 	}
@@ -243,14 +256,14 @@ JausBoolean cancelEventMessageToBuffer(CancelEventMessage message, unsigned char
 		}
 		else
 		{
-			return JAUS_FALSE; // headerToCancelEventBuffer failed
+			return JAUS_FALSE; // headerToRejectEventRequestBuffer failed
 		}
 	}
 }
 
-CancelEventMessage cancelEventMessageFromJausMessage(JausMessage jausMessage)
+RejectEventRequestMessage rejectEventRequestMessageFromJausMessage(JausMessage jausMessage)
 {
-	CancelEventMessage message;
+	RejectEventRequestMessage message;
 	
 	if(jausMessage->commandCode != commandCode)
 	{
@@ -258,7 +271,7 @@ CancelEventMessage cancelEventMessageFromJausMessage(JausMessage jausMessage)
 	}
 	else
 	{
-		message = (CancelEventMessage)malloc( sizeof(CancelEventMessageStruct) );
+		message = (RejectEventRequestMessage)malloc( sizeof(RejectEventRequestMessageStruct) );
 		if(message == NULL)
 		{
 			return NULL;
@@ -291,7 +304,7 @@ CancelEventMessage cancelEventMessageFromJausMessage(JausMessage jausMessage)
 	}
 }
 
-JausMessage cancelEventMessageToJausMessage(CancelEventMessage message)
+JausMessage rejectEventRequestMessageToJausMessage(RejectEventRequestMessage message)
 {
 	JausMessage jausMessage;
 	
@@ -312,24 +325,25 @@ JausMessage cancelEventMessageToJausMessage(CancelEventMessage message)
 	*jausMessage->destination = *message->destination;
 	jausMessage->source = jausAddressCreate();
 	*jausMessage->source = *message->source;
+	jausMessage->dataSize = message->dataSize;
 	jausMessage->dataFlag = message->dataFlag;
 	jausMessage->sequenceNumber = message->sequenceNumber;
 	
 	jausMessage->data = (unsigned char *)malloc(dataSize(message));
-	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, message->dataSize);
+	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, dataSize(message));
 	
 	return jausMessage;
 }
 
 
-unsigned int cancelEventMessageSize(CancelEventMessage message)
+unsigned int rejectEventRequestMessageSize(RejectEventRequestMessage message)
 {
 	return (unsigned int)(dataSize(message) + JAUS_HEADER_SIZE_BYTES);
 }
 
 //********************* PRIVATE HEADER FUNCTIONS **********************//
 
-static JausBoolean headerFromBuffer(CancelEventMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
+static JausBoolean headerFromBuffer(RejectEventRequestMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
 {
 	if(bufferSizeBytes < JAUS_HEADER_SIZE_BYTES)
 	{
@@ -367,7 +381,7 @@ static JausBoolean headerFromBuffer(CancelEventMessage message, unsigned char *b
 	}
 }
 
-static JausBoolean headerToBuffer(CancelEventMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
+static JausBoolean headerToBuffer(RejectEventRequestMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
 {
 	JausUnsignedShort *propertiesPtr = (JausUnsignedShort*)&message->properties;
 	

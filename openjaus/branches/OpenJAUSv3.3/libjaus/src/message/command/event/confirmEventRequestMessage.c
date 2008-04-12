@@ -31,7 +31,7 @@
  *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
  *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ****************************************************************************/
-// File Name: confirmEventMessage.c
+// File Name: confirmEventRequestMessage.c
 //
 // Written By: Danny Kent (jaus AT dannykent DOT com), Tom Galluzzo (galluzzo AT gmail DOT com)
 //
@@ -39,7 +39,7 @@
 //
 // Date: 08/04/06
 //
-// Description: This file defines the functionality of a ConfirmEventMessage
+// Description: This file defines the functionality of a ConfirmEventRequestMessage
 
 
 
@@ -47,27 +47,28 @@
 #include <string.h>
 #include "jaus.h"
 
-static const int commandCode = JAUS_CONFIRM_EVENT;
-static const int maxDataSizeBytes = 7;
+static const int commandCode = JAUS_CONFIRM_EVENT_REQUEST;
+static const int maxDataSizeBytes = 8;
 
-static JausBoolean headerFromBuffer(ConfirmEventMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-static JausBoolean headerToBuffer(ConfirmEventMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+static JausBoolean headerFromBuffer(ConfirmEventRequestMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+static JausBoolean headerToBuffer(ConfirmEventRequestMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
-static JausBoolean dataFromBuffer(ConfirmEventMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-static int dataToBuffer(ConfirmEventMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-static void dataInitialize(ConfirmEventMessage message);
-static void dataDestroy(ConfirmEventMessage message);
+static JausBoolean dataFromBuffer(ConfirmEventRequestMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+static int dataToBuffer(ConfirmEventRequestMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+static void dataInitialize(ConfirmEventRequestMessage message);
+static void dataDestroy(ConfirmEventRequestMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS
 // ************************************************************************************************************** //
 
 // Initializes the message-specific fields
-static void dataInitialize(ConfirmEventMessage message)
+static void dataInitialize(ConfirmEventRequestMessage message)
 {
 	message->properties.expFlag = JAUS_EXPERIMENTAL_MESSAGE;	
 	// Set initial values of message fields
 	message->presenceVector = newJausByte(JAUS_BYTE_PRESENCE_VECTOR_ALL_ON);	// 1: Presence Vector
+	message->requestId = newJausByte(0);						
 	message->messageCode = newJausUnsignedShort(0);			// 2: Command Code of message sent in case of event occurance
 	message->eventId = newJausByte(0);						// 3: Event Id
 	message->confirmedUpdateRate = newJausDouble(0);		// 4: For Periodic Events, Scaled UnsignedShort (0, 1092)
@@ -75,13 +76,13 @@ static void dataInitialize(ConfirmEventMessage message)
 }
 
 // Destructs the message-specific fields
-static void dataDestroy(ConfirmEventMessage message)
+static void dataDestroy(ConfirmEventRequestMessage message)
 {
 	// Free message fields
 }
 
 // Return boolean of success
-static JausBoolean dataFromBuffer(ConfirmEventMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
+static JausBoolean dataFromBuffer(ConfirmEventRequestMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
 {
 	int index = 0;
 	JausUnsignedShort tempUShort;
@@ -93,6 +94,10 @@ static JausBoolean dataFromBuffer(ConfirmEventMessage message, unsigned char *bu
 		if(!jausByteFromBuffer(&message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
 
+		// Request ID
+		if(!jausByteFromBuffer(&message->requestId, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		index += JAUS_BYTE_SIZE_BYTES;
+
 		// Message Code
 		if(!jausUnsignedShortFromBuffer(&message->messageCode, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;		
@@ -101,7 +106,7 @@ static JausBoolean dataFromBuffer(ConfirmEventMessage message, unsigned char *bu
 		if(!jausByteFromBuffer(&message->eventId, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
 
-		if(jausByteIsBitSet(message->presenceVector, CONFIRM_EVENT_PV_PERIODIC_RATE_BIT))
+		if(jausByteIsBitSet(message->presenceVector, CONFIRM_EVENT_REQUEST_PV_PERIODIC_RATE_BIT))
 		{		
 			// Periodic Rate 
 			if(!jausUnsignedShortFromBuffer(&tempUShort, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -124,7 +129,7 @@ static JausBoolean dataFromBuffer(ConfirmEventMessage message, unsigned char *bu
 }
 
 // Returns number of bytes put into the buffer
-static int dataToBuffer(ConfirmEventMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
+static int dataToBuffer(ConfirmEventRequestMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
 {
 	int index = 0;
 	JausUnsignedShort tempUShort;
@@ -136,6 +141,10 @@ static int dataToBuffer(ConfirmEventMessage message, unsigned char *buffer, unsi
 		if(!jausByteToBuffer(message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
 
+		// Request Id
+		if(!jausByteToBuffer(message->requestId, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		index += JAUS_BYTE_SIZE_BYTES;
+
 		// Message Code
 		if(!jausUnsignedShortToBuffer(message->messageCode, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;		
@@ -144,7 +153,7 @@ static int dataToBuffer(ConfirmEventMessage message, unsigned char *buffer, unsi
 		if(!jausByteToBuffer(message->eventId, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
 
-		if(jausByteIsBitSet(message->presenceVector, CONFIRM_EVENT_PV_PERIODIC_RATE_BIT))
+		if(jausByteIsBitSet(message->presenceVector, CONFIRM_EVENT_REQUEST_PV_PERIODIC_RATE_BIT))
 		{		
 			// Scaled Int (0, 1092);
 			tempUShort = jausUnsignedShortFromDouble(message->confirmedUpdateRate, 0, 1092);
@@ -163,12 +172,15 @@ static int dataToBuffer(ConfirmEventMessage message, unsigned char *buffer, unsi
 }
 
 // Returns number of bytes put into the buffer
-static int dataSize(ConfirmEventMessage message)
+static int dataSize(ConfirmEventRequestMessage message)
 {
 	int index = 0;
 
 	// Presence Vector
 	index += JAUS_BYTE_SIZE_BYTES;
+
+	// Request ID
+	index += JAUS_BYTE_SIZE_BYTES;		
 
 	// Message Code
 	index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;		
@@ -176,7 +188,7 @@ static int dataSize(ConfirmEventMessage message)
 	// Event Id
 	index += JAUS_BYTE_SIZE_BYTES;
 
-	if(jausByteIsBitSet(message->presenceVector, CONFIRM_EVENT_PV_PERIODIC_RATE_BIT))
+	if(jausByteIsBitSet(message->presenceVector, CONFIRM_EVENT_REQUEST_PV_PERIODIC_RATE_BIT))
 	{		
 		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
 	}
@@ -191,11 +203,11 @@ static int dataSize(ConfirmEventMessage message)
 //                                    NON-USER CONFIGURED FUNCTIONS
 // ************************************************************************************************************** //
 
-ConfirmEventMessage confirmEventMessageCreate(void)
+ConfirmEventRequestMessage confirmEventRequestMessageCreate(void)
 {
-	ConfirmEventMessage message;
+	ConfirmEventRequestMessage message;
 
-	message = (ConfirmEventMessage)malloc( sizeof(ConfirmEventMessageStruct) );
+	message = (ConfirmEventRequestMessage)malloc( sizeof(ConfirmEventRequestMessageStruct) );
 	if(message == NULL)
 	{
 		return NULL;
@@ -221,7 +233,7 @@ ConfirmEventMessage confirmEventMessageCreate(void)
 	return message;	
 }
 
-void confirmEventMessageDestroy(ConfirmEventMessage message)
+void confirmEventRequestMessageDestroy(ConfirmEventRequestMessage message)
 {
 	dataDestroy(message);
 	jausAddressDestroy(message->source);
@@ -229,7 +241,7 @@ void confirmEventMessageDestroy(ConfirmEventMessage message)
 	free(message);
 }
 
-JausBoolean confirmEventMessageFromBuffer(ConfirmEventMessage message, unsigned char* buffer, unsigned int bufferSizeBytes)
+JausBoolean confirmEventRequestMessageFromBuffer(ConfirmEventRequestMessage message, unsigned char* buffer, unsigned int bufferSizeBytes)
 {
 	int index = 0;
 	
@@ -251,9 +263,9 @@ JausBoolean confirmEventMessageFromBuffer(ConfirmEventMessage message, unsigned 
 	}
 }
 
-JausBoolean confirmEventMessageToBuffer(ConfirmEventMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
+JausBoolean confirmEventRequestMessageToBuffer(ConfirmEventRequestMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
 {
-	if(bufferSizeBytes < confirmEventMessageSize(message))
+	if(bufferSizeBytes < confirmEventRequestMessageSize(message))
 	{
 		return JAUS_FALSE; //improper size	
 	}
@@ -266,14 +278,14 @@ JausBoolean confirmEventMessageToBuffer(ConfirmEventMessage message, unsigned ch
 		}
 		else
 		{
-			return JAUS_FALSE; // headerToConfirmEventBuffer failed
+			return JAUS_FALSE; // headerToConfirmEventRequestBuffer failed
 		}
 	}
 }
 
-ConfirmEventMessage confirmEventMessageFromJausMessage(JausMessage jausMessage)
+ConfirmEventRequestMessage confirmEventRequestMessageFromJausMessage(JausMessage jausMessage)
 {
-	ConfirmEventMessage message;
+	ConfirmEventRequestMessage message;
 	
 	if(jausMessage->commandCode != commandCode)
 	{
@@ -281,7 +293,7 @@ ConfirmEventMessage confirmEventMessageFromJausMessage(JausMessage jausMessage)
 	}
 	else
 	{
-		message = (ConfirmEventMessage)malloc( sizeof(ConfirmEventMessageStruct) );
+		message = (ConfirmEventRequestMessage)malloc( sizeof(ConfirmEventRequestMessageStruct) );
 		if(message == NULL)
 		{
 			return NULL;
@@ -314,7 +326,7 @@ ConfirmEventMessage confirmEventMessageFromJausMessage(JausMessage jausMessage)
 	}
 }
 
-JausMessage confirmEventMessageToJausMessage(ConfirmEventMessage message)
+JausMessage confirmEventRequestMessageToJausMessage(ConfirmEventRequestMessage message)
 {
 	JausMessage jausMessage;
 	
@@ -346,14 +358,14 @@ JausMessage confirmEventMessageToJausMessage(ConfirmEventMessage message)
 }
 
 
-unsigned int confirmEventMessageSize(ConfirmEventMessage message)
+unsigned int confirmEventRequestMessageSize(ConfirmEventRequestMessage message)
 {
 	return (unsigned int)(dataSize(message) + JAUS_HEADER_SIZE_BYTES);
 }
 
 //********************* PRIVATE HEADER FUNCTIONS **********************//
 
-static JausBoolean headerFromBuffer(ConfirmEventMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
+static JausBoolean headerFromBuffer(ConfirmEventRequestMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
 {
 	if(bufferSizeBytes < JAUS_HEADER_SIZE_BYTES)
 	{
@@ -391,7 +403,7 @@ static JausBoolean headerFromBuffer(ConfirmEventMessage message, unsigned char *
 	}
 }
 
-static JausBoolean headerToBuffer(ConfirmEventMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
+static JausBoolean headerToBuffer(ConfirmEventRequestMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
 {
 	JausUnsignedShort *propertiesPtr = (JausUnsignedShort*)&message->properties;
 	
