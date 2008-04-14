@@ -31,7 +31,7 @@
  *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
  *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ****************************************************************************/
-// File Name: rejectEventRequestMessage.c
+// File Name: terminateVksDataTransferMessage.c
 //
 // Written By: Danny Kent (jaus AT dannykent DOT com), Tom Galluzzo (galluzzo AT gmail DOT com)
 //
@@ -39,80 +39,49 @@
 //
 // Date: 08/04/06
 //
-// Description: This file defines the functionality of a RejectEventRequestMessage
-
-
+// Description: This file defines the functionality of a TerminateVksDataTransferMessage
 
 #include <stdlib.h>
 #include <string.h>
 #include "jaus.h"
 
-static const int commandCode = JAUS_REJECT_EVENT_REQUEST;
-static const int maxDataSizeBytes = 512000;
+static const int commandCode = JAUS_TERMINATE_VKS_DATA_TRANSFER;
+static const int maxDataSizeBytes = 0;
 
-static JausBoolean headerFromBuffer(RejectEventRequestMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-static JausBoolean headerToBuffer(RejectEventRequestMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+static JausBoolean headerFromBuffer(TerminateVksDataTransferMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+static JausBoolean headerToBuffer(TerminateVksDataTransferMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
-static JausBoolean dataFromBuffer(RejectEventRequestMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-static int dataToBuffer(RejectEventRequestMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-static void dataInitialize(RejectEventRequestMessage message);
-static void dataDestroy(RejectEventRequestMessage message);
+static JausBoolean dataFromBuffer(TerminateVksDataTransferMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+static int dataToBuffer(TerminateVksDataTransferMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+static void dataInitialize(TerminateVksDataTransferMessage message);
+static void dataDestroy(TerminateVksDataTransferMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS
 // ************************************************************************************************************** //
 
 // Initializes the message-specific fields
-static void dataInitialize(RejectEventRequestMessage message)
+static void dataInitialize(TerminateVksDataTransferMessage message)
 {
 	// Set initial values of message fields
-	message->presenceVector = newJausByte(JAUS_BYTE_PRESENCE_VECTOR_ALL_ON);	// 1: Presence Vector
-	message->requestId = newJausByte(0);						
-	message->responseCode = newJausByte(0);					// 5: Enumeration of Response Types (see above)
-	message->errorMessage = NULL;
+
 }
 
 // Destructs the message-specific fields
-static void dataDestroy(RejectEventRequestMessage message)
+static void dataDestroy(TerminateVksDataTransferMessage message)
 {
 	// Free message fields
-	if(message->errorMessage)
-	{
-		free(message->errorMessage);
-	}
 }
 
 // Return boolean of success
-static JausBoolean dataFromBuffer(RejectEventRequestMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
+static JausBoolean dataFromBuffer(TerminateVksDataTransferMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
 {
 	int index = 0;
 	
 	if(bufferSizeBytes == message->dataSize)
 	{
 		// Unpack Message Fields from Buffer
-		// Presence Vector
-		if(!jausByteFromBuffer(&message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_BYTE_SIZE_BYTES;
-
-		// Request ID
-		if(!jausByteFromBuffer(&message->requestId, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_BYTE_SIZE_BYTES;
 		
-		// Response Code
-		if(!jausByteFromBuffer(&message->responseCode, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_BYTE_SIZE_BYTES;
-
-		if(jausByteIsBitSet(message->presenceVector, REJECT_EVENT_REQUEST_PV_ERROR_MESSAGE_BIT))
-		{
-			message->errorMessage = (char *)malloc(bufferSizeBytes-index);
-			memcpy(message->errorMessage, buffer+index, bufferSizeBytes - index);
-			if(message->errorMessage[bufferSizeBytes - index - 1])
-			{
-				message->errorMessage = (char *)realloc(message->errorMessage, bufferSizeBytes-index);
-				message->errorMessage[bufferSizeBytes - index] = '\0';
-			}		
-		}
-
 		return JAUS_TRUE;
 	}
 	else
@@ -122,70 +91,34 @@ static JausBoolean dataFromBuffer(RejectEventRequestMessage message, unsigned ch
 }
 
 // Returns number of bytes put into the buffer
-static int dataToBuffer(RejectEventRequestMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
+static int dataToBuffer(TerminateVksDataTransferMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
 {
 	int index = 0;
 
 	if(bufferSizeBytes >= message->dataSize)
 	{
 		// Pack Message Fields to Buffer
-		// Presence Vector
-		if(!jausByteToBuffer(message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_BYTE_SIZE_BYTES;
-
-		// Request Id
-		if(!jausByteToBuffer(message->requestId, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_BYTE_SIZE_BYTES;
-
-		// Response Code
-		if(!jausByteToBuffer(message->responseCode, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_BYTE_SIZE_BYTES;		
-
-		if(jausByteIsBitSet(message->presenceVector, REJECT_EVENT_REQUEST_PV_ERROR_MESSAGE_BIT))
-		{
-			memcpy(buffer+index, message->errorMessage, strlen(message->errorMessage)+1);
-			index += (int) strlen(message->errorMessage)+1;		
-		}		
-
+				
 	}
 
 	return index;
 }
 
 // Returns number of bytes put into the buffer
-static int dataSize(RejectEventRequestMessage message)
+static int dataSize(TerminateVksDataTransferMessage message)
 {
-	int index = 0;
-
-	// Presence Vector
-	index += JAUS_BYTE_SIZE_BYTES;
-
-	// Request ID
-	index += JAUS_BYTE_SIZE_BYTES;		
-
-	// Message Code
-	index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;		
-
-	// Response Code
-	index += JAUS_BYTE_SIZE_BYTES;		
-
-	if(jausByteIsBitSet(message->presenceVector, REJECT_EVENT_REQUEST_PV_ERROR_MESSAGE_BIT))
-	{
-		index += (int) strlen(message->errorMessage)+1;
-	}		
-
-	return index;
+	return maxDataSizeBytes;
 }
 
 // ************************************************************************************************************** //
 //                                    NON-USER CONFIGURED FUNCTIONS
 // ************************************************************************************************************** //
 
-RejectEventRequestMessage rejectEventRequestMessageCreate(void)
+TerminateVksDataTransferMessage terminateVksDataTransferMessageCreate(void)
 {
-	RejectEventRequestMessage message;
+	TerminateVksDataTransferMessage message;
 
-	message = (RejectEventRequestMessage)malloc( sizeof(RejectEventRequestMessageStruct) );
+	message = (TerminateVksDataTransferMessage)malloc( sizeof(TerminateVksDataTransferMessageStruct) );
 	if(message == NULL)
 	{
 		return NULL;
@@ -211,7 +144,7 @@ RejectEventRequestMessage rejectEventRequestMessageCreate(void)
 	return message;	
 }
 
-void rejectEventRequestMessageDestroy(RejectEventRequestMessage message)
+void terminateVksDataTransferMessageDestroy(TerminateVksDataTransferMessage message)
 {
 	dataDestroy(message);
 	jausAddressDestroy(message->source);
@@ -219,7 +152,7 @@ void rejectEventRequestMessageDestroy(RejectEventRequestMessage message)
 	free(message);
 }
 
-JausBoolean rejectEventRequestMessageFromBuffer(RejectEventRequestMessage message, unsigned char* buffer, unsigned int bufferSizeBytes)
+JausBoolean terminateVksDataTransferMessageFromBuffer(TerminateVksDataTransferMessage message, unsigned char* buffer, unsigned int bufferSizeBytes)
 {
 	int index = 0;
 	
@@ -241,9 +174,9 @@ JausBoolean rejectEventRequestMessageFromBuffer(RejectEventRequestMessage messag
 	}
 }
 
-JausBoolean rejectEventRequestMessageToBuffer(RejectEventRequestMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
+JausBoolean terminateVksDataTransferMessageToBuffer(TerminateVksDataTransferMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
 {
-	if(bufferSizeBytes < rejectEventRequestMessageSize(message))
+	if(bufferSizeBytes < terminateVksDataTransferMessageSize(message))
 	{
 		return JAUS_FALSE; //improper size	
 	}
@@ -256,14 +189,14 @@ JausBoolean rejectEventRequestMessageToBuffer(RejectEventRequestMessage message,
 		}
 		else
 		{
-			return JAUS_FALSE; // headerToRejectEventRequestBuffer failed
+			return JAUS_FALSE; // headerToTerminateVksDataTransferMessageBuffer failed
 		}
 	}
 }
 
-RejectEventRequestMessage rejectEventRequestMessageFromJausMessage(JausMessage jausMessage)
+TerminateVksDataTransferMessage terminateVksDataTransferMessageFromJausMessage(JausMessage jausMessage)
 {
-	RejectEventRequestMessage message;
+	TerminateVksDataTransferMessage message;
 	
 	if(jausMessage->commandCode != commandCode)
 	{
@@ -271,7 +204,7 @@ RejectEventRequestMessage rejectEventRequestMessageFromJausMessage(JausMessage j
 	}
 	else
 	{
-		message = (RejectEventRequestMessage)malloc( sizeof(RejectEventRequestMessageStruct) );
+		message = (TerminateVksDataTransferMessage)malloc( sizeof(TerminateVksDataTransferMessageStruct) );
 		if(message == NULL)
 		{
 			return NULL;
@@ -304,9 +237,10 @@ RejectEventRequestMessage rejectEventRequestMessageFromJausMessage(JausMessage j
 	}
 }
 
-JausMessage rejectEventRequestMessageToJausMessage(RejectEventRequestMessage message)
+JausMessage terminateVksDataTransferMessageToJausMessage(TerminateVksDataTransferMessage message)
 {
 	JausMessage jausMessage;
+	int size;
 	
 	jausMessage = (JausMessage)malloc( sizeof(struct JausMessageStruct) );
 	if(jausMessage == NULL)
@@ -325,25 +259,24 @@ JausMessage rejectEventRequestMessageToJausMessage(RejectEventRequestMessage mes
 	*jausMessage->destination = *message->destination;
 	jausMessage->source = jausAddressCreate();
 	*jausMessage->source = *message->source;
-	jausMessage->dataSize = message->dataSize;
 	jausMessage->dataFlag = message->dataFlag;
 	jausMessage->sequenceNumber = message->sequenceNumber;
 	
-	jausMessage->data = (unsigned char *)malloc(dataSize(message));
-	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, dataSize(message));
+	size = dataSize(message);
+	jausMessage->data = (unsigned char *)malloc(size);
+	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, size);
 	
 	return jausMessage;
 }
 
-
-unsigned int rejectEventRequestMessageSize(RejectEventRequestMessage message)
+unsigned int terminateVksDataTransferMessageSize(TerminateVksDataTransferMessage message)
 {
 	return (unsigned int)(dataSize(message) + JAUS_HEADER_SIZE_BYTES);
 }
 
 //********************* PRIVATE HEADER FUNCTIONS **********************//
 
-static JausBoolean headerFromBuffer(RejectEventRequestMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
+static JausBoolean headerFromBuffer(TerminateVksDataTransferMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
 {
 	if(bufferSizeBytes < JAUS_HEADER_SIZE_BYTES)
 	{
@@ -381,7 +314,7 @@ static JausBoolean headerFromBuffer(RejectEventRequestMessage message, unsigned 
 	}
 }
 
-static JausBoolean headerToBuffer(RejectEventRequestMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
+static JausBoolean headerToBuffer(TerminateVksDataTransferMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
 {
 	JausUnsignedShort *propertiesPtr = (JausUnsignedShort*)&message->properties;
 	
