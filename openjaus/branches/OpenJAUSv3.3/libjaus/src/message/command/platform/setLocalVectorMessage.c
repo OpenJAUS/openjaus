@@ -157,7 +157,7 @@ SetLocalVectorMessage setLocalVectorMessageCreate(void)
 	message->properties.ackNak = JAUS_ACK_NAK_NOT_REQUIRED;
 	message->properties.scFlag = JAUS_NOT_SERVICE_CONNECTION_MESSAGE;
 	message->properties.expFlag = JAUS_NOT_EXPERIMENTAL_MESSAGE;
-	message->properties.version = JAUS_VERSION_3_2;
+	message->properties.version = JAUS_VERSION_3_3;
 	message->properties.reserved = 0;
 	message->commandCode = commandCode;
 	message->destination = jausAddressCreate();
