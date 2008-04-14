@@ -37,26 +37,31 @@ JAUS_EXPORT void ojCmptSetMessageProcessorCallback(OjCmpt ojCmpt, void (*process
 
 JAUS_EXPORT int ojCmptSendMessage(OjCmpt ojCmpt, JausMessage message);
 
+// Accessors
 JAUS_EXPORT char* ojCmptGetName(OjCmpt ojCmpt);
 JAUS_EXPORT JausAddress ojCmptGetAddress(OjCmpt ojCmpt);
-
 JAUS_EXPORT int ojCmptGetState(OjCmpt ojCmpt);
-
 JAUS_EXPORT double ojCmptGetRateHz(OjCmpt ojCmpt);
 JAUS_EXPORT void ojCmptDefaultMessageProcessor(OjCmpt ojCmpt, JausMessage message);
 
-void addService(JausService service);
-//	int addServiceCommand(ServiceCommandType direction, JausUnsignedShort id, JausUnsignedShort commandCode, JausUnsignedInteger presenceVector);
+// Services
+JAUS_EXPORT JausBoolean ojCmptAddService(OjCmpt ojCmpt, JausUnsignedShort serviceType);
+JAUS_EXPORT JausBoolean ojCmptAddServiceInputMessage(OjCmpt ojCmpt, JausUnsignedShort serviceType, JausUnsignedShort commandCode, JausUnsignedInteger presenceVector);
+JAUS_EXPORT JausBoolean ojCmptAddServiceOutputMessage(OjCmpt ojCmpt, JausUnsignedShort serviceType, JausUnsignedShort commandCode, JausUnsignedInteger presenceVector);
 
+// Incomming Service Connections
+int ojCmptEstablishSc(OjCmpt ojCmpt, JausUnsignedShort cCode, JausUnsignedInteger pv, JausAddress address, double rateHz, double timeoutSec, int qSize);
+void ojCmptTerminateSc(OjCmpt ojCmpt, ServiceConnection cmptSc);
+// OjCmpt add receive SC method
 
-void establishServiceConnection(ServiceConnection cmptSc);
+// Outgoing Service Connections
+void ojCmptAddSupportedSc(OjCmpt ojCmpt, unsigned short commandCode);		// Add service connection support for this message
+void ojCmptRemoveSupportedSc(OjCmpt ojCmpt, unsigned short commandCode);	// Removes service connection support for this message
+ServiceConnection ojCmptGetScSendList(OjCmpt ojCmpt, unsigned short commandCode);
 
+// System Discovery
+int ojCmptLookupAddress(OjCmpt ojCmpt, JausAddress address);
 
-void addScMessage(unsigned short commandCode);		// Add service connection support for this message
-void removeScMessage(unsigned short commandCode);	// Removes service connection support for this message
-
-int scIsActive(unsigned short commandCode);
-ServiceConnection getScSendList(unsigned short commandCode);
 
 #ifdef __cplusplus
 }

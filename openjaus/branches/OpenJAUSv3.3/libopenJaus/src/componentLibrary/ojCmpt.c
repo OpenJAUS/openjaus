@@ -28,6 +28,11 @@ struct OjCmptStruct
 	int state;
 	int run;
 
+	ServiceConnection *inConnection;
+	int inConnectionCount;
+	ServiceConnection *outConnection;
+	int outConnectionCount;
+
 	NodeManagerInterface nmi;	
 };
 
@@ -66,6 +71,11 @@ OjCmpt ojCmptCreate(char *name, JausByte id, double stateFrequencyHz)
 		return NULL;
 	}
 
+	ojCmpt->inConnection = NULL;
+	ojCmpt->inConnectionCount = 0;
+	ojCmpt->outConnection = NULL;
+	ojCmpt->outConnectionCount = 0;
+	
 	ojCmpt->nmi = NULL;
 
 	return ojCmpt;
@@ -205,7 +215,6 @@ double ojCmptGetRateHz(OjCmpt ojCmpt)
 	return ojCmpt->rateHz;
 }
 
-
 void* ojCmptThread(void *threadData)
 {
 	OjCmpt ojCmpt;
@@ -279,8 +288,6 @@ void* ojCmptThread(void *threadData)
 	return NULL;
 }
 
-
-
 char* ojCmptGetName(OjCmpt ojCmpt)
 {
 	char *name;
@@ -306,46 +313,106 @@ int ojCmptGetState(OjCmpt ojCmpt)
 	return ojCmpt->state;
 }
 
-//int OpenJausComponent::sendMessage(OjCmpt JausMessage message)
-//{
-//	return nodeManagerSend(ojCmpt->nmi, message);
-//}
+int ojCmptSendMessage(OjCmpt ojCmpt, JausMessage message)
+{
+	return nodeManagerSend(ojCmpt->nmi, message);
+}
 
-//void OpenJausComponent::addService(JausService service)
-//{
-//	jausServiceAddService(this->cmpt->services, service);
-//}
-//
-//
-////bool OpenJausComponent::addServiceCommand(ServiceCommandType direction, JausUnsignedShort id, JausUnsignedShort commandCode, JausUnsignedInteger presenceVector)
-////{
-////	JausService service;
-////	
-////	// Find the service from the id
-////	for (int i = 0; i < this->cmpt->services->elementCount; i++)
-////	{
-////		if (services->)
-////	}
-////}
-//
-//
-//void OpenJausComponent::establishServiceConnection(ServiceConnection cmptSc)
-//{
-//	messageHandler.establishServiceConnection(cmptSc);
-//}
-//
-//
-//void OpenJausComponent::addScMessage(unsigned short commandCode)
-//{
-//	messageHandler.addScMessage(commandCode);
-//}
-//
-//
-//void OpenJausComponent::removeScMessage(unsigned short commandCode)
-//{
-//	messageHandler.removeScMessage(commandCode);
-//}
-//
+JausBoolean ojCmptAddService(OjCmpt ojCmpt, JausUnsignedShort serviceType)
+{
+	JausService service = jausServiceCreate(serviceType); 
+	if(service)
+	{
+		return jausServiceAddService(ojCmpt->jaus->services, service);
+	}
+	return JAUS_FALSE;
+}
+
+JausBoolean ojCmptAddServiceInputMessage(OjCmpt ojCmpt, JausUnsignedShort serviceType, JausUnsignedShort commandCode, JausUnsignedInteger presenceVector)
+{
+	JausService service = jausServiceRetrieveService(ojCmpt->jaus->services, serviceType);
+	
+	if(service)
+	{
+		return jausServiceAddInputCommand(service, commandCode, presenceVector);
+	}
+	return JAUS_FALSE;
+}
+
+JausBoolean ojCmptAddServiceOutputMessage(OjCmpt ojCmpt, JausUnsignedShort serviceType, JausUnsignedShort commandCode, JausUnsignedInteger presenceVector)
+{
+	JausService service = jausServiceRetrieveService(ojCmpt->jaus->services, serviceType);
+	
+	if(service)
+	{
+		return jausServiceAddOutputCommand(service, commandCode, presenceVector);
+	}
+	return JAUS_FALSE;
+}
+
+void ojCmptAddSupportedSc(OjCmpt ojCmpt, unsigned short commandCode)		// Add service connection support for this message
+{
+	scManagerAddSupportedMessage(ojCmpt->nmi, commandCode);
+}
+
+void ojCmptRemoveSupportedSc(OjCmpt ojCmpt, unsigned short commandCode)	// Removes service connection support for this message
+{
+	scManagerRemoveSupportedMessage(ojCmpt->nmi, commandCode);
+}
+
+// Incomming Service Connections
+void ojCmptManageServiceConnections(OjCmpt ojCmpt)
+{
+	// Manage Incomming Connections
+		// For all incomming SCs in array
+		// If sc is not active, then send the create
+		// else attempt to receive process incomming message
+
+	// Manage outgoing connections
+		// For 	
+}
+
+int ojCmptEstablishSc(OjCmpt ojCmpt, JausUnsignedShort cCode, JausUnsignedInteger pv, JausAddress address, double rateHz, double timeoutSec, int qSize)
+{
+	int scIndex = ojCmpt->inConnectionCount;
+	
+	ojCmpt->inConnectionCount++;
+	
+	if(ojCmpt->inConnection)
+	{
+		ojCmpt->inConnection = (ServiceConnection *)realloc(ojCmpt->inConnection, ojCmpt->inConnectionCount * sizeof(ServiceConnection));
+	}
+	else
+	{
+		ojCmpt->inConnection = (ServiceConnection *)malloc(sizeof(ServiceConnection));
+	}
+	
+	ojCmpt->inConnection[scIndex] = serviceConnectionCreate();
+	ojCmpt->inConnection[scIndex]->requestedUpdateRateHz = rateHz;
+	// TODO: Locate Command Code service in system based on address
+	jausAddressCopy(ojCmpt->inConnection[scIndex]->address, address);
+	ojCmpt->inConnection[scIndex]->presenceVector = pv;
+	ojCmpt->inConnection[scIndex]->commandCode = cCode;
+	ojCmpt->inConnection[scIndex]->isActive = JAUS_FALSE;
+	ojCmpt->inConnection[scIndex]->queueSize = qSize;
+	ojCmpt->inConnection[scIndex]->timeoutSec = timeoutSec;
+
+	return scIndex;	
+}
+
+void ojCmptTerminateSc(OjCmpt ojCmpt, ServiceConnection cmptSc)
+{
+	if(cmptSc->isActive)
+	{	
+		scManagerTerminateServiceConnection(ojCmpt->nmi, cmptSc);
+	}
+}
+
+//void ojCmpt
+//	if(gposSc && gposSc->isActive)
+//	{
+//		if(scManagerReceiveServiceConnection(wdNmi, gposSc, &message))
+
 //
 //bool OpenJausComponent::scIsActive(unsigned short commandCode)
 //{
