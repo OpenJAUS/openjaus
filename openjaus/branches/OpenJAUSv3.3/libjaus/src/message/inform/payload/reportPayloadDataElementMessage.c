@@ -64,9 +64,6 @@ static void dataDestroy(ReportPayloadDataElementMessage message);
 // Initializes the message-specific fields
 static void dataInitialize(ReportPayloadDataElementMessage message)
 {
-	// Set Experimental Flag
-	message->properties.expFlag = JAUS_EXPERIMENTAL_MESSAGE;
-
 	// Set initial values of message fields
 	message->jausPayloadInterface = NULL;
 	message->numberInterfaces = 0;

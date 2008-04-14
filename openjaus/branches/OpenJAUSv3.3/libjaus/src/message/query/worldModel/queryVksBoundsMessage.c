@@ -63,7 +63,6 @@ static void dataDestroy(QueryVksBoundsMessage message);
 // Initializes the message-specific fields
 static void dataInitialize(QueryVksBoundsMessage message)
 {
-	message->properties.expFlag = JAUS_EXPERIMENTAL_MESSAGE;
 	// Set initial values of message fields
 	message->requestId = newJausByte(0);
 	message->featureClassId = newJausUnsignedShort(0);

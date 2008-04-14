@@ -64,9 +64,6 @@ static void dataInitialize(QueryConfigurationMessage message);
 // Initializes the message-specific fields
 static void dataInitialize(QueryConfigurationMessage message)
 {
-	// Set Experimental Flag
-	message->properties.expFlag = JAUS_EXPERIMENTAL_MESSAGE;
-
 	// Set initial values of message fields
 	message->queryField = newJausByte(0);
 }

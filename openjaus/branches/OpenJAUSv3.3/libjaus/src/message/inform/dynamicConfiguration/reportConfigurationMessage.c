@@ -64,9 +64,6 @@ static void dataInitialize(ReportConfigurationMessage message);
 // Initializes the message-specific fields
 static void dataInitialize(ReportConfigurationMessage message)
 {
-	// Set Experimental Flag
-	message->properties.expFlag = JAUS_EXPERIMENTAL_MESSAGE;
-
 	// Set initial values of message fields
 	message->subsystem = jausSubsystemCreate();
 }

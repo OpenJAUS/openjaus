@@ -63,7 +63,6 @@ static void dataDestroy(ReportVksObjectsCreationMessage message);
 // Initializes the message-specific fields
 static void dataInitialize(ReportVksObjectsCreationMessage message)
 {
-	message->properties.expFlag = JAUS_EXPERIMENTAL_MESSAGE;
 	// Set initial values of message fields
 	message->requestId = newJausByte(0);				// 1: The request id sent by the requesting service
 	message->objectCount = newJausUnsignedShort(0);		// 2: Total number of objects reported

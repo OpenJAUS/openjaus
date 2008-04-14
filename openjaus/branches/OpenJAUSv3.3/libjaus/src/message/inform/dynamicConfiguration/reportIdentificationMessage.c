@@ -64,9 +64,6 @@ static void dataInitialize(ReportIdentificationMessage message);
 // Initializes the message-specific fields
 static void dataInitialize(ReportIdentificationMessage message)
 {
-	// Set Experimental Flag
-	message->properties.expFlag = JAUS_EXPERIMENTAL_MESSAGE;
-
 	// Set initial values of message fields
 	message->queryType = newJausByte(0);
 	message->authority = newJausByte(0);

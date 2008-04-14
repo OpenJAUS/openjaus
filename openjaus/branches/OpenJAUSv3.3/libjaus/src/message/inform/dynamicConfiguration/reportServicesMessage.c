@@ -63,9 +63,6 @@ static void dataDestroy(ReportServicesMessage message);
 // Initializes the message-specific fields
 static void dataInitialize(ReportServicesMessage message)
 {
-	// Set Experimental Flag
-	message->properties.expFlag = JAUS_EXPERIMENTAL_MESSAGE;
-
 	// Set initial values of message fields
 	message->jausServices = jausArrayCreate();
 }

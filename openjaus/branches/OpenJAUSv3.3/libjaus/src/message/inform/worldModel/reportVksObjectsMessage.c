@@ -63,7 +63,6 @@ static void dataDestroy(ReportVksObjectsMessage message);
 // Initializes the message-specific fields
 static void dataInitialize(ReportVksObjectsMessage message)
 {
-	message->properties.expFlag = JAUS_EXPERIMENTAL_MESSAGE;
 	// Set initial values of message fields
 	message->presenceVector = newJausByte(JAUS_BYTE_PRESENCE_VECTOR_ALL_ON);
 	message->requestId = newJausByte(0);

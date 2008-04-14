@@ -62,9 +62,6 @@ static void dataInitialize(QueryPayloadInterfaceMessage message);
 // Initializes the message-specific fields
 static void dataInitialize(QueryPayloadInterfaceMessage message)
 {
-	// Set Experimental Flag
-	message->properties.expFlag = JAUS_EXPERIMENTAL_MESSAGE;
-
 	// Set initial values of message fields
 	// No Fields
 }
