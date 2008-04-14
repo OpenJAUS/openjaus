@@ -80,6 +80,8 @@
 #include "command/platform/setLocalPathSegmentMessage.h"
 #include "command/worldModel/createVksObjectsMessage.h"
 #include "command/worldModel/deleteVksObjectsMessage.h"
+#include "command/worldModel/setVksFeatureClassMetadataMessage.h"
+#include "command/worldModel/terminateVksDataTransferMessage.h"
 #include "command/payload/setPayloadDataElementMessage.h"
 #include "command/event/cancelEventMessage.h"
 #include "command/event/confirmEventRequestMessage.h"
@@ -132,6 +134,7 @@
 #include "inform/worldModel/reportVksFeatureClassMetadataMessage.h"
 #include "inform/worldModel/reportVksObjectsCreationMessage.h"
 #include "inform/worldModel/reportVksObjectsMessage.h"
+#include "inform/worldModel/reportVksDataTransferTerminationMessage.h"
 #include "inform/event/reportEventsMessage.h"
 #include "inform/event/eventMessage.h"
 

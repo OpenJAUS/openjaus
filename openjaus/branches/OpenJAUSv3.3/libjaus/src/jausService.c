@@ -206,7 +206,7 @@ JausBoolean jausServiceAddCoreServices(JausArray jausServices)
 	JausService service;
 	
 	// create a new service for core message support
-	service = jausServiceCreate(CORE_MESSAGE_SUPPORT);  
+	service = jausServiceCreate(CORE_MESSAGE_SUPPORT);
 	
 	// add each supported core input message 
 	jausServiceAddInputCommand(service, JAUS_SET_COMPONENT_AUTHORITY, NO_PRESENCE_VECTOR);
@@ -232,6 +232,9 @@ JausBoolean jausServiceAddCoreServices(JausArray jausServices)
 	jausServiceAddInputCommand(service, JAUS_REPORT_COMPONENT_AUTHORITY, NO_PRESENCE_VECTOR);
 	jausServiceAddInputCommand(service, JAUS_REPORT_COMPONENT_STATUS, NO_PRESENCE_VECTOR);
 //	jausServiceAddInputCommand(service, JAUS_REPORT_TIME, 0xFF);
+	jausServiceAddInputCommand(service, JAUS_QUERY_IDENTIFICATION, NO_PRESENCE_VECTOR);
+	jausServiceAddInputCommand(service, JAUS_REPORT_CONFIGURATION, NO_PRESENCE_VECTOR);
+	jausServiceAddInputCommand(service, JAUS_REPORT_SERVICES, NO_PRESENCE_VECTOR);
 	
 	// add each supported core output message
 	jausServiceAddOutputCommand(service, JAUS_CREATE_SERVICE_CONNECTION, NO_PRESENCE_VECTOR);
@@ -241,14 +244,9 @@ JausBoolean jausServiceAddCoreServices(JausArray jausServices)
 	jausServiceAddOutputCommand(service, JAUS_REJECT_COMPONENT_CONTROL, NO_PRESENCE_VECTOR);
 	jausServiceAddOutputCommand(service, JAUS_REPORT_COMPONENT_AUTHORITY, NO_PRESENCE_VECTOR);
 	jausServiceAddOutputCommand(service, JAUS_REPORT_COMPONENT_STATUS, NO_PRESENCE_VECTOR);
-	
-	// experimental messages handled by default
-	jausServiceAddInputCommand(service, JAUS_QUERY_IDENTIFICATION, NO_PRESENCE_VECTOR);
 	jausServiceAddOutputCommand(service, JAUS_REPORT_IDENTIFICATION, NO_PRESENCE_VECTOR);
-	jausServiceAddInputCommand(service, JAUS_REPORT_CONFIGURATION, NO_PRESENCE_VECTOR);
 	jausServiceAddOutputCommand(service, JAUS_QUERY_CONFIGURATION, NO_PRESENCE_VECTOR);
-	jausServiceAddOutputCommand(service, JAUS_CONFIGURATION_CHANGED_EVENT_SETUP, NO_PRESENCE_VECTOR);
-	jausServiceAddInputCommand(service, JAUS_CONFIGURATION_CHANGED_EVENT_NOTIFICATION, NO_PRESENCE_VECTOR);
+	jausServiceAddOutputCommand(service, JAUS_QUERY_SERVICES, NO_PRESENCE_VECTOR);
 	
 	// add the service to the component's services jausArray
 	if(jausServiceAddService(jausServices, service))
