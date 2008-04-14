@@ -63,7 +63,6 @@ static void dataDestroy(ReportVksFeatureClassMetadataMessage message);
 // Initializes the message-specific fields
 static void dataInitialize(ReportVksFeatureClassMetadataMessage message)
 {
-	message->properties.expFlag = JAUS_EXPERIMENTAL_MESSAGE;
 	// Set initial values of message fields
 	message->fcClass = featureClassCreate();
 }

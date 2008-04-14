@@ -63,7 +63,6 @@ static void dataDestroy(QueryVksFeatureClassMetadataMessage message);
 // Initializes the message-specific fields
 static void dataInitialize(QueryVksFeatureClassMetadataMessage message)
 {
-	message->properties.expFlag = JAUS_EXPERIMENTAL_MESSAGE;
 	// Set initial values of message fields
 	message->featureClassId = newJausUnsignedShort(0);	
 }

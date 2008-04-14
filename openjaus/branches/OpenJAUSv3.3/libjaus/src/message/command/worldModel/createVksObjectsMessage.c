@@ -63,7 +63,6 @@ static void dataDestroy(CreateVksObjectsMessage message);
 // Initializes the message-specific fields
 static void dataInitialize(CreateVksObjectsMessage message)
 {
-	message->properties.expFlag = JAUS_EXPERIMENTAL_MESSAGE;
 	// Set initial values of message fields
 	message->presenceVector = newJausByte(JAUS_BYTE_PRESENCE_VECTOR_ALL_ON);		// presenceVector
 	message->messageProperties = newJausByte(JAUS_BYTE_PRESENCE_VECTOR_ALL_ON); 	// Bit Field, use Presence Vector for ease
