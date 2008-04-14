@@ -31,7 +31,7 @@
  *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
  *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ****************************************************************************/
-// File Name: reportVideoFrameMessage.c
+// File Name: reportImageMessage.c
 //
 // Written By: Danny Kent (jaus AT dannykent DOT com), Tom Galluzzo (galluzzo AT gmail DOT com)
 //
@@ -39,31 +39,29 @@
 //
 // Date: 08/04/06
 //
-// Description: This file defines the functionality of a ReportVideoFrameMessage
-
-
+// Description: This file defines the functionality of a ReportImageMessage
 
 #include <stdlib.h>
 #include <string.h>
 #include "jaus.h"
 
-static const int commandCode = JAUS_REPORT_VIDEO_FRAME;
+static const int commandCode = JAUS_REPORT_IMAGE;
 static const int maxDataSizeBytes = 0;
 
-static JausBoolean headerFromBuffer(ReportVideoFrameMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-static JausBoolean headerToBuffer(ReportVideoFrameMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+static JausBoolean headerFromBuffer(ReportImageMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+static JausBoolean headerToBuffer(ReportImageMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
-static JausBoolean dataFromBuffer(ReportVideoFrameMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-static int dataToBuffer(ReportVideoFrameMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-static void dataInitialize(ReportVideoFrameMessage message);
-static void dataDestroy(ReportVideoFrameMessage message);
+static JausBoolean dataFromBuffer(ReportImageMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+static int dataToBuffer(ReportImageMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+static void dataInitialize(ReportImageMessage message);
+static void dataDestroy(ReportImageMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS
 // ************************************************************************************************************** //
 
 // Initializes the message-specific fields
-static void dataInitialize(ReportVideoFrameMessage message)
+static void dataInitialize(ReportImageMessage message)
 {
 	// Set initial values of message fields
 	message->cameraID = 0;
@@ -73,13 +71,13 @@ static void dataInitialize(ReportVideoFrameMessage message)
 }
 
 // Destructs the message-specific fields
-static void dataDestroy(ReportVideoFrameMessage message)
+static void dataDestroy(ReportImageMessage message)
 {
 	// Free message fields
 }
 
 // Return boolean of success
-static JausBoolean dataFromBuffer(ReportVideoFrameMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
+static JausBoolean dataFromBuffer(ReportImageMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
 {
 	int index = 0;
 	
@@ -87,20 +85,17 @@ static JausBoolean dataFromBuffer(ReportVideoFrameMessage message, unsigned char
 	{
 		// Unpack Message Fields from Buffer
 		
-		if(!jausByteFromBuffer(&message->cameraID, buffer+index, bufferSizeBytes-index))
-			return JAUS_FALSE;
-		
+		if(!jausByteFromBuffer(&message->cameraID, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
 		
-		if(!jausByteFromBuffer(&message->videoFormat, buffer+index, bufferSizeBytes-index))
-			return JAUS_FALSE;
-			
+		if(!jausByteFromBuffer(&message->videoFormat, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
 		
 		memcpy(message->data, buffer+index, bufferSizeBytes-index);
-		
+		index += bufferSizeBytes-index;
+
 		message->bufferSizeBytes = bufferSizeBytes-index;
-		
+
 		return JAUS_TRUE;
 	}
 	else
@@ -110,7 +105,7 @@ static JausBoolean dataFromBuffer(ReportVideoFrameMessage message, unsigned char
 }
 
 // Returns number of bytes put into the buffer
-static int dataToBuffer(ReportVideoFrameMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
+static int dataToBuffer(ReportImageMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
 {
 	int index = 0;
 
@@ -130,7 +125,7 @@ static int dataToBuffer(ReportVideoFrameMessage message, unsigned char *buffer, 
 	return index;
 }
 
-static int dataSize(ReportVideoFrameMessage message)
+static int dataSize(ReportImageMessage message)
 {
 	// Constant Size
 	return maxDataSizeBytes;
@@ -140,11 +135,11 @@ static int dataSize(ReportVideoFrameMessage message)
 //                                    NON-USER CONFIGURED FUNCTIONS
 // ************************************************************************************************************** //
 
-ReportVideoFrameMessage reportVideoFrameMessageCreate(void)
+ReportImageMessage reportImageMessageCreate(void)
 {
-	ReportVideoFrameMessage message;
+	ReportImageMessage message;
 
-	message = (ReportVideoFrameMessage)malloc( sizeof(ReportVideoFrameMessageStruct) );
+	message = (ReportImageMessage)malloc( sizeof(ReportImageMessageStruct) );
 	if(message == NULL)
 	{
 		return NULL;
@@ -169,7 +164,7 @@ ReportVideoFrameMessage reportVideoFrameMessageCreate(void)
 	return message;	
 }
 
-void reportVideoFrameMessageDestroy(ReportVideoFrameMessage message)
+void reportImageMessageDestroy(ReportImageMessage message)
 {
 	dataDestroy(message);
 	jausAddressDestroy(message->source);
@@ -177,7 +172,7 @@ void reportVideoFrameMessageDestroy(ReportVideoFrameMessage message)
 	free(message);
 }
 
-JausBoolean reportVideoFrameMessageFromBuffer(ReportVideoFrameMessage message, unsigned char* buffer, unsigned int bufferSizeBytes)
+JausBoolean reportImageMessageFromBuffer(ReportImageMessage message, unsigned char* buffer, unsigned int bufferSizeBytes)
 {
 	int index = 0;
 	
@@ -199,9 +194,9 @@ JausBoolean reportVideoFrameMessageFromBuffer(ReportVideoFrameMessage message, u
 	}
 }
 
-JausBoolean reportVideoFrameMessageToBuffer(ReportVideoFrameMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
+JausBoolean reportImageMessageToBuffer(ReportImageMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
 {
-	if(bufferSizeBytes < reportVideoFrameMessageSize(message))
+	if(bufferSizeBytes < reportImageMessageSize(message))
 	{
 		return JAUS_FALSE; //improper size	
 	}
@@ -219,9 +214,9 @@ JausBoolean reportVideoFrameMessageToBuffer(ReportVideoFrameMessage message, uns
 	}
 }
 
-ReportVideoFrameMessage reportVideoFrameMessageFromJausMessage(JausMessage jausMessage)
+ReportImageMessage reportImageMessageFromJausMessage(JausMessage jausMessage)
 {
-	ReportVideoFrameMessage message;
+	ReportImageMessage message;
 	
 	if(jausMessage->commandCode != commandCode)
 	{
@@ -229,7 +224,7 @@ ReportVideoFrameMessage reportVideoFrameMessageFromJausMessage(JausMessage jausM
 	}
 	else
 	{
-		message = (ReportVideoFrameMessage)malloc( sizeof(ReportVideoFrameMessageStruct) );
+		message = (ReportImageMessage)malloc( sizeof(ReportImageMessageStruct) );
 		if(message == NULL)
 		{
 			return NULL;
@@ -262,7 +257,7 @@ ReportVideoFrameMessage reportVideoFrameMessageFromJausMessage(JausMessage jausM
 	}
 }
 
-JausMessage reportVideoFrameMessageToJausMessage(ReportVideoFrameMessage message)
+JausMessage reportImageMessageToJausMessage(ReportImageMessage message)
 {
 	JausMessage jausMessage;
 	
@@ -294,14 +289,14 @@ JausMessage reportVideoFrameMessageToJausMessage(ReportVideoFrameMessage message
 }
 
 
-unsigned int reportVideoFrameMessageSize(ReportVideoFrameMessage message)
+unsigned int reportImageMessageSize(ReportImageMessage message)
 {
 	return (unsigned int)(dataSize(message) + JAUS_HEADER_SIZE_BYTES);
 }
 
 //********************* PRIVATE HEADER FUNCTIONS **********************//
 
-static JausBoolean headerFromBuffer(ReportVideoFrameMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
+static JausBoolean headerFromBuffer(ReportImageMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
 {
 	if(bufferSizeBytes < JAUS_HEADER_SIZE_BYTES)
 	{
@@ -339,7 +334,7 @@ static JausBoolean headerFromBuffer(ReportVideoFrameMessage message, unsigned ch
 	}
 }
 
-static JausBoolean headerToBuffer(ReportVideoFrameMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
+static JausBoolean headerToBuffer(ReportImageMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
 {
 	JausUnsignedShort *propertiesPtr = (JausUnsignedShort*)&message->properties;
 	

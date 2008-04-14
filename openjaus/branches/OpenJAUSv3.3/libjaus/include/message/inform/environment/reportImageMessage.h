@@ -31,7 +31,7 @@
  *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
  *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ****************************************************************************/
-// File Name: reportVideoFrameMessage.h
+// File Name: reportImageMessage.h
 //
 // Written By: Danny Kent (jaus AT dannykent DOT com), Tom Galluzzo 
 //
@@ -39,10 +39,10 @@
 //
 // Date: 08/04/06
 //
-// Description: This file defines the attributes of a ReportVideoFrameMessage
+// Description: This file defines the attributes of a ReportImageMessage
 
-#ifndef REPORT_VIDEO_FRAME_MESSAGE_H
-#define REPORT_VIDEO_FRAME_MESSAGE_H
+#ifndef REPORT_IMAGE_MESSAGE_H
+#define REPORT_IMAGE_MESSAGE_H
 
 #include "jaus.h"
 
@@ -91,19 +91,19 @@ typedef struct
 	JausByte *data;  // or char* ?
 	JausUnsignedInteger bufferSizeBytes;
 	
-}ReportVideoFrameMessageStruct;
+}ReportImageMessageStruct;
 
-typedef ReportVideoFrameMessageStruct* ReportVideoFrameMessage;
+typedef ReportImageMessageStruct* ReportImageMessage;
 
-JAUS_EXPORT ReportVideoFrameMessage reportVideoFrameMessageCreate(void);
-JAUS_EXPORT void reportVideoFrameMessageDestroy(ReportVideoFrameMessage);
+JAUS_EXPORT ReportImageMessage reportImageMessageCreate(void);
+JAUS_EXPORT void reportImageMessageDestroy(ReportImageMessage);
 
-JAUS_EXPORT JausBoolean reportVideoFrameMessageFromBuffer(ReportVideoFrameMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JAUS_EXPORT JausBoolean reportVideoFrameMessageToBuffer(ReportVideoFrameMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean reportImageMessageFromBuffer(ReportImageMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean reportImageMessageToBuffer(ReportImageMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
-JAUS_EXPORT ReportVideoFrameMessage reportVideoFrameMessageFromJausMessage(JausMessage jausMessage);
-JAUS_EXPORT JausMessage reportVideoFrameMessageToJausMessage(ReportVideoFrameMessage message);
+JAUS_EXPORT ReportImageMessage reportImageMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage reportImageMessageToJausMessage(ReportImageMessage message);
 
-JAUS_EXPORT unsigned int reportVideoFrameMessageSize(ReportVideoFrameMessage message);
+JAUS_EXPORT unsigned int reportImageMessageSize(ReportImageMessage message);
 
-#endif // REPORT_VIDEO_FRAME_MESSAGE_H
+#endif // REPORT_IMAGE_MESSAGE_H
