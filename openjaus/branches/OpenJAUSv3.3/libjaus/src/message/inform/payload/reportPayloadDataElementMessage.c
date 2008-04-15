@@ -1,5 +1,5 @@
 /*****************************************************************************
- *  Copyright (c) 2006, University of Florida.
+ *  Copyright (c) 2008, OpenJAUS.com
  *  All rights reserved.
  *  
  *  This file is part of OpenJAUS.  OpenJAUS is distributed under the BSD 
@@ -35,7 +35,7 @@
 //
 // Written By: Bob Toucthon
 //
-// Version: 3.2
+// Version: 3.3 BETA
 //
 // Date: // Date: 3/20/06
 //
