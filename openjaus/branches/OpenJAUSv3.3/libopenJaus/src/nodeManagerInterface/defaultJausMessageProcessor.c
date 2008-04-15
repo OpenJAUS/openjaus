@@ -53,7 +53,6 @@ void defaultJausMessageProcessor(JausMessage message, NodeManagerInterface nmi, 
 	ReportComponentAuthorityMessage reportComponentAuthority;
 	ReportComponentStatusMessage reportComponentStatus;
 	ReportIdentificationMessage reportIdentification;
-	QueryConfigurationMessage queryConfMsg;
 	ReportConfigurationMessage reportConfMsg;
 	ConfirmServiceConnectionMessage confScMsg;
 	CreateServiceConnectionMessage createScMsg;
@@ -428,30 +427,6 @@ void defaultJausMessageProcessor(JausMessage message, NodeManagerInterface nmi, 
 			{
 				//cError("DefaultMessageProcessor: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
 			}
-			jausMessageDestroy(message);
-			break;
-
-		case JAUS_CONFIGURATION_CHANGED_EVENT_NOTIFICATION:
-			queryConfMsg = queryConfigurationMessageCreate();
-			jausAddressCopy(queryConfMsg->source, cmpt->address);
-			jausAddressCopy(queryConfMsg->destination, message->source);
-			
-		    switch(message->source->component)
-		    {
-		        case JAUS_NODE_MANAGER:
-		        	queryConfMsg->queryField = JAUS_SUBSYSTEM_CONFIGURATION;		        	    
-		            break;
-		            
-		        default: 
-					queryConfigurationMessageDestroy(queryConfMsg);
-					jausMessageDestroy(message);
-		        	return; // Do not bother to query any other component for its config
-		    }
-			txMessage = queryConfigurationMessageToJausMessage(queryConfMsg);	
-			nodeManagerSend(nmi, txMessage);
-			jausMessageDestroy(txMessage);
-
-			queryConfigurationMessageDestroy(queryConfMsg);
 			jausMessageDestroy(message);
 			break;
 
