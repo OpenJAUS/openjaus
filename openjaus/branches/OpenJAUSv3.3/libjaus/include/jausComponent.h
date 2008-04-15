@@ -1,5 +1,5 @@
 /*****************************************************************************
- *  Copyright (c) 2006, University of Florida.
+ *  Copyright (c) 2008, OpenJAUS.com
  *  All rights reserved.
  *  
  *  This file is part of OpenJAUS.  OpenJAUS is distributed under the BSD 
@@ -35,9 +35,9 @@
 //
 // Written By: Danny Kent (jaus AT dannykent DOT com)
 //
-// Version: 3.2
+// Version: 3.3 BETA
 //
-// Date: 08/04/06
+// Date: 04/15/08
 //
 // Description: This file defines all the attributes of a JausComponent and defines all 
 // pre-defined Jaus Component Ids according to RA 3.2
@@ -81,7 +81,6 @@
 #define JAUS_MANIPULATOR_JOINT_MOVE_DRIVER 					58
 #define JAUS_MANIPULATOR_END_EFFECTOR_DISCRETE_POSE_DRIVER 	59
 #define JAUS_WORLD_MODEL_VECTOR_KNOWLEDGE_STORE				61
-
 
 #define COMPONENT_TIMEOUT_SEC 3.0
 

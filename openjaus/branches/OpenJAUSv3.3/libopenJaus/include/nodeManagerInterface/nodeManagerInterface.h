@@ -1,5 +1,5 @@
 /*****************************************************************************
- *  Copyright (c) 2006, University of Florida.
+ *  Copyright (c) 2008, OpenJAUS.com
  *  All rights reserved.
  *  
  *  This file is part of OpenJAUS.  OpenJAUS is distributed under the BSD 
@@ -48,7 +48,7 @@
 	#define JAUS_EXPORT
 #endif
 
-#define	OJ_NODE_MANAGER_INTERFACE_VERSION	"3.2.0"
+#define	OJ_NODE_MANAGER_INTERFACE_VERSION	"3.3.0"
 
 #ifdef __cplusplus
 extern "C" 

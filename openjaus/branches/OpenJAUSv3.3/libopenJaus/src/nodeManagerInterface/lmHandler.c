@@ -1,5 +1,5 @@
 /*****************************************************************************
- *  Copyright (c) 2006, University of Florida.
+ *  Copyright (c) 2008, OpenJAUS.com
  *  All rights reserved.
  *  
  *  This file is part of OpenJAUS.  OpenJAUS is distributed under the BSD 
@@ -32,9 +32,9 @@
  *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ****************************************************************************/
 // File:		lmHandler.c
-// Version:		3.2
+// Version:		3.3 BETA
 // Written by:	Danny Kent (jaus AT dannykent DOT com)
-// Date:		08/04/06
+// Date:		04/15/08
 // Description:	LargeMessageHandler handles the queueing of large sets of Jaus Messages for 
 //				use by the system. It will queue sets of messages until an end message is
 //				recieved and then create a single Jaus Message from that collection
