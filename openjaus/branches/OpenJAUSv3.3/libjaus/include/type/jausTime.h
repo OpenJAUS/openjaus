@@ -88,6 +88,8 @@ typedef JausTimeStruct *JausTime;
 
 JAUS_EXPORT JausTime jausTimeCreate(void);
 JAUS_EXPORT void jausTimeDestroy(JausTime time);
+JAUS_EXPORT JausTime jausTimeClone(JausTime time);
+JAUS_EXPORT JausBoolean jausTimeCopy(JausTime dstTime, JausTime srcTime);
 
 JAUS_EXPORT JausBoolean jausTimeSetCurrentTime(JausTime time);
 JAUS_EXPORT JausBoolean jausTimeToString(JausTime time, char *buffer, size_t buffSize);
