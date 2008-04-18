@@ -6,7 +6,7 @@
 //				This code is designed to work with the node manager and JAUS library software written by CIMAR
 
 #include "jaus.h"			// JAUS message set (USER: JAUS libraries must be installed first)
-#include "openjaus.h"	// Node managment functions for sending and receiving JAUS messages (USER: Node Manager must be installed)
+#include "openJaus.h"	// Node managment functions for sending and receiving JAUS messages (USER: Node Manager must be installed)
 #include <pthread.h>			// Multi-threading functions (standard to unix)
 #include <stdlib.h>	
 //#include <unistd.h>				// Unix standard functions
