@@ -277,7 +277,7 @@ int nodeManagerClose(NodeManagerInterface nmi)
 
 		lmHandlerDestroy(nmi->lmh);
 		scManagerDestroy(nmi->scm);
-		queueDestroy(nmi->receiveQueue, free); 
+		queueDestroy(nmi->receiveQueue, (void*)jausMessageDestroy); 
 		checkOutOfNodeManager(nmi);
 		datagramSocketDestroy(nmi->messageSocket);
 		datagramSocketDestroy(nmi->interfaceSocket);
