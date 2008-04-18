@@ -21,14 +21,13 @@ General Public License for more details.  */
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-
 #include <sys/types.h>
 
 #include <stdio.h>
 #include <assert.h>
 #include <errno.h>
 
-#if STDC_HEADERS || defined(WIN32) || defined(TARGET_OS_MAC)
+#if STDC_HEADERS || defined(WIN32) || defined(TARGET_OS_MAC) || defined(__linux__)
 #include <stdlib.h>
 #else
 char *malloc (), *realloc ();
