@@ -73,6 +73,50 @@ void jausTimeDestroy(JausTime time)
 	free(time);
 }
 
+JausTime jausTimeClone(JausTime time)
+{
+	JausTime newTime = (JausTime)malloc(sizeof(JausTimeStruct));
+	
+	if (newTime)
+	{
+		newTime->timeStamp = time->timeStamp;
+		newTime->dateStamp = time->dateStamp;
+	
+		newTime->millisec = time->millisec;
+		newTime->second = time->second;
+		newTime->minute = time->minute;
+		newTime->hour = time->hour;
+		newTime->day = time->day;
+		newTime->month = time->month;
+		newTime->year = time->year;
+	}
+	
+	return newTime;
+}
+
+
+JausBoolean jausTimeCopy(JausTime dstTime, JausTime srcTime)
+{
+	if (!dstTime || !srcTime)
+	{
+		return JAUS_FALSE;
+	}
+	
+	dstTime->timeStamp = srcTime->timeStamp;
+	dstTime->dateStamp = srcTime->dateStamp;
+
+	dstTime->millisec = srcTime->millisec;
+	dstTime->second = srcTime->second;
+	dstTime->minute = srcTime->minute;
+	dstTime->hour = srcTime->hour;
+	dstTime->day = srcTime->day;
+	dstTime->month = srcTime->month;
+	dstTime->year = srcTime->year;
+	
+	return JAUS_TRUE;
+}
+
+
 JausBoolean jausTimeSetCurrentTime(JausTime jausTime)
 {
 	struct tm *gmTime;
