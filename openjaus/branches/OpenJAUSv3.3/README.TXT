@@ -12,7 +12,7 @@ libjaus:		A C99 compliant library that contains JAUS constructs, data
 libopenJaus:	A C/C++ library containing a runtime JAUS node manager library,
 				node manager communication interface, and component framework 
 				library.
-ojCmpt:			An example text user interface JAUS component 
+ojCmpt:		An example text user interface JAUS component 
 ojNodeManager:	The OpenJAUS node manager executable with text interface
 ojVehicleSim:	A collection of JAUS components that work together to simulate
 				a JAUS ground vehicle subsystem. These components provide a set
@@ -82,6 +82,40 @@ information within the shared object (.so) files. This is to facilitate
 efficient  development and use of a run-time debugger. To reduce the size of the
 installed  libraries, the information can be removed by using the "strip"
 command. 
+
+
+Installation (Microsoft Visual Studio 2005 / Windows):
+------------------------------------------------------
+
+Requirements:
+	Microsoft Visual Studio 2005
+	Pthreads-win32 (included in distribution)
+	pdcurses (included in distribution)
+
+To build the library and executable code:
+
+In the top level directory, open the Microsoft Visual Studio solution 
+file "OpenJAUS v3.3.sln." This solution contains 4 individual projects: 
+libjaus, libopenJaus, ojNodeManager and ojVehicleSim. These projects coorespond 
+to the descriptions above. Once open, the solution should be able to be 
+built. Each project has the appropriate dependancies setup using relative paths, 
+therefore it shouldcompile for the developer in any configuration. Also, project 
+references have been setup, so a referenced code base will be compiled prior to 
+the compilation of any child project.
+
+Once built, the ojNodeManager should run in a console window if it is set
+as the default project. Ensure that the nodeManager.conf file is configured correctly.
+The ojVehicleSim should run as well if it is set to the default project, however it 
+is important that the ojNodeManager be running first.
+
+The libraries libjaus and libopenJaus can be linked against other projects using 
+the .lib files. To run projects built against them, ensure the appropriate .dll 
+files are available either locally or globally on the system.
+
+*Note: Use of these libraries has only been tested in the Debug configuration 
+to date. This is due to the added value of retaining debug information for developers 
+of both the OpenJAUS code base and applications based upon that. The creation of release 
+targets, if desired, is left up to the individual developer. 
 
 
 Configuring and Running the Node Manager:
@@ -166,3 +200,17 @@ Known Issues:
    this implementation and thus makes displaying critical information to the
    user more cumbersome.
 
+
+Copyright Notices
+-----------------
+
+Portions of the Windows distribution are based on pdcurses and Pthreads-win32. 
+These binaries packages have their own copyright. They are redistributed with the 
+OpenJAUS codebase as a convenience to developers. More information about these 
+packages can be found on their respective websites below:
+
+Pthreads-win32: http://sourceware.org/pthreads-win32/
+pdcurses: http://pdcurses.sourceforge.net/
+
+The remainder of the code is copyright OpenJAUS.com and is distributed under the 
+BSD license. See the LICENSE file for details.
