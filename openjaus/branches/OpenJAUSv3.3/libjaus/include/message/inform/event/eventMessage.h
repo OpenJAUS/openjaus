@@ -86,8 +86,7 @@ typedef struct
 
 	// MESSAGE DATA MEMBERS GO HERE
 	JausByte eventId;						// ID of event to be updated
-	JausUnsignedShort messageCode;			// Command Code of the resulting query
-	JausByte eventSequenceNumber;				// Sequential count of the number of times the event has occured
+	JausByte eventSequenceNumber;			// Sequential count of the number of times the event has occured
 	JausMessage reportMessage;				// Report message of event
 }EventMessageStruct;
 

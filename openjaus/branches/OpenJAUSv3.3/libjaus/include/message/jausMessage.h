@@ -308,5 +308,7 @@ JAUS_EXPORT char *jausMessageCommandCodeString(JausMessage);
 JAUS_EXPORT char *jausCommandCodeString(unsigned short commandCode);
 JAUS_EXPORT JausMessage jausMessageClone(JausMessage);
 JAUS_EXPORT JausBoolean jausMessageIsRejectableCommand(JausMessage message);
+JAUS_EXPORT unsigned short jausMessageGetComplimentaryCommandCode(unsigned short commandCode);
+
 
 #endif // JAUS_MESSAGE_H

@@ -99,7 +99,7 @@ file "OpenJAUS v3.3.sln." This solution contains 4 individual projects:
 libjaus, libopenJaus, ojNodeManager and ojVehicleSim. These projects coorespond 
 to the descriptions above. Once open, the solution should be able to be 
 built. Each project has the appropriate dependancies setup using relative paths, 
-therefore it shouldcompile for the developer in any configuration. Also, project 
+therefore it should compile for the developer in any configuration. Also, project 
 references have been setup, so a referenced code base will be compiled prior to 
 the compilation of any child project.
 

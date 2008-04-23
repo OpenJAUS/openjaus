@@ -227,6 +227,9 @@ bool NodeManagerComponent::processMessage(JausMessage message)
 		case JAUS_CREATE_EVENT:
 			return processCreateEvent(message);
 
+		case JAUS_EVENT:
+			return processEvent(message);
+
 		default:
 			// Unhandled message received by node manager component
 			jausMessageDestroy(message);
@@ -830,7 +833,7 @@ bool NodeManagerComponent::processCreateEvent(JausMessage message)
 		return false;
 	}
 
-	if(createEvent->messageCode != JAUS_QUERY_CONFIGURATION)
+	if(createEvent->reportMessageCode != JAUS_REPORT_CONFIGURATION)
 	{
 		// Currently the NM only supports configuration changed events
 		confirmEventRequest->responseCode = MESSAGE_UNSUPPORTED_RESPONSE;
@@ -1106,11 +1109,11 @@ bool NodeManagerComponent::processQueryComponentAuthority(JausMessage message)
 	ReportComponentAuthorityMessage report = NULL;
 	JausMessage txMessage = NULL;
 
-
 	report = reportComponentAuthorityMessageCreate();
 	if(!report)
 	{
 		// TODO: Throw Exception. Log Error.
+		jausMessageDestroy(message);
 		return false;
 	}
 
@@ -1446,10 +1449,30 @@ bool NodeManagerComponent::processConfirmEvent(JausMessage message)
 	return true;
 }
 
+bool NodeManagerComponent::processEvent(JausMessage message)
+{
+	EventMessage eventMessage;
+
+	eventMessage = eventMessageFromJausMessage(message);
+	if(!eventMessage)
+	{
+		// Error unpacking the eventMessage
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::Memory, __FUNCTION__, __LINE__, "Cannot unpack EventMessage!");
+		this->eventHandler->handleEvent(e);
+		jausMessageDestroy(message);
+		return false;
+	}
+
+	processMessage(eventMessage->reportMessage);
+	eventMessageDestroy(eventMessage);
+	return true;
+}
+
 void NodeManagerComponent::sendNodeChangedEvents()
 {
 	ReportConfigurationMessage reportConf = NULL;
-	JausMessage txMessage = NULL;	
+	JausMessage txMessage = NULL;
+	EventMessage eventMessage = NULL;
 	HASH_MAP <int, JausAddress>::iterator iterator;
 	
 	JausNode thisNode = systemTree->getNode(this->cmpt->address);
@@ -1468,13 +1491,30 @@ void NodeManagerComponent::sendNodeChangedEvents()
 	}
 	jausArrayAdd(reportConf->subsystem->nodes, (void *)thisNode);
 
-	txMessage = reportConfigurationMessageToJausMessage(reportConf);
-	jausAddressCopy(txMessage->source, cmpt->address);
+	eventMessage = eventMessageCreate();
+	if(!eventMessage)
+	{
+		// TODO: Record an error. Throw Exception
+		reportConfigurationMessageDestroy(reportConf);
+		return;
+	}
+
+	eventMessage->reportMessage = reportConfigurationMessageToJausMessage(reportConf);
+	if(!eventMessage->reportMessage)
+	{
+		// TODO: Record an error. Throw Exception
+		reportConfigurationMessageDestroy(reportConf);
+		eventMessageDestroy(eventMessage);
+		return;
+	}
+	jausAddressCopy(eventMessage->source, cmpt->address);
 
 	// TODO: Go through nodeChangeList looking for dead addresses
 	for(iterator = nodeChangeList.begin(); iterator != nodeChangeList.end(); iterator++)
 	{
-		jausAddressCopy(txMessage->destination, iterator->second);
+		eventMessage->eventId = iterator->first;
+		jausAddressCopy(eventMessage->destination, iterator->second);
+		txMessage = eventMessageToJausMessage(eventMessage);
 		this->commMngr->receiveJausMessage(jausMessageClone(txMessage), this);
 	}
 	
@@ -1485,7 +1525,8 @@ void NodeManagerComponent::sendNodeChangedEvents()
 void NodeManagerComponent::sendSubsystemChangedEvents()
 {
 	ReportConfigurationMessage reportConf = NULL;
-	JausMessage txMessage = NULL;	
+	JausMessage txMessage = NULL;
+	EventMessage eventMessage = NULL;
 	HASH_MAP <int, JausAddress>::iterator iterator;
 
 	JausSubsystem thisSubs = systemTree->getSubsystem(this->cmpt->address);
@@ -1505,13 +1546,30 @@ void NodeManagerComponent::sendSubsystemChangedEvents()
 	jausSubsystemDestroy(reportConf->subsystem);
 	reportConf->subsystem = thisSubs;
 
-	txMessage = reportConfigurationMessageToJausMessage(reportConf);
-	jausAddressCopy(txMessage->source, cmpt->address);
+	eventMessage = eventMessageCreate();
+	if(!eventMessage)
+	{
+		// TODO: Record an error. Throw Exception
+		reportConfigurationMessageDestroy(reportConf);
+		return;
+	}
+
+	eventMessage->reportMessage = reportConfigurationMessageToJausMessage(reportConf);
+	if(!eventMessage->reportMessage)
+	{
+		// TODO: Record an error. Throw Exception
+		reportConfigurationMessageDestroy(reportConf);
+		eventMessageDestroy(eventMessage);
+		return;
+	}
+	jausAddressCopy(eventMessage->source, cmpt->address);
 
 	// TODO: check subsystemChangeList for dead addresses
 	for(iterator = subsystemChangeList.begin(); iterator != subsystemChangeList.end(); iterator++)
 	{
-		jausAddressCopy(txMessage->destination, iterator->second);
+		eventMessage->eventId = iterator->first;
+		jausAddressCopy(eventMessage->destination, iterator->second);
+		txMessage = eventMessageToJausMessage(eventMessage);
 		this->commMngr->receiveJausMessage(jausMessageClone(txMessage), this);
 	}
 
@@ -1753,7 +1811,7 @@ bool NodeManagerComponent::sendQueryNodeConfiguration(JausAddress address, bool 
 				return false;
 			}
 			
-			createEventMsg->messageCode = query->commandCode;
+			createEventMsg->reportMessageCode = jausMessageGetComplimentaryCommandCode(query->commandCode);
 			createEventMsg->eventType = EVENT_EVERY_CHANGE_TYPE;
 			createEventMsg->queryMessage = queryConfigurationMessageToJausMessage(query);
 			if(!createEventMsg->queryMessage)
@@ -1824,7 +1882,7 @@ bool NodeManagerComponent::sendQuerySubsystemConfiguration(JausAddress address, 
 				return false;
 			}
 			
-			createEventMsg->messageCode = query->commandCode;
+			createEventMsg->reportMessageCode = jausMessageGetComplimentaryCommandCode(query->commandCode);
 			createEventMsg->eventType = EVENT_EVERY_CHANGE_TYPE;
 			createEventMsg->queryMessage = queryConfigurationMessageToJausMessage(query);
 			if(!createEventMsg->queryMessage)

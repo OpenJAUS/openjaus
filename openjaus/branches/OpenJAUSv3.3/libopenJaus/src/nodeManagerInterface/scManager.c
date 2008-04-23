@@ -1015,7 +1015,7 @@ void scManagerProccessCreateEvent(NodeManagerInterface nmi, CreateEventMessage m
 	ConfirmEventRequestMessage confirmEvent;
 	
 	// Look to see if the requested commandcode exists
-	supportedScMsg = scFindSupportedScMsgInList(nmi->scm->supportedScMsgList, message->messageCode);
+	supportedScMsg = scFindSupportedScMsgInList(nmi->scm->supportedScMsgList, jausMessageGetComplimentaryCommandCode(message->reportMessageCode));
 	if(supportedScMsg == NULL)
 	{
 		// Command Code Not Supported
@@ -1025,7 +1025,7 @@ void scManagerProccessCreateEvent(NodeManagerInterface nmi, CreateEventMessage m
 			jausAddressCopy(confirmEvent->source, nmi->cmpt->address);
 			jausAddressCopy(confirmEvent->destination, message->source);
 			
-			confirmEvent->messageCode = message->messageCode;
+			confirmEvent->messageCode = message->reportMessageCode;
 			confirmEvent->eventId = 0;
 			confirmEvent->responseCode = MESSAGE_UNSUPPORTED_RESPONSE;
 			
@@ -1053,7 +1053,7 @@ void scManagerProccessCreateEvent(NodeManagerInterface nmi, CreateEventMessage m
 			jausAddressCopy(confirmEvent->source, nmi->cmpt->address);
 			jausAddressCopy(confirmEvent->destination, message->source);
 			
-			confirmEvent->messageCode = message->messageCode;
+			confirmEvent->messageCode = message->reportMessageCode;
 			confirmEvent->eventId = 0;
 			confirmEvent->responseCode = CONNECTION_REFUSED_RESPONSE;
 			
@@ -1079,7 +1079,7 @@ void scManagerProccessCreateEvent(NodeManagerInterface nmi, CreateEventMessage m
 		return;		
 	}
 	newSc->serviceConnectionType = SC_EVENT_TYPE;
-	newSc->commandCode = message->messageCode;
+	newSc->commandCode = jausMessageGetComplimentaryCommandCode(message->reportMessageCode);
 	newSc->presenceVector = 0;	
 	newSc->address = jausAddressCreate();
 	jausAddressCopy(newSc->address, message->source);
@@ -1095,7 +1095,7 @@ void scManagerProccessCreateEvent(NodeManagerInterface nmi, CreateEventMessage m
 			jausAddressCopy(confirmEvent->source, nmi->cmpt->address);
 			jausAddressCopy(confirmEvent->destination, message->source);
 			
-			confirmEvent->messageCode = message->messageCode;
+			confirmEvent->messageCode = message->reportMessageCode;
 			confirmEvent->eventId = 0;
 			confirmEvent->responseCode = CONNECTION_REFUSED_RESPONSE;
 			
@@ -1147,7 +1147,7 @@ void scManagerProccessCreateEvent(NodeManagerInterface nmi, CreateEventMessage m
 		jausAddressCopy(confirmEvent->source, nmi->cmpt->address);
 		jausAddressCopy(confirmEvent->destination, message->source);
 		
-		confirmEvent->messageCode = message->messageCode;
+		confirmEvent->messageCode = message->reportMessageCode;
 		confirmEvent->eventId = sc->instanceId;
 		confirmEvent->responseCode = SUCCESSFUL_RESPONSE;
 		
@@ -1174,7 +1174,8 @@ void scManagerProcessConfirmEvent(NodeManagerInterface nmi, ConfirmEventRequestM
 	while(sc)
 	{
 		// Test if this incoming SC matches the one replied to
-		if(	sc->commandCode == message->messageCode && jausAddressEqual(sc->address, message->source) )
+		if(	sc->commandCode == jausMessageGetComplimentaryCommandCode(message->messageCode) 
+			&& jausAddressEqual(sc->address, message->source) )
 		{
 			// Success
 			if( message->responseCode == SUCCESSFUL_RESPONSE )
@@ -1321,7 +1322,7 @@ JausBoolean scManagerCreatePeriodicEvent(NodeManagerInterface nmi, ServiceConnec
 	jausAddressCopy(createEvent->source, nmi->cmpt->address);
 	jausByteSetBit(&createEvent->presenceVector, CREATE_EVENT_PV_REQUESTED_RATE_BIT); // Set for Periodic Event, Specify the Requested Rate
 	jausByteSetBit(&createEvent->presenceVector, CREATE_EVENT_PV_MINIMUM_RATE_BIT); // Set for Periodic Event, Specify the Requested Rate
-	createEvent->messageCode = sc->commandCode;
+	createEvent->reportMessageCode = jausMessageGetComplimentaryCommandCode(sc->commandCode);
 	createEvent->eventType = EVENT_PERIODIC_TYPE;
 	createEvent->requestedMinimumRate = sc->requestedUpdateRateHz;
 	createEvent->requestedUpdateRate = sc->requestedUpdateRateHz;
