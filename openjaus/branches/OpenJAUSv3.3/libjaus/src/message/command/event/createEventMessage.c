@@ -68,7 +68,7 @@ static void dataInitialize(CreateEventMessage message)
 	// Set initial values of message fields
 
 	message->presenceVector = newJausByte(JAUS_BYTE_PRESENCE_VECTOR_ALL_ON);	// 1: Presence Vector
-	message->requestId = newJausByte		(0);			// Local request ID for use in confirm event
+	message->requestId = newJausByte(0);					// Local request ID for use in confirm event
 	message->reportMessageCode = newJausUnsignedShort(0);	// Command Code of the resulting report
 	message->eventType = newJausByte(0);					// Enumeration of Event types
 	message->eventBoundary = newJausByte(0);				// Enumeration of Event Boundary Conditions
@@ -78,7 +78,7 @@ static void dataInitialize(CreateEventMessage message)
 	message->stateLimit = jausEventLimitCreate();			// State Event Limit used for Equal Boundary
 	message->requestedMinimumRate = newJausDouble(0.0);		// For Periodic Events for unchanging value, Scaled UnsignedShort (0, 1092)
 	message->requestedUpdateRate = newJausDouble(0.0);		// For Periodic Events, Scaled UnsignedShort (0, 1092)
-	message->queryMessage = jausMessageCreate();		// Query Message (including header) to use for response	
+	message->queryMessage = NULL;							// Query Message (not including header) to use for response	
 }
 
 // Destructs the message-specific fields
@@ -221,7 +221,7 @@ static int dataToBuffer(CreateEventMessage message, unsigned char *buffer, unsig
 	int index = 0;
 	JausUnsignedShort tempUShort;
 
-	if(bufferSizeBytes >= message->dataSize)
+	if(bufferSizeBytes >= dataSize(message))
 	{
 		// Unpack Message Fields from Buffer
 		// Presence Vector
@@ -368,7 +368,7 @@ static int dataSize(CreateEventMessage message)
 		index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
 
 		// Jaus Message
-		index += message->queryMessage->dataSize;
+		if(message->queryMessage) index += message->queryMessage->dataSize;
 	}
 
 
@@ -507,7 +507,7 @@ CreateEventMessage createEventMessageFromJausMessage(JausMessage jausMessage)
 JausMessage createEventMessageToJausMessage(CreateEventMessage message)
 {
 	JausMessage jausMessage;
-	
+
 	jausMessage = (JausMessage)malloc( sizeof(struct JausMessageStruct) );
 	if(jausMessage == NULL)
 	{
@@ -525,12 +525,12 @@ JausMessage createEventMessageToJausMessage(CreateEventMessage message)
 	*jausMessage->destination = *message->destination;
 	jausMessage->source = jausAddressCreate();
 	*jausMessage->source = *message->source;
-	jausMessage->dataSize = message->dataSize;
+	jausMessage->dataSize = dataSize(message);
 	jausMessage->dataFlag = message->dataFlag;
 	jausMessage->sequenceNumber = message->sequenceNumber;
 	
-	jausMessage->data = (unsigned char *)malloc(dataSize(message));
-	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, dataSize(message));
+	jausMessage->data = (unsigned char *)malloc(jausMessage->dataSize);
+	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, jausMessage->dataSize);
 	
 	return jausMessage;
 }
