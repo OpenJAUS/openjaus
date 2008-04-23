@@ -57,6 +57,7 @@ static JausBoolean dataFromBuffer(CreateEventMessage message, unsigned char *buf
 static int dataToBuffer(CreateEventMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(CreateEventMessage message);
 static void dataDestroy(CreateEventMessage message);
+static unsigned int dataSize(CreateEventMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS
@@ -194,6 +195,9 @@ static JausBoolean dataFromBuffer(CreateEventMessage message, unsigned char *buf
 			if(bufferSizeBytes-index < queryMessageSize) return JAUS_FALSE;
 
 			// Setup our Query Message
+			message->queryMessage = jausMessageCreate();
+			if(!message->queryMessage) return JAUS_FALSE;
+
 			message->queryMessage->commandCode= queryMessageSize;
 			jausAddressCopy(message->queryMessage->source, message->source);
 			jausAddressCopy(message->queryMessage->destination, message->destination);
@@ -201,7 +205,7 @@ static JausBoolean dataFromBuffer(CreateEventMessage message, unsigned char *buf
 			message->queryMessage->commandCode = jausMessageGetComplimentaryCommandCode(message->reportMessageCode);
 
 			// Allocate Memory
-			message->queryMessage->data = (unsigned char *) malloc(queryMessageSize);
+			message->queryMessage->data = (char *) malloc(queryMessageSize);
 			
 			// Copy query message body to the data member
 			memcpy(message->queryMessage->data, buffer+index, queryMessageSize);
@@ -312,7 +316,7 @@ static int dataToBuffer(CreateEventMessage message, unsigned char *buffer, unsig
 }
 
 // Returns number of bytes put into the buffer
-static int dataSize(CreateEventMessage message)
+static unsigned int dataSize(CreateEventMessage message)
 {
 	int index = 0;
 
