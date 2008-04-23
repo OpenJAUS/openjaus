@@ -628,7 +628,7 @@ bool CommunicatorComponent::processCreateEvent(JausMessage message)
 		return false;
 	}
 
-	if(createEvent->messageCode != JAUS_QUERY_CONFIGURATION)
+	if(createEvent->reportMessageCode != JAUS_REPORT_CONFIGURATION)
 	{
 		// Currently the NM only supports configuration changed events
 		confirmEventRequest->responseCode = MESSAGE_UNSUPPORTED_RESPONSE;
@@ -1485,7 +1485,7 @@ bool CommunicatorComponent::sendQueryNodeConfiguration(JausAddress address, bool
 				return false;
 			}
 			
-			createEventMsg->messageCode = query->commandCode;
+			createEventMsg->reportMessageCode = jausMessageGetComplimentaryCommandCode(query->commandCode);
 			createEventMsg->eventType = EVENT_EVERY_CHANGE_TYPE;
 			createEventMsg->queryMessage = queryConfigurationMessageToJausMessage(query);
 			if(!createEventMsg->queryMessage)
@@ -1557,7 +1557,7 @@ bool CommunicatorComponent::sendQuerySubsystemConfiguration(JausAddress address,
 				return false;
 			}
 			
-			createEventMsg->messageCode = query->commandCode;
+			createEventMsg->reportMessageCode = jausMessageGetComplimentaryCommandCode(query->commandCode);
 			createEventMsg->eventType = EVENT_EVERY_CHANGE_TYPE;
 			createEventMsg->queryMessage = queryConfigurationMessageToJausMessage(query);
 			if(!createEventMsg->queryMessage)

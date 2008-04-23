@@ -455,7 +455,7 @@ void defaultJausMessageProcessor(JausMessage message, NodeManagerInterface nmi, 
 						jausAddressCopy(confirmEventRequest->source, cmpt->address);
 						jausAddressCopy(confirmEventRequest->destination, message->source);
 						
-						confirmEventRequest->messageCode = createEvent->messageCode;
+						confirmEventRequest->messageCode = createEvent->reportMessageCode;
 						confirmEventRequest->eventId = 0;
 						confirmEventRequest->responseCode = CONNECTION_REFUSED_RESPONSE;
 						

@@ -123,9 +123,9 @@ typedef struct
 	JausUnsignedShort sequenceNumber;
 
 	// MESSAGE DATA MEMBERS GO HERE
-	JausByte presenceVector;			// Presence Vector
-	JausByte requestId;					// Local request ID for use in confirm event
-	JausUnsignedShort messageCode;			// Command Code of the resulting query
+	JausByte presenceVector;				// Presence Vector
+	JausByte requestId;						// Local request ID for use in confirm event
+	JausUnsignedShort reportMessageCode;	// Command Code of the resulting report message
 	JausByte eventType;						// Enumeration of Event types
 	JausByte eventBoundary;					// Enumeration of Event Boundary Conditions
 	JausByte limitDataField;				// Field from Report for Limit Trigger
@@ -134,7 +134,7 @@ typedef struct
 	JausEventLimit stateLimit;				// State Event Limit used for Equal Boundary
 	JausDouble requestedMinimumRate;		// For Periodic Events for unchanging value, Scaled UnsignedShort (0, 1092)
 	JausDouble requestedUpdateRate;			// For Periodic Events, Scaled UnsignedShort (0, 1092)
-	JausMessage queryMessage;				// Query Message (including header) to use for response
+	JausMessage queryMessage;				// Query Message Body (not including header) to use for response
 }CreateEventMessageStruct;
 
 typedef CreateEventMessageStruct* CreateEventMessage;
