@@ -198,7 +198,10 @@ static int dataSize(EventMessage message)
 	index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
 		
 	// Jaus Report Message
-	index += message->reportMessage->dataSize;
+	if(message->reportMessage)
+	{
+		index += message->reportMessage->dataSize;
+	}
 
 	return index;
 }
