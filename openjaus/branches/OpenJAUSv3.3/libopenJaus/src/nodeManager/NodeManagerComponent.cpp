@@ -1463,7 +1463,7 @@ bool NodeManagerComponent::processEvent(JausMessage message)
 		return false;
 	}
 
-	processMessage(eventMessage->reportMessage);
+	processMessage(jausMessageClone(eventMessage->reportMessage));
 	eventMessageDestroy(eventMessage);
 	return true;
 }
