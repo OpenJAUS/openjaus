@@ -1,0 +1,68 @@
+#!/bin/sh
+
+exec > Makefile
+
+OPEN_JAUS_HOME=..
+
+echo "TARGET	= 	./bin/ojVehicleSim"
+echo "CCFLAGS	=	-Wall -fno-strict-aliasing -O2 -c -g -I ./include/ -I $OPEN_JAUS_HOME/libjaus/include/ -I $OPEN_JAUS_HOME/libopenJaus/include/"
+echo "LFLAGS	=	-L $OPEN_JAUS_HOME/libjaus/lib/ -L $OPEN_JAUS_HOME/libopenJaus/lib/"
+echo "LIBS		=	-lopenJaus -ljaus -lrt -lcurses"
+
+SOURCE_C_FILES=`find ./src/ -name "*.c"`
+for cfile in $SOURCE_C_FILES
+do
+	SOURCES="$SOURCES$cfile \\\\\\n\\t\\t"
+	ofile=${cfile##*/}
+	ofile=./Build/${ofile%c}o
+	OBJECTS="$OBJECTS$ofile \\\\\\n\\t\\t"
+done
+
+SOURCE_CPP_FILES=`find ./src/ -name "*.cpp"`
+for cfile in $SOURCE_CPP_FILES
+do
+	SOURCES="$SOURCES$cfile \\\\\\n\\t\\t"
+	ofile=${cfile##*/}
+	ofile=./Build/${ofile%cpp}o
+	if [ "$ofile" != "./Build/main.o" ]; then
+		OBJECTS="$OBJECTS$ofile \\\\\\n\\t\\t"
+	fi
+done
+
+SOURCES=${SOURCES%" \\\\\\n"\\t\\t}
+echo -e "SOURCES =\t$SOURCES"
+
+OBJECTS=${OBJECTS%" \\\\\\n"\\t\\t}
+echo -e "\nOBJECTS =\t$OBJECTS"
+
+echo
+echo "default : all"
+echo
+echo "all : \$(TARGET)"
+echo
+echo "clean :"
+echo "	rm -f ./Build/*.o"
+echo "	rm -f \$(TARGET)"
+echo
+echo "\$(TARGET) : \$(OBJECTS)"
+echo "	g++ \$(LFLAGS) -o \$(TARGET) \$(OBJECTS) \$(LIBS)"
+
+for cfile in $SOURCE_C_FILES
+do
+	ofile=${cfile##*/}
+	ofile=./Build/${ofile%c}o
+
+	echo
+	echo "$ofile : $cfile"
+	echo "	gcc \$(CCFLAGS) -o $ofile $cfile"
+done
+
+for cfile in $SOURCE_CPP_FILES
+do
+	ofile=${cfile##*/}
+	ofile=./Build/${ofile%cpp}o
+
+	echo
+	echo "$ofile : $cfile"
+	echo "	g++ \$(CCFLAGS) -o $ofile $cfile"
+done
