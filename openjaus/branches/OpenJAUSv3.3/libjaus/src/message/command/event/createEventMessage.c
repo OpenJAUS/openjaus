@@ -198,7 +198,7 @@ static JausBoolean dataFromBuffer(CreateEventMessage message, unsigned char *buf
 			message->queryMessage = jausMessageCreate();
 			if(!message->queryMessage) return JAUS_FALSE;
 
-			message->queryMessage->commandCode= queryMessageSize;
+			message->queryMessage->dataSize = queryMessageSize;
 			jausAddressCopy(message->queryMessage->source, message->source);
 			jausAddressCopy(message->queryMessage->destination, message->destination);
 			
