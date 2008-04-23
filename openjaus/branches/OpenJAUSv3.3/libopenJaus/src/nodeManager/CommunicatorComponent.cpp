@@ -44,6 +44,8 @@
 
 #include "nodeManager/CommunicatorComponent.h"
 #include "nodeManager/JausComponentCommunicationManager.h"
+#include "nodeManager/events/ErrorEvent.h"
+#include "nodeManager/EventHandler.h"
 #include "utils/timeLib.h"
 #include "jaus.h"
 
@@ -205,6 +207,9 @@ bool CommunicatorComponent::processMessage(JausMessage message)
 
 		case JAUS_CREATE_EVENT:
 			return processCreateEvent(message);
+
+		case JAUS_EVENT:
+			return processEvent(message);
 
 		default:
 			// Unhandled message received by node manager component
@@ -784,7 +789,8 @@ void CommunicatorComponent::sendNodeChangedEvents()
 void CommunicatorComponent::sendSubsystemChangedEvents()
 {
 	ReportConfigurationMessage reportConf = NULL;
-	JausMessage txMessage = NULL;	
+	JausMessage txMessage = NULL;
+	EventMessage eventMessage = NULL;
 	HASH_MAP <int, JausAddress>::iterator iterator;
 
 	JausSubsystem thisSubs = systemTree->getSubsystem(this->cmpt->address);
@@ -804,13 +810,30 @@ void CommunicatorComponent::sendSubsystemChangedEvents()
 	jausSubsystemDestroy(reportConf->subsystem);
 	reportConf->subsystem = thisSubs;
 
-	txMessage = reportConfigurationMessageToJausMessage(reportConf);
-	jausAddressCopy(txMessage->source, cmpt->address);
+	eventMessage = eventMessageCreate();
+	if(!eventMessage)
+	{
+		// TODO: Record an error. Throw Exception
+		reportConfigurationMessageDestroy(reportConf);
+		return;
+	}
+
+	eventMessage->reportMessage = reportConfigurationMessageToJausMessage(reportConf);
+	if(!eventMessage->reportMessage)
+	{
+		// TODO: Record an error. Throw Exception
+		reportConfigurationMessageDestroy(reportConf);
+		eventMessageDestroy(eventMessage);
+		return;
+	}
+	jausAddressCopy(eventMessage->source, cmpt->address);
 
 	// TODO: check subsystemChangeList for dead addresses
 	for(iterator = subsystemChangeList.begin(); iterator != subsystemChangeList.end(); iterator++)
 	{
-		jausAddressCopy(txMessage->destination, iterator->second);
+		eventMessage->eventId = iterator->first;
+		jausAddressCopy(eventMessage->destination, iterator->second);
+		txMessage = eventMessageToJausMessage(eventMessage);
 		this->commMngr->receiveJausMessage(jausMessageClone(txMessage), this);
 	}
 
@@ -1412,6 +1435,25 @@ bool CommunicatorComponent::processConfirmEvent(JausMessage message)
 	return true;
 }
 
+bool CommunicatorComponent::processEvent(JausMessage message)
+{
+	EventMessage eventMessage;
+
+	eventMessage = eventMessageFromJausMessage(message);
+	if(!eventMessage)
+	{
+		// Error unpacking the eventMessage
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::Memory, __FUNCTION__, __LINE__, "Cannot unpack EventMessage!");
+		this->eventHandler->handleEvent(e);
+		jausMessageDestroy(message);
+		return false;
+	}
+
+	processMessage(jausMessageClone(eventMessage->reportMessage));
+	eventMessageDestroy(eventMessage);
+	return true;
+}
+
 bool CommunicatorComponent::sendQueryComponentServices(JausAddress address)
 {
 	QueryServicesMessage query = NULL;
@@ -1485,6 +1527,10 @@ bool CommunicatorComponent::sendQueryNodeConfiguration(JausAddress address, bool
 				return false;
 			}
 			
+			// Setup Create Event PV
+			createEventMsg->presenceVector = 0;
+			jausByteSetBit(&createEventMsg->presenceVector, CREATE_EVENT_PV_QUERY_MESSAGE_BIT);
+
 			createEventMsg->reportMessageCode = jausMessageGetComplimentaryCommandCode(query->commandCode);
 			createEventMsg->eventType = EVENT_EVERY_CHANGE_TYPE;
 			createEventMsg->queryMessage = queryConfigurationMessageToJausMessage(query);
@@ -1556,6 +1602,10 @@ bool CommunicatorComponent::sendQuerySubsystemConfiguration(JausAddress address,
 				queryConfigurationMessageDestroy(query);
 				return false;
 			}
+
+			// Setup Create Event PV
+			createEventMsg->presenceVector = 0;
+			jausByteSetBit(&createEventMsg->presenceVector, CREATE_EVENT_PV_QUERY_MESSAGE_BIT);
 			
 			createEventMsg->reportMessageCode = jausMessageGetComplimentaryCommandCode(query->commandCode);
 			createEventMsg->eventType = EVENT_EVERY_CHANGE_TYPE;

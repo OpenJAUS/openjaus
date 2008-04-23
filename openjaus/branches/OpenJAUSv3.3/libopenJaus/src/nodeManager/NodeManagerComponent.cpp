@@ -1885,6 +1885,10 @@ bool NodeManagerComponent::sendQuerySubsystemConfiguration(JausAddress address, 
 				queryConfigurationMessageDestroy(query);
 				return false;
 			}
+
+			// Setup Create Event PV
+			createEventMsg->presenceVector = 0;
+			jausByteSetBit(&createEventMsg->presenceVector, CREATE_EVENT_PV_QUERY_MESSAGE_BIT);
 			
 			createEventMsg->reportMessageCode = jausMessageGetComplimentaryCommandCode(query->commandCode);
 			createEventMsg->eventType = EVENT_EVERY_CHANGE_TYPE;
