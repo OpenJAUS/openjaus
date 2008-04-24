@@ -124,7 +124,7 @@ static JausBoolean dataFromBuffer(EventMessage message, unsigned char *buffer, u
 		if(bufferSizeBytes-index < message->reportMessage->dataSize) return JAUS_FALSE;
 
 		// Allocate memory for report body
-		message->reportMessage->data = (char *) malloc(message->reportMessage->dataSize);
+		message->reportMessage->data = (unsigned char *) malloc(message->reportMessage->dataSize);
 		if(!message->reportMessage->data) return JAUS_FALSE;
 
 		// Copy body of report from buffer
