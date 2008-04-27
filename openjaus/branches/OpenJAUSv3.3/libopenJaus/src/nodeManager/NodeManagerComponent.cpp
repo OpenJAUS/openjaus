@@ -44,6 +44,7 @@
 
 #include "nodeManager/NodeManagerComponent.h"
 #include "nodeManager/JausComponentCommunicationManager.h"
+#include "nodeManager/events/SystemTreeEvent.h"
 #include "nodeManager/events/ErrorEvent.h"
 #include "nodeManager/EventHandler.h"
 #include "nodeManager/SystemTree.h"
@@ -81,6 +82,7 @@ NodeManagerComponent::NodeManagerComponent(FileLoader *configData, EventHandler 
 	this->name = "OpenJAUS Node Manager";
 	this->cmptRateHz = NM_RATE_HZ;
 	this->systemTree = cmptComms->getSystemTree();
+	this->systemTree->registerEventHandler(this);
 	for(int i = 0; i < MAXIMUM_EVENT_ID; i++)
 	{
 		eventId[i] = false;
@@ -270,6 +272,7 @@ JausAddress NodeManagerComponent::checkInLocalComponent(int cmptId)
 			jausComponentDestroy(component);
 			
 			sendNodeChangedEvents();
+			sendSubsystemChangedEvents();
 			return address;
 		}
 		else
@@ -290,6 +293,7 @@ void NodeManagerComponent::checkOutLocalComponent(int subsId, int nodeId, int cm
 	if(systemTree->removeComponent(subsId, nodeId, cmptId, instId))
 	{
 		sendNodeChangedEvents();
+		sendSubsystemChangedEvents();
 	}
 }
 
@@ -1996,4 +2000,35 @@ bool NodeManagerComponent::setupJausServices()
 	return true;
 }
 
+void NodeManagerComponent::handleEvent(NodeManagerEvent *e)
+{
+	SystemTreeEvent *treeEvent;
+
+	switch(e->getType())
+	{
+		case NodeManagerEvent::SystemTreeEvent:
+			treeEvent = (SystemTreeEvent *)e;
+			switch(treeEvent->getSubType())
+			{
+				case SystemTreeEvent::NodeTimeout:
+					this->sendSubsystemChangedEvents();
+					break;
+
+				case SystemTreeEvent::ComponentTimeout:
+					this->sendSubsystemChangedEvents();
+					this->sendNodeChangedEvents();
+					break;
+
+				default:
+					// Nothing
+					break;
+			}
+			delete e;
+			break;
+
+		default:
+			delete e;
+			break;
+	}	
+}
 

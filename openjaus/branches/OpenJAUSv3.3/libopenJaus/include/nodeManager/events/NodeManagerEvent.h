@@ -60,6 +60,7 @@ public:
 	EXPORT unsigned int getType();
 	EXPORT virtual std::string toString();
 	EXPORT virtual ~NodeManagerEvent() = 0;
+	EXPORT virtual NodeManagerEvent *cloneEvent() = 0;
 
 protected:
 	unsigned int type;

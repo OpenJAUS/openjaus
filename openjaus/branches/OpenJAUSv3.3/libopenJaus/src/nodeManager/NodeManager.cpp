@@ -138,7 +138,8 @@ void NodeManager::handleEvent(NodeManagerEvent *e)
 	std::list <EventHandler *>::iterator iter;
 	for(iter = eventHandlers.begin(); iter != eventHandlers.end(); iter++)
 	{
-		(*iter)->handleEvent(e);
+		(*iter)->handleEvent(e->cloneEvent());
 	}
+	delete e;
 }
 

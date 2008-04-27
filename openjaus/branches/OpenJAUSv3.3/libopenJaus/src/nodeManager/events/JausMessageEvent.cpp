@@ -60,6 +60,11 @@ JausMessageEvent::~JausMessageEvent()
 	}
 }
 
+JausMessageEvent *JausMessageEvent::cloneEvent()
+{
+	return new JausMessageEvent(jausMessageClone(this->message), this->transport, this->direction);
+}
+
 std::string JausMessageEvent::toString()
 {
 	char buf[1024] = {0};

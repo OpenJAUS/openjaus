@@ -56,8 +56,10 @@ public:
 	SystemTreeEvent(unsigned int type, JausNode node);
 	SystemTreeEvent(unsigned int type, JausComponent cmpt);
 	~SystemTreeEvent();
+	SystemTreeEvent *cloneEvent();
 
 	std::string toString();
+	unsigned int getSubType();
 	JausComponent getComponent();
 	JausNode getNode();
 	JausSubsystem getSubsystem();

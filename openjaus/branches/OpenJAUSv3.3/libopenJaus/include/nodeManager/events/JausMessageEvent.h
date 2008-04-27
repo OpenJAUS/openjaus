@@ -53,6 +53,7 @@ class JausMessageEvent : public NodeManagerEvent
 public:
 	JausMessageEvent(JausMessage message, JausTransportInterface *transport, unsigned char direction);
 	~JausMessageEvent();
+	JausMessageEvent *cloneEvent();
 
 	std::string toString();
 	JausMessage getJausMessage();
