@@ -91,7 +91,6 @@ private:
 	bool processConfirmEvent(JausMessage message);
 	bool processEvent(JausMessage message);
 
-	void sendNodeChangedEvents();
 	void sendSubsystemChangedEvents();
 	void generateHeartbeats();
 	

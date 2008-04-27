@@ -46,6 +46,7 @@
 #include "nodeManager/JausComponentCommunicationManager.h"
 #include "nodeManager/events/SystemTreeEvent.h"
 #include "nodeManager/events/ErrorEvent.h"
+#include "nodeManager/events/DebugEvent.h"
 #include "nodeManager/EventHandler.h"
 #include "nodeManager/SystemTree.h"
 #include "jaus.h"
@@ -847,6 +848,12 @@ bool NodeManagerComponent::processCreateEvent(JausMessage message)
 			this->commMngr->receiveJausMessage(txMessage, this);
 		}
 		confirmEventRequestMessageDestroy(confirmEventRequest);
+		
+		char buf[256];
+		sprintf(buf, "Rejected event from %d.%d.%d.%d. Unsupported command code (0x%04X)", createEvent->source->subsystem, createEvent->source->node, createEvent->source->component, createEvent->source->instance, createEvent->reportMessageCode); 
+		DebugEvent *e = new DebugEvent("Event", __FUNCTION__, __LINE__, buf);
+		this->eventHandler->handleEvent(e);
+		
 		return false;
 	}
 	confirmEventRequest->messageCode = JAUS_REPORT_CONFIGURATION;
@@ -887,12 +894,21 @@ bool NodeManagerComponent::processCreateEvent(JausMessage message)
 				eventId[nextEventId] = true;
 				subsystemChangeList[nextEventId] = jausAddressClone(createEvent->source);
 				confirmEventRequest->responseCode = SUCCESSFUL_RESPONSE;
-				printf("Added %d.%d.%d to Subs Change Event List on NM\n", createEvent->source->subsystem, createEvent->source->node, createEvent->source->component);
+
+				char buf[256];
+				sprintf(buf, "Added Subsystem Configuration event for %d.%d.%d.%d.", createEvent->source->subsystem, createEvent->source->node, createEvent->source->component, createEvent->source->instance);
+				DebugEvent *e = new DebugEvent("Event", __FUNCTION__, __LINE__, buf);
+				this->eventHandler->handleEvent(e);
 			}
 			else
 			{
 				confirmEventRequest->responseCode = CONNECTION_REFUSED_RESPONSE;
 				confirmEventRequest->eventId = 0;
+
+				char buf[256];
+				sprintf(buf, "Rejected event from %d.%d.%d.%d. No available Event Ids.", createEvent->source->subsystem, createEvent->source->node, createEvent->source->component, createEvent->source->instance, createEvent->reportMessageCode); 
+				DebugEvent *e = new DebugEvent("Event", __FUNCTION__, __LINE__, buf);
+				this->eventHandler->handleEvent(e);
 			}
 			break;
 		
@@ -915,12 +931,21 @@ bool NodeManagerComponent::processCreateEvent(JausMessage message)
 				eventId[nextEventId] = true;
 				nodeChangeList[nextEventId] = jausAddressClone(createEvent->source);
 				confirmEventRequest->responseCode = SUCCESSFUL_RESPONSE;
-				printf("Added %d.%d.%d to Node Change Event List\n", createEvent->source->subsystem, createEvent->source->node, createEvent->source->component);
+
+				char buf[256];
+				sprintf(buf, "Added Node Configuration event for %d.%d.%d.%d.", createEvent->source->subsystem, createEvent->source->node, createEvent->source->component, createEvent->source->instance);
+				DebugEvent *e = new DebugEvent("Event", __FUNCTION__, __LINE__, buf);
+				this->eventHandler->handleEvent(e);
 			}
 			else
 			{
 				confirmEventRequest->responseCode = CONNECTION_REFUSED_RESPONSE;
 				confirmEventRequest->eventId = 0;
+
+				char buf[256];
+				sprintf(buf, "Rejected event from %d.%d.%d.%d. No available Event Ids.", createEvent->source->subsystem, createEvent->source->node, createEvent->source->component, createEvent->source->instance, createEvent->reportMessageCode); 
+				DebugEvent *e = new DebugEvent("Event", __FUNCTION__, __LINE__, buf);
+				this->eventHandler->handleEvent(e);
 			}
 			break;
 
@@ -987,24 +1012,28 @@ bool NodeManagerComponent::processCancelEvent(JausMessage message)
 bool NodeManagerComponent::processCreateServiceConnection(JausMessage message)
 {
 	// Not implemented right now
+	jausMessageDestroy(message);
 	return true;
 }
 
 bool NodeManagerComponent::processActivateServiceConnection(JausMessage message)
 {
 	// Not Implemented right now
+	jausMessageDestroy(message);
 	return true;
 }
 
 bool NodeManagerComponent::processSuspendServiceConnection(JausMessage message)
 {
 	// Not Implemented right now
+	jausMessageDestroy(message);
 	return true;
 }
 
 bool NodeManagerComponent::processTerminateServiceConnection(JausMessage message)
 {
 	// Not Implemented right now
+	jausMessageDestroy(message);
 	return true;
 }
 
@@ -1522,6 +1551,11 @@ void NodeManagerComponent::sendNodeChangedEvents()
 		jausAddressCopy(eventMessage->destination, iterator->second);
 		txMessage = eventMessageToJausMessage(eventMessage);
 		this->commMngr->receiveJausMessage(jausMessageClone(txMessage), this);
+
+		char buf[256];
+		sprintf(buf, "Send Node Changed event to %d.%d.%d.%d.", txMessage->destination->subsystem, txMessage->destination->node, txMessage->destination->component, txMessage->destination->instance);
+		DebugEvent *e = new DebugEvent("Event", __FUNCTION__, __LINE__, buf);
+		this->eventHandler->handleEvent(e);
 	}
 	
 	jausMessageDestroy(txMessage);
@@ -1577,6 +1611,11 @@ void NodeManagerComponent::sendSubsystemChangedEvents()
 		jausAddressCopy(eventMessage->destination, iterator->second);
 		txMessage = eventMessageToJausMessage(eventMessage);
 		this->commMngr->receiveJausMessage(jausMessageClone(txMessage), this);
+
+		char buf[256];
+		sprintf(buf, "Send Subs Changed event to %d.%d.%d.%d.", txMessage->destination->subsystem, txMessage->destination->node, txMessage->destination->component, txMessage->destination->instance);
+		DebugEvent *e = new DebugEvent("Event", __FUNCTION__, __LINE__, buf);
+		this->eventHandler->handleEvent(e);
 	}
 
 	jausMessageDestroy(txMessage);

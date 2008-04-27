@@ -31,41 +31,59 @@
  *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
  *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ****************************************************************************/
-// File Name: NodeManagerEvent.h
+// File Name: DebugEvent.cpp
 //
-// Written By: Danny Kent (jaus AT dannykent DOT com)
+// Written By: Danny Kent (jaus AT dannykent DOT com) 
 //
 // Version: 3.3 BETA
 //
 // Date: 04/15/08
 //
-// Description: 
+// Description: This file defines the interface of an DebugEvent, 
+// 				which is derived from a the NodeManagerEvent class
 
-#ifndef NM_EVENT_H
-#define NM_EVENT_H
+#include "nodeManager/events/DebugEvent.h"
 
-#include <string>
-
-#ifdef WIN32
-	#define EXPORT	__declspec(dllexport)
-#else
-	#define EXPORT
-#endif
-
-class NodeManagerEvent
+DebugEvent::DebugEvent(std::string debugClass)
 {
+	this->type = NodeManagerEvent::DebugEvent;
+	this->debugClass = debugClass;
+	this->debugString = "";
+	this->line = -1;
+	this->function = "";
+}
+
+DebugEvent::DebugEvent(std::string debugClass, const char *function, long line, std::string debugString)
+{
+	this->type = NodeManagerEvent::DebugEvent;
+	this->debugClass = debugClass;
+	this->debugString = debugString;
+	this->function = function;
+	this->line = line;
+}
+
+DebugEvent::~DebugEvent(){}
+
+DebugEvent *DebugEvent::cloneEvent()
+{
+	return new DebugEvent(this->debugClass, this->function.c_str(), this->line, this->debugString);
+}
+
+std::string DebugEvent::getDebugString()
+{
+	return this->debugString;
+}
+
+std::string DebugEvent::getDebugClass()
+{
+	return this->debugClass;
+}
+
+std::string DebugEvent::toString()
+{
+	char buf[256] = {0};
 	
-public:
-	EXPORT enum {SystemTreeEvent, ErrorEvent, TransportEvent, JausMessageEvent, DebugEvent};
-	EXPORT unsigned int getType();
-	EXPORT virtual std::string toString();
-	EXPORT virtual ~NodeManagerEvent() = 0;
-	EXPORT virtual NodeManagerEvent *cloneEvent() = 0;
+	sprintf(buf, "(%s:%d) %s: %s", this->function.c_str(), this->line, this->debugClass.c_str(), this->debugString.c_str());
 
-protected:
-	unsigned int type;
-
-};
-
-#endif
-
+	return buf;
+}

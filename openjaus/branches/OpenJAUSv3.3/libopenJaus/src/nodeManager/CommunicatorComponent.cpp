@@ -45,6 +45,7 @@
 #include "nodeManager/CommunicatorComponent.h"
 #include "nodeManager/JausComponentCommunicationManager.h"
 #include "nodeManager/events/ErrorEvent.h"
+#include "nodeManager/events/DebugEvent.h"
 #include "nodeManager/EventHandler.h"
 #include "utils/timeLib.h"
 #include "jaus.h"
@@ -706,6 +707,12 @@ bool CommunicatorComponent::processCreateEvent(JausMessage message)
 		{
 			this->commMngr->receiveJausMessage(txMessage, this);
 		}
+
+		char buf[256];
+		sprintf(buf, "Rejected event from %d.%d.%d.%d. Unsupported command code (0x%04X)", createEvent->source->subsystem, createEvent->source->node, createEvent->source->component, createEvent->source->instance, createEvent->reportMessageCode); 
+		DebugEvent *e = new DebugEvent("Event", __FUNCTION__, __LINE__, buf);
+		this->eventHandler->handleEvent(e);
+
 		confirmEventRequestMessageDestroy(confirmEventRequest);
 		return false;
 	}
@@ -744,15 +751,23 @@ bool CommunicatorComponent::processCreateEvent(JausMessage message)
 		{
 			confirmEventRequest->eventId = (JausByte) nextEventId;
 			eventId[nextEventId] = true;
-			subsystemChangeList[nextEventId] = createEvent->source;
+			subsystemChangeList[nextEventId] = jausAddressClone(createEvent->source);
 			confirmEventRequest->responseCode = SUCCESSFUL_RESPONSE;
-			printf("Added %d.%d.%d to Subs Change Event List on Communicator\n", createEvent->source->subsystem, createEvent->source->node, createEvent->source->component);
 
+			char buf[256];
+			sprintf(buf, "Added Subsystem Configuration event for %d.%d.%d.%d.", createEvent->source->subsystem, createEvent->source->node, createEvent->source->component, createEvent->source->instance);
+			DebugEvent *e = new DebugEvent("Event", __FUNCTION__, __LINE__, buf);
+			this->eventHandler->handleEvent(e);
 		}
 		else
 		{
 			confirmEventRequest->responseCode = CONNECTION_REFUSED_RESPONSE;
 			confirmEventRequest->eventId = 0;
+
+			char buf[256];
+			sprintf(buf, "Rejected event from %d.%d.%d.%d. No available Event Ids.", createEvent->source->subsystem, createEvent->source->node, createEvent->source->component, createEvent->source->instance, createEvent->reportMessageCode); 
+			DebugEvent *e = new DebugEvent("Event", __FUNCTION__, __LINE__, buf);
+			this->eventHandler->handleEvent(e);
 		}
 	}
 	else
@@ -816,42 +831,6 @@ bool CommunicatorComponent::processCancelEvent(JausMessage message)
 	return true;
 }
 
-void CommunicatorComponent::sendNodeChangedEvents()
-{
-	ReportConfigurationMessage reportConf = NULL;
-	JausMessage txMessage = NULL;	
-	HASH_MAP <int, JausAddress>::iterator iterator;
-	
-	JausNode thisNode = systemTree->getNode(this->cmpt->address);
-	if(!thisNode)
-	{
-		// TODO: Record an error. Throw Exception
-		return;
-	}
-
-	reportConf = reportConfigurationMessageCreate();
-	if(!reportConf)
-	{
-		// TODO: Record an error. Throw Exception
-		jausNodeDestroy(thisNode);
-		return;
-	}
-	jausArrayAdd(reportConf->subsystem->nodes, (void *)thisNode);
-
-	txMessage = reportConfigurationMessageToJausMessage(reportConf);
-	jausAddressCopy(txMessage->source, cmpt->address);
-
-	// TODO: Go through nodeChangeList looking for dead addresses
-	for(iterator = nodeChangeList.begin(); iterator != nodeChangeList.end(); iterator++)
-	{
-		jausAddressCopy(txMessage->destination, iterator->second);
-		this->commMngr->receiveJausMessage(jausMessageClone(txMessage), this);
-	}
-	
-	jausMessageDestroy(txMessage);
-	reportConfigurationMessageDestroy(reportConf);
-}
-
 void CommunicatorComponent::sendSubsystemChangedEvents()
 {
 	ReportConfigurationMessage reportConf = NULL;
@@ -901,6 +880,11 @@ void CommunicatorComponent::sendSubsystemChangedEvents()
 		jausAddressCopy(eventMessage->destination, iterator->second);
 		txMessage = eventMessageToJausMessage(eventMessage);
 		this->commMngr->receiveJausMessage(jausMessageClone(txMessage), this);
+
+		char buf[256];
+		sprintf(buf, "Send Subs Changed event to %d.%d.%d.%d.", txMessage->destination->subsystem, txMessage->destination->node, txMessage->destination->component, txMessage->destination->instance);
+		DebugEvent *e = new DebugEvent("Event", __FUNCTION__, __LINE__, buf);
+		this->eventHandler->handleEvent(e);
 	}
 
 	jausMessageDestroy(txMessage);

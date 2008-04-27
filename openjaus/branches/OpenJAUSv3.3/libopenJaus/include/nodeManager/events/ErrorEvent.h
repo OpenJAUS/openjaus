@@ -62,7 +62,6 @@ public:
 private:
 	unsigned int subType;
 	std::string userString;
-	std::string file;
 	std::string function;
 	long line;
 };

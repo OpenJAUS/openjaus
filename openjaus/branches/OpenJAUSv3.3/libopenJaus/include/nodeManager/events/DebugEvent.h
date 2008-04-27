@@ -31,7 +31,7 @@
  *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
  *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ****************************************************************************/
-// File Name: NodeManagerEvent.h
+// File Name: DebugEvent.h
 //
 // Written By: Danny Kent (jaus AT dannykent DOT com)
 //
@@ -41,30 +41,28 @@
 //
 // Description: 
 
-#ifndef NM_EVENT_H
-#define NM_EVENT_H
+#ifndef DEBUG_EVENT_H
+#define DEBUG_EVENT_H
 
 #include <string>
+#include "NodeManagerEvent.h"
 
-#ifdef WIN32
-	#define EXPORT	__declspec(dllexport)
-#else
-	#define EXPORT
-#endif
-
-class NodeManagerEvent
+class DebugEvent : public NodeManagerEvent
 {
-	
 public:
-	EXPORT enum {SystemTreeEvent, ErrorEvent, TransportEvent, JausMessageEvent, DebugEvent};
-	EXPORT unsigned int getType();
-	EXPORT virtual std::string toString();
-	EXPORT virtual ~NodeManagerEvent() = 0;
-	EXPORT virtual NodeManagerEvent *cloneEvent() = 0;
-
-protected:
-	unsigned int type;
-
+	DebugEvent(std::string debugClass);
+	DebugEvent(std::string debugClass, const char *function, long line, std::string debugString);
+	~DebugEvent();
+	DebugEvent *cloneEvent();
+	std::string toString();
+	std::string getDebugString();
+	std::string getDebugClass();
+	
+private:
+	std::string debugClass;
+	std::string debugString;
+	std::string function;
+	long line;
 };
 
 #endif

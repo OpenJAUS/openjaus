@@ -54,6 +54,7 @@
 #include "events/SystemTreeEvent.h"
 #include "events/ErrorEvent.h"
 #include "events/JausMessageEvent.h"
+#include "events/DebugEvent.h"
 
 #define	OJ_NODE_MANAGER_VERSION	"3.3.0"
 
