@@ -63,9 +63,11 @@ ErrorEvent::ErrorEvent(unsigned int subType, const char *function, long line, st
 	this->line = line;
 }
 
-ErrorEvent::~ErrorEvent()
-{
+ErrorEvent::~ErrorEvent(){}
 
+ErrorEvent *ErrorEvent::cloneEvent()
+{
+	return new ErrorEvent(this->subType, this->function.c_str(), this->line, this->userString);
 }
 
 std::string ErrorEvent::getUserString()

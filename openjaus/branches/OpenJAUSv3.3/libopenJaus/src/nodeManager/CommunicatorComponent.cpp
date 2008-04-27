@@ -75,6 +75,7 @@ CommunicatorComponent::CommunicatorComponent(FileLoader *configData, EventHandle
 	this->name = "OpenJAUS Communicator";
 	this->cmptRateHz = COMMUNICATOR_RATE_HZ;
 	this->systemTree = cmptComms->getSystemTree();
+	this->nodeManagerSubsystemEventConfirmed = false;
 	for(int i = 0; i < MAXIMUM_EVENT_ID; i++)
 	{
 		eventId[i] = false;
@@ -284,8 +285,8 @@ void CommunicatorComponent::startupState()
 }
 
 void CommunicatorComponent::intializeState()
-{
-	// Nothing to do
+{	
+	// Switch to Ready State
 	this->cmpt->state = JAUS_READY_STATE;
 }
 
@@ -296,7 +297,63 @@ void CommunicatorComponent::standbyState()
 
 void CommunicatorComponent::readyState()
 {
+	CreateEventMessage createEventMsg = NULL;
+	QueryConfigurationMessage query = NULL;
+	JausMessage txMessage = NULL;
+	static double nextSendTime = 0;
 
+	if(!nodeManagerSubsystemEventConfirmed && getTimeSeconds() > nextSendTime)
+	{
+		// Create query message
+		query = queryConfigurationMessageCreate();
+		if(!query)
+		{
+			// Constructor Failed
+			return;
+		}
+		query->queryField = JAUS_SUBSYSTEM_CONFIGURATION;
+
+		createEventMsg = createEventMessageCreate();
+		if(!createEventMsg)
+		{
+			queryConfigurationMessageDestroy(query);
+			return;
+		}
+		
+		// Setup Create Event PV
+		createEventMsg->presenceVector = 0;
+		jausByteSetBit(&createEventMsg->presenceVector, CREATE_EVENT_PV_QUERY_MESSAGE_BIT);
+
+		createEventMsg->reportMessageCode = jausMessageGetComplimentaryCommandCode(query->commandCode);
+		createEventMsg->eventType = EVENT_EVERY_CHANGE_TYPE;
+		createEventMsg->queryMessage = queryConfigurationMessageToJausMessage(query);
+		if(!createEventMsg->queryMessage)
+		{
+			// Problem with queryConfigurationMessageToJausMessage
+			createEventMessageDestroy(createEventMsg);
+			queryConfigurationMessageDestroy(query);
+			return;
+		}
+		
+		txMessage = createEventMessageToJausMessage(createEventMsg);
+		if(!txMessage)
+		{
+			// Problem with createEventMsgMessageToJausMessage
+			createEventMessageDestroy(createEventMsg);
+			queryConfigurationMessageDestroy(query);
+			return;
+		}
+
+		txMessage->destination->subsystem = this->cmpt->address->subsystem;
+		txMessage->destination->node = this->cmpt->address->node;
+		txMessage->destination->component = JAUS_NODE_MANAGER_COMPONENT;
+		txMessage->destination->instance = 1;
+
+		jausAddressCopy(txMessage->source, cmpt->address);
+		this->commMngr->receiveJausMessage(txMessage, this);
+
+		nextSendTime = getTimeSeconds() + 1.0;
+	}
 }
 
 void CommunicatorComponent::emergencyState()
@@ -416,6 +473,15 @@ bool CommunicatorComponent::processReportConfiguration(JausMessage message)
 {
 	// This function follows the flowchart designed for NM 2.0 by D. Kent and T. Galluzzo
 	ReportConfigurationMessage reportConf = NULL;
+
+	// Check for a reportConf from our own NM
+	if(reportConf->source->subsystem == this->cmpt->address->subsystem &&
+		reportConf->source->component == JAUS_NODE_MANAGER_COMPONENT)
+	{
+		sendSubsystemChangedEvents();
+		jausMessageDestroy(message);
+		return true;
+	}
 
 	reportConf = reportConfigurationMessageFromJausMessage(message);
 	if(!reportConf)
@@ -1431,7 +1497,25 @@ bool CommunicatorComponent::processQueryServices(JausMessage message)
 
 bool CommunicatorComponent::processConfirmEvent(JausMessage message)
 {
-	// Not currently implemented
+	ConfirmEventRequestMessage confirm = NULL;
+	
+	confirm = confirmEventRequestMessageFromJausMessage(message);
+	if(!confirm)
+	{
+		jausMessageDestroy(message);
+		return false;
+	}
+
+	if(	confirm->source->node == this->cmpt->address->node &&
+		confirm->source->component == JAUS_NODE_MANAGER_COMPONENT &&
+		confirm->messageCode == JAUS_REPORT_CONFIGURATION &&
+		confirm->responseCode == SUCCESSFUL_RESPONSE)
+	{
+		this->nodeManagerSubsystemEventConfirmed = true;
+	}
+
+
+	jausMessageDestroy(message);
 	return true;
 }
 

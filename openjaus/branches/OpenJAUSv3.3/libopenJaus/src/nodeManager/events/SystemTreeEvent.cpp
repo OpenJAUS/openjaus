@@ -62,7 +62,6 @@ SystemTreeEvent::SystemTreeEvent(unsigned int type, JausSubsystem subs)
 	this->cmpt = NULL;
 }
 
-
 SystemTreeEvent::SystemTreeEvent(unsigned int type, JausNode node)
 {
 	this->type = NodeManagerEvent::SystemTreeEvent;
@@ -88,6 +87,25 @@ SystemTreeEvent::~SystemTreeEvent()
 	if(cmpt) jausComponentDestroy(cmpt);
 }
 
+SystemTreeEvent *SystemTreeEvent::cloneEvent()
+{
+	if(this->subs)
+	{
+		return new SystemTreeEvent(this->subType, this->subs);
+	}
+	else if(this->node)
+	{
+		return new SystemTreeEvent(this->subType, this->node);
+	}
+	else if(this->cmpt)
+	{
+		return new SystemTreeEvent(this->subType, this->cmpt);
+	}
+	else
+	{
+		return new SystemTreeEvent(this->subType);
+	}
+}
 
 std::string SystemTreeEvent::toString()
 {
@@ -154,5 +172,25 @@ std::string SystemTreeEvent::toString()
 			output = "Unknown Subsystem Event";
 			return output;
 	}
+}
+
+unsigned int SystemTreeEvent::getSubType()
+{
+	return this->subType;
+}
+
+JausComponent SystemTreeEvent::getComponent()
+{
+	return this->cmpt;
+}
+
+JausNode SystemTreeEvent::getNode()
+{
+	return this->node;
+}
+
+JausSubsystem SystemTreeEvent::getSubsystem()
+{
+	return this->subs;
 }
 

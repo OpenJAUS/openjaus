@@ -53,7 +53,7 @@ public:
 	ErrorEvent(unsigned int subType);
 	ErrorEvent(unsigned int subType, const char *function, long line, std::string userString);
 	~ErrorEvent();
-
+	ErrorEvent *cloneEvent();
 	std::string toString();
 	std::string getUserString();
 	

@@ -63,7 +63,7 @@ class SystemTree;
 #define MAXIMUM_EVENT_ID	255
 #define REFRESH_TIME_SEC	1
 
-class NodeManagerComponent : public LocalComponent
+class NodeManagerComponent : public LocalComponent, EventHandler
 {
 public:
 	NodeManagerComponent(FileLoader *configData, EventHandler *handler, JausComponentCommunicationManager *cmptComms);
@@ -71,6 +71,7 @@ public:
 
 	bool processMessage(JausMessage message);
 	std::string toString();
+	void handleEvent(NodeManagerEvent *e);
 
 	JausAddress checkInLocalComponent(int cmptId);
 	void checkOutLocalComponent(int subsId, int nodeId, int cmptId, int instId);

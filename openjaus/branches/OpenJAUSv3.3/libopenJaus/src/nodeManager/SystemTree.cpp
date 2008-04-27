@@ -49,7 +49,7 @@
 SystemTree::SystemTree(FileLoader *configData, EventHandler *handler)
 {
 	this->configData = configData;
-	this->eventHandler = handler;
+	this->registerEventHandler(handler);
 
 	mySubsystemId = configData->GetConfigDataInt("JAUS", "SubsystemId");
 	myNodeId = configData->GetConfigDataInt("JAUS", "NodeId");
@@ -819,9 +819,6 @@ JausAddress SystemTree::lookUpAddress(int lookupSubs, int lookupNode, int lookup
 	return returnAddress;
 }
 
-//JausAddress SystemTree::lookUpServiceInNode(JausNode node, int commandCode, int serviceType);
-//JausAddress SystemTree::lookUpServiceInSubsystem(JausSubsystem subs, int commandCode, int serviceType);
-
 JausAddress SystemTree::lookUpServiceInSystem(int commandCode, int serviceType)
 {
 	JausAddress list = NULL;
@@ -1084,7 +1081,7 @@ bool SystemTree::addComponent(int subsystemId, int nodeId, int componentId, int 
 
 			jausArrayAdd(node->components, cmpt);
 			SystemTreeEvent *e = new SystemTreeEvent(SystemTreeEvent::ComponentAdded, cmpt);
-			this->eventHandler->handleEvent(e);
+			this->handleEvent(e);
 			return true;
 		}
 	}
@@ -1124,7 +1121,7 @@ bool SystemTree::addNode(int subsystemId, int nodeId, JausNode node)
 			jausArrayAdd(subs->nodes, node);
 
 			SystemTreeEvent *e = new SystemTreeEvent(SystemTreeEvent::NodeAdded, node);
-			this->eventHandler->handleEvent(e);
+			this->handleEvent(e);
 
 			return true;
 		}
@@ -1163,7 +1160,7 @@ bool SystemTree::addSubsystem(int subsystemId, JausSubsystem subs)
 			subsystemCount++;
 
 			SystemTreeEvent *e = new SystemTreeEvent(SystemTreeEvent::SubsystemAdded, subs);
-			this->eventHandler->handleEvent(e);
+			this->handleEvent(e);
 
 			return true;
 		}
@@ -1246,7 +1243,7 @@ bool SystemTree::removeComponent(int subsystemId, int nodeId, int componentId, i
 				jausArrayRemoveAt(node->components, i);
 
 				SystemTreeEvent *e = new SystemTreeEvent(SystemTreeEvent::ComponentRemoved, cmpt);
-				this->eventHandler->handleEvent(e);
+				this->handleEvent(e);
 
 				jausComponentDestroy(cmpt);
 				return true;
@@ -1552,7 +1549,7 @@ void SystemTree::refresh()
 							{
 								// Create Subsystem Event and send it off
 								SystemTreeEvent *e = new SystemTreeEvent(SystemTreeEvent::ComponentTimeout, cmpt);
-								this->eventHandler->handleEvent(e);
+								this->handleEvent(e);
 
 								// Remove this component
 								jausArrayRemoveAt(node->components, k); k--;
@@ -1565,7 +1562,7 @@ void SystemTree::refresh()
 						if(jausNodeIsTimedOut(node))
 						{
 							SystemTreeEvent *e = new SystemTreeEvent(SystemTreeEvent::NodeTimeout, node);
-							this->eventHandler->handleEvent(e);
+							this->handleEvent(e);
 							removeNode(node);
 						}
 					}
@@ -1576,13 +1573,34 @@ void SystemTree::refresh()
 				if(jausSubsystemIsTimedOut(system[i]))
 				{
 					SystemTreeEvent *e = new SystemTreeEvent(SystemTreeEvent::SubsystemTimeout, system[i]);
-					this->eventHandler->handleEvent(e);
+					this->handleEvent(e);
 					removeSubsystem(system[i]->id);
 				}
 			}
 		}
 	}
 
+}
+
+bool SystemTree::registerEventHandler(EventHandler *handler)
+{
+	if(handler)
+	{
+		this->eventHandlers.push_back(handler);
+		return true;
+	}
+	return false;
+}
+
+void SystemTree::handleEvent(NodeManagerEvent *e)
+{
+	// Send to all registered handlers
+	std::list <EventHandler *>::iterator iter;
+	for(iter = eventHandlers.begin(); iter != eventHandlers.end(); iter++)
+	{
+		(*iter)->handleEvent(e->cloneEvent());
+	}
+	delete e;
 }
 
 

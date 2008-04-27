@@ -118,6 +118,7 @@ private:
 	HASH_MAP <int, JausAddress> subsystemChangeList;
 	bool eventId[255];
 	SystemTree *systemTree;
+	bool nodeManagerSubsystemEventConfirmed;
 };
 
 #endif

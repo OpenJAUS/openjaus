@@ -44,6 +44,7 @@
 #ifndef SYSTEM_TREE_H
 #define SYSTEM_TREE_H
 
+#include <list>
 #include "utils/FileLoader.h"
 #include "EventHandler.h"
 #include "jaus.h"
@@ -164,6 +165,7 @@ public:
 	JausAddress lookUpService(JausAddress address, int commandCode, int serviceType);
 
 	unsigned char getNextInstanceId(JausAddress address);
+	bool registerEventHandler(EventHandler *handler);
 
 	std::string toString();
 	std::string toDetailedString();
@@ -171,7 +173,7 @@ public:
 
 private:
 	FileLoader *configData;
-	EventHandler *eventHandler;
+	std::list <EventHandler *> eventHandlers;
 	JausSubsystem system[255];
 	int subsystemCount;
 	int mySubsystemId;
@@ -184,7 +186,7 @@ private:
 	JausComponent findComponent(JausComponent cmpt);
 	JausComponent findComponent(JausAddress address);
 	JausComponent findComponent(int subsId, int nodeId, int cmptId, int instId);
-
+	void handleEvent(NodeManagerEvent *e);
 };
 
 #endif
