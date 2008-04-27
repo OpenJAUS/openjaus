@@ -746,6 +746,8 @@ bool CommunicatorComponent::processCreateEvent(JausMessage message)
 			eventId[nextEventId] = true;
 			subsystemChangeList[nextEventId] = createEvent->source;
 			confirmEventRequest->responseCode = SUCCESSFUL_RESPONSE;
+			printf("Added %d.%d.%d to Subs Change Event List on Communicator\n", createEvent->source->subsystem, createEvent->source->node, createEvent->source->component);
+
 		}
 		else
 		{
