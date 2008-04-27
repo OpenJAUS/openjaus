@@ -68,6 +68,7 @@ class MyHandler : public EventHandler
 		SystemTreeEvent *treeEvent;
 		ErrorEvent *errorEvent;
 		JausMessageEvent *messageEvent;
+		DebugEvent *debugEvent;
 
 		switch(e->getType())
 		{
@@ -88,6 +89,12 @@ class MyHandler : public EventHandler
 				// TODO: Make this useful somehow
 				// If you turn this on, the system gets spam-y this is just a test of the message event
 				//printf("%s\n", messageEvent->toString().c_str());
+				delete e;
+				break;
+
+			case NodeManagerEvent::DebugEvent:
+				debugEvent = (DebugEvent *)e;
+				printf("%s\n", debugEvent->toString().c_str());
 				delete e;
 				break;
 

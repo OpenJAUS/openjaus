@@ -67,6 +67,9 @@ std::string NodeManagerEvent::toString()
 		case NodeManagerEvent::JausMessageEvent:
 			return "JAUS Message Event";
 
+		case NodeManagerEvent::DebugEvent:
+			return "JAUS Message Event";
+
 		default:
 			return "Unknown Event";
 	}

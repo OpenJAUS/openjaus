@@ -49,7 +49,6 @@ ErrorEvent::ErrorEvent(unsigned int subType)
 	this->type = NodeManagerEvent::ErrorEvent;
 	this->subType = subType;
 	this->userString = "";
-	this->file = "";
 	this->line = -1;
 	this->function = "";
 }
