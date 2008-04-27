@@ -1273,25 +1273,31 @@ bool SystemTree::replaceSubsystem(int subsystemId, JausSubsystem newSubs)
 		return false;
 	}
 	
-	size_t stringLength = strlen(currentSubs->identification) + 1;
-	cloneSubs->identification = (char *) realloc(cloneSubs->identification, stringLength);
-	sprintf(cloneSubs->identification, "%s", currentSubs->identification);
-	
+	if(currentSubs->identification)
+	{
+		size_t stringLength = strlen(currentSubs->identification) + 1;
+		cloneSubs->identification = (char *) realloc(cloneSubs->identification, stringLength);
+		sprintf(cloneSubs->identification, "%s", currentSubs->identification);
+	}
+
 	for(int i = 0; i < cloneSubs->nodes->elementCount; i++)
 	{
 		JausNode cloneNode = (JausNode)cloneSubs->nodes->elementData[i];
 		JausNode currentNode = findNode(cloneNode);
 		if(currentNode)
 		{
-			size_t stringLength = strlen(currentNode->identification) + 1;
-			cloneNode->identification = (char *) realloc(cloneNode->identification, stringLength);
-			sprintf(cloneNode->identification, "%s", currentNode->identification);
+			if(currentNode->identification)
+			{
+				size_t stringLength = strlen(currentNode->identification) + 1;
+				cloneNode->identification = (char *) realloc(cloneNode->identification, stringLength);
+				sprintf(cloneNode->identification, "%s", currentNode->identification);
+			}
 			
 			for(int i = 0; i < cloneNode->components->elementCount; i++)
 			{
 				JausComponent cloneCmpt = (JausComponent)cloneNode->components->elementData[i];
 				JausComponent currentCmpt = findComponent(cloneCmpt);
-				if(currentCmpt)
+				if(currentCmpt && currentCmpt->identification)
 				{
 					size_t stringLength = strlen(currentCmpt->identification) + 1;
 					cloneCmpt->identification = (char *) realloc(cloneCmpt->identification, stringLength);
