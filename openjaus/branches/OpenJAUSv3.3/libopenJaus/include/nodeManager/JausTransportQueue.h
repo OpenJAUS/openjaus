@@ -14,6 +14,7 @@
 
 #include <queue>
 #include "jaus.h"
+#include "pthread.h"
 
 class JausTransportQueue
 {
@@ -28,6 +29,7 @@ public:
 
 private:
 	std::queue <JausMessage> list;
+	pthread_mutex_t mutex;
 };
 
 #endif

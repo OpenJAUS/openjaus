@@ -887,6 +887,7 @@ bool NodeManagerComponent::processCreateEvent(JausMessage message)
 				eventId[nextEventId] = true;
 				subsystemChangeList[nextEventId] = jausAddressClone(createEvent->source);
 				confirmEventRequest->responseCode = SUCCESSFUL_RESPONSE;
+				printf("Added %d.%d.%d to Subs Change Event List on NM\n", createEvent->source->subsystem, createEvent->source->node, createEvent->source->component);
 			}
 			else
 			{
@@ -914,6 +915,7 @@ bool NodeManagerComponent::processCreateEvent(JausMessage message)
 				eventId[nextEventId] = true;
 				nodeChangeList[nextEventId] = jausAddressClone(createEvent->source);
 				confirmEventRequest->responseCode = SUCCESSFUL_RESPONSE;
+				printf("Added %d.%d.%d to Node Change Event List\n", createEvent->source->subsystem, createEvent->source->node, createEvent->source->component);
 			}
 			else
 			{

@@ -45,28 +45,39 @@
 #include "nodeManager/JausTransportInterface.h"
 #include "nodeManager/JausCommunicationManager.h"
 
-JausTransportQueue::JausTransportQueue(void){}
+JausTransportQueue::JausTransportQueue(void)
+{
+	pthread_mutex_init(&mutex, NULL);
+}
 
 JausTransportQueue::~JausTransportQueue(void)
 {
 	list.~queue();
+	pthread_mutex_destroy(&mutex);
 }
 
 void JausTransportQueue::push(JausMessage inc)
 {
+	pthread_mutex_lock(&mutex);
 	list.push(inc);
+	pthread_mutex_unlock(&mutex);
 }
 
 JausMessage JausTransportQueue::pop(void)
 {
+	pthread_mutex_lock(&mutex);
 	if(!list.empty())
 	{
 		JausMessage out = list.front();
 		list.pop();
+
+		pthread_mutex_unlock(&mutex);
 		return out;
 	}
-	else
-		return NULL;
+
+	pthread_mutex_unlock(&mutex);
+	return NULL;
+
 }
 
 bool JausTransportQueue::isEmpty(void)
