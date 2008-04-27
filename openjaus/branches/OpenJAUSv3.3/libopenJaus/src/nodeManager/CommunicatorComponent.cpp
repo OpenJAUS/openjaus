@@ -113,12 +113,10 @@ CommunicatorComponent::CommunicatorComponent(FileLoader *configData, EventHandle
 	this->cmpt->node = systemTree->getNode(subsystemId, nodeId);
 	this->cmpt->identification = (char *)this->name.c_str();
 
-	this->startupState();
-
 	this->setupThread();
 	if(!systemTree->addComponent(this->cmpt))
 	{
-		// TODO: Log Error, we can't add a node manager with instance 1
+		// TODO: Log Error, we can't add our communicator with instance 1
 	}
 }
 
@@ -475,8 +473,8 @@ bool CommunicatorComponent::processReportConfiguration(JausMessage message)
 	ReportConfigurationMessage reportConf = NULL;
 
 	// Check for a reportConf from our own NM
-	if(reportConf->source->subsystem == this->cmpt->address->subsystem &&
-		reportConf->source->component == JAUS_NODE_MANAGER_COMPONENT)
+	if(message->source->subsystem == this->cmpt->address->subsystem &&
+		message->source->component == JAUS_NODE_MANAGER_COMPONENT)
 	{
 		sendSubsystemChangedEvents();
 		jausMessageDestroy(message);

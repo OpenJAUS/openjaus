@@ -56,7 +56,7 @@
 #include "LocalComponent.h"
 
 #define MAXIMUM_EVENT_ID	255
-#define COMMUNICATOR_RATE_HZ 10
+#define COMMUNICATOR_RATE_HZ 5
 
 class SystemTree;
 class JausComponentCommunicationManager;

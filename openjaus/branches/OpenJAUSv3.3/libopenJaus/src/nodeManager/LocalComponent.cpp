@@ -57,6 +57,9 @@ void LocalComponent::run()
 		return;
 	}
 
+	this->startupState();
+	this->cmpt->state = JAUS_INITIALIZE_STATE;
+
 	// Lock our mutex
 	pthread_mutex_lock(&this->threadMutex);
 	
@@ -72,12 +75,12 @@ void LocalComponent::run()
 
 	while(this->running)
 	{
-		if(timeout.tv_nsec > 1e9)
+		while(timeout.tv_nsec > 1e9)
 		{
-			timeout.tv_nsec = timeout.tv_nsec % (long)1e9;
+			timeout.tv_nsec -= (long)1e9;
 			timeout.tv_sec++;
 		}
-		
+	
 		int rc = pthread_cond_timedwait(&this->threadConditional, &this->threadMutex, &timeout);
 		switch(rc)
 		{
@@ -100,6 +103,7 @@ void LocalComponent::run()
 			case ETIMEDOUT: // our time is up
 				// Capture time now, that way we get a constant deltaTime from beginning to beginning
 				gettimeofday(&now, NULL);
+
 				switch(cmpt->state)
 				{
 					case JAUS_INITIALIZE_STATE:

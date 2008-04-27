@@ -125,7 +125,6 @@ NodeManagerComponent::NodeManagerComponent(FileLoader *configData, EventHandler 
 	this->cmpt->node = systemTree->getNode(subsystemId, nodeId);
 	this->cmpt->identification = (char *)this->name.c_str();
 
-	this->startupState();
 	this->setupThread();
 
 	if(!systemTree->addComponent(this->cmpt->address, this->cmpt))
@@ -299,6 +298,7 @@ void NodeManagerComponent::checkOutLocalComponent(int subsId, int nodeId, int cm
 
 void NodeManagerComponent::startupState()
 {
+
 }
 
 void NodeManagerComponent::intializeState()
