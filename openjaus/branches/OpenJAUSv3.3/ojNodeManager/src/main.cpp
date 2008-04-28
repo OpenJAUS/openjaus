@@ -94,7 +94,7 @@ class MyHandler : public EventHandler
 
 			case NodeManagerEvent::DebugEvent:
 				debugEvent = (DebugEvent *)e;
-				printf("%s\n", debugEvent->toString().c_str());
+				//printf("%s\n", debugEvent->toString().c_str());
 				delete e;
 				break;
 
