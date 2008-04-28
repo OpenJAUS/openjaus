@@ -332,7 +332,6 @@ SetCameraFormatOptionsMessage setCameraFormatOptionsMessageFromJausMessage(JausM
 JausMessage setCameraFormatOptionsMessageToJausMessage(SetCameraFormatOptionsMessage message)
 {
 	JausMessage jausMessage;
-	int size;
 	
 	jausMessage = (JausMessage)malloc( sizeof(struct JausMessageStruct) );
 	if(jausMessage == NULL)
@@ -351,12 +350,12 @@ JausMessage setCameraFormatOptionsMessageToJausMessage(SetCameraFormatOptionsMes
 	*jausMessage->destination = *message->destination;
 	jausMessage->source = jausAddressCreate();
 	*jausMessage->source = *message->source;
+	jausMessage->dataSize = dataSize(message);
 	jausMessage->dataFlag = message->dataFlag;
 	jausMessage->sequenceNumber = message->sequenceNumber;
 	
-	size = dataSize(message);
-	jausMessage->data = (unsigned char *)malloc(size);
-	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, size);
+	jausMessage->data = (unsigned char *)malloc(message->dataSize);
+	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, message->dataSize);
 	
 	return jausMessage;
 }
