@@ -290,11 +290,11 @@ JausMessage confirmServiceConnectionMessageToJausMessage(ConfirmServiceConnectio
 	*jausMessage->destination = *message->destination;
 	jausMessage->source = jausAddressCreate();
 	*jausMessage->source = *message->source;
-	jausMessage->dataSize = message->dataSize;
+	jausMessage->dataSize = dataSize(message);
 	jausMessage->dataFlag = message->dataFlag;
 	jausMessage->sequenceNumber = message->sequenceNumber;
 	
-	jausMessage->data = (unsigned char *)malloc(dataSize(message));
+	jausMessage->data = (unsigned char *)malloc(message->dataSize);
 	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, message->dataSize);
 	
 	return jausMessage;
