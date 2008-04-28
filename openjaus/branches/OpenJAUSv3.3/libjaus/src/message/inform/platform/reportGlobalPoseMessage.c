@@ -205,7 +205,7 @@ static int dataToBuffer(ReportGlobalPoseMessage message, unsigned char *buffer, 
 	JausShort	tempShort;
 	JausUnsignedShort tempUShort;
 
-	if(bufferSizeBytes >= message->dataSize)
+	if(bufferSizeBytes >= dataSize(message))
 	{
 		// Pack Message Fields to Buffer
 		// Use Presence Vector

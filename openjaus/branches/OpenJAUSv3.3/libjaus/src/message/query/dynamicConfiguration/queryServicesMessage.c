@@ -94,7 +94,7 @@ static int dataToBuffer(QueryServicesMessage message, unsigned char *buffer, uns
 {
 	int index = 0;
 
-	if(bufferSizeBytes >= message->dataSize)
+	if(bufferSizeBytes >= dataSize(message))
 	{
 		// Pack Message Fields to Buffer
 		// No Fields

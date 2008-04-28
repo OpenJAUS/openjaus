@@ -133,7 +133,7 @@ static int dataToBuffer(SetCameraFormatOptionsMessage message, unsigned char *bu
 {
 	int index = 0;
 
-	if(bufferSizeBytes >= message->dataSize)
+	if(bufferSizeBytes >= dataSize(message))
 	{
 		// Pack Message Fields to Buffer
 		

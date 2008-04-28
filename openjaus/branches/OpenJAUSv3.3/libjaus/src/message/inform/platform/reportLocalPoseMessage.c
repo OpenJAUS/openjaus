@@ -205,7 +205,7 @@ static int dataToBuffer(ReportLocalPoseMessage message, unsigned char *buffer, u
 	JausShort	tempShort;
 	JausUnsignedShort tempUShort;
 
-	if(bufferSizeBytes >= message->dataSize)
+	if(bufferSizeBytes >= dataSize(message))
 	{
 		// Pack Message Fields to Buffer
 		// Use Presence Vector

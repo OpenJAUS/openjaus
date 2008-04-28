@@ -145,7 +145,7 @@ static int dataToBuffer(EventMessage message, unsigned char *buffer, unsigned in
 {
 	int index = 0;
 
-	if(bufferSizeBytes >= message->dataSize)
+	if(bufferSizeBytes >= dataSize(message))
 	{
 		// Pack Message Fields to Buffer
 

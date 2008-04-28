@@ -266,7 +266,7 @@ static int dataToBuffer(SetCameraCapabilitiesMessage message, unsigned char *buf
 	JausUnsignedShort imageControl = 0;
 	JausUnsignedShort audioControl = 0;
 
-	if(bufferSizeBytes >= message->dataSize)
+	if(bufferSizeBytes >= dataSize(message))
 	{
 		// Pack Message Fields to Buffer
 		

@@ -90,7 +90,7 @@ static int dataToBuffer(ReportComponentAuthorityMessage message, unsigned char *
 {
 	int index = 0;
 
-	if(bufferSizeBytes >= message->dataSize)
+	if(bufferSizeBytes >= dataSize(message))
 	{
 		// Pack Message Fields to Buffer
 		if(!jausByteFromBuffer( &(message->authorityCode), buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;

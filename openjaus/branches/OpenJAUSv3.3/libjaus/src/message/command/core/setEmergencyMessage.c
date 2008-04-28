@@ -95,7 +95,7 @@ static int dataToBuffer(SetEmergencyMessage message, unsigned char *buffer, unsi
 	int index = 0;
 	JausUnsignedShort emergencyCode = 0;
 
-	if(bufferSizeBytes >= message->dataSize)
+	if(bufferSizeBytes >= dataSize(message))
 	{
 		// Pack Message Fields to Buffer
 		if(message->transitionToEmergency) jausUnsignedShortSetBit(&emergencyCode, JAUS_SET_EMERGENCY_BF_TRANSITION_TO_EMERGENCY_BIT);

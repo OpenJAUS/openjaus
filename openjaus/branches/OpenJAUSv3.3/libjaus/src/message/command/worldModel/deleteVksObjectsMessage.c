@@ -227,7 +227,7 @@ static int dataToBuffer(DeleteVksObjectsMessage message, unsigned char *buffer, 
 	JausGeometryPointLLA point = NULL;
 	JausInteger tempInt;
 
-	if(bufferSizeBytes >= message->dataSize)
+	if(bufferSizeBytes >= dataSize(message))
 	{
 		// Ensure the PV rules are met
 		// If the VKS_PV_DELETE_OBJECTS_REGION_BIT is set, then the VKS_PV_DELETE_OBJECTS_POINT_COUNT_BIT is required

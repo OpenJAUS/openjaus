@@ -118,7 +118,7 @@ static int dataToBuffer(ReportVksObjectsCreationMessage message, unsigned char *
 	int index = 0;
 	unsigned short i = 0;
 
-	if(bufferSizeBytes >= message->dataSize)
+	if(bufferSizeBytes >= dataSize(message))
 	{
 		// Pack Message Fields to Buffer
 		// Request Id

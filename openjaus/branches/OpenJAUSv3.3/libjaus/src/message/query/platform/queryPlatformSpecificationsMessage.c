@@ -93,7 +93,7 @@ static int dataToBuffer(QueryPlatformSpecificationsMessage message, unsigned cha
 {
 	int index = 0;
 
-	if(bufferSizeBytes >= message->dataSize)
+	if(bufferSizeBytes >= dataSize(message))
 	{
 		// Pack Message Fields to Buffer
 		if(!jausUnsignedIntegerToBuffer(message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;

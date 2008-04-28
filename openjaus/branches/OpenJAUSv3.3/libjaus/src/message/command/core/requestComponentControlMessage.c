@@ -93,7 +93,7 @@ static int dataToBuffer(RequestComponentControlMessage message, unsigned char *b
 {
 	int index = 0;
 
-	if(bufferSizeBytes >= message->dataSize)
+	if(bufferSizeBytes >= dataSize(message))
 	{
 		// Pack Message Fields to Buffer
 		if(!jausByteToBuffer(message->authorityCode, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;

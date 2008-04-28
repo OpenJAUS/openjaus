@@ -93,7 +93,7 @@ static int dataToBuffer(QuerySelectedCameraMessage message, unsigned char *buffe
 {
 	int index = 0;
 
-	if(bufferSizeBytes >= message->dataSize)
+	if(bufferSizeBytes >= dataSize(message))
 	{
 		// No Data
 	}

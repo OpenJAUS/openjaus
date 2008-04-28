@@ -100,7 +100,7 @@ static int dataToBuffer(ReportComponentStatusMessage message, unsigned char *buf
 {
 	int index = 0;
 
-	if(bufferSizeBytes >= message->dataSize)
+	if(bufferSizeBytes >= dataSize(message))
 	{
 		// Pack Message Fields to Buffer
 		if(!jausByteToBuffer(((JausByte)message->primaryStatusCode), buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;

@@ -108,7 +108,7 @@ static int dataToBuffer(SetLocalVectorMessage message, unsigned char *buffer, un
 	JausInteger tempInteger;
 	JausShort tempShort;
 
-	if(bufferSizeBytes >= message->dataSize)
+	if(bufferSizeBytes >= dataSize(message))
 	{
 		// Pack Message Fields to Buffer
 		

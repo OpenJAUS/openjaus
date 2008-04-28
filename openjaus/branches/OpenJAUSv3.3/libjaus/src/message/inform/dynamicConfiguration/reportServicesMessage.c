@@ -160,7 +160,7 @@ static int dataToBuffer(ReportServicesMessage message, unsigned char *buffer, un
 	JausService service;
 	JausCommand command;
 
-	if(bufferSizeBytes >= message->dataSize)
+	if(bufferSizeBytes >= dataSize(message))
 	{
 		// Pack Message Fields to Buffer
 	    // # Services

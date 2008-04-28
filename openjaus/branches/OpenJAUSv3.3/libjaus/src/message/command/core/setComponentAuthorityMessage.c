@@ -92,7 +92,7 @@ static int dataToBuffer(SetComponentAuthorityMessage message, unsigned char *buf
 {
 	int index = 0;
 
-	if(bufferSizeBytes >= message->dataSize)
+	if(bufferSizeBytes >= dataSize(message))
 	{
 		// Pack Message Fields to Buffer
 		if(!jausByteToBuffer(message->authorityCode, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;

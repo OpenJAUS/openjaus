@@ -271,7 +271,7 @@ static int dataToBuffer(ReportManipulatorSpecificationsMessage message, unsigned
 	JausUnsignedShort tempUShort;
 	JausUnsignedInteger tempUInt;
 
-	if(bufferSizeBytes >= message->dataSize)
+	if(bufferSizeBytes >= dataSize(message))
 	{
 		// Pack Message Fields to Buffer
 		// Unpack Message Fields from Buffer

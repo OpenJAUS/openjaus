@@ -149,7 +149,7 @@ static int dataToBuffer(ReportConfigurationMessage message, unsigned char *buffe
 	JausNode node;
 	JausComponent component;
 
-	if(bufferSizeBytes >= message->dataSize)
+	if(bufferSizeBytes >= dataSize(message))
 	{
 		// Pack Message Fields to Buffer
 	    // # Nodes

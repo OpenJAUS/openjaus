@@ -212,7 +212,7 @@ static int dataToBuffer(UpdateEventMessage message, unsigned char *buffer, unsig
 	int index = 0;
 	JausUnsignedShort tempUShort;
 
-	if(bufferSizeBytes >= message->dataSize)
+	if(bufferSizeBytes >= dataSize(message))
 	{
 		// Unpack Message Fields from Buffer
 		// Presence Vector

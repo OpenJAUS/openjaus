@@ -116,7 +116,7 @@ static int dataToBuffer(SetTimeMessage message, unsigned char *buffer, unsigned 
 {
 	int index = 0;
 
-	if(bufferSizeBytes >= message->dataSize)
+	if(bufferSizeBytes >= dataSize(message))
 	{
 		// Pack Message Fields to Buffer
 		// Pack According to Presence Vector

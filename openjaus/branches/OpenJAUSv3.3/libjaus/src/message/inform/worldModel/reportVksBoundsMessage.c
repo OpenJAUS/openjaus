@@ -138,7 +138,7 @@ static int dataToBuffer(ReportVksBoundsMessage message, unsigned char *buffer, u
 	int index = 0;
 	JausInteger tempInt;
 
-	if(bufferSizeBytes >= message->dataSize)
+	if(bufferSizeBytes >= dataSize(message))
 	{
 		// Pack Message Fields to Buffer
 		// Request Id

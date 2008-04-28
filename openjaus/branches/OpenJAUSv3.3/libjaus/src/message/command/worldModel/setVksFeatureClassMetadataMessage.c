@@ -126,7 +126,7 @@ static int dataToBuffer(SetVksFeatureClassMetadataMessage message, unsigned char
 	JausByte tempByte;
 	JausUnsignedShort stringLength = 0;
 
-	if(bufferSizeBytes >= message->dataSize)
+	if(bufferSizeBytes >= dataSize(message))
 	{
 		// Pack Message Fields to Buffer
 		

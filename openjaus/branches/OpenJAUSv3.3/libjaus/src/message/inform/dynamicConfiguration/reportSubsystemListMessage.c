@@ -143,7 +143,7 @@ static int dataToBuffer(ReportSubsystemListMessage message, unsigned char *buffe
 	int index = 0;
 	int i = 0;
 
-	if(bufferSizeBytes >= message->dataSize)
+	if(bufferSizeBytes >= dataSize(message))
 	{
 		// Pack Message Fields to Buffer
 		if(!jausByteToBuffer(message->subsystemCount, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;

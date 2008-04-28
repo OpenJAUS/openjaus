@@ -206,7 +206,7 @@ static int dataToBuffer(ReportVelocityStateMessage message, unsigned char *buffe
 	JausUnsignedShort tempUShort;
 	JausUnsignedInteger tempUInt;
 
-	if(bufferSizeBytes >= message->dataSize)
+	if(bufferSizeBytes >= dataSize(message))
 	{
 		// Pack Message Fields to Buffer
 		// Use Presence Vector

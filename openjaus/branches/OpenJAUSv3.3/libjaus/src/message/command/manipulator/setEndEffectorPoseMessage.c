@@ -138,7 +138,7 @@ static int dataToBuffer(SetEndEffectorPoseMessage message, unsigned char *buffer
 	int index = 0;
 	JausUnsignedInteger tempUInt;
 
-	if(bufferSizeBytes >= message->dataSize)
+	if(bufferSizeBytes >= dataSize(message))
 	{
 		// Pack Message Fields to Buffer
 		// Scaled Short (-30, 30)			

@@ -131,7 +131,7 @@ static int dataToBuffer(ReportPayloadDataElementMessage message, unsigned char *
 	int informationInterfaceNumber = 0;
 	JausInformationInterface informationInterface = NULL;
 
-	if(bufferSizeBytes >= message->dataSize)
+	if(bufferSizeBytes >= dataSize(message))
 	{
 		// Pack Message Fields to Buffer
 		// # payload interfaces

@@ -118,7 +118,7 @@ static int dataToBuffer(ReportJointEffortsMessage message, unsigned char *buffer
 	int i;
 	JausUnsignedShort tempUShort;
 
-	if(bufferSizeBytes >= message->dataSize)
+	if(bufferSizeBytes >= dataSize(message))
 	{
 		// Pack Message Fields to Buffer
 		if(!jausByteToBuffer(message->numJoints, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;

@@ -106,7 +106,7 @@ static int dataToBuffer(ReportComponentControlMessage message, unsigned char *bu
 {
 	int index = 0;
 
-	if(bufferSizeBytes >= message->dataSize)
+	if(bufferSizeBytes >= dataSize(message))
 	{
 		// Pack Message Fields to Buffer
 		if(!jausByteFromBuffer( &(message->subsystemId), buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;

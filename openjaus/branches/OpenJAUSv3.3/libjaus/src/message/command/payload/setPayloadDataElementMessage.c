@@ -131,7 +131,7 @@ static int dataToBuffer(SetPayloadDataElementMessage message, unsigned char *buf
 	int commandInterfaceNumber = 0;
 	JausCommandInterface commandInterface = NULL;
 
-	if(bufferSizeBytes >= message->dataSize)
+	if(bufferSizeBytes >= dataSize(message))
 	{
 		// Pack Message Fields to Buffer
 		// # payload interfaces

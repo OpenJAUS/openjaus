@@ -115,7 +115,7 @@ static int dataToBuffer(ReportTimeMessage message, unsigned char *buffer, unsign
 {
 	int index = 0;
 
-	if(bufferSizeBytes >= message->dataSize)
+	if(bufferSizeBytes >= dataSize(message))
 	{
 		// Pack Message Fields to Buffer
 		// Pack According to Presence Vector

@@ -182,7 +182,7 @@ static int dataToBuffer(ReportRelativeObjectPositionMessage message, unsigned ch
 	JausUnsignedInteger tempUInt;
 	JausInteger tempInt;
 
-	if(bufferSizeBytes >= message->dataSize)
+	if(bufferSizeBytes >= dataSize(message))
 	{
 		// Pack Message Fields to Buffer
 		// Unpack Message Fields from Buffer
