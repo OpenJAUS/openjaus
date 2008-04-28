@@ -56,6 +56,7 @@ static JausBoolean headerToBuffer(ReportGlobalVectorMessage message, unsigned ch
 static JausBoolean dataFromBuffer(ReportGlobalVectorMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static int dataToBuffer(ReportGlobalVectorMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(ReportGlobalVectorMessage message);
+static int dataSize(ReportGlobalVectorMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS

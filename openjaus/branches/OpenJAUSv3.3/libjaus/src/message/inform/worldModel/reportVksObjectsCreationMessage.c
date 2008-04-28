@@ -55,6 +55,7 @@ static JausBoolean dataFromBuffer(ReportVksObjectsCreationMessage message, unsig
 static int dataToBuffer(ReportVksObjectsCreationMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(ReportVksObjectsCreationMessage message);
 static void dataDestroy(ReportVksObjectsCreationMessage message);
+static int dataSize(ReportVksObjectsCreationMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS

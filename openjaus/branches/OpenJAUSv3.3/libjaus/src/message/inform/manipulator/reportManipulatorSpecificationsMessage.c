@@ -55,6 +55,7 @@ static JausBoolean dataFromBuffer(ReportManipulatorSpecificationsMessage message
 static int dataToBuffer(ReportManipulatorSpecificationsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(ReportManipulatorSpecificationsMessage message);
 static void dataDestroy(ReportManipulatorSpecificationsMessage message);
+static int dataSize(ReportManipulatorSpecificationsMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS

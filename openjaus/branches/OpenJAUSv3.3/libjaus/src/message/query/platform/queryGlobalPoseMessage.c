@@ -56,6 +56,7 @@ static JausBoolean headerToBuffer(QueryGlobalPoseMessage message, unsigned char 
 static JausBoolean dataFromBuffer(QueryGlobalPoseMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static int dataToBuffer(QueryGlobalPoseMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(QueryGlobalPoseMessage message);
+static int dataSize(QueryGlobalPoseMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS

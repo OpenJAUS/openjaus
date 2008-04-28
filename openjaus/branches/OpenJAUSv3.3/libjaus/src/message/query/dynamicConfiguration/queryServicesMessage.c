@@ -55,6 +55,7 @@ static JausBoolean dataFromBuffer(QueryServicesMessage message, unsigned char *b
 static int dataToBuffer(QueryServicesMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(QueryServicesMessage message);
 static void dataDestroy(QueryServicesMessage message);
+static int dataSize(QueryServicesMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS

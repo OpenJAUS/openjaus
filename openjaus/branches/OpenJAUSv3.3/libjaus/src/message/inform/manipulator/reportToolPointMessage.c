@@ -55,6 +55,7 @@ static JausBoolean dataFromBuffer(ReportToolPointMessage message, unsigned char 
 static int dataToBuffer(ReportToolPointMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(ReportToolPointMessage message);
 static void dataDestroy(ReportToolPointMessage message);
+static int dataSize(ReportToolPointMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS

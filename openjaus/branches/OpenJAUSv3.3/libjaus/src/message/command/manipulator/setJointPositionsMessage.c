@@ -55,6 +55,7 @@ static JausBoolean dataFromBuffer(SetJointPositionsMessage message, unsigned cha
 static int dataToBuffer(SetJointPositionsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(SetJointPositionsMessage message);
 static void dataDestroy(SetJointPositionsMessage message);
+static int dataSize(SetJointPositionsMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS

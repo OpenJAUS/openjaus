@@ -55,6 +55,7 @@ static JausBoolean dataFromBuffer(QueryCameraCountMessage message, unsigned char
 static int dataToBuffer(QueryCameraCountMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(QueryCameraCountMessage message);
 static void dataDestroy(QueryCameraCountMessage message);
+static int dataSize(QueryCameraCountMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS

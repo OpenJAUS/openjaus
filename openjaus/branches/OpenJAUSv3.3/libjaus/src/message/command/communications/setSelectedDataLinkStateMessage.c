@@ -55,6 +55,7 @@ static JausBoolean dataFromBuffer(SetSelectedDataLinkStateMessage message, unsig
 static int dataToBuffer(SetSelectedDataLinkStateMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(SetSelectedDataLinkStateMessage message);
 static void dataDestroy(SetSelectedDataLinkStateMessage message);
+static int dataSize(SetSelectedDataLinkStateMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS

@@ -56,6 +56,7 @@ static JausBoolean headerToBuffer(QueryHeartbeatPulseMessage message, unsigned c
 static JausBoolean dataFromBuffer(QueryHeartbeatPulseMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static int dataToBuffer(QueryHeartbeatPulseMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(QueryHeartbeatPulseMessage message);
+static int dataSize(QueryHeartbeatPulseMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS

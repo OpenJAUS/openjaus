@@ -55,6 +55,7 @@ static JausBoolean dataFromBuffer(ReportJointForceTorquesMessage message, unsign
 static int dataToBuffer(ReportJointForceTorquesMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(ReportJointForceTorquesMessage message);
 static void dataDestroy(ReportJointForceTorquesMessage message);
+static int dataSize(ReportJointForceTorquesMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS

@@ -56,6 +56,7 @@ static JausBoolean headerToBuffer(QueryLocalPoseMessage message, unsigned char *
 static JausBoolean dataFromBuffer(QueryLocalPoseMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static int dataToBuffer(QueryLocalPoseMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(QueryLocalPoseMessage message);
+static int dataSize(QueryLocalPoseMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS

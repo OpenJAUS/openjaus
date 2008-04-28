@@ -56,6 +56,7 @@ static JausBoolean headerToBuffer(QueryGlobalVectorMessage message, unsigned cha
 static JausBoolean dataFromBuffer(QueryGlobalVectorMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static int dataToBuffer(QueryGlobalVectorMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(QueryGlobalVectorMessage message);
+static int dataSize(QueryGlobalVectorMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS

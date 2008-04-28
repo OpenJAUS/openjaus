@@ -55,6 +55,7 @@ static JausBoolean dataFromBuffer(ReportJointVelocitiesMessage message, unsigned
 static int dataToBuffer(ReportJointVelocitiesMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(ReportJointVelocitiesMessage message);
 static void dataDestroy(ReportJointVelocitiesMessage message);
+static int dataSize(ReportJointVelocitiesMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS

@@ -55,6 +55,7 @@ static JausBoolean dataFromBuffer(SetEndEffectorPathMotionMessage message, unsig
 static int dataToBuffer(SetEndEffectorPathMotionMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(SetEndEffectorPathMotionMessage message);
 static void dataDestroy(SetEndEffectorPathMotionMessage message);
+static int dataSize(SetEndEffectorPathMotionMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS

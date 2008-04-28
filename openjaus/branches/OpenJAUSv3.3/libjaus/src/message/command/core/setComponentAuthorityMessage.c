@@ -56,6 +56,7 @@ static JausBoolean headerToBuffer(SetComponentAuthorityMessage message, unsigned
 static JausBoolean dataFromBuffer(SetComponentAuthorityMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static int dataToBuffer(SetComponentAuthorityMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(SetComponentAuthorityMessage message);
+static int dataSize(SetComponentAuthorityMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS

@@ -56,6 +56,7 @@ static JausBoolean headerToBuffer(QueryPlatformSpecificationsMessage message, un
 static JausBoolean dataFromBuffer(QueryPlatformSpecificationsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static int dataToBuffer(QueryPlatformSpecificationsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(QueryPlatformSpecificationsMessage message);
+static int dataSize(QueryPlatformSpecificationsMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS

@@ -55,6 +55,7 @@ static JausBoolean dataFromBuffer(QueryDataLinkStatusMessage message, unsigned c
 static int dataToBuffer(QueryDataLinkStatusMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(QueryDataLinkStatusMessage message);
 static void dataDestroy(QueryDataLinkStatusMessage message);
+static int dataSize(QueryDataLinkStatusMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS

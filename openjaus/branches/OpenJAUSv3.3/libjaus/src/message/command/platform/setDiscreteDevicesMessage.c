@@ -56,6 +56,7 @@ static JausBoolean headerToBuffer(SetDiscreteDevicesMessage message, unsigned ch
 static JausBoolean dataFromBuffer(SetDiscreteDevicesMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static int dataToBuffer(SetDiscreteDevicesMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(SetDiscreteDevicesMessage message);
+static int dataSize(SetDiscreteDevicesMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS

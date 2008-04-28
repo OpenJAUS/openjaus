@@ -56,6 +56,7 @@ static JausBoolean headerToBuffer(ReportWaypointCountMessage message, unsigned c
 static JausBoolean dataFromBuffer(ReportWaypointCountMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static int dataToBuffer(ReportWaypointCountMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(ReportWaypointCountMessage message);
+static int dataSize(ReportWaypointCountMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS

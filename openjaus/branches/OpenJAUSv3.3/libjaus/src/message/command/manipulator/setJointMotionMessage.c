@@ -55,6 +55,7 @@ static JausBoolean dataFromBuffer(SetJointMotionMessage message, unsigned char *
 static int dataToBuffer(SetJointMotionMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(SetJointMotionMessage message);
 static void dataDestroy(SetJointMotionMessage message);
+static int dataSize(SetJointMotionMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS

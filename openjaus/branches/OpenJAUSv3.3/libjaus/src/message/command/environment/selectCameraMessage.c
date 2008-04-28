@@ -57,6 +57,7 @@ static JausBoolean dataFromBuffer(SelectCameraMessage message, unsigned char *bu
 static int dataToBuffer(SelectCameraMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(SelectCameraMessage message);
 static void dataDestroy(SelectCameraMessage message);
+static int dataSize(SelectCameraMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS

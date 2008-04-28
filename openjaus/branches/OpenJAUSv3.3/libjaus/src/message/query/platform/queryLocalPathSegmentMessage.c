@@ -56,6 +56,7 @@ static JausBoolean headerToBuffer(QueryLocalPathSegmentMessage message, unsigned
 static JausBoolean dataFromBuffer(QueryLocalPathSegmentMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static int dataToBuffer(QueryLocalPathSegmentMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(QueryLocalPathSegmentMessage message);
+static int dataSize(QueryLocalPathSegmentMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS

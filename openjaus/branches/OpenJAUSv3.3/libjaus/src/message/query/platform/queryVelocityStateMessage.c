@@ -56,6 +56,7 @@ static JausBoolean headerToBuffer(QueryVelocityStateMessage message, unsigned ch
 static JausBoolean dataFromBuffer(QueryVelocityStateMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static int dataToBuffer(QueryVelocityStateMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(QueryVelocityStateMessage message);
+static int dataSize(QueryVelocityStateMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS

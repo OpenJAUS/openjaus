@@ -55,6 +55,7 @@ static JausBoolean dataFromBuffer(SetToolPointMessage message, unsigned char *bu
 static int dataToBuffer(SetToolPointMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(SetToolPointMessage message);
 static void dataDestroy(SetToolPointMessage message);
+static int dataSize(SetToolPointMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS

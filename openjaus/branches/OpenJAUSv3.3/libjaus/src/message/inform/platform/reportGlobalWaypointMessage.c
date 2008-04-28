@@ -56,6 +56,7 @@ static JausBoolean headerToBuffer(ReportGlobalWaypointMessage message, unsigned 
 static JausBoolean dataFromBuffer(ReportGlobalWaypointMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static int dataToBuffer(ReportGlobalWaypointMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(ReportGlobalWaypointMessage message);
+static int dataSize(ReportGlobalWaypointMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS

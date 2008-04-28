@@ -55,6 +55,7 @@ static JausBoolean dataFromBuffer(QueryManipulatorSpecificationsMessage message,
 static int dataToBuffer(QueryManipulatorSpecificationsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(QueryManipulatorSpecificationsMessage message);
 static void dataDestroy(QueryManipulatorSpecificationsMessage message);
+static int dataSize(QueryManipulatorSpecificationsMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS

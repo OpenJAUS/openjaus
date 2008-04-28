@@ -56,6 +56,7 @@ static JausBoolean headerToBuffer(QueryComponentAuthorityMessage message, unsign
 static JausBoolean dataFromBuffer(QueryComponentAuthorityMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static int dataToBuffer(QueryComponentAuthorityMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(QueryComponentAuthorityMessage message);
+static int dataSize(QueryComponentAuthorityMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS

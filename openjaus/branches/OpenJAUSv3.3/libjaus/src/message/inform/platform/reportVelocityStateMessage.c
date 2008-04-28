@@ -57,6 +57,7 @@ static JausBoolean dataFromBuffer(ReportVelocityStateMessage message, unsigned c
 static int dataToBuffer(ReportVelocityStateMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(ReportVelocityStateMessage message);
 static void dataDestroy(ReportVelocityStateMessage message);
+static int dataSize(ReportVelocityStateMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS

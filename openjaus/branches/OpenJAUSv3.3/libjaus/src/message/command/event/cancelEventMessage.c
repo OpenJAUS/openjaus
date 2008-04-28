@@ -55,6 +55,7 @@ static JausBoolean dataFromBuffer(CancelEventMessage message, unsigned char *buf
 static int dataToBuffer(CancelEventMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(CancelEventMessage message);
 static void dataDestroy(CancelEventMessage message);
+static int dataSize(CancelEventMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS
