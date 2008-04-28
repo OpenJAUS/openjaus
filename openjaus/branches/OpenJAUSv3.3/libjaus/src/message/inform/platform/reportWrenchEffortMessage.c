@@ -56,6 +56,7 @@ static JausBoolean headerToBuffer(ReportWrenchEffortMessage message, unsigned ch
 static JausBoolean dataFromBuffer(ReportWrenchEffortMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static int dataToBuffer(ReportWrenchEffortMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(ReportWrenchEffortMessage message);
+static int dataSize(ReportWrenchEffortMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS

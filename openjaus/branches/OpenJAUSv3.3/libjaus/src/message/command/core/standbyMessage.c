@@ -56,6 +56,7 @@ static JausBoolean headerToBuffer(StandbyMessage message, unsigned char *buffer,
 static JausBoolean dataFromBuffer(StandbyMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static int dataToBuffer(StandbyMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(StandbyMessage message);
+static int dataSize(StandbyMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS

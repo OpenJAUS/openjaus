@@ -56,6 +56,7 @@ static JausBoolean headerToBuffer(ResumeMessage message, unsigned char *buffer, 
 static JausBoolean dataFromBuffer(ResumeMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static int dataToBuffer(ResumeMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(ResumeMessage message);
+static int dataSize(ResumeMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS

@@ -56,6 +56,7 @@ static JausBoolean headerToBuffer(TerminateServiceConnectionMessage message, uns
 static JausBoolean dataFromBuffer(TerminateServiceConnectionMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static int dataToBuffer(TerminateServiceConnectionMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(TerminateServiceConnectionMessage message);
+static int dataSize(TerminateServiceConnectionMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS

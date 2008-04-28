@@ -56,6 +56,7 @@ static JausBoolean headerToBuffer(ShutdownMessage message, unsigned char *buffer
 static JausBoolean dataFromBuffer(ShutdownMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static int dataToBuffer(ShutdownMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(ShutdownMessage message);
+static int dataSize(ShutdownMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS

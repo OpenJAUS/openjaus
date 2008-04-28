@@ -57,6 +57,7 @@ static JausBoolean dataFromBuffer(QueryVideoFrameMessage message, unsigned char 
 static int dataToBuffer(QueryVideoFrameMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(QueryVideoFrameMessage message);
 static void dataDestroy(QueryVideoFrameMessage message);
+static int dataSize(QueryVideoFrameMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS

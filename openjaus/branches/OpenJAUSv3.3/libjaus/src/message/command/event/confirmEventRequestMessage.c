@@ -57,6 +57,7 @@ static JausBoolean dataFromBuffer(ConfirmEventRequestMessage message, unsigned c
 static int dataToBuffer(ConfirmEventRequestMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(ConfirmEventRequestMessage message);
 static void dataDestroy(ConfirmEventRequestMessage message);
+static int dataSize(ConfirmEventRequestMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS

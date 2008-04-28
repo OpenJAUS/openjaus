@@ -56,6 +56,7 @@ static JausBoolean headerToBuffer(RequestComponentControlMessage message, unsign
 static JausBoolean dataFromBuffer(RequestComponentControlMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static int dataToBuffer(RequestComponentControlMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(RequestComponentControlMessage message);
+static int dataSize(RequestComponentControlMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS

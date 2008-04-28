@@ -55,6 +55,7 @@ static JausBoolean dataFromBuffer(QueryVksFeatureClassMetadataMessage message, u
 static int dataToBuffer(QueryVksFeatureClassMetadataMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(QueryVksFeatureClassMetadataMessage message);
 static void dataDestroy(QueryVksFeatureClassMetadataMessage message);
+static int dataSize(QueryVksFeatureClassMetadataMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS

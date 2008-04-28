@@ -56,6 +56,7 @@ static JausBoolean headerToBuffer(ReportComponentStatusMessage message, unsigned
 static JausBoolean dataFromBuffer(ReportComponentStatusMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static int dataToBuffer(ReportComponentStatusMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(ReportComponentStatusMessage message);
+static int dataSize(ReportComponentStatusMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS

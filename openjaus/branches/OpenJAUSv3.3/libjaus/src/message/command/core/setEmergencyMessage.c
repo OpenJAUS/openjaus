@@ -54,6 +54,7 @@ static JausBoolean headerToBuffer(SetEmergencyMessage message, unsigned char *bu
 static JausBoolean dataFromBuffer(SetEmergencyMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static int dataToBuffer(SetEmergencyMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(SetEmergencyMessage message);
+static int dataSize(SetEmergencyMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS

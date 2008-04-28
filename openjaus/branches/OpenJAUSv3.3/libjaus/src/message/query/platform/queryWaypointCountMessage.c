@@ -56,6 +56,7 @@ static JausBoolean headerToBuffer(QueryWaypointCountMessage message, unsigned ch
 static JausBoolean dataFromBuffer(QueryWaypointCountMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static int dataToBuffer(QueryWaypointCountMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(QueryWaypointCountMessage message);
+static int dataSize(QueryWaypointCountMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS

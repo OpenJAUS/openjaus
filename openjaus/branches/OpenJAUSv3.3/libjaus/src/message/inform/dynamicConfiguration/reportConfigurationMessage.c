@@ -56,6 +56,7 @@ static JausBoolean headerToBuffer(ReportConfigurationMessage message, unsigned c
 static JausBoolean dataFromBuffer(ReportConfigurationMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static int dataToBuffer(ReportConfigurationMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(ReportConfigurationMessage message);
+static int dataSize(ReportConfigurationMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS

@@ -55,6 +55,7 @@ static JausBoolean dataFromBuffer(QueryVksBoundsMessage message, unsigned char *
 static int dataToBuffer(QueryVksBoundsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(QueryVksBoundsMessage message);
 static void dataDestroy(QueryVksBoundsMessage message);
+static int dataSize(QueryVksBoundsMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS

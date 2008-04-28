@@ -57,6 +57,7 @@ static JausBoolean dataFromBuffer(SetTimeMessage message, unsigned char *buffer,
 static int dataToBuffer(SetTimeMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(SetTimeMessage message);
 static void dataDestroy(SetTimeMessage message);
+static int dataSize(SetTimeMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS

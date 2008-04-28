@@ -56,6 +56,7 @@ static JausBoolean dataFromBuffer(ReportPayloadDataElementMessage message, unsig
 static int dataToBuffer(ReportPayloadDataElementMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(ReportPayloadDataElementMessage message);
 static void dataDestroy(ReportPayloadDataElementMessage message);
+static int dataSize(ReportPayloadDataElementMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS

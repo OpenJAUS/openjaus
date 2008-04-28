@@ -56,6 +56,7 @@ static JausBoolean headerToBuffer(ConfirmServiceConnectionMessage message, unsig
 static JausBoolean dataFromBuffer(ConfirmServiceConnectionMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static int dataToBuffer(ConfirmServiceConnectionMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(ConfirmServiceConnectionMessage message);
+static int dataSize(ConfirmServiceConnectionMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS

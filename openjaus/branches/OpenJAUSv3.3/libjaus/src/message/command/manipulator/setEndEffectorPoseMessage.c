@@ -55,6 +55,7 @@ static JausBoolean dataFromBuffer(SetEndEffectorPoseMessage message, unsigned ch
 static int dataToBuffer(SetEndEffectorPoseMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(SetEndEffectorPoseMessage message);
 static void dataDestroy(SetEndEffectorPoseMessage message);
+static int dataSize(SetEndEffectorPoseMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS

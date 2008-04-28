@@ -57,6 +57,7 @@ static JausBoolean dataFromBuffer(ReportLocalPoseMessage message, unsigned char 
 static int dataToBuffer(ReportLocalPoseMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(ReportLocalPoseMessage message);
 static void dataDestroy(ReportLocalPoseMessage message);
+static int dataSize(ReportLocalPoseMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS

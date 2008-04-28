@@ -55,6 +55,7 @@ static JausBoolean dataFromBuffer(QueryRelativeObjectPositionMessage message, un
 static int dataToBuffer(QueryRelativeObjectPositionMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(QueryRelativeObjectPositionMessage message);
 static void dataDestroy(QueryRelativeObjectPositionMessage message);
+static int dataSize(QueryRelativeObjectPositionMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS
