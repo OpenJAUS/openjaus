@@ -99,7 +99,7 @@ static int dataToBuffer(ReportSelectedCameraMessage message, unsigned char *buff
 {
 	int index = 0;
 
-	if(bufferSizeBytes >= message->dataSize)
+	if(bufferSizeBytes >= dataSize(message))
 	{
 		// CameraID
 		if(!jausByteToBuffer(message->cameraID, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;

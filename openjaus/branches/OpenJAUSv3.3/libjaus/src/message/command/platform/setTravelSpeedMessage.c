@@ -99,7 +99,7 @@ static int dataToBuffer(SetTravelSpeedMessage message, unsigned char *buffer, un
 	int index = 0;
 	JausUnsignedShort tempUShort;
 
-	if(bufferSizeBytes >= message->dataSize)
+	if(bufferSizeBytes >= dataSize(message))
 	{
 		// Pack Message Fields to Buffer
 

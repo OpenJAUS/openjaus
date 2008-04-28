@@ -118,7 +118,7 @@ static int dataToBuffer(ReportJointForceTorquesMessage message, unsigned char *b
 	int i;
 	JausUnsignedInteger tempUInt;
 
-	if(bufferSizeBytes >= message->dataSize)
+	if(bufferSizeBytes >= dataSize(message))
 	{
 		// Pack Message Fields to Buffer
 		if(!jausByteToBuffer(message->numJoints, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;

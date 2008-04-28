@@ -271,7 +271,7 @@ static int dataToBuffer(ReportCameraCapabilitiesMessage message, unsigned char *
 	int index = 0;
 	JausUnsignedShort tempUShort;
 
-	if(bufferSizeBytes >= message->dataSize)
+	if(bufferSizeBytes >= dataSize(message))
 	{
 		// Pack Message Fields to Buffer
 		

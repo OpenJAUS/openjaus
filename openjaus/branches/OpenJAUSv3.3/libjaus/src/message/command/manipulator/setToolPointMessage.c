@@ -114,7 +114,7 @@ static int dataToBuffer(SetToolPointMessage message, unsigned char *buffer, unsi
 	int index = 0;
 	JausUnsignedInteger tempUInt;
 
-	if(bufferSizeBytes >= message->dataSize)
+	if(bufferSizeBytes >= dataSize(message))
 	{
 		// Pack Message Fields to Buffer
 		// Scaled Short (-15, 15)			

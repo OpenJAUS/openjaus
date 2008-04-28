@@ -149,7 +149,7 @@ static int dataToBuffer(ReportPlatformOperationalDataMessage message, unsigned c
 	JausShort tempShort;
 	JausByte tempByte;
 
-	if(bufferSizeBytes >= message->dataSize)
+	if(bufferSizeBytes >= dataSize(message))
 	{
 		// Pack Message Fields to Buffer
 		// Use Presence Vector

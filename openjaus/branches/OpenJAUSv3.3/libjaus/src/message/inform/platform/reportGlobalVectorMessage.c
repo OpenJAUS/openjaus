@@ -158,7 +158,7 @@ static int dataToBuffer(ReportGlobalVectorMessage message, unsigned char *buffer
 	JausInteger tempInteger;
 	JausShort tempShort;
 
-	if(bufferSizeBytes >= message->dataSize)
+	if(bufferSizeBytes >= dataSize(message))
 	{
 		// Pack Message Fields to Buffer
 		// Pack according to presence vector

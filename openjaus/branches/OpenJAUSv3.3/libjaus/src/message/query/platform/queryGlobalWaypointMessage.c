@@ -93,7 +93,7 @@ static int dataToBuffer(QueryGlobalWaypointMessage message, unsigned char *buffe
 {
 	int index = 0;
 
-	if(bufferSizeBytes >= message->dataSize)
+	if(bufferSizeBytes >= dataSize(message))
 	{
 		// Pack Message Fields to Buffer
 		if(!jausUnsignedShortToBuffer(message->waypointNumber, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;

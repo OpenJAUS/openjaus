@@ -120,7 +120,7 @@ static int dataToBuffer(QueryPayloadDataElementMessage message, unsigned char *b
 	JausByte payloadInformationDataElementCount = 0;
 	int informationInterfaceNumber = 0;
 
-	if(bufferSizeBytes >= message->dataSize)
+	if(bufferSizeBytes >= dataSize(message))
 	{
 		// Pack Message Fields to Buffer
 		// # payload interfaces

@@ -101,7 +101,7 @@ static int dataToBuffer(SetDataLinkStatusMessage message, unsigned char *buffer,
 	int index = 0;
 	JausByte tempByte;
 
-	if(bufferSizeBytes >= message->dataSize)
+	if(bufferSizeBytes >= dataSize(message))
 	{
 		// Pack Message Fields to Buffer		
 		tempByte = (message->state < 0) ? JAUS_BYTE_MIN_VALUE : message->state;

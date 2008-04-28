@@ -152,7 +152,7 @@ static int dataToBuffer(SetDiscreteDevicesMessage message, unsigned char *buffer
 	int index = 0;
 	JausByte tempByte = 0;
 
-	if(bufferSizeBytes >= message->dataSize)
+	if(bufferSizeBytes >= dataSize(message))
 	{
 		// Pack Message Fields to Buffer
 		// Pack according to presence vector

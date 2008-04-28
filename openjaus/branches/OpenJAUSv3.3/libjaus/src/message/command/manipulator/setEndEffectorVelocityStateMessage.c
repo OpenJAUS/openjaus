@@ -136,7 +136,7 @@ static int dataToBuffer(SetEndEffectorVelocityStateMessage message, unsigned cha
 	int index = 0;
 	JausUnsignedInteger tempUInt;
 
-	if(bufferSizeBytes >= message->dataSize)
+	if(bufferSizeBytes >= dataSize(message))
 	{
 		// Pack Message Fields to Buffer
 		if(!jausByteToBuffer(message->coordinateSystem, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;

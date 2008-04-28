@@ -327,7 +327,7 @@ static int dataToBuffer(ReportPlatformSpecificationsMessage message, unsigned ch
 	int index = 0;
 	JausUnsignedShort tempUShort;
 
-	if(bufferSizeBytes >= message->dataSize)
+	if(bufferSizeBytes >= dataSize(message))
 	{
 		// Pack Message Fields to Buffer
 		// Pack using Presence Vector

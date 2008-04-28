@@ -159,7 +159,7 @@ static int dataToBuffer(ReportLocalWaypointMessage message, unsigned char *buffe
 	JausInteger tempInteger;
 	JausShort tempShort;
 
-	if(bufferSizeBytes >= message->dataSize)
+	if(bufferSizeBytes >= dataSize(message))
 	{
 		// Pack Message Fields to Buffer
 		// Use Presence Vector

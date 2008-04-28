@@ -134,7 +134,7 @@ static int dataToBuffer(ConfirmEventRequestMessage message, unsigned char *buffe
 	int index = 0;
 	JausUnsignedShort tempUShort;
 
-	if(bufferSizeBytes >= message->dataSize)
+	if(bufferSizeBytes >= dataSize(message))
 	{
 		// Pack Message Fields to Buffer
 		// Presence Vector

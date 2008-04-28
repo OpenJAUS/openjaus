@@ -121,7 +121,7 @@ static int dataToBuffer(QueryJointVelocitiesMessage message, unsigned char *buff
 {
 	int index = 0;
 
-	if(bufferSizeBytes >= message->dataSize)
+	if(bufferSizeBytes >= dataSize(message))
 	{
 		// Pack Message Fields to Buffer
 		

@@ -157,7 +157,7 @@ static int dataToBuffer(ReportLocalPathSegmentMessage message, unsigned char *bu
 	JausInteger tempInteger;
 	JausShort tempUShort;
 
-	if(bufferSizeBytes >= message->dataSize)
+	if(bufferSizeBytes >= dataSize(message))
 	{
 		// Pack Message Fields to Buffer
 		// Use Presence Vector

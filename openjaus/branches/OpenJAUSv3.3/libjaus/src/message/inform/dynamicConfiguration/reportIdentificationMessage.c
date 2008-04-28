@@ -106,7 +106,7 @@ static int dataToBuffer(ReportIdentificationMessage message, unsigned char *buff
 	int index = 0;
 	int identificationStringLength = 0;
 
-	if(bufferSizeBytes >= message->dataSize)
+	if(bufferSizeBytes >= dataSize(message))
 	{
 		// Pack Message Fields to Buffer
 		if(!jausByteToBuffer(message->queryType, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;

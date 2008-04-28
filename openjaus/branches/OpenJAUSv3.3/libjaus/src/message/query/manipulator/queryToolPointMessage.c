@@ -121,7 +121,7 @@ static int dataToBuffer(QueryToolPointMessage message, unsigned char *buffer, un
 {
 	int index = 0;
 
-	if(bufferSizeBytes >= message->dataSize)
+	if(bufferSizeBytes >= dataSize(message))
 	{
 		// Pack Message Fields to Buffer
 		

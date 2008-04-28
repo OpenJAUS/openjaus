@@ -236,7 +236,7 @@ static int dataToBuffer(QueryVksObjectsMessage message, unsigned char *buffer, u
 	JausGeometryPointLLA point = NULL;
 	JausInteger tempInt;
 
-	if(bufferSizeBytes >= message->dataSize)
+	if(bufferSizeBytes >= dataSize(message))
 	{
 		// Ensure the PV rules are met
 		// If the VKS_PV_QUERY_OBJECTS_REGION_BIT is set, then the VKS_PV_QUERY_OBJECTS_POINT_COUNT_BIT is required

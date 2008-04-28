@@ -137,7 +137,7 @@ static int dataToBuffer(ReportVksObjectsMessage message, unsigned char *buffer, 
 	int i = 0;
 	JausWorldModelVectorObject object = NULL;
 
-	if(bufferSizeBytes >= message->dataSize)
+	if(bufferSizeBytes >= dataSize(message))
 	{
 		// Pack Message Fields to Buffer
 		// Presence Vector

@@ -201,7 +201,7 @@ static int dataToBuffer(SetEndEffectorPathMotionMessage message, unsigned char *
 	int pose;
 	JausUnsignedInteger tempUInt;
 
-	if(bufferSizeBytes >= message->dataSize)
+	if(bufferSizeBytes >= dataSize(message))
 	{
 		// Pack Message Fields to Buffer
 		if(!jausByteToBuffer(message->numPoses, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;

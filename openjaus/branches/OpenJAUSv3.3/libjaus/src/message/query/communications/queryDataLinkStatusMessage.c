@@ -97,7 +97,7 @@ static int dataToBuffer(QueryDataLinkStatusMessage message, unsigned char *buffe
 {
 	int index = 0;
 
-	if(bufferSizeBytes >= message->dataSize)
+	if(bufferSizeBytes >= dataSize(message))
 	{
 		// Pack Message Fields to Buffer		
 		if(!jausByteToBuffer(message->dataLinkId, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;

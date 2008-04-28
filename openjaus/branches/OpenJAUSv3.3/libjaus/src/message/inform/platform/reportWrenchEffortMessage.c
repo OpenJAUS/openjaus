@@ -232,7 +232,7 @@ static int dataToBuffer(ReportWrenchEffortMessage message, unsigned char *buffer
 	JausShort tempShort;
 	JausByte tempByte;
 
-	if(bufferSizeBytes >= message->dataSize)
+	if(bufferSizeBytes >= dataSize(message))
 	{
 		// Pack Message Fields to Buffer
 		// Pack according to Presence Vector

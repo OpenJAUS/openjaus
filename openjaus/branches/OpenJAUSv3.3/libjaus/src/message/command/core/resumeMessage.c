@@ -91,7 +91,7 @@ static int dataToBuffer(ResumeMessage message, unsigned char *buffer, unsigned i
 {
 	int index = 0;
 
-	if(bufferSizeBytes >= message->dataSize)
+	if(bufferSizeBytes >= dataSize(message))
 	{
 		// Pack Message Fields to Buffer
 		buffer = NULL;

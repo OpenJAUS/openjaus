@@ -89,7 +89,7 @@ static int dataToBuffer(StandbyMessage message, unsigned char *buffer, unsigned 
 {
 	int index = 0;
 
-	if(bufferSizeBytes >= message->dataSize)
+	if(bufferSizeBytes >= dataSize(message))
 	{
 		buffer = NULL;
 	}

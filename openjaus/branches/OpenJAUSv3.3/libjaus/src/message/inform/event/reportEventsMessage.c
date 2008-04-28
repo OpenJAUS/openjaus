@@ -236,7 +236,7 @@ static int dataToBuffer(ReportEventsMessage message, unsigned char *buffer, unsi
 	int i;
 	int index = 0;
 
-	if(bufferSizeBytes >= message->dataSize)
+	if(bufferSizeBytes >= dataSize(message))
 	{
 		// Pack Message Fields to Buffer
 		// Message Count

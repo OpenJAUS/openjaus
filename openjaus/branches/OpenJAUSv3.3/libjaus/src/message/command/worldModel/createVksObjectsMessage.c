@@ -134,7 +134,7 @@ static int dataToBuffer(CreateVksObjectsMessage message, unsigned char *buffer, 
 	JausBoolean objectBuffered;
 	JausWorldModelVectorObject object;
 
-	if(bufferSizeBytes >= message->dataSize)
+	if(bufferSizeBytes >= dataSize(message))
 	{
 		// Pack Message Fields to Buffer
 		// Presence Vector

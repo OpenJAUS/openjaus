@@ -113,7 +113,7 @@ static int dataToBuffer(ReportVksFeatureClassMetadataMessage message, unsigned c
 	int index = 0;
 	JausUnsignedShort stringLength;
 
-	if(bufferSizeBytes >= message->dataSize)
+	if(bufferSizeBytes >= dataSize(message))
 	{
 		// Pack Message Fields to Buffer
 		if(!jausUnsignedShortToBuffer(message->fcClass->id, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;

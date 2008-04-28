@@ -302,7 +302,7 @@ static int dataToBuffer(ReportPayloadInterfaceMessage message, unsigned char *bu
 	char * tempString = NULL;
 	JausTypeCode minValue, defaultValue, maxValue;
 
-	if(bufferSizeBytes >= message->dataSize)
+	if(bufferSizeBytes >= dataSize(message))
 	{
 		// Pack Message Fields to Buffer
 		// pack presence vector
