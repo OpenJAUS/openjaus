@@ -55,7 +55,7 @@ static JausBoolean dataFromBuffer(QuerySubsystemListMessage message, unsigned ch
 static int dataToBuffer(QuerySubsystemListMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(QuerySubsystemListMessage message);
 static void dataDestroy(QuerySubsystemListMessage message);
-static int dataSize(QuerySubsystemListMessage message);
+static unsigned int dataSize(QuerySubsystemListMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS
@@ -103,7 +103,7 @@ static int dataToBuffer(QuerySubsystemListMessage message, unsigned char *buffer
 	return index;
 }
 
-static int dataSize(QuerySubsystemListMessage message)
+static unsigned int dataSize(QuerySubsystemListMessage message)
 {
 	// Constant Size
 	return maxDataSizeBytes;

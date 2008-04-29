@@ -55,7 +55,7 @@ static JausBoolean dataFromBuffer(ReportImageMessage message, unsigned char *buf
 static int dataToBuffer(ReportImageMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(ReportImageMessage message);
 static void dataDestroy(ReportImageMessage message);
-static int dataSize(ReportImageMessage message);
+static unsigned int dataSize(ReportImageMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS
@@ -126,7 +126,7 @@ static int dataToBuffer(ReportImageMessage message, unsigned char *buffer, unsig
 	return index;
 }
 
-static int dataSize(ReportImageMessage message)
+static unsigned int dataSize(ReportImageMessage message)
 {
 	// Constant Size
 	return maxDataSizeBytes;

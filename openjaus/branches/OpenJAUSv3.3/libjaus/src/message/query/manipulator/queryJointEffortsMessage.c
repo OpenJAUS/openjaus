@@ -55,7 +55,7 @@ static JausBoolean dataFromBuffer(QueryJointEffortsMessage message, unsigned cha
 static int dataToBuffer(QueryJointEffortsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(QueryJointEffortsMessage message);
 static void dataDestroy(QueryJointEffortsMessage message);
-static int dataSize(QueryJointEffortsMessage message);
+static unsigned int dataSize(QueryJointEffortsMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS
@@ -146,7 +146,7 @@ static int dataToBuffer(QueryJointEffortsMessage message, unsigned char *buffer,
 }
 
 // Returns number of bytes put into the buffer
-static int dataSize(QueryJointEffortsMessage message)
+static unsigned int dataSize(QueryJointEffortsMessage message)
 {
 	int index = 0;
 

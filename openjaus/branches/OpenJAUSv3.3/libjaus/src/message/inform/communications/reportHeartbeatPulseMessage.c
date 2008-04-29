@@ -56,7 +56,7 @@ static JausBoolean headerToBuffer(ReportHeartbeatPulseMessage message, unsigned 
 static JausBoolean dataFromBuffer(ReportHeartbeatPulseMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static int dataToBuffer(ReportHeartbeatPulseMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(ReportHeartbeatPulseMessage message);
-static int dataSize(ReportHeartbeatPulseMessage message);
+static unsigned int dataSize(ReportHeartbeatPulseMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS
@@ -81,7 +81,7 @@ static int dataToBuffer(ReportHeartbeatPulseMessage message, unsigned char *buff
 	return 0;
 }
 
-static int dataSize(ReportHeartbeatPulseMessage message)
+static unsigned int dataSize(ReportHeartbeatPulseMessage message)
 {
 	// Constant Size
 	return maxDataSizeBytes;

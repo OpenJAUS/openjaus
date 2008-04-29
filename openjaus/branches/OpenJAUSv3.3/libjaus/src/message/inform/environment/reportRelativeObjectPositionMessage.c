@@ -55,7 +55,7 @@ static JausBoolean dataFromBuffer(ReportRelativeObjectPositionMessage message, u
 static int dataToBuffer(ReportRelativeObjectPositionMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(ReportRelativeObjectPositionMessage message);
 static void dataDestroy(ReportRelativeObjectPositionMessage message);
-static int dataSize(ReportRelativeObjectPositionMessage message);
+static unsigned int dataSize(ReportRelativeObjectPositionMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS
@@ -264,7 +264,7 @@ static int dataToBuffer(ReportRelativeObjectPositionMessage message, unsigned ch
 }
 
 // Returns number of bytes put into the buffer
-static int dataSize(ReportRelativeObjectPositionMessage message)
+static unsigned int dataSize(ReportRelativeObjectPositionMessage message)
 {
 	int index = 0;
 

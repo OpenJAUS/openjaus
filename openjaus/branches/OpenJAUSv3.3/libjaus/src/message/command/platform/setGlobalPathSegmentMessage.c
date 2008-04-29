@@ -56,7 +56,7 @@ static JausBoolean headerToBuffer(SetGlobalPathSegmentMessage message, unsigned 
 static JausBoolean dataFromBuffer(SetGlobalPathSegmentMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static int dataToBuffer(SetGlobalPathSegmentMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(SetGlobalPathSegmentMessage message);
-static int dataSize(SetGlobalPathSegmentMessage message);
+static unsigned int dataSize(SetGlobalPathSegmentMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS
@@ -216,7 +216,7 @@ static int dataToBuffer(SetGlobalPathSegmentMessage message, unsigned char *buff
 	return index;
 }
 
-static int dataSize(SetGlobalPathSegmentMessage message)
+static unsigned int dataSize(SetGlobalPathSegmentMessage message)
 {
 	int index = 0;
 

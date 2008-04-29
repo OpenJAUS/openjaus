@@ -55,7 +55,7 @@ static JausBoolean dataFromBuffer(SetEndEffectorPoseMessage message, unsigned ch
 static int dataToBuffer(SetEndEffectorPoseMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(SetEndEffectorPoseMessage message);
 static void dataDestroy(SetEndEffectorPoseMessage message);
-static int dataSize(SetEndEffectorPoseMessage message);
+static unsigned int dataSize(SetEndEffectorPoseMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS
@@ -175,7 +175,7 @@ static int dataToBuffer(SetEndEffectorPoseMessage message, unsigned char *buffer
 }
 
 // Returns number of bytes put into the buffer
-static int dataSize(SetEndEffectorPoseMessage message)
+static unsigned int dataSize(SetEndEffectorPoseMessage message)
 {
 	return maxDataSizeBytes;
 }

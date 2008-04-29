@@ -56,7 +56,7 @@ static JausBoolean headerToBuffer(ReportDiscreteDevicesMessage message, unsigned
 static JausBoolean dataFromBuffer(ReportDiscreteDevicesMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static int dataToBuffer(ReportDiscreteDevicesMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(ReportDiscreteDevicesMessage message);
-static int dataSize(ReportDiscreteDevicesMessage message);
+static unsigned int dataSize(ReportDiscreteDevicesMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS
@@ -206,7 +206,7 @@ static int dataToBuffer(ReportDiscreteDevicesMessage message, unsigned char *buf
 }
 
 // Returns number of bytes put into the buffer
-static int dataSize(ReportDiscreteDevicesMessage message)
+static unsigned int dataSize(ReportDiscreteDevicesMessage message)
 {
 	int index = 0;
 

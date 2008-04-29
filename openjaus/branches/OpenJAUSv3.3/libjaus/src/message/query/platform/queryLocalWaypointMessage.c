@@ -56,7 +56,7 @@ static JausBoolean headerToBuffer(QueryLocalWaypointMessage message, unsigned ch
 static JausBoolean dataFromBuffer(QueryLocalWaypointMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static int dataToBuffer(QueryLocalWaypointMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(QueryLocalWaypointMessage message);
-static int dataSize(QueryLocalWaypointMessage message);
+static unsigned int dataSize(QueryLocalWaypointMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS
@@ -103,7 +103,7 @@ static int dataToBuffer(QueryLocalWaypointMessage message, unsigned char *buffer
 	return index;
 }
 
-static int dataSize(QueryLocalWaypointMessage message)
+static unsigned int dataSize(QueryLocalWaypointMessage message)
 {
 	// Constant Size
 	return maxDataSizeBytes;

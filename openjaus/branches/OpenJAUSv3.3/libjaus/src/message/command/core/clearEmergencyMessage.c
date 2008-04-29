@@ -56,7 +56,7 @@ static JausBoolean headerToBuffer(ClearEmergencyMessage message, unsigned char *
 static JausBoolean dataFromBuffer(ClearEmergencyMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static int dataToBuffer(ClearEmergencyMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(ClearEmergencyMessage message);
-static int dataSize(ClearEmergencyMessage message);
+static unsigned int dataSize(ClearEmergencyMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS
@@ -109,7 +109,7 @@ static int dataToBuffer(ClearEmergencyMessage message, unsigned char *buffer, un
 	return index;
 }
 
-static int dataSize(ClearEmergencyMessage message)
+static unsigned int dataSize(ClearEmergencyMessage message)
 {
 	// Constant Size
 	return maxDataSizeBytes;

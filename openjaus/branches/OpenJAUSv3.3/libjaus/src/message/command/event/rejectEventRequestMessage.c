@@ -57,7 +57,7 @@ static JausBoolean dataFromBuffer(RejectEventRequestMessage message, unsigned ch
 static int dataToBuffer(RejectEventRequestMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(RejectEventRequestMessage message);
 static void dataDestroy(RejectEventRequestMessage message);
-static int dataSize(RejectEventRequestMessage message);
+static unsigned int dataSize(RejectEventRequestMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS
@@ -154,7 +154,7 @@ static int dataToBuffer(RejectEventRequestMessage message, unsigned char *buffer
 }
 
 // Returns number of bytes put into the buffer
-static int dataSize(RejectEventRequestMessage message)
+static unsigned int dataSize(RejectEventRequestMessage message)
 {
 	int index = 0;
 

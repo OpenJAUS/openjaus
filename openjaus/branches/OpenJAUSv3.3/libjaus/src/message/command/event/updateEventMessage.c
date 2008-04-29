@@ -57,7 +57,7 @@ static JausBoolean dataFromBuffer(UpdateEventMessage message, unsigned char *buf
 static int dataToBuffer(UpdateEventMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(UpdateEventMessage message);
 static void dataDestroy(UpdateEventMessage message);
-static int dataSize(UpdateEventMessage message);
+static unsigned int dataSize(UpdateEventMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS
@@ -304,7 +304,7 @@ static int dataToBuffer(UpdateEventMessage message, unsigned char *buffer, unsig
 }
 
 // Returns number of bytes put into the buffer
-static int dataSize(UpdateEventMessage message)
+static unsigned int dataSize(UpdateEventMessage message)
 {
 	int index = 0;
 

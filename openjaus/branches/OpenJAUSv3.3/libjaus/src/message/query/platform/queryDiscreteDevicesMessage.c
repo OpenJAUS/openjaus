@@ -56,7 +56,7 @@ static JausBoolean headerToBuffer(QueryDiscreteDevicesMessage message, unsigned 
 static JausBoolean dataFromBuffer(QueryDiscreteDevicesMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static int dataToBuffer(QueryDiscreteDevicesMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(QueryDiscreteDevicesMessage message);
-static int dataSize(QueryDiscreteDevicesMessage message);
+static unsigned int dataSize(QueryDiscreteDevicesMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS
@@ -103,7 +103,7 @@ static int dataToBuffer(QueryDiscreteDevicesMessage message, unsigned char *buff
 	return index;
 }
 
-static int dataSize(QueryDiscreteDevicesMessage message)
+static unsigned int dataSize(QueryDiscreteDevicesMessage message)
 {
 	// Constant Size
 	return maxDataSizeBytes;

@@ -55,7 +55,7 @@ static JausBoolean dataFromBuffer(ReportVksObjectsCreationMessage message, unsig
 static int dataToBuffer(ReportVksObjectsCreationMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(ReportVksObjectsCreationMessage message);
 static void dataDestroy(ReportVksObjectsCreationMessage message);
-static int dataSize(ReportVksObjectsCreationMessage message);
+static unsigned int dataSize(ReportVksObjectsCreationMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS
@@ -139,7 +139,7 @@ static int dataToBuffer(ReportVksObjectsCreationMessage message, unsigned char *
 	return index;
 }
 
-static int dataSize(ReportVksObjectsCreationMessage message)
+static unsigned int dataSize(ReportVksObjectsCreationMessage message)
 {
 	int index = 0;
 	unsigned short i = 0;

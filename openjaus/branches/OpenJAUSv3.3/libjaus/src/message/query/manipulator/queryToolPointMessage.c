@@ -55,7 +55,7 @@ static JausBoolean dataFromBuffer(QueryToolPointMessage message, unsigned char *
 static int dataToBuffer(QueryToolPointMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(QueryToolPointMessage message);
 static void dataDestroy(QueryToolPointMessage message);
-static int dataSize(QueryToolPointMessage message);
+static unsigned int dataSize(QueryToolPointMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS
@@ -146,7 +146,7 @@ static int dataToBuffer(QueryToolPointMessage message, unsigned char *buffer, un
 }
 
 // Returns number of bytes put into the buffer
-static int dataSize(QueryToolPointMessage message)
+static unsigned int dataSize(QueryToolPointMessage message)
 {
 	int index = 0;
 

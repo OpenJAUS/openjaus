@@ -55,7 +55,7 @@ static JausBoolean dataFromBuffer(ReportToolPointMessage message, unsigned char 
 static int dataToBuffer(ReportToolPointMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(ReportToolPointMessage message);
 static void dataDestroy(ReportToolPointMessage message);
-static int dataSize(ReportToolPointMessage message);
+static unsigned int dataSize(ReportToolPointMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS
@@ -135,7 +135,7 @@ static int dataToBuffer(ReportToolPointMessage message, unsigned char *buffer, u
 }
 
 // Returns number of bytes put into the buffer
-static int dataSize(ReportToolPointMessage message)
+static unsigned int dataSize(ReportToolPointMessage message)
 {
 	return maxDataSizeBytes;
 }

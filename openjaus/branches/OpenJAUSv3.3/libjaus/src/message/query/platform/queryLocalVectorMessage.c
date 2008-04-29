@@ -56,7 +56,7 @@ static JausBoolean headerToBuffer(QueryLocalVectorMessage message, unsigned char
 static JausBoolean dataFromBuffer(QueryLocalVectorMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static int dataToBuffer(QueryLocalVectorMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(QueryLocalVectorMessage message);
-static int dataSize(QueryLocalVectorMessage message);
+static unsigned int dataSize(QueryLocalVectorMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS
@@ -89,7 +89,7 @@ static int dataToBuffer(QueryLocalVectorMessage message, unsigned char *buffer, 
 	return index;
 }
 
-static int dataSize(QueryLocalVectorMessage message)
+static unsigned int dataSize(QueryLocalVectorMessage message)
 {
 	// Constant Size
 	return maxDataSizeBytes;

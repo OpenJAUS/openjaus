@@ -56,7 +56,7 @@ static JausBoolean headerToBuffer(RejectComponentControlMessage message, unsigne
 static JausBoolean dataFromBuffer(RejectComponentControlMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static int dataToBuffer(RejectComponentControlMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(RejectComponentControlMessage message);
-static int dataSize(RejectComponentControlMessage message);
+static unsigned int dataSize(RejectComponentControlMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS
@@ -99,7 +99,7 @@ static int dataToBuffer(RejectComponentControlMessage message, unsigned char *bu
 	return index;
 }
 
-static int dataSize(RejectComponentControlMessage message)
+static unsigned int dataSize(RejectComponentControlMessage message)
 {
 	// Constant Size
 	return maxDataSizeBytes;

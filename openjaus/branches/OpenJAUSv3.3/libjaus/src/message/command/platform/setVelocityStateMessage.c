@@ -57,7 +57,7 @@ static JausBoolean dataFromBuffer(SetVelocityStateMessage message, unsigned char
 static int dataToBuffer(SetVelocityStateMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(SetVelocityStateMessage message);
 static void dataDestroy(SetVelocityStateMessage message);
-static int dataSize(SetVelocityStateMessage message);
+static unsigned int dataSize(SetVelocityStateMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS
@@ -303,7 +303,7 @@ static int dataToBuffer(SetVelocityStateMessage message, unsigned char *buffer, 
 	return index;
 }
 
-static int dataSize(SetVelocityStateMessage message)
+static unsigned int dataSize(SetVelocityStateMessage message)
 {
 	int index = 0;
 

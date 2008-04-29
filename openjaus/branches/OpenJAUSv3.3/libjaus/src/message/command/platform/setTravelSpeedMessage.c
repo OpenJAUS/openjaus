@@ -56,7 +56,7 @@ static JausBoolean headerToBuffer(SetTravelSpeedMessage message, unsigned char *
 static JausBoolean dataFromBuffer(SetTravelSpeedMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static int dataToBuffer(SetTravelSpeedMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(SetTravelSpeedMessage message);
-static int dataSize(SetTravelSpeedMessage message);
+static unsigned int dataSize(SetTravelSpeedMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS
@@ -113,7 +113,7 @@ static int dataToBuffer(SetTravelSpeedMessage message, unsigned char *buffer, un
 	return index;
 }
 
-static int dataSize(SetTravelSpeedMessage message)
+static unsigned int dataSize(SetTravelSpeedMessage message)
 {
 	// Constant Size
 	return maxDataSizeBytes;

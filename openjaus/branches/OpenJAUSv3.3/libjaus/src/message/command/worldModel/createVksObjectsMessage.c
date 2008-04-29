@@ -55,7 +55,7 @@ static JausBoolean dataFromBuffer(CreateVksObjectsMessage message, unsigned char
 static int dataToBuffer(CreateVksObjectsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(CreateVksObjectsMessage message);
 static void dataDestroy(CreateVksObjectsMessage message);
-static int dataSize(CreateVksObjectsMessage message);
+static unsigned int dataSize(CreateVksObjectsMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS
@@ -166,7 +166,7 @@ static int dataToBuffer(CreateVksObjectsMessage message, unsigned char *buffer, 
 }
 
 // Returns number of bytes put into the buffer
-static int dataSize(CreateVksObjectsMessage message)
+static unsigned int dataSize(CreateVksObjectsMessage message)
 {
 	int index = 0;
 	int i = 0;
