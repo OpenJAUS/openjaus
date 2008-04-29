@@ -56,7 +56,7 @@ static JausBoolean headerToBuffer(QueryComponentControlMessage message, unsigned
 static JausBoolean dataFromBuffer(QueryComponentControlMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static int dataToBuffer(QueryComponentControlMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(QueryComponentControlMessage message);
-static int dataSize(QueryComponentControlMessage message);
+static unsigned int dataSize(QueryComponentControlMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS
@@ -100,7 +100,7 @@ static int dataToBuffer(QueryComponentControlMessage message, unsigned char *buf
 	return index;
 }
 
-static int dataSize(QueryComponentControlMessage message)
+static unsigned int dataSize(QueryComponentControlMessage message)
 {
 	// Constant Size
 	return maxDataSizeBytes;
@@ -256,8 +256,8 @@ JausMessage queryComponentControlMessageToJausMessage(QueryComponentControlMessa
 	jausMessage->dataFlag = message->dataFlag;
 	jausMessage->sequenceNumber = message->sequenceNumber;
 	
-	jausMessage->data = (unsigned char *)malloc(message->dataSize);
-	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, message->dataSize);
+	jausMessage->data = (unsigned char *)malloc(jausMessage->dataSize);
+	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, jausMessage->dataSize);
 	
 	return jausMessage;
 }
