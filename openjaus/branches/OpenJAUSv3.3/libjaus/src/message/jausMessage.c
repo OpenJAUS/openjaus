@@ -137,7 +137,7 @@ JausBoolean jausMessageFromBuffer(JausMessage message, unsigned char *buffer, un
 		}
 		else
 		{
-			message->data = (unsigned char*) malloc(message->dataSize);
+			message->data = (unsigned char*) malloc(jausMessage->dataSize);
 			memcpy(message->data, buffer+index, message->dataSize);
 			return JAUS_TRUE;
 		}

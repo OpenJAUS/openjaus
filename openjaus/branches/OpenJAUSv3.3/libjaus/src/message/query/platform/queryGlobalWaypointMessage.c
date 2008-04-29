@@ -259,8 +259,8 @@ JausMessage queryGlobalWaypointMessageToJausMessage(QueryGlobalWaypointMessage m
 	jausMessage->dataFlag = message->dataFlag;
 	jausMessage->sequenceNumber = message->sequenceNumber;
 	
-	jausMessage->data = (unsigned char *)malloc(message->dataSize);
-	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, message->dataSize);
+	jausMessage->data = (unsigned char *)malloc(jausMessage->dataSize);
+	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, jausMessage->dataSize);
 	
 	return jausMessage;
 }
