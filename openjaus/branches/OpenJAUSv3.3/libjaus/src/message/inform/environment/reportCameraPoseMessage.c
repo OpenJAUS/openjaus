@@ -55,7 +55,7 @@ static JausBoolean dataFromBuffer(ReportCameraPoseMessage message, unsigned char
 static int dataToBuffer(ReportCameraPoseMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(ReportCameraPoseMessage message);
 static void dataDestroy(ReportCameraPoseMessage message);
-static int dataSize(ReportCameraPoseMessage message);
+static unsigned int dataSize(ReportCameraPoseMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS
@@ -333,7 +333,7 @@ static int dataToBuffer(ReportCameraPoseMessage message, unsigned char *buffer, 
 }
 
 // Returns number of bytes put into the buffer
-static int dataSize(ReportCameraPoseMessage message)
+static unsigned int dataSize(ReportCameraPoseMessage message)
 {
 	int index = 0;
 

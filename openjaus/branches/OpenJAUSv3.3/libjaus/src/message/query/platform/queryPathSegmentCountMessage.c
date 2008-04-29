@@ -56,7 +56,7 @@ static JausBoolean headerToBuffer(QueryPathSegmentCountMessage message, unsigned
 static JausBoolean dataFromBuffer(QueryPathSegmentCountMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static int dataToBuffer(QueryPathSegmentCountMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(QueryPathSegmentCountMessage message);
-static int dataSize(QueryPathSegmentCountMessage message);
+static unsigned int dataSize(QueryPathSegmentCountMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS
@@ -100,7 +100,7 @@ static int dataToBuffer(QueryPathSegmentCountMessage message, unsigned char *buf
 	return index;
 }
 
-static int dataSize(QueryPathSegmentCountMessage message)
+static unsigned int dataSize(QueryPathSegmentCountMessage message)
 {
 	// Constant Size
 	return maxDataSizeBytes;

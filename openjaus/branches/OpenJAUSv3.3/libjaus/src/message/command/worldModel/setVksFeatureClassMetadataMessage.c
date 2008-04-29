@@ -55,7 +55,7 @@ static JausBoolean dataFromBuffer(SetVksFeatureClassMetadataMessage message, uns
 static int dataToBuffer(SetVksFeatureClassMetadataMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(SetVksFeatureClassMetadataMessage message);
 static void dataDestroy(SetVksFeatureClassMetadataMessage message);
-static int dataSize(SetVksFeatureClassMetadataMessage message);
+static unsigned int dataSize(SetVksFeatureClassMetadataMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS
@@ -170,7 +170,7 @@ static int dataToBuffer(SetVksFeatureClassMetadataMessage message, unsigned char
 }
 
 // Returns number of bytes put into the buffer
-static int dataSize(SetVksFeatureClassMetadataMessage message)
+static unsigned int dataSize(SetVksFeatureClassMetadataMessage message)
 {
 	int index = 0;
 

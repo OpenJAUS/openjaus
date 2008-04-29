@@ -56,7 +56,7 @@ static JausBoolean headerToBuffer(CreateServiceConnectionMessage message, unsign
 static JausBoolean dataFromBuffer(CreateServiceConnectionMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static int dataToBuffer(CreateServiceConnectionMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(CreateServiceConnectionMessage message);
-static int dataSize(CreateServiceConnectionMessage message);
+static unsigned int dataSize(CreateServiceConnectionMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS
@@ -126,7 +126,7 @@ static int dataToBuffer(CreateServiceConnectionMessage message, unsigned char *b
 	return index;
 }
 
-static int dataSize(CreateServiceConnectionMessage message)
+static unsigned int dataSize(CreateServiceConnectionMessage message)
 {
 	// Constant Size
 	return maxDataSizeBytes;

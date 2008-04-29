@@ -56,7 +56,7 @@ static JausBoolean headerToBuffer(QueryPlatformOperationalDataMessage message, u
 static JausBoolean dataFromBuffer(QueryPlatformOperationalDataMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static int dataToBuffer(QueryPlatformOperationalDataMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(QueryPlatformOperationalDataMessage message);
-static int dataSize(QueryPlatformOperationalDataMessage message);
+static unsigned int dataSize(QueryPlatformOperationalDataMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS
@@ -103,7 +103,7 @@ static int dataToBuffer(QueryPlatformOperationalDataMessage message, unsigned ch
 	return index;
 }
 
-static int dataSize(QueryPlatformOperationalDataMessage message)
+static unsigned int dataSize(QueryPlatformOperationalDataMessage message)
 {
 	// Constant Size
 	return maxDataSizeBytes;

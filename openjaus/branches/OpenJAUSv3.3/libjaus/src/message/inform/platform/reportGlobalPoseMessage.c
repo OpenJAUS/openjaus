@@ -57,7 +57,7 @@ static JausBoolean dataFromBuffer(ReportGlobalPoseMessage message, unsigned char
 static int dataToBuffer(ReportGlobalPoseMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(ReportGlobalPoseMessage message);
 static void dataDestroy(ReportGlobalPoseMessage message);
-static int dataSize(ReportGlobalPoseMessage message);
+static unsigned int dataSize(ReportGlobalPoseMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS
@@ -306,7 +306,7 @@ static int dataToBuffer(ReportGlobalPoseMessage message, unsigned char *buffer, 
 }
 
 // Returns number of bytes put into the buffer
-static int dataSize(ReportGlobalPoseMessage message)
+static unsigned int dataSize(ReportGlobalPoseMessage message)
 {
 	int index = 0;
 

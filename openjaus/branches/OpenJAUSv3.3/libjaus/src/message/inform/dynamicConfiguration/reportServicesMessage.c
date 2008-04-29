@@ -55,7 +55,7 @@ static JausBoolean dataFromBuffer(ReportServicesMessage message, unsigned char *
 static int dataToBuffer(ReportServicesMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(ReportServicesMessage message);
 static void dataDestroy(ReportServicesMessage message);
-static int dataSize(ReportServicesMessage message);
+static unsigned int dataSize(ReportServicesMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS
@@ -219,7 +219,7 @@ static int dataToBuffer(ReportServicesMessage message, unsigned char *buffer, un
 }
 
 // Returns number of bytes put into the buffer
-static int dataSize(ReportServicesMessage message)
+static unsigned int dataSize(ReportServicesMessage message)
 {
 	int index = 0;
 	int i = 0;

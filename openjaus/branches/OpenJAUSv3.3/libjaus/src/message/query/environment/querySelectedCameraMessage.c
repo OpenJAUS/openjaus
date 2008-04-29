@@ -55,7 +55,7 @@ static JausBoolean dataFromBuffer(QuerySelectedCameraMessage message, unsigned c
 static int dataToBuffer(QuerySelectedCameraMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(QuerySelectedCameraMessage message);
 static void dataDestroy(QuerySelectedCameraMessage message);
-static int dataSize(QuerySelectedCameraMessage message);
+static unsigned int dataSize(QuerySelectedCameraMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS
@@ -102,7 +102,7 @@ static int dataToBuffer(QuerySelectedCameraMessage message, unsigned char *buffe
 }
 
 // Returns number of bytes put into the buffer
-static int dataSize(QuerySelectedCameraMessage message)
+static unsigned int dataSize(QuerySelectedCameraMessage message)
 {
 	return maxDataSizeBytes;
 }

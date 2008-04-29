@@ -56,7 +56,7 @@ static JausBoolean headerToBuffer(ReportPathSegmentCountMessage message, unsigne
 static JausBoolean dataFromBuffer(ReportPathSegmentCountMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static int dataToBuffer(ReportPathSegmentCountMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(ReportPathSegmentCountMessage message);
-static int dataSize(ReportPathSegmentCountMessage message);
+static unsigned int dataSize(ReportPathSegmentCountMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS
@@ -103,7 +103,7 @@ static int dataToBuffer(ReportPathSegmentCountMessage message, unsigned char *bu
 	return index;
 }
 
-static int dataSize(ReportPathSegmentCountMessage message)
+static unsigned int dataSize(ReportPathSegmentCountMessage message)
 {
 	// Constant Size
 	return maxDataSizeBytes;

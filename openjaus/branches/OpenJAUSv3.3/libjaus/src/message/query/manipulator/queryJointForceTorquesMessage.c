@@ -55,7 +55,7 @@ static JausBoolean dataFromBuffer(QueryJointForceTorquesMessage message, unsigne
 static int dataToBuffer(QueryJointForceTorquesMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(QueryJointForceTorquesMessage message);
 static void dataDestroy(QueryJointForceTorquesMessage message);
-static int dataSize(QueryJointForceTorquesMessage message);
+static unsigned int dataSize(QueryJointForceTorquesMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS
@@ -146,7 +146,7 @@ static int dataToBuffer(QueryJointForceTorquesMessage message, unsigned char *bu
 }
 
 // Returns number of bytes put into the buffer
-static int dataSize(QueryJointForceTorquesMessage message)
+static unsigned int dataSize(QueryJointForceTorquesMessage message)
 {
 	int index = 0;
 

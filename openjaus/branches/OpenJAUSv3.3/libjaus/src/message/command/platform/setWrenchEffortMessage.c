@@ -56,7 +56,7 @@ static JausBoolean headerToBuffer(SetWrenchEffortMessage message, unsigned char 
 static JausBoolean dataFromBuffer(SetWrenchEffortMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static int dataToBuffer(SetWrenchEffortMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(SetWrenchEffortMessage message);
-static int dataSize(SetWrenchEffortMessage message);
+static unsigned int dataSize(SetWrenchEffortMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS
@@ -364,7 +364,7 @@ static int dataToBuffer(SetWrenchEffortMessage message, unsigned char *buffer, u
 	return index;
 }
 
-static int dataSize(SetWrenchEffortMessage message)
+static unsigned int dataSize(SetWrenchEffortMessage message)
 {
 	int index = 0;
 	

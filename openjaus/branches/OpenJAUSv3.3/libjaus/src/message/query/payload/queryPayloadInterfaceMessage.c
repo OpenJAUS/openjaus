@@ -54,7 +54,7 @@ static JausBoolean headerToBuffer(QueryPayloadInterfaceMessage message, unsigned
 static JausBoolean dataFromBuffer(QueryPayloadInterfaceMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static int dataToBuffer(QueryPayloadInterfaceMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(QueryPayloadInterfaceMessage message);
-static int dataSize(QueryPayloadInterfaceMessage message);
+static unsigned int dataSize(QueryPayloadInterfaceMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS
@@ -97,7 +97,7 @@ static int dataToBuffer(QueryPayloadInterfaceMessage message, unsigned char *buf
 	return index;
 }
 
-static int dataSize(QueryPayloadInterfaceMessage message)
+static unsigned int dataSize(QueryPayloadInterfaceMessage message)
 {
 	// Constant Size
 	return maxDataSizeBytes;

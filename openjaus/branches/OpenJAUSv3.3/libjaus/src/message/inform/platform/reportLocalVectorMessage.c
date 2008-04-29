@@ -56,7 +56,7 @@ static JausBoolean headerToBuffer(ReportLocalVectorMessage message, unsigned cha
 static JausBoolean dataFromBuffer(ReportLocalVectorMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static int dataToBuffer(ReportLocalVectorMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(ReportLocalVectorMessage message);
-static int dataSize(ReportLocalVectorMessage message);
+static unsigned int dataSize(ReportLocalVectorMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS
@@ -129,7 +129,7 @@ static int dataToBuffer(ReportLocalVectorMessage message, unsigned char *buffer,
 	return index;
 }
 
-static int dataSize(ReportLocalVectorMessage message)
+static unsigned int dataSize(ReportLocalVectorMessage message)
 {
 	int index = 0;
 

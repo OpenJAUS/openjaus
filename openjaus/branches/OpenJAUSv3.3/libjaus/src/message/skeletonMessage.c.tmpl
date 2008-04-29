@@ -55,6 +55,7 @@ static JausBoolean dataFromBuffer(XxXxMessage message, unsigned char *buffer, un
 static int dataToBuffer(XxXxMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(XxXxMessage message);
 static void dataDestroy(XxXxMessage message);
+static unsigned int dataSize(XxXxMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS
@@ -122,7 +123,7 @@ static int dataToBuffer(XxXxMessage message, unsigned char *buffer, unsigned int
 {
 	int index = 0;
 
-	if(bufferSizeBytes >= message->dataSize)
+	if(bufferSizeBytes >= dataSize(message))
 	{
 		// Pack Message Fields to Buffer
 		
@@ -147,7 +148,7 @@ static int dataToBuffer(XxXxMessage message, unsigned char *buffer, unsigned int
 }
 
 // Returns number of bytes put into the buffer
-static int dataSize(XxXxMessage message)
+static unsigned int dataSize(XxXxMessage message)
 {
 	int index = 0;
 
@@ -314,12 +315,12 @@ JausMessage xXXXMessageToJausMessage(XxXxMessage message)
 	*jausMessage->destination = *message->destination;
 	jausMessage->source = jausAddressCreate();
 	*jausMessage->source = *message->source;
+	jausMessage->dataSize = dataSize(message);
 	jausMessage->dataFlag = message->dataFlag;
 	jausMessage->sequenceNumber = message->sequenceNumber;
 	
-	size = dataSize(message);
-	jausMessage->data = (unsigned char *)malloc(size);
-	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, size);
+	jausMessage->data = (unsigned char *)malloc(message->dataSize);
+	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, message->dataSize);
 	
 	return jausMessage;
 }

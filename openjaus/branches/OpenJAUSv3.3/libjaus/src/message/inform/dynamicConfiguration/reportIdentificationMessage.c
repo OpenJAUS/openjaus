@@ -56,7 +56,7 @@ static JausBoolean headerToBuffer(ReportIdentificationMessage message, unsigned 
 static JausBoolean dataFromBuffer(ReportIdentificationMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static int dataToBuffer(ReportIdentificationMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(ReportIdentificationMessage message);
-static int dataSize(ReportIdentificationMessage message);
+static unsigned int dataSize(ReportIdentificationMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS
@@ -139,7 +139,7 @@ static int dataToBuffer(ReportIdentificationMessage message, unsigned char *buff
 	return index;
 }
 
-static int dataSize(ReportIdentificationMessage message)
+static unsigned int dataSize(ReportIdentificationMessage message)
 {
 	// Constant Size
 	return maxDataSizeBytes;

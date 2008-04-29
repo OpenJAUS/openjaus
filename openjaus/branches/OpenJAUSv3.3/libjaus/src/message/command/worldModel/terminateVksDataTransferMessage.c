@@ -55,7 +55,7 @@ static JausBoolean dataFromBuffer(TerminateVksDataTransferMessage message, unsig
 static int dataToBuffer(TerminateVksDataTransferMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(TerminateVksDataTransferMessage message);
 static void dataDestroy(TerminateVksDataTransferMessage message);
-static int dataSize(TerminateVksDataTransferMessage message);
+static unsigned int dataSize(TerminateVksDataTransferMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS
@@ -104,7 +104,7 @@ static int dataToBuffer(TerminateVksDataTransferMessage message, unsigned char *
 }
 
 // Returns number of bytes put into the buffer
-static int dataSize(TerminateVksDataTransferMessage message)
+static unsigned int dataSize(TerminateVksDataTransferMessage message)
 {
 	return maxDataSizeBytes;
 }

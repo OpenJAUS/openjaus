@@ -55,7 +55,7 @@ static JausBoolean dataFromBuffer(SetEndEffectorPathMotionMessage message, unsig
 static int dataToBuffer(SetEndEffectorPathMotionMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(SetEndEffectorPathMotionMessage message);
 static void dataDestroy(SetEndEffectorPathMotionMessage message);
-static int dataSize(SetEndEffectorPathMotionMessage message);
+static unsigned int dataSize(SetEndEffectorPathMotionMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS
@@ -247,7 +247,7 @@ static int dataToBuffer(SetEndEffectorPathMotionMessage message, unsigned char *
 }
 
 // Returns number of bytes put into the buffer
-static int dataSize(SetEndEffectorPathMotionMessage message)
+static unsigned int dataSize(SetEndEffectorPathMotionMessage message)
 {
 	int index = 0;
 

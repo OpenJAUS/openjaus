@@ -55,7 +55,7 @@ static JausBoolean dataFromBuffer(QueryJointPositionsMessage message, unsigned c
 static int dataToBuffer(QueryJointPositionsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(QueryJointPositionsMessage message);
 static void dataDestroy(QueryJointPositionsMessage message);
-static int dataSize(QueryJointPositionsMessage message);
+static unsigned int dataSize(QueryJointPositionsMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS
@@ -146,7 +146,7 @@ static int dataToBuffer(QueryJointPositionsMessage message, unsigned char *buffe
 }
 
 // Returns number of bytes put into the buffer
-static int dataSize(QueryJointPositionsMessage message)
+static unsigned int dataSize(QueryJointPositionsMessage message)
 {
 	int index = 0;
 

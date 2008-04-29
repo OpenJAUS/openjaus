@@ -56,7 +56,7 @@ static JausBoolean headerToBuffer(SetComponentAuthorityMessage message, unsigned
 static JausBoolean dataFromBuffer(SetComponentAuthorityMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static int dataToBuffer(SetComponentAuthorityMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(SetComponentAuthorityMessage message);
-static int dataSize(SetComponentAuthorityMessage message);
+static unsigned int dataSize(SetComponentAuthorityMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS
@@ -102,7 +102,7 @@ static int dataToBuffer(SetComponentAuthorityMessage message, unsigned char *buf
 	return index;
 }
 
-static int dataSize(SetComponentAuthorityMessage message)
+static unsigned int dataSize(SetComponentAuthorityMessage message)
 {
 	// Constant Size
 	return maxDataSizeBytes;

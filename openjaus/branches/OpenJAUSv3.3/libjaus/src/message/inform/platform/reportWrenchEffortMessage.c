@@ -56,7 +56,7 @@ static JausBoolean headerToBuffer(ReportWrenchEffortMessage message, unsigned ch
 static JausBoolean dataFromBuffer(ReportWrenchEffortMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static int dataToBuffer(ReportWrenchEffortMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(ReportWrenchEffortMessage message);
-static int dataSize(ReportWrenchEffortMessage message);
+static unsigned int dataSize(ReportWrenchEffortMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS
@@ -364,7 +364,7 @@ static int dataToBuffer(ReportWrenchEffortMessage message, unsigned char *buffer
 }
 
 // Returns number of bytes put into the buffer
-static int dataSize(ReportWrenchEffortMessage message)
+static unsigned int dataSize(ReportWrenchEffortMessage message)
 {
 	int index = 0;
 

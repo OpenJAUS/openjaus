@@ -56,7 +56,7 @@ static JausBoolean dataFromBuffer(QueryPayloadDataElementMessage message, unsign
 static int dataToBuffer(QueryPayloadDataElementMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(QueryPayloadDataElementMessage message);
 static void dataDestroy(QueryPayloadDataElementMessage message);
-static int dataSize(QueryPayloadDataElementMessage message);
+static unsigned int dataSize(QueryPayloadDataElementMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS
@@ -148,7 +148,7 @@ static int dataToBuffer(QueryPayloadDataElementMessage message, unsigned char *b
 }
 
 // Returns number of bytes put into the buffer
-static int dataSize(QueryPayloadDataElementMessage message)
+static unsigned int dataSize(QueryPayloadDataElementMessage message)
 {
 	int index = 0;
 	int i = 0;

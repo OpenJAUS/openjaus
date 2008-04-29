@@ -56,7 +56,7 @@ static JausBoolean headerToBuffer(ReportComponentAuthorityMessage message, unsig
 static JausBoolean dataFromBuffer(ReportComponentAuthorityMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static int dataToBuffer(ReportComponentAuthorityMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(ReportComponentAuthorityMessage message);
-static int dataSize(ReportComponentAuthorityMessage message);
+static unsigned int dataSize(ReportComponentAuthorityMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS
@@ -77,7 +77,7 @@ int index = 0;
 	if(bufferSizeBytes == message->dataSize)
 	{
 		// Unpack Message Fields from Buffer
-		if(!jausByteFromBuffer( &(message->authorityCode), buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		if(!jausByteFromBuffer(&message->authorityCode, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
 		
 		return JAUS_TRUE;
@@ -93,7 +93,7 @@ static int dataToBuffer(ReportComponentAuthorityMessage message, unsigned char *
 	if(bufferSizeBytes >= dataSize(message))
 	{
 		// Pack Message Fields to Buffer
-		if(!jausByteFromBuffer( &(message->authorityCode), buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		if(!jausByteToBuffer(message->authorityCode, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
 
 	}
@@ -101,7 +101,7 @@ static int dataToBuffer(ReportComponentAuthorityMessage message, unsigned char *
 	return index;
 }
 
-static int dataSize(ReportComponentAuthorityMessage message)
+static unsigned int dataSize(ReportComponentAuthorityMessage message)
 {
 	// Constant Size
 	return maxDataSizeBytes;

@@ -55,7 +55,7 @@ static JausBoolean dataFromBuffer(SetDataLinkStatusMessage message, unsigned cha
 static int dataToBuffer(SetDataLinkStatusMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(SetDataLinkStatusMessage message);
 static void dataDestroy(SetDataLinkStatusMessage message);
-static int dataSize(SetDataLinkStatusMessage message);
+static unsigned int dataSize(SetDataLinkStatusMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS
@@ -114,7 +114,7 @@ static int dataToBuffer(SetDataLinkStatusMessage message, unsigned char *buffer,
 }
 
 // Returns number of bytes put into the buffer
-static int dataSize(SetDataLinkStatusMessage message)
+static unsigned int dataSize(SetDataLinkStatusMessage message)
 {
 	return maxDataSizeBytes;
 }

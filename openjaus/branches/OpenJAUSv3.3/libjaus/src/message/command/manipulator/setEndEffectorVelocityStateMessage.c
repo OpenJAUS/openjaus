@@ -55,7 +55,7 @@ static JausBoolean dataFromBuffer(SetEndEffectorVelocityStateMessage message, un
 static int dataToBuffer(SetEndEffectorVelocityStateMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(SetEndEffectorVelocityStateMessage message);
 static void dataDestroy(SetEndEffectorVelocityStateMessage message);
-static int dataSize(SetEndEffectorVelocityStateMessage message);
+static unsigned int dataSize(SetEndEffectorVelocityStateMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS
@@ -174,7 +174,7 @@ static int dataToBuffer(SetEndEffectorVelocityStateMessage message, unsigned cha
 }
 
 // Returns number of bytes put into the buffer
-static int dataSize(SetEndEffectorVelocityStateMessage message)
+static unsigned int dataSize(SetEndEffectorVelocityStateMessage message)
 {
 	return maxDataSizeBytes;
 }

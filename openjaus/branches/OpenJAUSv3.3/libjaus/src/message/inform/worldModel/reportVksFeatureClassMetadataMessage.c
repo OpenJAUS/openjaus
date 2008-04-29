@@ -55,7 +55,7 @@ static JausBoolean dataFromBuffer(ReportVksFeatureClassMetadataMessage message, 
 static int dataToBuffer(ReportVksFeatureClassMetadataMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(ReportVksFeatureClassMetadataMessage message);
 static void dataDestroy(ReportVksFeatureClassMetadataMessage message);
-static int dataSize(ReportVksFeatureClassMetadataMessage message);
+static unsigned int dataSize(ReportVksFeatureClassMetadataMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS
@@ -131,7 +131,7 @@ static int dataToBuffer(ReportVksFeatureClassMetadataMessage message, unsigned c
 	return index;
 }
 
-static int dataSize(ReportVksFeatureClassMetadataMessage message)
+static unsigned int dataSize(ReportVksFeatureClassMetadataMessage message)
 {
 	int index = 0;
 	JausUnsignedShort stringLength;

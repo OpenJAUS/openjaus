@@ -56,7 +56,7 @@ static JausBoolean headerToBuffer(ReportPlatformOperationalDataMessage message, 
 static JausBoolean dataFromBuffer(ReportPlatformOperationalDataMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static int dataToBuffer(ReportPlatformOperationalDataMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(ReportPlatformOperationalDataMessage message);
-static int dataSize(ReportPlatformOperationalDataMessage message);
+static unsigned int dataSize(ReportPlatformOperationalDataMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS
@@ -207,7 +207,7 @@ static int dataToBuffer(ReportPlatformOperationalDataMessage message, unsigned c
 }
 
 // Returns number of bytes put into the buffer
-static int dataSize(ReportPlatformOperationalDataMessage message)
+static unsigned int dataSize(ReportPlatformOperationalDataMessage message)
 {
 	int index = 0;
 

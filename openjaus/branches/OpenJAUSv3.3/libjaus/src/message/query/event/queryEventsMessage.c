@@ -55,7 +55,7 @@ static JausBoolean dataFromBuffer(QueryEventsMessage message, unsigned char *buf
 static int dataToBuffer(QueryEventsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(QueryEventsMessage message);
 static void dataDestroy(QueryEventsMessage message);
-static int dataSize(QueryEventsMessage message);
+static unsigned int dataSize(QueryEventsMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS
@@ -153,7 +153,7 @@ static int dataToBuffer(QueryEventsMessage message, unsigned char *buffer, unsig
 	return index;
 }
 
-static int dataSize(QueryEventsMessage message)
+static unsigned int dataSize(QueryEventsMessage message)
 {
 	int size = 0;
 	

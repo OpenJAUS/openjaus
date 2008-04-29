@@ -56,7 +56,7 @@ static JausBoolean headerToBuffer(QueryTimeMessage message, unsigned char *buffe
 static JausBoolean dataFromBuffer(QueryTimeMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static int dataToBuffer(QueryTimeMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static void dataInitialize(QueryTimeMessage message);
-static int dataSize(QueryTimeMessage message);
+static unsigned int dataSize(QueryTimeMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS
@@ -103,7 +103,7 @@ static int dataToBuffer(QueryTimeMessage message, unsigned char *buffer, unsigne
 	return index;
 }
 
-static int dataSize(QueryTimeMessage message)
+static unsigned int dataSize(QueryTimeMessage message)
 {
 	// Constant Size
 	return maxDataSizeBytes;
