@@ -83,7 +83,7 @@ static void dataInitialize(ReportVelocityStateMessage message)
 static void dataDestroy(ReportVelocityStateMessage message)
 {
 	// Free message fields
-	jausTimeDestroy(message->time);
+	if(message->time) jausTimeDestroy(message->time);
 }
 
 // Return boolean of success
@@ -185,6 +185,9 @@ static JausBoolean dataFromBuffer(ReportVelocityStateMessage message, unsigned c
 
 		if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_VELOCITY_PV_TIME_STAMP_BIT))
 		{
+			message->time = jausTimeCreate();
+			if(!message->time) return JAUS_FALSE;
+			
 			//unpack
 			if(!jausTimeStampFromBuffer(message->time,  buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 			index += JAUS_TIME_STAMP_SIZE_BYTES;

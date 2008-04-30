@@ -83,7 +83,7 @@ static void dataInitialize(ReportLocalPoseMessage message)
 static void dataDestroy(ReportLocalPoseMessage message)
 {
 	// Free message fields
-	jausTimeDestroy(message->time);
+	if(message->time) jausTimeDestroy(message->time);
 }
 
 // Return boolean of success
@@ -184,10 +184,18 @@ static JausBoolean dataFromBuffer(ReportLocalPoseMessage message, unsigned char 
 		
 		if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_LOCAL_POSE_PV_TIME_STAMP_BIT))
 		{
+			message->time = jausTimeCreate();
+			if(!message->time) return JAUS_FALSE;
+
 			//unpack
 			if(!jausTimeStampFromBuffer(message->time,  buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 			index += JAUS_TIME_STAMP_SIZE_BYTES;
 		}
+		else
+		{
+			message->time = NULL;
+		}
+
 		return JAUS_TRUE;
 	}
 	else
