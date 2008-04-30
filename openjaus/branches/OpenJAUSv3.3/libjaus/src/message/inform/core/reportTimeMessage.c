@@ -75,7 +75,7 @@ static void dataInitialize(ReportTimeMessage message)
 static void dataDestroy(ReportTimeMessage message)
 {
 	// Free message fields
-	jausTimeDestroy(message->time);
+	if(message->time) jausTimeDestroy(message->time);
 }
 
 // Return boolean of success
@@ -89,6 +89,9 @@ static JausBoolean dataFromBuffer(ReportTimeMessage message, unsigned char *buff
 		// Unpack according to Presence Vector
 		if(!jausByteFromBuffer(&message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
+
+		message->time = jausTimeCreate();
+		if(!message->time) return JAUS_FALSE;
 
 		if(jausByteIsBitSet(message->presenceVector, JAUS_TIME_PV_TIME_STAMP_BIT))
 		{

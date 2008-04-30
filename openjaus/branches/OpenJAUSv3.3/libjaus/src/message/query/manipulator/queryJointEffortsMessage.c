@@ -64,19 +64,6 @@ static unsigned int dataSize(QueryJointEffortsMessage message);
 // Initializes the message-specific fields
 static void dataInitialize(QueryJointEffortsMessage message)
 {
-	// Set initial values of message fields
-	// Example from ReportGlobalPoseMessage.c
-	// 
-	//	message->presenceVector = newJausUnsignedShort(JAUS_SHORT_PRESENCE_VECTOR_ALL_ON);
-	//	message->latitudeDegrees = newJausDouble(0);			// Scaled Int (-90, 90)
-	//	message->longitudeDegrees = newJausDouble(0);			// Scaled Int (-180, 180)
-	//	message->elevationMeters = newJausDouble(0);			// Scaled Int (-10000, 35000)
-	//	message->positionRmsMeters = newJausDouble(0);			// Scaled UInt (0, 100)
-	//	message->rollRadians = newJausDouble(0);				// Scaled Short (-JAUS_PI, JAUS_PI)
-	//	message->pitchRadians = newJausDouble(0);				// Scaled Short (-JAUS_PI, JAUS_PI)
-	//	message->yawRadians = newJausDouble(0);					// Scaled Short (-JAUS_PI, JAUS_PI)
-	//	message->attitudeRmsRadians = newJausDouble(0);			// Scaled Short (0, JAUS_PI)
-	//	message->timeStamp = newJausUnsignedInteger(0);
 
 }
 
@@ -91,22 +78,7 @@ static JausBoolean dataFromBuffer(QueryJointEffortsMessage message, unsigned cha
 {
 	if(bufferSizeBytes == message->dataSize)
 	{
-		// Unpack Message Fields from Buffer
-		
-		// Couple Examples from ReportGlobalPoseMessage
-		//
-		//	if(!jausUnsignedShortFromBuffer(&message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		//	index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
-		//
-		//	if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_POSE_PV_LATITUDE_BIT))
-		//	{
-		//		//unpack
-		//		if(!jausIntegerFromBuffer(&tempInt, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		//		index += JAUS_INTEGER_SIZE_BYTES;
-		//		// Scaled Int (-90, 90)			
-		//		message->latitudeDegrees = jausIntegerToDouble(tempInt, -90, 90);
-		//	}
-	
+		// Unpack Message Fields from Buffer	
 
 		return JAUS_TRUE;
 	}
@@ -124,22 +96,6 @@ static int dataToBuffer(QueryJointEffortsMessage message, unsigned char *buffer,
 	if(bufferSizeBytes >= dataSize(message))
 	{
 		// Pack Message Fields to Buffer
-		
-		// Couple Examples from ReportGlobalPoseMessage
-		//
-		//	if(!jausUnsignedShortToBuffer(message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		//	index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
-		//	
-		//	if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_POSE_PV_LATITUDE_BIT))
-		//	{
-		//		// Scaled Int (-90, 90)			
-		//		tempInt = jausIntegerFromDouble(message->latitudeDegrees, -90, 90);
-		//
-		//		//pack
-		//		if(!jausIntegerToBuffer(tempInt, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		//		index += JAUS_INTEGER_SIZE_BYTES;
-		//	}
-		
 	}
 
 	return index;
@@ -148,20 +104,7 @@ static int dataToBuffer(QueryJointEffortsMessage message, unsigned char *buffer,
 // Returns number of bytes put into the buffer
 static unsigned int dataSize(QueryJointEffortsMessage message)
 {
-	int index = 0;
-
-	// Couple Examples from ReportGlobalPoseMessage
-	//
-	//	// PresenceVector
-	//	index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
-	//	
-	//	if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_POSE_PV_LATITUDE_BIT))
-	//	{
-	//		// Latitude
-	//		index += JAUS_INTEGER_SIZE_BYTES;
-	//	}
-		
-	return index;
+	return maxDataSizeBytes;
 }
 
 // ************************************************************************************************************** //
