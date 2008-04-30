@@ -109,19 +109,19 @@ static int dataToBuffer(ReportComponentControlMessage message, unsigned char *bu
 	if(bufferSizeBytes >= dataSize(message))
 	{
 		// Pack Message Fields to Buffer
-		if(!jausByteFromBuffer( &(message->subsystemId), buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		if(!jausByteToBuffer( message->subsystemId, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
 
-		if(!jausByteFromBuffer( &(message->nodeId), buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		if(!jausByteToBuffer( message->nodeId, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
 
-		if(!jausByteFromBuffer( &(message->componentId), buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		if(!jausByteToBuffer( message->componentId, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
 
-		if(!jausByteFromBuffer( &(message->instanceId), buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		if(!jausByteToBuffer( message->instanceId, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
 
-		if(!jausByteFromBuffer( &(message->authorityCode), buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		if(!jausByteToBuffer( message->authorityCode, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
 
 	}

@@ -52,9 +52,10 @@
 #define JAUS_RELATIVE_OBJECT_POSITION_PV_RANGE_ERROR_BIT		1
 #define JAUS_RELATIVE_OBJECT_POSITION_PV_BEARING_BIT			2
 #define JAUS_RELATIVE_OBJECT_POSITION_PV_BEARING_ERROR_BIT		3
-#define JAUS_RELATIVE_OBJECT_POSITION_PV_ELEVATION_BIT			4
-#define JAUS_RELATIVE_OBJECT_POSITION_PV_ELEVATION_ERROR_BIT	5
+#define JAUS_RELATIVE_OBJECT_POSITION_PV_INCLINATION_BIT			4
+#define JAUS_RELATIVE_OBJECT_POSITION_PV_INCLINATION_ERROR_BIT	5
 #define JAUS_RELATIVE_OBJECT_POSITION_PV_CONFIDENCE_BIT			6
+#define JAUS_RELATIVE_OBJECT_POSITION_PV_OBJECT_ID_BIT			6
 #endif
 
 typedef struct
@@ -102,9 +103,10 @@ typedef struct
 	JausDouble rangeErrorMeters;		// Scaled UInt (0, 1000)
 	JausDouble bearingRadians;			// Scaled Int (-JAUS_PI, JAUS_PI)
 	JausDouble bearingErrorRadians;		// Scaled UInt (0, JAUS_PI)
-	JausDouble elevationRadians;		// Scaled Int (-JAUS_PI, JAUS_PI)
-	JausDouble elevationErrorRadians;	// Scaled UInt (0, JAUS_PI)
+	JausDouble inclinationRadians;		// Scaled Int (-JAUS_PI, JAUS_PI)
+	JausDouble inclinationErrorRadians;	// Scaled UInt (0, JAUS_PI)
 	JausByte confidence;
+	JausUnsignedShort objectId;
 
 }ReportRelativeObjectPositionMessageStruct;
 
