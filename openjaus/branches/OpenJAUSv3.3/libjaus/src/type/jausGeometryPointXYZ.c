@@ -41,7 +41,7 @@
 //
 // Description: This file defines the functions of a JausGeometryPointXYZ Object
 
-#include <malloc.h>
+#include <stdlib.h>
 #include "jaus.h"
 
 JausGeometryPointXYZ jausGeometryPointXYZCreate(void)

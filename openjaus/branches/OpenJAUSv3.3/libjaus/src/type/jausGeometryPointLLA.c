@@ -41,7 +41,7 @@
 //
 // Description: This file defines the functions of a JausGeometryPointLLA Object
 
-#include <malloc.h>
+#include <stdlib.h>
 #include "jaus.h"
 
 JausGeometryPointLLA jausGeometryPointLLACreate(void)
