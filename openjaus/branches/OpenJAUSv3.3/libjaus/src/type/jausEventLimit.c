@@ -41,7 +41,7 @@
 //
 // Description:
 
-#include <malloc.h>
+#include <stdlib.h>
 #include <string.h>
 #include "jaus.h"
 
@@ -257,7 +257,7 @@ JausBoolean jausEventLimitToBuffer(JausEventLimit limit, unsigned char *buffer, 
 				return JAUS_FALSE;
 		}
 	}
-	return JAUS_FALSE;	
+	return JAUS_FALSE;
 }
 
 unsigned int jausEventLimitSize(JausEventLimit limit)
