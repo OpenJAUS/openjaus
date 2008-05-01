@@ -33,17 +33,14 @@
  ****************************************************************************/
 // File:		node.c
 // 
-// Version:		3.2
+// Version:		3.3
 //
-// Written by:	Tom Galluzzo (galluzzo AT gmail DOT com)
+// Written by:	Tom Galluzzo (galluzzo AT gmail DOT com) and Danny Kent (jaus AT dannykent DOT com)
 //
-// Date:		08/04/06
+// Date:		04/30/08
 //
 // Description:	This file contains the main code for implementing a CIMAR JAUS component
 
-#include <jaus.h>
-#include <openJaus.h>
-#include <curses.h>
 #include <ctype.h>
 #include <errno.h>
 #include <signal.h>
@@ -52,9 +49,24 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include <termios.h>
 #include <time.h>
-#include <unistd.h>
+
+#include <jaus.h>
+#include <openJaus.h>
+
+#if defined(WIN32)
+	#undef MOUSE_MOVED	// conflict between PDCURSES and WIN32
+	#include <curses.h>
+	#include <windows.h>
+	#define SLEEP_MS(x) Sleep(x)
+	#define CLEAR "cls"
+#elif defined(__linux) || defined(linux) || defined(__linux__)
+	#include <ncurses.h>
+	#include <termios.h>
+	#include <unistd.h>
+	#define CLEAR "clear"
+	#define SLEEP_MS(x) usleep(x*1000)
+#endif
 
 #include "cmpt.h"
 
@@ -66,10 +78,21 @@
 #endif
 
 #define DEFAULT_STRING_LENGTH 128
-
 #define KEYBOARD_LOCK_TIMEOUT_SEC	60.0
 
 static int mainRunning = FALSE;
+static int verbose = FALSE;
+static int keyboardLock = FALSE;
+static FILE *logFile = NULL;
+static char timeString[DEFAULT_STRING_LENGTH] = "";
+
+// Operating specific console handles
+#if defined(WIN32)
+	static HANDLE handleStdin;
+#elif defined(__linux) || defined(linux) || defined(__linux__)
+	static struct termios newTermio;
+	static struct termios storedTermio;
+#endif
 
 // Refresh screen in curses mode
 void updateScreen(int keyboardLock, int keyPress)
@@ -92,33 +115,129 @@ void updateScreen(int keyboardLock, int keyPress)
 	refresh();
 }
 
-int main(int argCount, char **argString)
+void parseUserInput(char input)
 {
-	int choice=0;
-	int verbose = FALSE;
-	int keyboardLock = FALSE;
-	double keyboardLockTime = ojGetTimeSec() + KEYBOARD_LOCK_TIMEOUT_SEC;
-	struct termios newTermio;
-	struct termios storedTermio;
-	char timeString[DEFAULT_STRING_LENGTH] = "";
-	time_t timeStamp;
-	
-	//Get and Format Time String
-	time(&timeStamp);
-	strftime(timeString, DEFAULT_STRING_LENGTH-1, "%m-%d-%Y %X", localtime(&timeStamp));
-
-	system("clear");
-
-	printf("main: Starting OpenJAUS CMPT: %s\n", timeString);
-	if(cmptStartup())
+	switch(input)
 	{
-		printf("main: CMPT Startup failed\n");
-		printf("main: Exiting CMPT\n");
-		return 0;
+		case 12: // 12 == 'ctrl + L'
+			keyboardLock = !keyboardLock;
+			break;
+		
+		case 27: // 27 
+			if(!keyboardLock)
+			{
+				mainRunning = FALSE;
+			}
+			break;
+		
+		default:
+			break;
 	}
+	return;
+}
+void parseCommandLine(int argCount, char **argString)
+{
+	int i = 0;
+	int debugLevel = 0;
+	char logFileStr[DEFAULT_STRING_LENGTH] = "";
+	char debugLogicString[DEFAULT_STRING_LENGTH] = "";
+	
+	for(i=1; i<argCount; i++)
+	{
+		if(argString[i][0] == '-')
+		{
+			switch(argString[i][1])
+			{
+				case 'v':
+					verbose = TRUE;
+					//setLogVerbose(TRUE);
+					break;
+					
+				case 'd':
+					if(argString[i][2] == '+') 
+					{
+						//setDebugLogic(DEBUG_GREATER_THAN);
+						sprintf(debugLogicString, "Greater than or equal to: ");
+						if(argString[i][3] >= '0' && argString[i][3] <= '9')
+						{
+							debugLevel = atoi(&argString[i][3]);
+						}
+						else
+						{
+							printf("main: Incorrect use of arguments\n");
+							break;
+						}
+					}
+					else if(argString[i][2] == '-')
+					{
+						//setDebugLogic(DEBUG_LESS_THAN);
+						sprintf(debugLogicString, "Less than or equal to: ");
+						if(argString[i][3] >= '0' && argString[i][3] <= '9')
+						{
+							debugLevel = atoi(&argString[i][3]);
+						}
+						else
+						{
+							printf("main: Incorrect use of arguments\n");
+							break;
+						}
+					}
+					else if(argString[i][2] == '=')
+					{
+						//setDebugLogic(DEBUG_EQUAL_TO);
+						if(argString[i][3] >= '0' && argString[i][3] <= '9')
+						{
+							debugLevel = atoi(&argString[i][3]);
+						}
+						else
+						{
+							printf("main: Incorrect use of arguments\n");
+							break;
+						}
+					}
+					else if(argString[i][2] >= '0' && argString[i][2] <= '9')
+					{
+						debugLevel = atoi(&argString[i][2]);
+					}
+					else
+					{
+						printf("main: Incorrect use of arguments\n");
+						break;
+					}
+					printf("main: Switching to debug level: %s%d\n", debugLogicString, debugLevel);
+					//setDebugLevel(debugLevel);
+					break;
+					
+				case 'l':
+					if(argCount > i+1 && argString[i+1][0] != '-')
+					{
+						logFile = fopen(argString[i+1], "w");
+						if(logFile != NULL)
+						{
+							fprintf(logFile, "CIMAR %s Log -- %s\n", argString[0], timeString);
+							//setLogFile(logFile);
+						}
+						else printf("main: Error creating log file, switching to default\n");
+					}
+					else
+					{
+						printf("main: Incorrect use of arguments\n");
+					}
+					break;
 
+				default:
+					printf("main: Incorrect use of arguments\n");
+					break;
+			}
+		}
+	}
+}
+
+void setupTerminal()
+{
 	if(verbose)
 	{
+#if defined(__linux) || defined(linux) || defined(__linux__)
 		tcgetattr(0,&storedTermio);
 		memcpy(&newTermio,&storedTermio,sizeof(struct termios));
 		
@@ -128,6 +247,10 @@ int main(int argCount, char **argString)
 		newTermio.c_cc[VTIME] = 0;
 		newTermio.c_cc[VMIN] = 0;
 		tcsetattr(0,TCSANOW,&newTermio);
+#elif defined(WIN32)
+		// Setup the console window's input handle
+		handleStdin = GetStdHandle(STD_INPUT_HANDLE); 
+#endif
 	}
 	else
 	{	
@@ -138,59 +261,15 @@ int main(int argCount, char **argString)
 		nodelay(stdscr, 1);	// Don't wait at the getch() function if the user hasn't hit a key
 		keypad(stdscr, 1); // Allow Function key input and arrow key input
 	}
-	
-	mainRunning = TRUE;
-	
-	while(mainRunning)
-	{
-		if(verbose)
-		{
-			choice = getc(stdin);
-		}
-		else // Not in verbose mode
-		{
-			choice = getch(); // Get the key that the user has selected
-			updateScreen(keyboardLock, choice);		
-		}
+}
 
-		if(choice > -1)
-		{
-			keyboardLockTime = getTimeSeconds() + KEYBOARD_LOCK_TIMEOUT_SEC;
-			if(choice == 12) // 12 == 'ctrl + L'
-			{
-				keyboardLock = !keyboardLock;
-			}
-		}
-		else
-		{
-			if(getTimeSeconds() > keyboardLockTime)
-			{
-				keyboardLock = TRUE;
-			}
-		}
-		
-		
-		if(!keyboardLock)
-		{
-			switch(choice)
-			{
-				// USER: Add key press event options here
-
-				case 27: // Escape Key Pressed
-					mainRunning = FALSE;
-					break;
-					
-				default:
-					break;
-			}
-		}
-				
-		usleep(50000);
-	}
-	
+void cleanupConsole()
+{
 	if(verbose)
 	{
+#if defined(__linux) || defined(linux) || defined(__linux__)
 		tcsetattr(0,TCSANOW,&storedTermio);
+#endif
 	}
 	else
 	{
@@ -198,9 +277,160 @@ int main(int argCount, char **argString)
 		clear();
 		endwin();
 	}
+}
+
+char getUserInput()
+{
+	char retVal = FALSE;
+	int choice;
+	int i = 0;
+
+	if(verbose)
+	{
+#if defined(WIN32)
+    INPUT_RECORD inputEvents[128];
+	DWORD eventCount;
+
+		// See how many events are waiting for us, this prevents blocking if none
+		GetNumberOfConsoleInputEvents(handleStdin, &eventCount);
+		
+		if(eventCount > 0)
+		{
+			// Check for user input here
+			ReadConsoleInput( 
+					handleStdin,		// input buffer handle 
+					inputEvents,		// buffer to read into 
+					128,				// size of read buffer 
+					&eventCount);		// number of records read 
+		}
+ 
+	    // Parse console input events 
+        for (i = 0; i < (int) eventCount; i++) 
+        {
+            switch(inputEvents[i].EventType) 
+            { 
+				case KEY_EVENT: // keyboard input 
+					parseUserInput(inputEvents[i].Event.KeyEvent.uChar.AsciiChar);
+					retVal = TRUE;
+					break;
+				
+				default:
+					break;
+			}
+		}
+#elif defined(__linux) || defined(linux) || defined(__linux__)
+		choice = getc(stdin);
+		if(choice > -1)
+		{
+			parseUserInput(choice);
+			retVal = TRUE;
+		}
+#endif
+	}
+	else
+	{
+		choice = getch(); // Get the key that the user has selected
+		updateScreen(keyboardLock, choice);
+		if(choice > -1)
+		{
+			parseUserInput(choice);
+			retVal = TRUE;
+		}
+	}
+
+	return retVal;
+}
+
+
+int main(int argCount, char **argString)
+{
+	int i = 0;
+	char keyPressed = FALSE;
+	int keyboardLock = FALSE;
+	double keyboardLockTime = getTimeSeconds() + KEYBOARD_LOCK_TIMEOUT_SEC;
+	time_t timeStamp;
+	char logFileStr[128] = {0};
 	
-	printf("main: Shutting Down CMPT\n");
+	//Get and Format Time String
+	time(&timeStamp);
+	strftime(timeString, DEFAULT_STRING_LENGTH-1, "%m-%d-%Y %X", localtime(&timeStamp));
+
+	system(CLEAR);
+
+	printf("main: CIMAR Core Executable: %s\n", timeString);
+
+	if(logFile == NULL)
+	{
+		i = (int) strlen(argString[0]) - 1;
+		while(i > 0 && argString[0][i-1] != '/') i--;
+				
+		sprintf(logFileStr, "%s.log", &argString[0][i]);
+		printf("main: Creating log: %s\n", logFileStr);
+		logFile = fopen(logFileStr, "w");
+		if(logFile != NULL)
+		{
+			fprintf(logFile, "CIMAR %s Log -- %s\n", argString[0], timeString);
+		}
+		else 
+		{
+			printf("main: ERROR: Could not create log file\n");
+			// BUG: Else pError here
+		}
+	}
+
+	printf("main: Starting OpenJAUS CMPT: %s\n", timeString);
+	if(cmptStartup())
+	{
+		printf("main: CMPT Startup failed\n");
+		printf("main: Exiting CMPT\n");
+#if defined(WIN32)
+		system("pause");
+#else
+		printf("Press ENTER to exit\n");
+		getch();
+#endif
+		return 0;
+	}
+
+	setupTerminal();
+
+	mainRunning = TRUE;
+	
+	while(mainRunning)
+	{
+		keyPressed = getUserInput();
+
+		if(keyPressed)
+		{
+			keyboardLockTime = getTimeSeconds() + KEYBOARD_LOCK_TIMEOUT_SEC;		
+		}
+		else if(getTimeSeconds() > keyboardLockTime)
+		{
+				keyboardLock = TRUE;
+		}
+
+		//if(verbose)
+		//{
+		//	choice = getc(stdin);
+		//}
+		//else // Not in verbose mode
+		//{
+		//	choice = getch(); // Get the key that the user has selected
+		//	updateScreen(keyboardLock, choice);		
+		//}
+						
+		SLEEP_MS(1000);
+	}
+
+	cleanupConsole();
+	
+	//cDebug(1, "main: Shutting Down %s Node Software\n", simulatorGetName());
 	cmptShutdown();
+	
+	if(logFile != NULL)
+	{
+		fclose(logFile);
+	}
 	
 	return 0;
 }
