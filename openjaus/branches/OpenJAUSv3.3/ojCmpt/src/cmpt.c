@@ -94,11 +94,6 @@ static pthread_t cmptThreadId;		// pthread component thread identifier
 static Properties cmptProperties;
 static NodeManagerInterface cmptNmi;	// A data structure containing the Node Manager Interface for this component
 
-static ServiceConnection controllerStatusSc = NULL;
-static SetWrenchEffortMessage setWrenchEffort = NULL;
-static ReportWrenchEffortMessage reportWrenchEffort = NULL;
-static SetDiscreteDevicesMessage setDiscreteDevices = NULL;
-
 // Function: 	cmptStartup
 // Access:		Public	
 // Description: This function allows the abstracted component functionality contained in this file to be started from an external source.
@@ -227,31 +222,6 @@ JausAddress cmptGetAddress(void)
 double cmptGetUcmptateRate(void)
 {
 	return cmptThreadHz; 
-}
-
-JausBoolean cmptGetControllerScStatus(void)
-{
-	return controllerStatusSc ? controllerStatusSc->isActive : JAUS_FALSE;
-}
-
-JausBoolean cmptGetControllerStatus(void)
-{
-	return cmpt->controller.active;
-}
-
-JausState cmptGetControllerState(void)
-{
-	return cmpt->controller.state;
-}
-
-JausAddress cmptGetControllerAddress(void)
-{
-	return cmpt->controller.address;
-}
-
-SetWrenchEffortMessage cmptGetWrenchEffort(void)
-{
-	return setWrenchEffort;
 }
 
 // Function: cmptThread

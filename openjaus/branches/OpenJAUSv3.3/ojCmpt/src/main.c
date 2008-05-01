@@ -85,6 +85,7 @@ static int verbose = FALSE;
 static int keyboardLock = FALSE;
 static FILE *logFile = NULL;
 static char timeString[DEFAULT_STRING_LENGTH] = "";
+char logFileStr[DEFAULT_STRING_LENGTH] = "";
 
 // Operating specific console handles
 #if defined(WIN32)
@@ -139,7 +140,6 @@ void parseCommandLine(int argCount, char **argString)
 {
 	int i = 0;
 	int debugLevel = 0;
-	char logFileStr[DEFAULT_STRING_LENGTH] = "";
 	char debugLogicString[DEFAULT_STRING_LENGTH] = "";
 	
 	for(i=1; i<argCount; i++)
@@ -355,6 +355,7 @@ int main(int argCount, char **argString)
 	time(&timeStamp);
 	strftime(timeString, DEFAULT_STRING_LENGTH-1, "%m-%d-%Y %X", localtime(&timeStamp));
 
+	parseCommandLine(argCount, argString);
 	system(CLEAR);
 
 	printf("main: CIMAR Core Executable: %s\n", timeString);
