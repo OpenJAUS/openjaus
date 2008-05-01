@@ -49,25 +49,29 @@
 // this file should also be renamed likewise
 // Also Change all "CMPT" to your component acronym (ALL CAPS) (case JAUS_sensitive)
 // The end user must also change all "USER_COMPONENT_ID_NUMBER_HERE" defines to the individual component define (see examples below)
-// Ex: For a Primitive Driver component change all "cmpt" to "pd" and "CMPT" to "PD"
+// Ex: For a Primitive Driver component change all "cmpt" to "cmpt" and "CMPT" to "CMPT"
 // Ex: For a Primitive Driver change all "USER_COMPONENT_ID_NUMBER_HERE" defines to "PRIMITIVE_DRIVER" defines
 // Note that for new/experimental components, the component ID will have to be defined in the header file 
 // After all changes are implemented, change the file header information at the begining of the file accordingly
 
-#include <jaus.h>			// JAUS message set (USER: JAUS libraries must be installed first)
-#include <openJaus.h>	// Node managment functions for sending and receiving JAUS messages (USER: Node Manager must be installed)
+#include "jaus.h"			// JAUS message set (USER: JAUS libraries must be installed first)
+#include "openJaus.h"	// Node managment functions for sending and receiving JAUS messages (USER: Node Manager must be installed)
 #include <pthread.h>			// Multi-threading functions (standard to unix)
 #include <stdlib.h>	
-#include <unistd.h>				// Unix standard functions
 #include <string.h>
-// USER: Add include files here as appropriate
+#include "properties.h"
 
 #include "cmpt.h"	// USER: Implement and rename this header file. Include prototypes for all public functions contained in this file.
-#include "properties.h"
+
+#if defined (WIN32)
+	#define CONFIG_DIRECTORY ".\\config\\"
+#elif defined(__linux) || defined(linux) || defined(__linux__)
+	#define CONFIG_DIRECTORY "./config/"
+#endif
 
 // Private function prototypes
 void *cmptThread(void *);
-void cmptProcessMessage(JausMessage);
+void cmptProcessMessage(JausMessage rxMessage);
 void cmptStartupState(void);
 void cmptInitState(void);
 void cmptStandbyState(void);
@@ -78,33 +82,22 @@ void cmptShutdownState(void);
 void cmptAllState(void);
 // USER: Insert any private function prototypes here
 
-static struct JausAddressStruct cmptAddress =	{ 0, USER_COMPONENT_ID_NUMBER_HERE, 0, 0, NULL }; 
-static struct JausAddressStruct cmptControllerAddress =	{ 0, 0, 0, 0, NULL }; 
-static JausComponentStruct cmptStruct =	{	"cmpt",
-											&cmptAddress,
-											JAUS_SHUTDOWN_STATE,
-											0,
-											NULL,
-											NULL,
-											{
-												&cmptControllerAddress,
-												JAUS_UNDEFINED_STATE,
-												0,
-												JAUS_FALSE
-											},
-											0.0
-										}; // All component specific information is stored in this CIMAR JAUS Library data structure
-static JausComponent cmpt = &cmptStruct;
+static JausComponent cmpt = NULL;
 static JausNode cmptNode;
 static JausSubsystem cmptSubsystem;
 
 static int cmptRun = FALSE;
-static double cmptThreadHz = 0;									// Stores the calculated update rate for main state thread
+static double cmptThreadHz = 0;		// Stores the calculated ucmptate rate for main state thread
 static int cmptThreadRunning = FALSE;
-static pthread_t cmptThreadId = 0;							// pthread component thread identifier
+static pthread_t cmptThreadId;		// pthread component thread identifier
 
 static Properties cmptProperties;
 static NodeManagerInterface cmptNmi;	// A data structure containing the Node Manager Interface for this component
+
+static ServiceConnection controllerStatusSc = NULL;
+static SetWrenchEffortMessage setWrenchEffort = NULL;
+static ReportWrenchEffortMessage reportWrenchEffort = NULL;
+static SetDiscreteDevicesMessage setDiscreteDevices = NULL;
 
 // Function: 	cmptStartup
 // Access:		Public	
@@ -115,10 +108,20 @@ int cmptStartup(void)
 {
 	FILE * propertyFile;
 	pthread_attr_t attr;	// Thread attributed for the component threads spawned in this function
-	
+	char fileName[128] = {0};
+
+	if(!cmpt)
+	{
+		cmpt = jausComponentCreate();
+		cmpt->address->component = JAUS_PRIMITIVE_DRIVER;
+		cmpt->identification  = "cmpt";
+		cmpt->state = JAUS_SHUTDOWN_STATE;
+	}
+
 	if(cmpt->state == JAUS_SHUTDOWN_STATE)	// Execute the startup routines only if the component is not running
 	{
-		propertyFile = fopen("./config/cmpt.conf", "r");
+		sprintf(fileName, "%scmpt.conf", CONFIG_DIRECTORY);
+		propertyFile = fopen(fileName, "r");
 		if(propertyFile)
 		{
 			cmptProperties = propertiesCreate();
@@ -153,7 +156,7 @@ int cmptStartup(void)
 
 		if(pthread_create(&cmptThreadId, &attr, cmptThread, NULL) != 0)
 		{
-			printf("cmpt: Could not create cmptThread\n");
+			//cError("cmpt: Could not create cmptThread\n");
 			cmptShutdown();
 			pthread_attr_destroy(&attr);
 			return CMPT_THREAD_CREATE_ERROR;
@@ -162,7 +165,7 @@ int cmptStartup(void)
 	}
 	else
 	{
-		printf("cmpt: Attempted startup while not shutdown\n");
+		//cError("cmpt: Attempted startup while not shutdown\n");
 		return CMPT_STARTUP_BEFORE_SHUTDOWN_ERROR;
 	}
 	
@@ -178,19 +181,19 @@ int cmptShutdown(void)
 {
 	double timeOutSec;
 
-	if(cmpt->state != JAUS_SHUTDOWN_STATE)	// Execute the shutdown routines only if the component is running
+	if(cmpt && cmpt->state != JAUS_SHUTDOWN_STATE)	// Execute the shutdown routines only if the component is running
 	{
 		cmptRun = FALSE;
 
 		timeOutSec = getTimeSeconds() + CMPT_THREAD_TIMEOUT_SEC;
 		while(cmptThreadRunning)
 		{
-			usleep(100000);
+			ojSleepMsec(100);
 			if(getTimeSeconds() >= timeOutSec)
 			{
 				pthread_cancel(cmptThreadId);
 				cmptThreadRunning = FALSE;
-				printf("cmpt: cmptThread Shutdown Improperly\n");
+				//cError("cmpt: cmptThread Shutdown Improperly\n");
 				break;
 			}
 		}
@@ -221,12 +224,35 @@ JausAddress cmptGetAddress(void)
 	return cmpt->address;
 }
 
-double cmptGetUpdateRate(void)
+double cmptGetUcmptateRate(void)
 {
 	return cmptThreadHz; 
 }
 
-// USER: Insert any additional public variable accessors here
+JausBoolean cmptGetControllerScStatus(void)
+{
+	return controllerStatusSc ? controllerStatusSc->isActive : JAUS_FALSE;
+}
+
+JausBoolean cmptGetControllerStatus(void)
+{
+	return cmpt->controller.active;
+}
+
+JausState cmptGetControllerState(void)
+{
+	return cmpt->controller.state;
+}
+
+JausAddress cmptGetControllerAddress(void)
+{
+	return cmpt->controller.address;
+}
+
+SetWrenchEffortMessage cmptGetWrenchEffort(void)
+{
+	return setWrenchEffort;
+}
 
 // Function: cmptThread
 // Access:		Private
@@ -236,12 +262,8 @@ void *cmptThread(void *threadData)
 {
 	JausMessage rxMessage;
 	double time, prevTime, nextExcecuteTime = 0.0;
-	struct timespec sleepTime;
 
 	cmptThreadRunning = TRUE;
-
-	sleepTime.tv_sec = 0;
-	sleepTime.tv_nsec = 1000;
 
 	time = getTimeSeconds();
 	cmpt->state = JAUS_INITIALIZE_STATE; // Set JAUS state to INITIALIZE
@@ -254,7 +276,6 @@ void *cmptThread(void *threadData)
 		{
 			if(nodeManagerReceive(cmptNmi, &rxMessage))
 			{
-				//cDebug(4, "CMPT: Got message: %s from %d.%d.%d.%d\n", jausMessageCommandCodeString(rxMessage), rxMessage->source->subsystem, rxMessage->source->node, rxMessage->source->component, rxMessage->source->instance);
 				cmptProcessMessage(rxMessage);
 			}
 			else 
@@ -265,14 +286,14 @@ void *cmptThread(void *threadData)
 				}
 				else
 				{
-					nanosleep(&sleepTime, NULL);
+					ojSleepMsec(1);
 				}
 			}
 		}while(getTimeSeconds() < nextExcecuteTime);
 		
 		prevTime = time;
 		time = getTimeSeconds();
-		cmptThreadHz = 1.0/(time-prevTime); // Compute the update rate of this thread
+		cmptThreadHz = 1.0/(time-prevTime); // Compute the ucmptate rate of this thread
 		
 		switch(cmpt->state) // Switch component behavior based on which state the machine is in
 		{
@@ -313,7 +334,7 @@ void *cmptThread(void *threadData)
 	
 	cmptShutdownState();
 	
-	usleep(50000);	// Sleep for 50 milliseconds and then exit
+	ojSleepMsec(50);	// Sleep for 50 milliseconds and then exit
 
 	cmptThreadRunning = FALSE;
 	
@@ -407,6 +428,11 @@ void cmptProcessMessage(JausMessage message)
 			defaultJausMessageProcessor(message, cmptNmi, cmpt);
 			break;
 	}
+}
+
+double cmptGetUpdateRate(void)
+{
+	return cmptThreadHz;
 }
 
 void cmptStartupState(void)
