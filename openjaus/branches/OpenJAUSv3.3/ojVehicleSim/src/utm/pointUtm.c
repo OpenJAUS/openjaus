@@ -41,7 +41,7 @@
 //
 // Description: This file defines the functions of a PointUtm object
 
-#include <malloc.h>
+#include <stdlib.h>
 #include <string.h>
 #include "utm/utmLib.h"
 
