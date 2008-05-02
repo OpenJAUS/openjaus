@@ -31,7 +31,7 @@
  *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
  *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ****************************************************************************/
-// File Name: queryVideoFrameMessage.c
+// File Name: queryImageMessage.c
 //
 // Written By: Danny Kent (jaus AT dannykent DOT com), Tom Galluzzo (galluzzo AT gmail DOT com)
 //
@@ -39,7 +39,7 @@
 //
 // Date: 04/15/08
 //
-// Description: This file defines the functionality of a QueryVideoFrameMessage
+// Description: This file defines the functionality of a QueryImageMessage
 
 
 
@@ -47,36 +47,36 @@
 #include <string.h>
 #include "jaus.h"
 
-static const int commandCode = JAUS_QUERY_VIDEO_FRAME;
+static const int commandCode = JAUS_QUERY_IMAGE;
 static const int maxDataSizeBytes = 0;
 
-static JausBoolean headerFromBuffer(QueryVideoFrameMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-static JausBoolean headerToBuffer(QueryVideoFrameMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+static JausBoolean headerFromBuffer(QueryImageMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+static JausBoolean headerToBuffer(QueryImageMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
-static JausBoolean dataFromBuffer(QueryVideoFrameMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-static int dataToBuffer(QueryVideoFrameMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-static void dataInitialize(QueryVideoFrameMessage message);
-static void dataDestroy(QueryVideoFrameMessage message);
-static unsigned int dataSize(QueryVideoFrameMessage message);
+static JausBoolean dataFromBuffer(QueryImageMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+static int dataToBuffer(QueryImageMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+static void dataInitialize(QueryImageMessage message);
+static void dataDestroy(QueryImageMessage message);
+static unsigned int dataSize(QueryImageMessage message);
 
 // ************************************************************************************************************** //
 //                                    USER CONFIGURED FUNCTIONS
 // ************************************************************************************************************** //
 
 // Initializes the message-specific fields
-static void dataInitialize(QueryVideoFrameMessage message)
+static void dataInitialize(QueryImageMessage message)
 {
 	// Set initial values of message fields
 }
 
 // Destructs the message-specific fields
-static void dataDestroy(QueryVideoFrameMessage message)
+static void dataDestroy(QueryImageMessage message)
 {
 	// Free message fields
 }
 
 // Return boolean of success
-static JausBoolean dataFromBuffer(QueryVideoFrameMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
+static JausBoolean dataFromBuffer(QueryImageMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
 {
 	//int index = 0;
 	
@@ -92,7 +92,7 @@ static JausBoolean dataFromBuffer(QueryVideoFrameMessage message, unsigned char 
 }
 
 // Returns number of bytes put into the buffer
-static int dataToBuffer(QueryVideoFrameMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
+static int dataToBuffer(QueryImageMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
 {
 	int index = 0;
 
@@ -104,7 +104,7 @@ static int dataToBuffer(QueryVideoFrameMessage message, unsigned char *buffer, u
 	return index;
 }
 
-static unsigned int dataSize(QueryVideoFrameMessage message)
+static unsigned int dataSize(QueryImageMessage message)
 {
 	// Constant Size
 	return maxDataSizeBytes;
@@ -114,11 +114,11 @@ static unsigned int dataSize(QueryVideoFrameMessage message)
 //                                    NON-USER CONFIGURED FUNCTIONS
 // ************************************************************************************************************** //
 
-QueryVideoFrameMessage queryVideoFrameMessageCreate(void)
+QueryImageMessage queryImageMessageCreate(void)
 {
-	QueryVideoFrameMessage message;
+	QueryImageMessage message;
 
-	message = (QueryVideoFrameMessage)malloc( sizeof(QueryVideoFrameMessageStruct) );
+	message = (QueryImageMessage)malloc( sizeof(QueryImageMessageStruct) );
 	if(message == NULL)
 	{
 		return NULL;
@@ -143,7 +143,7 @@ QueryVideoFrameMessage queryVideoFrameMessageCreate(void)
 	return message;	
 }
 
-void queryVideoFrameMessageDestroy(QueryVideoFrameMessage message)
+void queryImageMessageDestroy(QueryImageMessage message)
 {
 	dataDestroy(message);
 	jausAddressDestroy(message->source);
@@ -151,7 +151,7 @@ void queryVideoFrameMessageDestroy(QueryVideoFrameMessage message)
 	free(message);
 }
 
-JausBoolean queryVideoFrameMessageFromBuffer(QueryVideoFrameMessage message, unsigned char* buffer, unsigned int bufferSizeBytes)
+JausBoolean queryImageMessageFromBuffer(QueryImageMessage message, unsigned char* buffer, unsigned int bufferSizeBytes)
 {
 	int index = 0;
 	
@@ -173,9 +173,9 @@ JausBoolean queryVideoFrameMessageFromBuffer(QueryVideoFrameMessage message, uns
 	}
 }
 
-JausBoolean queryVideoFrameMessageToBuffer(QueryVideoFrameMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
+JausBoolean queryImageMessageToBuffer(QueryImageMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
 {
-	if(bufferSizeBytes < queryVideoFrameMessageSize(message))
+	if(bufferSizeBytes < queryImageMessageSize(message))
 	{
 		return JAUS_FALSE; //improper size	
 	}
@@ -188,14 +188,14 @@ JausBoolean queryVideoFrameMessageToBuffer(QueryVideoFrameMessage message, unsig
 		}
 		else
 		{
-			return JAUS_FALSE; // headerToQueryVideoFrameBuffer failed
+			return JAUS_FALSE; // headerToQueryImageBuffer failed
 		}
 	}
 }
 
-QueryVideoFrameMessage queryVideoFrameMessageFromJausMessage(JausMessage jausMessage)
+QueryImageMessage queryImageMessageFromJausMessage(JausMessage jausMessage)
 {
-	QueryVideoFrameMessage message;
+	QueryImageMessage message;
 	
 	if(jausMessage->commandCode != commandCode)
 	{
@@ -203,7 +203,7 @@ QueryVideoFrameMessage queryVideoFrameMessageFromJausMessage(JausMessage jausMes
 	}
 	else
 	{
-		message = (QueryVideoFrameMessage)malloc( sizeof(QueryVideoFrameMessageStruct) );
+		message = (QueryImageMessage)malloc( sizeof(QueryImageMessageStruct) );
 		if(message == NULL)
 		{
 			return NULL;
@@ -236,7 +236,7 @@ QueryVideoFrameMessage queryVideoFrameMessageFromJausMessage(JausMessage jausMes
 	}
 }
 
-JausMessage queryVideoFrameMessageToJausMessage(QueryVideoFrameMessage message)
+JausMessage queryImageMessageToJausMessage(QueryImageMessage message)
 {
 	JausMessage jausMessage;
 	
@@ -268,14 +268,14 @@ JausMessage queryVideoFrameMessageToJausMessage(QueryVideoFrameMessage message)
 }
 
 
-unsigned int queryVideoFrameMessageSize(QueryVideoFrameMessage message)
+unsigned int queryImageMessageSize(QueryImageMessage message)
 {
 	return (unsigned int)(dataSize(message) + JAUS_HEADER_SIZE_BYTES);
 }
 
 //********************* PRIVATE HEADER FUNCTIONS **********************//
 
-static JausBoolean headerFromBuffer(QueryVideoFrameMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
+static JausBoolean headerFromBuffer(QueryImageMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
 {
 	if(bufferSizeBytes < JAUS_HEADER_SIZE_BYTES)
 	{
@@ -313,7 +313,7 @@ static JausBoolean headerFromBuffer(QueryVideoFrameMessage message, unsigned cha
 	}
 }
 
-static JausBoolean headerToBuffer(QueryVideoFrameMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
+static JausBoolean headerToBuffer(QueryImageMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
 {
 	JausUnsignedShort *propertiesPtr = (JausUnsignedShort*)&message->properties;
 	
