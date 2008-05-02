@@ -278,41 +278,44 @@ static int dataToBuffer(ReportManipulatorSpecificationsMessage message, unsigned
 		if(!jausByteToBuffer(message->numJoints, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
 
-		if(!jausByteToBuffer(message->jointType[message->numJoints - 1], buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_BYTE_SIZE_BYTES;
-
-		if(message->jointType[message->numJoints - 1] == 1) // Handle special scaling for revolute joints
+		if(message->numJoints > 0)
 		{
-			message->jointOffset[message->numJoints - 1] *= 1000.0;		
+			if(!jausByteToBuffer(message->jointType[message->numJoints - 1], buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+			index += JAUS_BYTE_SIZE_BYTES;
+	
+			if(message->jointType[message->numJoints - 1] == 1) // Handle special scaling for revolute joints
+			{
+				message->jointOffset[message->numJoints - 1] *= 1000.0;		
+			}
+			tempUShort = (JausUnsignedShort)message->jointOffset[message->numJoints - 1];
+			if(!jausUnsignedShortToBuffer(tempUShort, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+			index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+	
+			if(message->jointType[message->numJoints - 1] == 1) // Handle special scaling for revolute joints
+			{
+				message->jointMinValue[message->numJoints - 1] *= 1000.0;		
+			}
+			tempUShort = (JausUnsignedShort)message->jointMinValue[message->numJoints - 1];
+			if(!jausUnsignedShortToBuffer(tempUShort, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+			index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+	
+			if(message->jointType[message->numJoints - 1] == 1) // Handle special scaling for revolute joints
+			{
+				message->jointMaxValue[message->numJoints - 1] *= 1000.0;		
+			}
+			tempUShort = (JausUnsignedShort)message->jointMaxValue[message->numJoints - 1];
+			if(!jausUnsignedShortToBuffer(tempUShort, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+			index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+	
+			if(message->jointType[message->numJoints - 1] == 1) // Handle special scaling for revolute joints
+			{
+				message->jointMaxVelocity[message->numJoints - 1] *= 1000.0;		
+			}
+			tempUShort = (JausUnsignedShort)message->jointMaxVelocity[message->numJoints - 1];
+			if(!jausUnsignedShortToBuffer(tempUShort, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+			index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
 		}
-		tempUShort = (JausUnsignedShort)message->jointOffset[message->numJoints - 1];
-		if(!jausUnsignedShortToBuffer(tempUShort, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
-
-		if(message->jointType[message->numJoints - 1] == 1) // Handle special scaling for revolute joints
-		{
-			message->jointMinValue[message->numJoints - 1] *= 1000.0;		
-		}
-		tempUShort = (JausUnsignedShort)message->jointMinValue[message->numJoints - 1];
-		if(!jausUnsignedShortToBuffer(tempUShort, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
-
-		if(message->jointType[message->numJoints - 1] == 1) // Handle special scaling for revolute joints
-		{
-			message->jointMaxValue[message->numJoints - 1] *= 1000.0;		
-		}
-		tempUShort = (JausUnsignedShort)message->jointMaxValue[message->numJoints - 1];
-		if(!jausUnsignedShortToBuffer(tempUShort, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
-
-		if(message->jointType[message->numJoints - 1] == 1) // Handle special scaling for revolute joints
-		{
-			message->jointMaxVelocity[message->numJoints - 1] *= 1000.0;		
-		}
-		tempUShort = (JausUnsignedShort)message->jointMaxVelocity[message->numJoints - 1];
-		if(!jausUnsignedShortToBuffer(tempUShort, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
-
+		
 		tempUInt = jausUnsignedIntegerFromDouble(message->coordinateSysX, -30, 30); // Scaled Short (-30, 30)
 		if(!jausUnsignedIntegerToBuffer(tempUInt, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;

@@ -31,7 +31,7 @@
  *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
  *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ****************************************************************************/
-// File Name: queryVideoFrameMessage.h
+// File Name: queryImageMessage.h
 //
 // Written By: Danny Kent (jaus AT dannykent DOT com), Tom Galluzzo 
 //
@@ -39,10 +39,10 @@
 //
 // Date: 04/15/08
 //
-// Description: This file defines the attributes of a QueryVideoFrameMessage
+// Description: This file defines the attributes of a QueryImageMessage
 
-#ifndef QUERY_VIDEO_FRAME_MESSAGE_H
-#define QUERY_VIDEO_FRAME_MESSAGE_H
+#ifndef QUERY_IMAGE_MESSAGE_H
+#define QUERY_IMAGE_MESSAGE_H
 
 #include "jaus.h"
 
@@ -86,19 +86,19 @@ typedef struct
 
 	// MESSAGE DATA MEMBERS GO HERE
 	
-}QueryVideoFrameMessageStruct;
+}QueryImageMessageStruct;
 
-typedef QueryVideoFrameMessageStruct* QueryVideoFrameMessage;
+typedef QueryImageMessageStruct* QueryImageMessage;
 
-JAUS_EXPORT QueryVideoFrameMessage queryVideoFrameMessageCreate(void);
-JAUS_EXPORT void queryVideoFrameMessageDestroy(QueryVideoFrameMessage);
+JAUS_EXPORT QueryImageMessage queryImageMessageCreate(void);
+JAUS_EXPORT void queryImageMessageDestroy(QueryImageMessage);
 
-JAUS_EXPORT JausBoolean queryVideoFrameMessageFromBuffer(QueryVideoFrameMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JAUS_EXPORT JausBoolean queryVideoFrameMessageToBuffer(QueryVideoFrameMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean queryImageMessageFromBuffer(QueryImageMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
+JAUS_EXPORT JausBoolean queryImageMessageToBuffer(QueryImageMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 
-JAUS_EXPORT QueryVideoFrameMessage queryVideoFrameMessageFromJausMessage(JausMessage jausMessage);
-JAUS_EXPORT JausMessage queryVideoFrameMessageToJausMessage(QueryVideoFrameMessage message);
+JAUS_EXPORT QueryImageMessage queryImageMessageFromJausMessage(JausMessage jausMessage);
+JAUS_EXPORT JausMessage queryImageMessageToJausMessage(QueryImageMessage message);
 
-JAUS_EXPORT unsigned int queryVideoFrameMessageSize(QueryVideoFrameMessage message);
+JAUS_EXPORT unsigned int queryImageMessageSize(QueryImageMessage message);
 
-#endif // QUERY_VIDEO_FRAME_MESSAGE_H
+#endif // QUERY_IMAGE_MESSAGE_H
