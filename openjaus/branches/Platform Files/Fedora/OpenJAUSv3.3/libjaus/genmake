@@ -5,7 +5,7 @@ exec > Makefile
 OPEN_JAUS_HOME=$HOME/workspace/OpenJAUSv3.3
 
 echo "TARGET	= 	./lib/libjaus.so"
-echo "CCFLAGS	=	-Wall -std=c99 -fno-strict-aliasing -O2 -c -g -I ./include/"
+echo "CCFLAGS	=	-Wall -std=c99 -fPIC -fno-strict-aliasing -O2 -c -g -I ./include/"
 
 SOURCE_C_FILES=`find ./src/ -name "*.c"`
 for cfile in $SOURCE_C_FILES
