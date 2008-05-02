@@ -192,6 +192,11 @@ static JausBoolean dataFromBuffer(ReportVelocityStateMessage message, unsigned c
 			if(!jausTimeStampFromBuffer(message->time,  buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 			index += JAUS_TIME_STAMP_SIZE_BYTES;
 		}
+		else
+		{
+			message->time = NULL;
+		}
+
 		return JAUS_TRUE;
 	}
 	else
