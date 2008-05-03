@@ -35,7 +35,6 @@ int main(void)
 	ReportVksDataTransferTerminationMessage reportVksDataTransferTerminationMessage;
 	ReportVksBoundsMessage reportVksBoundsMessage;
 	ReportVksObjectsCreationMessage reportVksObjectsCreationMessage;
-	ReportPayloadInterfaceMessage reportPayloadInterfaceMessage;
 	ReportPayloadDataElementMessage reportPayloadDataElementMessage;
 	EventMessage eventMessage;
 	ReportEventsMessage reportEventsMessage;
