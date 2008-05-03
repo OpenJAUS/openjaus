@@ -140,8 +140,15 @@ static int dataToBuffer(SetVksFeatureClassMetadataMessage message, unsigned char
 		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
 
 		// String Length
-		stringLength = (JausUnsignedShort) strlen(message->featureClassMetadataString);
-
+		if(message->featureClassMetadataString)
+		{
+			stringLength = (JausUnsignedShort) strlen(message->featureClassMetadataString);
+		}
+		else
+		{
+			stringLength = 0;
+		}
+		
 		if(!jausUnsignedShortToBuffer(stringLength, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
 
@@ -184,7 +191,10 @@ static unsigned int dataSize(SetVksFeatureClassMetadataMessage message)
 	index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
 
 	// MetaData String
-	index += (int) strlen(message->featureClassMetadataString);
+	if(message->featureClassMetadataString)
+	{
+		index += (int) strlen(message->featureClassMetadataString);
+	}
 
 	return index;
 }

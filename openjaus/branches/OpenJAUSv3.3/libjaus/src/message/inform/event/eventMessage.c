@@ -147,6 +147,12 @@ static int dataToBuffer(EventMessage message, unsigned char *buffer, unsigned in
 
 	if(bufferSizeBytes >= dataSize(message))
 	{
+		// Check for valid data
+		if(message->reportMessage == NULL)
+		{
+			return 0;
+		}
+		
 		// Pack Message Fields to Buffer
 
 		// EventID

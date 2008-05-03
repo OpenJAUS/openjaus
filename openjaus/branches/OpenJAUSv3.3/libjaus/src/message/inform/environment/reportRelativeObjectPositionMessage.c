@@ -98,6 +98,8 @@ static JausBoolean dataFromBuffer(ReportRelativeObjectPositionMessage message, u
 		if(!jausByteFromBuffer(&message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
 	
+		message->time = jausTimeCreate();
+		
 		if(!jausTimeStampFromBuffer(message->time, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_TIME_STAMP_SIZE_BYTES;
 
