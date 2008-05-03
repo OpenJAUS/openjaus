@@ -91,6 +91,8 @@ static JausBoolean dataFromBuffer(SetTimeMessage message, unsigned char *buffer,
 		if(!jausByteFromBuffer(&message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
 		
+		message->time = jausTimeCreate();
+		
 		if(jausByteIsBitSet(message->presenceVector, JAUS_TIME_PV_TIME_STAMP_BIT))
 		{
 			if(!jausTimeStampFromBuffer(message->time,  buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;

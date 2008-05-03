@@ -144,8 +144,11 @@ static int dataToBuffer(RejectEventRequestMessage message, unsigned char *buffer
 
 		if(jausByteIsBitSet(message->presenceVector, REJECT_EVENT_REQUEST_PV_ERROR_MESSAGE_BIT))
 		{
-			memcpy(buffer+index, message->errorMessage, strlen(message->errorMessage)+1);
-			index += (int) strlen(message->errorMessage)+1;		
+			if(message->errorMessage)
+			{
+				memcpy(buffer+index, message->errorMessage, strlen(message->errorMessage)+1);
+				index += (int) strlen(message->errorMessage)+1;		
+			}
 		}		
 
 	}
@@ -172,7 +175,10 @@ static unsigned int dataSize(RejectEventRequestMessage message)
 
 	if(jausByteIsBitSet(message->presenceVector, REJECT_EVENT_REQUEST_PV_ERROR_MESSAGE_BIT))
 	{
-		index += (int) strlen(message->errorMessage)+1;
+		if(message->errorMessage)
+		{
+			index += (int) strlen(message->errorMessage)+1;
+		}
 	}		
 
 	return index;
