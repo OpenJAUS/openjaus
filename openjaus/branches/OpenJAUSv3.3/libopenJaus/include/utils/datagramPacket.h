@@ -53,7 +53,7 @@
     #endif
 	#define CLOSE_SOCKET closesocket
 	typedef unsigned int size_t;
-#elif defined(__linux) || defined(linux) || defined(__linux__)
+#elif defined(__linux) || defined(linux) || defined(__linux__) || defined(__APPLE__)
 	#include <unistd.h>
 	#include <sys/socket.h>
 	#include <netdb.h>
@@ -83,7 +83,7 @@ typedef struct
 {
 	unsigned char *buffer;
 
-#if defined(__linux) || defined(linux) || defined(__linux__)
+#if defined(__linux) || defined(linux) || defined(__linux__) || defined(__APPLE__)
 	size_t bufferSizeBytes;
 #else
 	int bufferSizeBytes;

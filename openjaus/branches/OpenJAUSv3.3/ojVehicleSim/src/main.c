@@ -17,7 +17,7 @@
 	#include <windows.h>
 	#define SLEEP_MS(x) Sleep(x)
 	#define CLEAR "cls"
-#elif defined(__linux) || defined(linux) || defined(__linux__)
+#elif defined(__linux) || defined(linux) || defined(__linux__) || defined(__APPLE__)
 	#include <ncurses.h>
 	#include <termios.h>
 	#include <unistd.h>
@@ -51,7 +51,7 @@ static char timeString[DEFAULT_STRING_LENGTH] = "";
 // Operating specific console handles
 #if defined(WIN32)
 	static HANDLE handleStdin;
-#elif defined(__linux) || defined(linux) || defined(__linux__)
+#elif defined(__linux) || defined(linux) || defined(__linux__) || defined(__APPLE__)
 	static struct termios newTermio;
 	static struct termios storedTermio;
 #endif
@@ -357,7 +357,7 @@ void setupTerminal()
 {
 	if(verbose)
 	{
-#if defined(__linux) || defined(linux) || defined(__linux__)
+#if defined(__linux) || defined(linux) || defined(__linux__) || defined(__APPLE__)
 		tcgetattr(0,&storedTermio);
 		memcpy(&newTermio,&storedTermio,sizeof(struct termios));
 		
@@ -387,7 +387,7 @@ void cleanupConsole()
 {
 	if(verbose)
 	{
-#if defined(__linux) || defined(linux) || defined(__linux__)
+#if defined(__linux) || defined(linux) || defined(__linux__) || defined(__APPLE__)
 		tcsetattr(0,TCSANOW,&storedTermio);
 #endif
 	}
@@ -438,7 +438,7 @@ char getUserInput()
 					break;
 			}
 		}
-	#elif defined(__linux) || defined(linux) || defined(__linux__)
+	#elif defined(__linux) || defined(linux) || defined(__linux__) || defined(__APPLE__)
 		choice = getc(stdin);
 		if(choice > -1)
 		{

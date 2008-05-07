@@ -65,7 +65,7 @@
 
 #if defined (WIN32)
 	#define CONFIG_DIRECTORY ".\\config\\"
-#elif defined(__linux) || defined(linux) || defined(__linux__)
+#elif defined(__linux) || defined(linux) || defined(__linux__) || defined(__APPLE__)
 	#define CONFIG_DIRECTORY "./config/"
 #endif
 

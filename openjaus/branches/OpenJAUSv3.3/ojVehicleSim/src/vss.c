@@ -32,7 +32,7 @@
 #if defined (WIN32)
 	#define SLEEP_MS(x) Sleep(x)
 	#define CONFIG_DIRECTORY ".\\config\\"
-#elif defined(__linux) || defined(linux) || defined(__linux__)
+#elif defined(__linux) || defined(linux) || defined(__linux__) || defined(__APPLE__)
 	#define SLEEP_MS(x) usleep(x*1000)
 	#define CONFIG_DIRECTORY "./config/"
 #endif
