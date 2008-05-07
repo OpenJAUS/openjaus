@@ -23,7 +23,7 @@
 	#define _USE_MATH_DEFINES
 	#define CONFIG_DIRECTORY ".\\config\\"
 	#include <math.h>
-#elif defined(__linux) || defined(linux) || defined(__linux__)
+#elif defined(__linux) || defined(linux) || defined(__linux__) || defined(__APPLE__)
 	#define SLEEP_MS(x) usleep(x*1000)
 	#define CONFIG_DIRECTORY "./config/"
 #endif

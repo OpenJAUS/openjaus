@@ -151,7 +151,7 @@ int multicastSocketJoinGroup(MulticastSocket multicastSocket, InetAddress groupI
 	multicastRequest.imr_multiaddr.s_addr = groupIpAddress->value;
 	multicastRequest.imr_interface.s_addr = multicastSocket->address->value;
 
-#if defined(__linux) || defined(linux) || defined(__linux__)
+#if defined(__linux) || defined(linux) || defined(__linux__) || defined(__APPLE__)
 	// Open a socket with: Protocol Family (PF) IPv4, of Datagram Socket Type, and using UDP IP protocol explicitly
 	multicastSocket->multicastSocketDescriptor = (int) socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP); 
 	if(multicastSocket->multicastSocketDescriptor  == -1)

@@ -55,7 +55,7 @@
 	#define CLOSE_SOCKET closesocket
 	typedef unsigned int size_t;
 	#define JAUS_EXPORT	__declspec(dllexport)
-#elif defined(__linux) || defined(linux) || defined(__linux__)
+#elif defined(__linux) || defined(linux) || defined(__linux__) || defined(__APPLE__)
 	#define JAUS_EXPORT
 	#include <unistd.h>
 	#include <sys/socket.h>

@@ -47,7 +47,7 @@
 	#include <winsock2.h>
 	#include <windows.h>
 	#define SLEEP_MS(x) Sleep(x)
-#elif defined(__linux) || defined(linux) || defined(__linux__)
+#elif defined(__linux) || defined(linux) || defined(__linux__) || defined(__APPLE__)
 	#include <unistd.h>
 	#include <sys/time.h>
 	#define SLEEP_MS(x) usleep(x*1000)

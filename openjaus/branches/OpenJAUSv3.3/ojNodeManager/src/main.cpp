@@ -46,7 +46,7 @@
 #if defined(WIN32)
 	#include <windows.h>
 	#define CLEAR_COMMAND "cls"
-#elif defined(__linux) || defined(linux) || defined(__linux__)
+#elif defined(__linux) || defined(linux) || defined(__linux__) || defined(__APPLE__)
 	#include <unistd.h>
 	#include <termios.h>
 	#define CLEAR_COMMAND "clear"
@@ -170,7 +170,7 @@ int main(int argc, char *args)
 	return 0;
 }
 
-#elif defined(__linux) || defined(linux) || defined(__linux__)
+#elif defined(__linux) || defined(linux) || defined(__linux__) || defined(__APPLE__)
 
 int main(int argc, char *args)
 {

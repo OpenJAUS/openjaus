@@ -84,7 +84,12 @@
 
 #else
 
+#ifdef __APPLE__
+	#define HAVE_GETTIMEOFDAY
+#else 
 	#define HAVE_CLOCK_GETTIME
+#endif
+	
 	#include <sys/time.h>
 	#include <time.h>
 	#include <unistd.h>
