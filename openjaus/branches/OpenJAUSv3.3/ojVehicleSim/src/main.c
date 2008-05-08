@@ -15,14 +15,12 @@
 	#undef MOUSE_MOVED	// conflict between PDCURSES and WIN32
 	#include <curses.h>
 	#include <windows.h>
-	#define SLEEP_MS(x) Sleep(x)
 	#define CLEAR "cls"
 #elif defined(__linux) || defined(linux) || defined(__linux__) || defined(__APPLE__)
 	#include <ncurses.h>
 	#include <termios.h>
 	#include <unistd.h>
 	#define CLEAR "clear"
-	#define SLEEP_MS(x) usleep(x*1000)
 #endif
 
 #include "simulator.h"
@@ -547,7 +545,7 @@ int main(int argCount, char **argString)
 		//	updateScreen(keyboardLock, choice);		
 		//}
 						
-		SLEEP_MS(1000);
+		ojSleepMsec(100);
 	}
 
 	cleanupConsole();

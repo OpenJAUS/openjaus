@@ -5,18 +5,6 @@
 // Description:	This file contains the skeleton C code for implementing a JAUS component in a Linux environment
 //				This code is designed to work with the node manager and JAUS library software written by CIMAR
 
-// How To Use This File:
-// All comments labled "USER:" specify lines of code that the end user must change to implement thier individual component
-// The end user must also change all functions and variables in this file begining with "vss" (case JAUS_sensitive do not change Cmpt)
-// This substring must be changed to the component identifier acronym of the individual component, and
-// this file should also be renamed likewise
-// Also Change all "VSS" to your component acronym (ALL CAPS) (case JAUS_sensitive)
-// The end user must also change all "USER_COMPONENT_ID_NUMBER_HERE" defines to the individual component define (see examples below)
-// Ex: For a Primitive Driver component change all "vss" to "pd" and "VSS" to "PD"
-// Ex: For a Primitive Driver change all "USER_COMPONENT_ID_NUMBER_HERE" defines to "PRIMITIVE_DRIVER" defines
-// Note that for new/experimental components, the component ID will have to be defined in the header file 
-// After all changes are implemented, change the file header information at the begining of the file accordingly
-
 #include "properties.h"
 #include <jaus.h>			// JAUS message set (USER: JAUS libraries must be installed first)
 #include <openJaus.h>	// Node managment functions for sending and receiving JAUS messages (USER: Node Manager must be installed)
@@ -30,10 +18,8 @@
 #include "vehicleSim.h"	
 
 #if defined (WIN32)
-	#define SLEEP_MS(x) Sleep(x)
 	#define CONFIG_DIRECTORY ".\\config\\"
 #elif defined(__linux) || defined(linux) || defined(__linux__) || defined(__APPLE__)
-	#define SLEEP_MS(x) usleep(x*1000)
 	#define CONFIG_DIRECTORY "./config/"
 #endif
 
@@ -155,7 +141,7 @@ int vssShutdown(void)
 		timeOutSec = getTimeSeconds() + VSS_THREAD_TIMEOUT_SEC;
 		while(vssThreadRunning)
 		{
-			SLEEP_MS(1000);
+			ojSleepMsec(100);
 			if(getTimeSeconds() >= timeOutSec)
 			{
 				pthread_cancel(vssThreadId);
@@ -214,12 +200,8 @@ void *vssThread(void *threadData)
 {
 	JausMessage rxMessage;
 	double time, prevTime, nextExcecuteTime = 0.0;
-	struct timespec sleepTime;
 
 	vssThreadRunning = TRUE;
-
-	sleepTime.tv_sec = 0;
-	sleepTime.tv_nsec = 1000;
 
 	time = getTimeSeconds();
 	vss->state = JAUS_INITIALIZE_STATE; // Set JAUS state to INITIALIZE
@@ -243,8 +225,7 @@ void *vssThread(void *threadData)
 				}
 				else
 				{
-					//nanosleep(&sleepTime, NULL);
-					SLEEP_MS(1);
+					ojSleepMsec(1);
 				}
 			}
 		}while(getTimeSeconds() < nextExcecuteTime);
@@ -292,8 +273,7 @@ void *vssThread(void *threadData)
 	
 	vssShutdownState();
 	
-	//usleep(50000);	// Sleep for 50 milliseconds and then exit
-	SLEEP_MS(50);
+	ojSleepMsec(50);	// Sleep for 50 milliseconds and then exit
 
 	vssThreadRunning = FALSE;
 	

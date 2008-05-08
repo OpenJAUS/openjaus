@@ -19,12 +19,10 @@
 #include "utm/pointLla.h"
 
 #if defined (WIN32)
-	#define SLEEP_MS(x) Sleep(x)
 	#define _USE_MATH_DEFINES
 	#define CONFIG_DIRECTORY ".\\config\\"
 	#include <math.h>
 #elif defined(__linux) || defined(linux) || defined(__linux__) || defined(__APPLE__)
-	#define SLEEP_MS(x) usleep(x*1000)
 	#define CONFIG_DIRECTORY "./config/"
 #endif
 
@@ -145,7 +143,7 @@ int gposShutdown(void)
 		timeOutSec = getTimeSeconds() + GPOS_THREAD_TIMEOUT_SEC;
 		while(gposThreadRunning)
 		{
-			SLEEP_MS(1000);
+			ojSleepMsec(100);
 			if(getTimeSeconds() >= timeOutSec)
 			{
 				pthread_cancel(gposThreadId);
@@ -214,12 +212,8 @@ void *gposThread(void *threadData)
 {
 	JausMessage rxMessage;
 	double time, prevTime, nextExcecuteTime = 0.0;
-	struct timespec sleepTime;
 
 	gposThreadRunning = TRUE;
-
-	sleepTime.tv_sec = 0;
-	sleepTime.tv_nsec = 1000;
 
 	time = getTimeSeconds();
 	gpos->state = JAUS_INITIALIZE_STATE; // Set JAUS state to INITIALIZE
@@ -243,8 +237,7 @@ void *gposThread(void *threadData)
 				}
 				else
 				{
-					//nanosleep(&sleepTime, NULL);
-					SLEEP_MS(1);
+					ojSleepMsec(1);
 				}
 			}
 		}while(getTimeSeconds() < nextExcecuteTime);
@@ -292,7 +285,7 @@ void *gposThread(void *threadData)
 	
 	gposShutdownState();
 	
-	SLEEP_MS(50);	// Sleep for 50 milliseconds and then exit
+	ojSleepMsec(50);	// Sleep for 50 milliseconds and then exit
 
 	gposThreadRunning = FALSE;
 	
