@@ -17,10 +17,8 @@
 #include "pd.h"	// USER: Implement and rename this header file. Include prototypes for all public functions contained in this file.
 
 #if defined (WIN32)
-	#define SLEEP_MS(x) Sleep(x)
 	#define CONFIG_DIRECTORY ".\\config\\"
 #elif defined(__linux) || defined(linux) || defined(__linux__) || defined(__APPLE__)
-	#define SLEEP_MS(x) usleep(x*1000)
 	#define CONFIG_DIRECTORY "./config/"
 #endif
 
@@ -151,7 +149,7 @@ int pdShutdown(void)
 		timeOutSec = getTimeSeconds() + PD_THREAD_TIMEOUT_SEC;
 		while(pdThreadRunning)
 		{
-			SLEEP_MS(1000);
+			ojSleepMsec(100);
 			if(getTimeSeconds() >= timeOutSec)
 			{
 				pthread_cancel(pdThreadId);
@@ -225,12 +223,8 @@ void *pdThread(void *threadData)
 {
 	JausMessage rxMessage;
 	double time, prevTime, nextExcecuteTime = 0.0;
-	struct timespec sleepTime;
 
 	pdThreadRunning = TRUE;
-
-	sleepTime.tv_sec = 0;
-	sleepTime.tv_nsec = 1000;
 
 	time = getTimeSeconds();
 	pd->state = JAUS_INITIALIZE_STATE; // Set JAUS state to INITIALIZE
@@ -254,8 +248,7 @@ void *pdThread(void *threadData)
 				}
 				else
 				{
-					//nanosleep(&sleepTime, NULL);
-					SLEEP_MS(.1);
+					ojSleepMsec(1);				
 				}
 			}
 		}while(getTimeSeconds() < nextExcecuteTime);
@@ -303,8 +296,8 @@ void *pdThread(void *threadData)
 	
 	pdShutdownState();
 	
-	//usleep(50000);	// Sleep for 50 milliseconds and then exit
-	SLEEP_MS(50);
+	// Sleep for 50 milliseconds and then exit
+	ojSleepMsec(50);
 
 	pdThreadRunning = FALSE;
 	
@@ -470,46 +463,6 @@ void pdStandbyState(void)
 
 	pd->state = JAUS_READY_STATE;
 	return;
-/*	
-	prevRunPause = runPause;
-	runPause = vehicleSimGetRunPause();
-	if(runPause == VEHICLE_SIM_RUN)
-	{
-		if(prevRunPause == VEHICLE_SIM_PAUSE)
-		{
-			readyTransitionTime = getTimeSeconds() + 2.0;
-		}
-		else
-		{
-			if(readyTransitionTime > 0 && getTimeSeconds() > readyTransitionTime)
-			{
-				pd->state = JAUS_READY_STATE;
-				return;
-			}
-		}
-	}		
-	else
-	{
-		readyTransitionTime = -1;
-	}
-
-	if(controllerStatusSc->isActive)
-	{
-		if(scManagerTerminateServiceConnection(pdNmi, controllerStatusSc))
-		{
-			//cDebug(2, "Terminated Component Status Sc\n");
-		}
-		else
-		{
-			//cError("pd: Failed to terminate controller status service connection\n");
-		}
-		usleep(500000);
-		controllerStatusSc->isActive = JAUS_FALSE;
-		pd->controller.state = JAUS_UNKNOWN_STATE;
-	}
-
-	vehicleSimSetCommand(0, 80, setWrenchEffort->propulsiveRotationalEffortZPercent);
-*/
 }
 
 void pdReadyState(void)
@@ -561,8 +514,7 @@ void pdReadyState(void)
 			{
 				//cError("pd: Failed to terminate controller status service connection\n");
 			}
-			//usleep(500000);
-			SLEEP_MS(500);
+			ojSleepMsec(500);
 
 			controllerStatusSc->isActive = JAUS_FALSE;
 			pd->controller.state = JAUS_UNKNOWN_STATE;
@@ -597,8 +549,7 @@ void pdReadyState(void)
 			{
 				//cError("pd: Failed to terminate controller status service connection\n");
 			}
-			//usleep(500000);
-			SLEEP_MS(500);
+			ojSleepMsec(500);
 			controllerStatusSc->isActive = JAUS_FALSE;
 			pd->controller.state = JAUS_UNKNOWN_STATE;
 		}
@@ -619,8 +570,7 @@ void pdEmergencyState(void)
 		{
 			//cError("pd: Failed to terminate controller status service connection\n");
 		}
-		//usleep(500000);
-		SLEEP_MS(500);
+		ojSleepMsec(500);
 		controllerStatusSc->isActive = JAUS_FALSE;
 		pd->controller.state = JAUS_UNKNOWN_STATE;
 	}

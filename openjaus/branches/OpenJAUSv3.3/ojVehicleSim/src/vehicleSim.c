@@ -8,12 +8,10 @@
 #include "vehicleSim.h"
 
 #if defined (WIN32)
-	#define SLEEP_MS(x) Sleep(x)
 	#define _USE_MATH_DEFINES
 	#include <math.h>
 	#define CONFIG_DIRECTORY ".\\config\\"
 #elif defined(__linux) || defined(linux) || defined(__linux__) || defined(__APPLE__)
-	#define SLEEP_MS(x) usleep(x*1000)
 	#define CONFIG_DIRECTORY "./config/"
 #endif
 
@@ -156,7 +154,7 @@ int vehicleSimShutdown(void)
 	timeOutSec = getTimeSeconds() + VEHICLE_SIM_THREAD_TIMEOUT_SEC;
 	while(vehicleSimThreadRunning)
 	{
-		SLEEP_MS(1000);
+		ojSleepMsec(100);
 		if(getTimeSeconds() >= timeOutSec)
 		{
 			pthread_cancel(vehicleSimThreadId);
@@ -338,16 +336,13 @@ void *vehicleSimThread(void *threadData)
 		}
 		vehiclePosLla = pointUtmToPointLla(vehiclePosUtm);
 
-		SLEEP_MS(25);
-		//usleep(25000);
+		ojSleepMsec(25);
 	}	
 	
-	//usleep(50000);	// Sleep for 50 milliseconds and then exit
-	SLEEP_MS(50);
-
+	ojSleepMsec(50);	// Sleep for 50 milliseconds and then exit
+	
 	vehicleSimThreadRunning = FALSE;
 	
 	return NULL;
-	//pthread_exit(NULL);
 }
 

@@ -56,12 +56,10 @@
 #include "vehicle.h"
 
 #if defined (WIN32)
-	#define SLEEP_MS(x) Sleep(x)
 	#define _USE_MATH_DEFINES
 	#include <math.h>
 	#define CONFIG_DIRECTORY ".\\config\\"
 #elif defined(__linux) || defined(linux) || defined(__linux__) || defined(__APPLE__)
-	#define SLEEP_MS(x) usleep(x*1000)
 	#define CONFIG_DIRECTORY "./config/"
 #endif
 
@@ -260,7 +258,7 @@ int wdShutdown(void)
 		timeOutSec = getTimeSeconds() + WD_THREAD_TIMEOUT_SEC;
 		while(wdThreadRunning)
 		{
-			SLEEP_MS(1000);
+			ojSleepMsec(100);
 			if(getTimeSeconds() >= timeOutSec)
 			{
 				pthread_cancel(wdThreadId);
@@ -447,12 +445,8 @@ void *wdThread(void *threadData)
 {
 	JausMessage rxMessage;
 	double time, prevTime, nextExcecuteTime = 0.0;
-	struct timespec sleepTime;
 
 	wdThreadRunning = TRUE;
-
-	sleepTime.tv_sec = 0;
-	sleepTime.tv_nsec = 1000;
 
 	time = getTimeSeconds();
 	wd->state = JAUS_INITIALIZE_STATE; // Set JAUS state to INITIALIZE
@@ -476,8 +470,7 @@ void *wdThread(void *threadData)
 				}
 				else
 				{
-					//nanosleep(&sleepTime, NULL);
-					SLEEP_MS(1);
+					ojSleepMsec(1);
 				}
 			}
 		}while(getTimeSeconds() < nextExcecuteTime);
@@ -525,9 +518,8 @@ void *wdThread(void *threadData)
 	
 	wdShutdownState();
 	
-	//usleep(50000);	// Sleep for 50 milliseconds and then exit
-	SLEEP_MS(50);
-
+	ojSleepMsec(50);	// Sleep for 50 milliseconds and then exit
+	
 	wdThreadRunning = FALSE;
 	
 	return NULL;

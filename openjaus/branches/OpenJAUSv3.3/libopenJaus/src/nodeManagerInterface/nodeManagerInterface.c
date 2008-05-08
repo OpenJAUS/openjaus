@@ -46,11 +46,9 @@
 	#define WIN32_LEAN_AND_MEAN
 	#include <winsock2.h>
 	#include <windows.h>
-	#define SLEEP_MS(x) Sleep(x)
 #elif defined(__linux) || defined(linux) || defined(__linux__) || defined(__APPLE__)
 	#include <unistd.h>
 	#include <sys/time.h>
-	#define SLEEP_MS(x) usleep(x*1000)
 #endif
 
 #include "nodeManagerInterface/nodeManagerInterface.h"
@@ -252,7 +250,7 @@ int nodeManagerClose(NodeManagerInterface nmi)
 		timeOutSec = getTimeSeconds() + INTERFACE_THREAD_TIMEOUT_SEC;
 		while(nmi->heartbeatThreadRunning)
 		{
-			SLEEP_MS(10);
+			ojSleepMsec(10);
 			if(getTimeSeconds() >= timeOutSec)
 			{
 				pthread_cancel(nmi->heartbeatThreadId);
@@ -265,7 +263,7 @@ int nodeManagerClose(NodeManagerInterface nmi)
 		timeOutSec = getTimeSeconds() + INTERFACE_THREAD_TIMEOUT_SEC;
 		while(nmi->receiveThreadRunning)
 		{
-			SLEEP_MS(10);
+			ojSleepMsec(10);
 			if(getTimeSeconds() >= timeOutSec)
 			{
 				pthread_cancel(nmi->receiveThreadId);
@@ -385,7 +383,7 @@ void *heartbeatThread(void *threadArgument)
 			//nmi->cmpt->state = JAUS_FAILURE_STATE;
 			break;
 		}
-		SLEEP_MS(1000); // sleep one second
+		ojSleepMsec(1000); // sleep one second
 	}
 
 	jausMessageDestroy(txMessage);	
