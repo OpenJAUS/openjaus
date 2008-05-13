@@ -35,6 +35,7 @@ int main(void)
 	ReportVksDataTransferTerminationMessage reportVksDataTransferTerminationMessage;
 	ReportVksBoundsMessage reportVksBoundsMessage;
 	ReportVksObjectsCreationMessage reportVksObjectsCreationMessage;
+	ReportPayloadInterfaceMessage reportPayloadInterfaceMessage;
 	ReportPayloadDataElementMessage reportPayloadDataElementMessage;
 	EventMessage eventMessage;
 	ReportEventsMessage reportEventsMessage;
@@ -91,6 +92,7 @@ int main(void)
 	SetVksFeatureClassMetadataMessage setVksFeatureClassMetadataMessage;
 	DeleteVksObjectsMessage deleteVksObjectsMessage;
 	TerminateVksDataTransferMessage terminateVksDataTransferMessage;
+	SetPayloadDataElementMessage setPayloadDataElementMessage;
 	RejectEventRequestMessage rejectEventRequestMessage;
 	CancelEventMessage cancelEventMessage;
 	UpdateEventMessage updateEventMessage;
@@ -153,729 +155,1025 @@ int main(void)
 
 	reportComponentControlMessage = reportComponentControlMessageCreate();
 	jausMessage = reportComponentControlMessageToJausMessage(reportComponentControlMessage);
+	reportComponentControlMessageDestroy(reportComponentControlMessage);
 	reportComponentControlMessage = reportComponentControlMessageFromJausMessage(jausMessage);
+	reportComponentControlMessageDestroy(reportComponentControlMessage);
 	jausMessageDestroy(jausMessage);
 
 	reportComponentStatusMessage = reportComponentStatusMessageCreate();
 	jausMessage = reportComponentStatusMessageToJausMessage(reportComponentStatusMessage);
+	reportComponentStatusMessageDestroy(reportComponentStatusMessage);
 	reportComponentStatusMessage = reportComponentStatusMessageFromJausMessage(jausMessage);
+	reportComponentStatusMessageDestroy(reportComponentStatusMessage);
 	jausMessageDestroy(jausMessage);
 
 	reportComponentAuthorityMessage = reportComponentAuthorityMessageCreate();
 	jausMessage = reportComponentAuthorityMessageToJausMessage(reportComponentAuthorityMessage);
+	reportComponentAuthorityMessageDestroy(reportComponentAuthorityMessage);
 	reportComponentAuthorityMessage = reportComponentAuthorityMessageFromJausMessage(jausMessage);
+	reportComponentAuthorityMessageDestroy(reportComponentAuthorityMessage);
 	jausMessageDestroy(jausMessage);
 
 	reportTimeMessage = reportTimeMessageCreate();
 	jausMessage = reportTimeMessageToJausMessage(reportTimeMessage);
+	reportTimeMessageDestroy(reportTimeMessage);
 	reportTimeMessage = reportTimeMessageFromJausMessage(jausMessage);
+	reportTimeMessageDestroy(reportTimeMessage);
 	jausMessageDestroy(jausMessage);
 
 	reportWrenchEffortMessage = reportWrenchEffortMessageCreate();
 	jausMessage = reportWrenchEffortMessageToJausMessage(reportWrenchEffortMessage);
+	reportWrenchEffortMessageDestroy(reportWrenchEffortMessage);
 	reportWrenchEffortMessage = reportWrenchEffortMessageFromJausMessage(jausMessage);
+	reportWrenchEffortMessageDestroy(reportWrenchEffortMessage);
 	jausMessageDestroy(jausMessage);
 
 	reportLocalVectorMessage = reportLocalVectorMessageCreate();
 	jausMessage = reportLocalVectorMessageToJausMessage(reportLocalVectorMessage);
+	reportLocalVectorMessageDestroy(reportLocalVectorMessage);
 	reportLocalVectorMessage = reportLocalVectorMessageFromJausMessage(jausMessage);
+	reportLocalVectorMessageDestroy(reportLocalVectorMessage);
 	jausMessageDestroy(jausMessage);
 
 	reportLocalPoseMessage = reportLocalPoseMessageCreate();
 	jausMessage = reportLocalPoseMessageToJausMessage(reportLocalPoseMessage);
+	reportLocalPoseMessageDestroy(reportLocalPoseMessage);
 	reportLocalPoseMessage = reportLocalPoseMessageFromJausMessage(jausMessage);
+	reportLocalPoseMessageDestroy(reportLocalPoseMessage);
 	jausMessageDestroy(jausMessage);
 
 	reportGlobalPathSegmentMessage = reportGlobalPathSegmentMessageCreate();
 	jausMessage = reportGlobalPathSegmentMessageToJausMessage(reportGlobalPathSegmentMessage);
+	reportGlobalPathSegmentMessageDestroy(reportGlobalPathSegmentMessage);
 	reportGlobalPathSegmentMessage = reportGlobalPathSegmentMessageFromJausMessage(jausMessage);
+	reportGlobalPathSegmentMessageDestroy(reportGlobalPathSegmentMessage);
 	jausMessageDestroy(jausMessage);
 
 	reportTravelSpeedMessage = reportTravelSpeedMessageCreate();
 	jausMessage = reportTravelSpeedMessageToJausMessage(reportTravelSpeedMessage);
+	reportTravelSpeedMessageDestroy(reportTravelSpeedMessage);
 	reportTravelSpeedMessage = reportTravelSpeedMessageFromJausMessage(jausMessage);
+	reportTravelSpeedMessageDestroy(reportTravelSpeedMessage);
 	jausMessageDestroy(jausMessage);
 
 	reportGlobalVectorMessage = reportGlobalVectorMessageCreate();
 	jausMessage = reportGlobalVectorMessageToJausMessage(reportGlobalVectorMessage);
+	reportGlobalVectorMessageDestroy(reportGlobalVectorMessage);
 	reportGlobalVectorMessage = reportGlobalVectorMessageFromJausMessage(jausMessage);
+	reportGlobalVectorMessageDestroy(reportGlobalVectorMessage);
 	jausMessageDestroy(jausMessage);
 
 	reportWaypointCountMessage = reportWaypointCountMessageCreate();
 	jausMessage = reportWaypointCountMessageToJausMessage(reportWaypointCountMessage);
+	reportWaypointCountMessageDestroy(reportWaypointCountMessage);
 	reportWaypointCountMessage = reportWaypointCountMessageFromJausMessage(jausMessage);
+	reportWaypointCountMessageDestroy(reportWaypointCountMessage);
 	jausMessageDestroy(jausMessage);
 
 	reportPlatformSpecificationsMessage = reportPlatformSpecificationsMessageCreate();
 	jausMessage = reportPlatformSpecificationsMessageToJausMessage(reportPlatformSpecificationsMessage);
+	reportPlatformSpecificationsMessageDestroy(reportPlatformSpecificationsMessage);
 	reportPlatformSpecificationsMessage = reportPlatformSpecificationsMessageFromJausMessage(jausMessage);
+	reportPlatformSpecificationsMessageDestroy(reportPlatformSpecificationsMessage);
 	jausMessageDestroy(jausMessage);
 
 	reportGlobalWaypointMessage = reportGlobalWaypointMessageCreate();
 	jausMessage = reportGlobalWaypointMessageToJausMessage(reportGlobalWaypointMessage);
+	reportGlobalWaypointMessageDestroy(reportGlobalWaypointMessage);
 	reportGlobalWaypointMessage = reportGlobalWaypointMessageFromJausMessage(jausMessage);
+	reportGlobalWaypointMessageDestroy(reportGlobalWaypointMessage);
 	jausMessageDestroy(jausMessage);
 
 	reportLocalPathSegmentMessage = reportLocalPathSegmentMessageCreate();
 	jausMessage = reportLocalPathSegmentMessageToJausMessage(reportLocalPathSegmentMessage);
+	reportLocalPathSegmentMessageDestroy(reportLocalPathSegmentMessage);
 	reportLocalPathSegmentMessage = reportLocalPathSegmentMessageFromJausMessage(jausMessage);
+	reportLocalPathSegmentMessageDestroy(reportLocalPathSegmentMessage);
 	jausMessageDestroy(jausMessage);
 
 	reportPathSegmentCountMessage = reportPathSegmentCountMessageCreate();
 	jausMessage = reportPathSegmentCountMessageToJausMessage(reportPathSegmentCountMessage);
+	reportPathSegmentCountMessageDestroy(reportPathSegmentCountMessage);
 	reportPathSegmentCountMessage = reportPathSegmentCountMessageFromJausMessage(jausMessage);
+	reportPathSegmentCountMessageDestroy(reportPathSegmentCountMessage);
 	jausMessageDestroy(jausMessage);
 
 	reportLocalWaypointMessage = reportLocalWaypointMessageCreate();
 	jausMessage = reportLocalWaypointMessageToJausMessage(reportLocalWaypointMessage);
+	reportLocalWaypointMessageDestroy(reportLocalWaypointMessage);
 	reportLocalWaypointMessage = reportLocalWaypointMessageFromJausMessage(jausMessage);
+	reportLocalWaypointMessageDestroy(reportLocalWaypointMessage);
 	jausMessageDestroy(jausMessage);
 
 	reportPlatformOperationalDataMessage = reportPlatformOperationalDataMessageCreate();
 	jausMessage = reportPlatformOperationalDataMessageToJausMessage(reportPlatformOperationalDataMessage);
+	reportPlatformOperationalDataMessageDestroy(reportPlatformOperationalDataMessage);
 	reportPlatformOperationalDataMessage = reportPlatformOperationalDataMessageFromJausMessage(jausMessage);
+	reportPlatformOperationalDataMessageDestroy(reportPlatformOperationalDataMessage);
 	jausMessageDestroy(jausMessage);
 
 	reportVelocityStateMessage = reportVelocityStateMessageCreate();
 	jausMessage = reportVelocityStateMessageToJausMessage(reportVelocityStateMessage);
+	reportVelocityStateMessageDestroy(reportVelocityStateMessage);
 	reportVelocityStateMessage = reportVelocityStateMessageFromJausMessage(jausMessage);
+	reportVelocityStateMessageDestroy(reportVelocityStateMessage);
 	jausMessageDestroy(jausMessage);
 
 	reportGlobalPoseMessage = reportGlobalPoseMessageCreate();
 	jausMessage = reportGlobalPoseMessageToJausMessage(reportGlobalPoseMessage);
+	reportGlobalPoseMessageDestroy(reportGlobalPoseMessage);
 	reportGlobalPoseMessage = reportGlobalPoseMessageFromJausMessage(jausMessage);
+	reportGlobalPoseMessageDestroy(reportGlobalPoseMessage);
 	jausMessageDestroy(jausMessage);
 
 	reportDiscreteDevicesMessage = reportDiscreteDevicesMessageCreate();
 	jausMessage = reportDiscreteDevicesMessageToJausMessage(reportDiscreteDevicesMessage);
+	reportDiscreteDevicesMessageDestroy(reportDiscreteDevicesMessage);
 	reportDiscreteDevicesMessage = reportDiscreteDevicesMessageFromJausMessage(jausMessage);
+	reportDiscreteDevicesMessageDestroy(reportDiscreteDevicesMessage);
 	jausMessageDestroy(jausMessage);
 
 	reportToolPointMessage = reportToolPointMessageCreate();
 	jausMessage = reportToolPointMessageToJausMessage(reportToolPointMessage);
+	reportToolPointMessageDestroy(reportToolPointMessage);
 	reportToolPointMessage = reportToolPointMessageFromJausMessage(jausMessage);
+	reportToolPointMessageDestroy(reportToolPointMessage);
 	jausMessageDestroy(jausMessage);
 
 	reportJointEffortsMessage = reportJointEffortsMessageCreate();
 	jausMessage = reportJointEffortsMessageToJausMessage(reportJointEffortsMessage);
+	reportJointEffortsMessageDestroy(reportJointEffortsMessage);
 	reportJointEffortsMessage = reportJointEffortsMessageFromJausMessage(jausMessage);
+	reportJointEffortsMessageDestroy(reportJointEffortsMessage);
 	jausMessageDestroy(jausMessage);
 
 	reportManipulatorSpecificationsMessage = reportManipulatorSpecificationsMessageCreate();
 	jausMessage = reportManipulatorSpecificationsMessageToJausMessage(reportManipulatorSpecificationsMessage);
+	reportManipulatorSpecificationsMessageDestroy(reportManipulatorSpecificationsMessage);
 	reportManipulatorSpecificationsMessage = reportManipulatorSpecificationsMessageFromJausMessage(jausMessage);
+	reportManipulatorSpecificationsMessageDestroy(reportManipulatorSpecificationsMessage);
 	jausMessageDestroy(jausMessage);
 
 	reportJointVelocitiesMessage = reportJointVelocitiesMessageCreate();
 	jausMessage = reportJointVelocitiesMessageToJausMessage(reportJointVelocitiesMessage);
+	reportJointVelocitiesMessageDestroy(reportJointVelocitiesMessage);
 	reportJointVelocitiesMessage = reportJointVelocitiesMessageFromJausMessage(jausMessage);
+	reportJointVelocitiesMessageDestroy(reportJointVelocitiesMessage);
 	jausMessageDestroy(jausMessage);
 
 	reportJointForceTorquesMessage = reportJointForceTorquesMessageCreate();
 	jausMessage = reportJointForceTorquesMessageToJausMessage(reportJointForceTorquesMessage);
+	reportJointForceTorquesMessageDestroy(reportJointForceTorquesMessage);
 	reportJointForceTorquesMessage = reportJointForceTorquesMessageFromJausMessage(jausMessage);
+	reportJointForceTorquesMessageDestroy(reportJointForceTorquesMessage);
 	jausMessageDestroy(jausMessage);
 
 	reportJointPositionsMessage = reportJointPositionsMessageCreate();
 	jausMessage = reportJointPositionsMessageToJausMessage(reportJointPositionsMessage);
+	reportJointPositionsMessageDestroy(reportJointPositionsMessage);
 	reportJointPositionsMessage = reportJointPositionsMessageFromJausMessage(jausMessage);
+	reportJointPositionsMessageDestroy(reportJointPositionsMessage);
 	jausMessageDestroy(jausMessage);
 
 	reportVksFeatureClassMetadataMessage = reportVksFeatureClassMetadataMessageCreate();
 	jausMessage = reportVksFeatureClassMetadataMessageToJausMessage(reportVksFeatureClassMetadataMessage);
+	reportVksFeatureClassMetadataMessageDestroy(reportVksFeatureClassMetadataMessage);
 	reportVksFeatureClassMetadataMessage = reportVksFeatureClassMetadataMessageFromJausMessage(jausMessage);
+	reportVksFeatureClassMetadataMessageDestroy(reportVksFeatureClassMetadataMessage);
 	jausMessageDestroy(jausMessage);
 
 	reportVksObjectsMessage = reportVksObjectsMessageCreate();
 	jausMessage = reportVksObjectsMessageToJausMessage(reportVksObjectsMessage);
+	reportVksObjectsMessageDestroy(reportVksObjectsMessage);
 	reportVksObjectsMessage = reportVksObjectsMessageFromJausMessage(jausMessage);
+	reportVksObjectsMessageDestroy(reportVksObjectsMessage);
 	jausMessageDestroy(jausMessage);
 
 	reportVksDataTransferTerminationMessage = reportVksDataTransferTerminationMessageCreate();
 	jausMessage = reportVksDataTransferTerminationMessageToJausMessage(reportVksDataTransferTerminationMessage);
+	reportVksDataTransferTerminationMessageDestroy(reportVksDataTransferTerminationMessage);
 	reportVksDataTransferTerminationMessage = reportVksDataTransferTerminationMessageFromJausMessage(jausMessage);
+	reportVksDataTransferTerminationMessageDestroy(reportVksDataTransferTerminationMessage);
 	jausMessageDestroy(jausMessage);
 
 	reportVksBoundsMessage = reportVksBoundsMessageCreate();
 	jausMessage = reportVksBoundsMessageToJausMessage(reportVksBoundsMessage);
+	reportVksBoundsMessageDestroy(reportVksBoundsMessage);
 	reportVksBoundsMessage = reportVksBoundsMessageFromJausMessage(jausMessage);
+	reportVksBoundsMessageDestroy(reportVksBoundsMessage);
 	jausMessageDestroy(jausMessage);
 
 	reportVksObjectsCreationMessage = reportVksObjectsCreationMessageCreate();
 	jausMessage = reportVksObjectsCreationMessageToJausMessage(reportVksObjectsCreationMessage);
+	reportVksObjectsCreationMessageDestroy(reportVksObjectsCreationMessage);
 	reportVksObjectsCreationMessage = reportVksObjectsCreationMessageFromJausMessage(jausMessage);
+	reportVksObjectsCreationMessageDestroy(reportVksObjectsCreationMessage);
+	jausMessageDestroy(jausMessage);
+
+	reportPayloadInterfaceMessage = reportPayloadInterfaceMessageCreate();
+	jausMessage = reportPayloadInterfaceMessageToJausMessage(reportPayloadInterfaceMessage);
+	reportPayloadInterfaceMessageDestroy(reportPayloadInterfaceMessage);
+	reportPayloadInterfaceMessage = reportPayloadInterfaceMessageFromJausMessage(jausMessage);
+	reportPayloadInterfaceMessageDestroy(reportPayloadInterfaceMessage);
 	jausMessageDestroy(jausMessage);
 
 	reportPayloadDataElementMessage = reportPayloadDataElementMessageCreate();
 	jausMessage = reportPayloadDataElementMessageToJausMessage(reportPayloadDataElementMessage);
+	reportPayloadDataElementMessageDestroy(reportPayloadDataElementMessage);
 	reportPayloadDataElementMessage = reportPayloadDataElementMessageFromJausMessage(jausMessage);
+	reportPayloadDataElementMessageDestroy(reportPayloadDataElementMessage);
 	jausMessageDestroy(jausMessage);
 
 	eventMessage = eventMessageCreate();
 	jausMessage = eventMessageToJausMessage(eventMessage);
+	eventMessageDestroy(eventMessage);
 	eventMessage = eventMessageFromJausMessage(jausMessage);
+	eventMessageDestroy(eventMessage);
 	jausMessageDestroy(jausMessage);
 
 	reportEventsMessage = reportEventsMessageCreate();
 	jausMessage = reportEventsMessageToJausMessage(reportEventsMessage);
+	reportEventsMessageDestroy(reportEventsMessage);
 	reportEventsMessage = reportEventsMessageFromJausMessage(jausMessage);
+	reportEventsMessageDestroy(reportEventsMessage);
 	jausMessageDestroy(jausMessage);
 
 	reportConfigurationMessage = reportConfigurationMessageCreate();
 	jausMessage = reportConfigurationMessageToJausMessage(reportConfigurationMessage);
+	reportConfigurationMessageDestroy(reportConfigurationMessage);
 	reportConfigurationMessage = reportConfigurationMessageFromJausMessage(jausMessage);
+	reportConfigurationMessageDestroy(reportConfigurationMessage);
 	jausMessageDestroy(jausMessage);
 
 	reportSubsystemListMessage = reportSubsystemListMessageCreate();
 	jausMessage = reportSubsystemListMessageToJausMessage(reportSubsystemListMessage);
+	reportSubsystemListMessageDestroy(reportSubsystemListMessage);
 	reportSubsystemListMessage = reportSubsystemListMessageFromJausMessage(jausMessage);
+	reportSubsystemListMessageDestroy(reportSubsystemListMessage);
 	jausMessageDestroy(jausMessage);
 
 	reportIdentificationMessage = reportIdentificationMessageCreate();
 	jausMessage = reportIdentificationMessageToJausMessage(reportIdentificationMessage);
+	reportIdentificationMessageDestroy(reportIdentificationMessage);
 	reportIdentificationMessage = reportIdentificationMessageFromJausMessage(jausMessage);
+	reportIdentificationMessageDestroy(reportIdentificationMessage);
 	jausMessageDestroy(jausMessage);
 
 	reportServicesMessage = reportServicesMessageCreate();
 	jausMessage = reportServicesMessageToJausMessage(reportServicesMessage);
+	reportServicesMessageDestroy(reportServicesMessage);
 	reportServicesMessage = reportServicesMessageFromJausMessage(jausMessage);
+	reportServicesMessageDestroy(reportServicesMessage);
 	jausMessageDestroy(jausMessage);
 
 	reportDataLinkStatusMessage = reportDataLinkStatusMessageCreate();
 	jausMessage = reportDataLinkStatusMessageToJausMessage(reportDataLinkStatusMessage);
+	reportDataLinkStatusMessageDestroy(reportDataLinkStatusMessage);
 	reportDataLinkStatusMessage = reportDataLinkStatusMessageFromJausMessage(jausMessage);
+	reportDataLinkStatusMessageDestroy(reportDataLinkStatusMessage);
 	jausMessageDestroy(jausMessage);
 
 	reportSelectedDataLinkStatusMessage = reportSelectedDataLinkStatusMessageCreate();
 	jausMessage = reportSelectedDataLinkStatusMessageToJausMessage(reportSelectedDataLinkStatusMessage);
+	reportSelectedDataLinkStatusMessageDestroy(reportSelectedDataLinkStatusMessage);
 	reportSelectedDataLinkStatusMessage = reportSelectedDataLinkStatusMessageFromJausMessage(jausMessage);
+	reportSelectedDataLinkStatusMessageDestroy(reportSelectedDataLinkStatusMessage);
 	jausMessageDestroy(jausMessage);
 
 	reportHeartbeatPulseMessage = reportHeartbeatPulseMessageCreate();
 	jausMessage = reportHeartbeatPulseMessageToJausMessage(reportHeartbeatPulseMessage);
+	reportHeartbeatPulseMessageDestroy(reportHeartbeatPulseMessage);
 	reportHeartbeatPulseMessage = reportHeartbeatPulseMessageFromJausMessage(jausMessage);
+	reportHeartbeatPulseMessageDestroy(reportHeartbeatPulseMessage);
 	jausMessageDestroy(jausMessage);
 
 	reportImageMessage = reportImageMessageCreate();
 	jausMessage = reportImageMessageToJausMessage(reportImageMessage);
+	reportImageMessageDestroy(reportImageMessage);
 	reportImageMessage = reportImageMessageFromJausMessage(jausMessage);
+	reportImageMessageDestroy(reportImageMessage);
 	jausMessageDestroy(jausMessage);
 
 	reportCameraCapabilitiesMessage = reportCameraCapabilitiesMessageCreate();
 	jausMessage = reportCameraCapabilitiesMessageToJausMessage(reportCameraCapabilitiesMessage);
+	reportCameraCapabilitiesMessageDestroy(reportCameraCapabilitiesMessage);
 	reportCameraCapabilitiesMessage = reportCameraCapabilitiesMessageFromJausMessage(jausMessage);
+	reportCameraCapabilitiesMessageDestroy(reportCameraCapabilitiesMessage);
 	jausMessageDestroy(jausMessage);
 
 	reportRelativeObjectPositionMessage = reportRelativeObjectPositionMessageCreate();
 	jausMessage = reportRelativeObjectPositionMessageToJausMessage(reportRelativeObjectPositionMessage);
+	reportRelativeObjectPositionMessageDestroy(reportRelativeObjectPositionMessage);
 	reportRelativeObjectPositionMessage = reportRelativeObjectPositionMessageFromJausMessage(jausMessage);
+	reportRelativeObjectPositionMessageDestroy(reportRelativeObjectPositionMessage);
 	jausMessageDestroy(jausMessage);
 
 	reportCameraPoseMessage = reportCameraPoseMessageCreate();
 	jausMessage = reportCameraPoseMessageToJausMessage(reportCameraPoseMessage);
+	reportCameraPoseMessageDestroy(reportCameraPoseMessage);
 	reportCameraPoseMessage = reportCameraPoseMessageFromJausMessage(jausMessage);
+	reportCameraPoseMessageDestroy(reportCameraPoseMessage);
 	jausMessageDestroy(jausMessage);
 
 	reportCameraFormatOptionsMessage = reportCameraFormatOptionsMessageCreate();
 	jausMessage = reportCameraFormatOptionsMessageToJausMessage(reportCameraFormatOptionsMessage);
+	reportCameraFormatOptionsMessageDestroy(reportCameraFormatOptionsMessage);
 	reportCameraFormatOptionsMessage = reportCameraFormatOptionsMessageFromJausMessage(jausMessage);
+	reportCameraFormatOptionsMessageDestroy(reportCameraFormatOptionsMessage);
 	jausMessageDestroy(jausMessage);
 
 	reportCameraCountMessage = reportCameraCountMessageCreate();
 	jausMessage = reportCameraCountMessageToJausMessage(reportCameraCountMessage);
+	reportCameraCountMessageDestroy(reportCameraCountMessage);
 	reportCameraCountMessage = reportCameraCountMessageFromJausMessage(jausMessage);
+	reportCameraCountMessageDestroy(reportCameraCountMessage);
 	jausMessageDestroy(jausMessage);
 
 	reportSelectedCameraMessage = reportSelectedCameraMessageCreate();
 	jausMessage = reportSelectedCameraMessageToJausMessage(reportSelectedCameraMessage);
+	reportSelectedCameraMessageDestroy(reportSelectedCameraMessage);
 	reportSelectedCameraMessage = reportSelectedCameraMessageFromJausMessage(jausMessage);
+	reportSelectedCameraMessageDestroy(reportSelectedCameraMessage);
 	jausMessageDestroy(jausMessage);
 
 	clearEmergencyMessage = clearEmergencyMessageCreate();
 	jausMessage = clearEmergencyMessageToJausMessage(clearEmergencyMessage);
+	clearEmergencyMessageDestroy(clearEmergencyMessage);
 	clearEmergencyMessage = clearEmergencyMessageFromJausMessage(jausMessage);
+	clearEmergencyMessageDestroy(clearEmergencyMessage);
 	jausMessageDestroy(jausMessage);
 
 	setEmergencyMessage = setEmergencyMessageCreate();
 	jausMessage = setEmergencyMessageToJausMessage(setEmergencyMessage);
+	setEmergencyMessageDestroy(setEmergencyMessage);
 	setEmergencyMessage = setEmergencyMessageFromJausMessage(jausMessage);
+	setEmergencyMessageDestroy(setEmergencyMessage);
 	jausMessageDestroy(jausMessage);
 
 	confirmServiceConnectionMessage = confirmServiceConnectionMessageCreate();
 	jausMessage = confirmServiceConnectionMessageToJausMessage(confirmServiceConnectionMessage);
+	confirmServiceConnectionMessageDestroy(confirmServiceConnectionMessage);
 	confirmServiceConnectionMessage = confirmServiceConnectionMessageFromJausMessage(jausMessage);
+	confirmServiceConnectionMessageDestroy(confirmServiceConnectionMessage);
 	jausMessageDestroy(jausMessage);
 
 	releaseComponentControlMessage = releaseComponentControlMessageCreate();
 	jausMessage = releaseComponentControlMessageToJausMessage(releaseComponentControlMessage);
+	releaseComponentControlMessageDestroy(releaseComponentControlMessage);
 	releaseComponentControlMessage = releaseComponentControlMessageFromJausMessage(jausMessage);
+	releaseComponentControlMessageDestroy(releaseComponentControlMessage);
 	jausMessageDestroy(jausMessage);
 
 	shutdownMessage = shutdownMessageCreate();
 	jausMessage = shutdownMessageToJausMessage(shutdownMessage);
+	shutdownMessageDestroy(shutdownMessage);
 	shutdownMessage = shutdownMessageFromJausMessage(jausMessage);
+	shutdownMessageDestroy(shutdownMessage);
 	jausMessageDestroy(jausMessage);
 
 	standbyMessage = standbyMessageCreate();
 	jausMessage = standbyMessageToJausMessage(standbyMessage);
+	standbyMessageDestroy(standbyMessage);
 	standbyMessage = standbyMessageFromJausMessage(jausMessage);
+	standbyMessageDestroy(standbyMessage);
 	jausMessageDestroy(jausMessage);
 
 	confirmComponentControlMessage = confirmComponentControlMessageCreate();
 	jausMessage = confirmComponentControlMessageToJausMessage(confirmComponentControlMessage);
+	confirmComponentControlMessageDestroy(confirmComponentControlMessage);
 	confirmComponentControlMessage = confirmComponentControlMessageFromJausMessage(jausMessage);
+	confirmComponentControlMessageDestroy(confirmComponentControlMessage);
 	jausMessageDestroy(jausMessage);
 
 	setTimeMessage = setTimeMessageCreate();
 	jausMessage = setTimeMessageToJausMessage(setTimeMessage);
+	setTimeMessageDestroy(setTimeMessage);
 	setTimeMessage = setTimeMessageFromJausMessage(jausMessage);
+	setTimeMessageDestroy(setTimeMessage);
 	jausMessageDestroy(jausMessage);
 
 	resetMessage = resetMessageCreate();
 	jausMessage = resetMessageToJausMessage(resetMessage);
+	resetMessageDestroy(resetMessage);
 	resetMessage = resetMessageFromJausMessage(jausMessage);
+	resetMessageDestroy(resetMessage);
 	jausMessageDestroy(jausMessage);
 
 	suspendServiceConnectionMessage = suspendServiceConnectionMessageCreate();
 	jausMessage = suspendServiceConnectionMessageToJausMessage(suspendServiceConnectionMessage);
+	suspendServiceConnectionMessageDestroy(suspendServiceConnectionMessage);
 	suspendServiceConnectionMessage = suspendServiceConnectionMessageFromJausMessage(jausMessage);
+	suspendServiceConnectionMessageDestroy(suspendServiceConnectionMessage);
 	jausMessageDestroy(jausMessage);
 
 	terminateServiceConnectionMessage = terminateServiceConnectionMessageCreate();
 	jausMessage = terminateServiceConnectionMessageToJausMessage(terminateServiceConnectionMessage);
+	terminateServiceConnectionMessageDestroy(terminateServiceConnectionMessage);
 	terminateServiceConnectionMessage = terminateServiceConnectionMessageFromJausMessage(jausMessage);
+	terminateServiceConnectionMessageDestroy(terminateServiceConnectionMessage);
 	jausMessageDestroy(jausMessage);
 
 	createServiceConnectionMessage = createServiceConnectionMessageCreate();
 	jausMessage = createServiceConnectionMessageToJausMessage(createServiceConnectionMessage);
+	createServiceConnectionMessageDestroy(createServiceConnectionMessage);
 	createServiceConnectionMessage = createServiceConnectionMessageFromJausMessage(jausMessage);
+	createServiceConnectionMessageDestroy(createServiceConnectionMessage);
 	jausMessageDestroy(jausMessage);
 
 	requestComponentControlMessage = requestComponentControlMessageCreate();
 	jausMessage = requestComponentControlMessageToJausMessage(requestComponentControlMessage);
+	requestComponentControlMessageDestroy(requestComponentControlMessage);
 	requestComponentControlMessage = requestComponentControlMessageFromJausMessage(jausMessage);
+	requestComponentControlMessageDestroy(requestComponentControlMessage);
 	jausMessageDestroy(jausMessage);
 
 	rejectComponentControlMessage = rejectComponentControlMessageCreate();
 	jausMessage = rejectComponentControlMessageToJausMessage(rejectComponentControlMessage);
+	rejectComponentControlMessageDestroy(rejectComponentControlMessage);
 	rejectComponentControlMessage = rejectComponentControlMessageFromJausMessage(jausMessage);
+	rejectComponentControlMessageDestroy(rejectComponentControlMessage);
 	jausMessageDestroy(jausMessage);
 
 	activateServiceConnectionMessage = activateServiceConnectionMessageCreate();
 	jausMessage = activateServiceConnectionMessageToJausMessage(activateServiceConnectionMessage);
+	activateServiceConnectionMessageDestroy(activateServiceConnectionMessage);
 	activateServiceConnectionMessage = activateServiceConnectionMessageFromJausMessage(jausMessage);
+	activateServiceConnectionMessageDestroy(activateServiceConnectionMessage);
 	jausMessageDestroy(jausMessage);
 
 	setComponentAuthorityMessage = setComponentAuthorityMessageCreate();
 	jausMessage = setComponentAuthorityMessageToJausMessage(setComponentAuthorityMessage);
+	setComponentAuthorityMessageDestroy(setComponentAuthorityMessage);
 	setComponentAuthorityMessage = setComponentAuthorityMessageFromJausMessage(jausMessage);
+	setComponentAuthorityMessageDestroy(setComponentAuthorityMessage);
 	jausMessageDestroy(jausMessage);
 
 	resumeMessage = resumeMessageCreate();
 	jausMessage = resumeMessageToJausMessage(resumeMessage);
+	resumeMessageDestroy(resumeMessage);
 	resumeMessage = resumeMessageFromJausMessage(jausMessage);
+	resumeMessageDestroy(resumeMessage);
 	jausMessageDestroy(jausMessage);
 
 	setLocalVectorMessage = setLocalVectorMessageCreate();
 	jausMessage = setLocalVectorMessageToJausMessage(setLocalVectorMessage);
+	setLocalVectorMessageDestroy(setLocalVectorMessage);
 	setLocalVectorMessage = setLocalVectorMessageFromJausMessage(jausMessage);
+	setLocalVectorMessageDestroy(setLocalVectorMessage);
 	jausMessageDestroy(jausMessage);
 
 	setGlobalVectorMessage = setGlobalVectorMessageCreate();
 	jausMessage = setGlobalVectorMessageToJausMessage(setGlobalVectorMessage);
+	setGlobalVectorMessageDestroy(setGlobalVectorMessage);
 	setGlobalVectorMessage = setGlobalVectorMessageFromJausMessage(jausMessage);
+	setGlobalVectorMessageDestroy(setGlobalVectorMessage);
 	jausMessageDestroy(jausMessage);
 
 	setGlobalPathSegmentMessage = setGlobalPathSegmentMessageCreate();
 	jausMessage = setGlobalPathSegmentMessageToJausMessage(setGlobalPathSegmentMessage);
+	setGlobalPathSegmentMessageDestroy(setGlobalPathSegmentMessage);
 	setGlobalPathSegmentMessage = setGlobalPathSegmentMessageFromJausMessage(jausMessage);
+	setGlobalPathSegmentMessageDestroy(setGlobalPathSegmentMessage);
 	jausMessageDestroy(jausMessage);
 
 	setLocalWaypointMessage = setLocalWaypointMessageCreate();
 	jausMessage = setLocalWaypointMessageToJausMessage(setLocalWaypointMessage);
+	setLocalWaypointMessageDestroy(setLocalWaypointMessage);
 	setLocalWaypointMessage = setLocalWaypointMessageFromJausMessage(jausMessage);
+	setLocalWaypointMessageDestroy(setLocalWaypointMessage);
 	jausMessageDestroy(jausMessage);
 
 	setTravelSpeedMessage = setTravelSpeedMessageCreate();
 	jausMessage = setTravelSpeedMessageToJausMessage(setTravelSpeedMessage);
+	setTravelSpeedMessageDestroy(setTravelSpeedMessage);
 	setTravelSpeedMessage = setTravelSpeedMessageFromJausMessage(jausMessage);
+	setTravelSpeedMessageDestroy(setTravelSpeedMessage);
 	jausMessageDestroy(jausMessage);
 
 	setVelocityStateMessage = setVelocityStateMessageCreate();
 	jausMessage = setVelocityStateMessageToJausMessage(setVelocityStateMessage);
+	setVelocityStateMessageDestroy(setVelocityStateMessage);
 	setVelocityStateMessage = setVelocityStateMessageFromJausMessage(jausMessage);
+	setVelocityStateMessageDestroy(setVelocityStateMessage);
 	jausMessageDestroy(jausMessage);
 
 	setWrenchEffortMessage = setWrenchEffortMessageCreate();
 	jausMessage = setWrenchEffortMessageToJausMessage(setWrenchEffortMessage);
+	setWrenchEffortMessageDestroy(setWrenchEffortMessage);
 	setWrenchEffortMessage = setWrenchEffortMessageFromJausMessage(jausMessage);
+	setWrenchEffortMessageDestroy(setWrenchEffortMessage);
 	jausMessageDestroy(jausMessage);
 
 	setDiscreteDevicesMessage = setDiscreteDevicesMessageCreate();
 	jausMessage = setDiscreteDevicesMessageToJausMessage(setDiscreteDevicesMessage);
+	setDiscreteDevicesMessageDestroy(setDiscreteDevicesMessage);
 	setDiscreteDevicesMessage = setDiscreteDevicesMessageFromJausMessage(jausMessage);
+	setDiscreteDevicesMessageDestroy(setDiscreteDevicesMessage);
 	jausMessageDestroy(jausMessage);
 
 	setLocalPathSegmentMessage = setLocalPathSegmentMessageCreate();
 	jausMessage = setLocalPathSegmentMessageToJausMessage(setLocalPathSegmentMessage);
+	setLocalPathSegmentMessageDestroy(setLocalPathSegmentMessage);
 	setLocalPathSegmentMessage = setLocalPathSegmentMessageFromJausMessage(jausMessage);
+	setLocalPathSegmentMessageDestroy(setLocalPathSegmentMessage);
 	jausMessageDestroy(jausMessage);
 
 	setGlobalWaypointMessage = setGlobalWaypointMessageCreate();
 	jausMessage = setGlobalWaypointMessageToJausMessage(setGlobalWaypointMessage);
+	setGlobalWaypointMessageDestroy(setGlobalWaypointMessage);
 	setGlobalWaypointMessage = setGlobalWaypointMessageFromJausMessage(jausMessage);
+	setGlobalWaypointMessageDestroy(setGlobalWaypointMessage);
 	jausMessageDestroy(jausMessage);
 
 	setJointPositionsMessage = setJointPositionsMessageCreate();
 	jausMessage = setJointPositionsMessageToJausMessage(setJointPositionsMessage);
+	setJointPositionsMessageDestroy(setJointPositionsMessage);
 	setJointPositionsMessage = setJointPositionsMessageFromJausMessage(jausMessage);
+	setJointPositionsMessageDestroy(setJointPositionsMessage);
 	jausMessageDestroy(jausMessage);
 
 	setToolPointMessage = setToolPointMessageCreate();
 	jausMessage = setToolPointMessageToJausMessage(setToolPointMessage);
+	setToolPointMessageDestroy(setToolPointMessage);
 	setToolPointMessage = setToolPointMessageFromJausMessage(jausMessage);
+	setToolPointMessageDestroy(setToolPointMessage);
 	jausMessageDestroy(jausMessage);
 
 	setJointMotionMessage = setJointMotionMessageCreate();
 	jausMessage = setJointMotionMessageToJausMessage(setJointMotionMessage);
+	setJointMotionMessageDestroy(setJointMotionMessage);
 	setJointMotionMessage = setJointMotionMessageFromJausMessage(jausMessage);
+	setJointMotionMessageDestroy(setJointMotionMessage);
 	jausMessageDestroy(jausMessage);
 
 	setEndEffectorPoseMessage = setEndEffectorPoseMessageCreate();
 	jausMessage = setEndEffectorPoseMessageToJausMessage(setEndEffectorPoseMessage);
+	setEndEffectorPoseMessageDestroy(setEndEffectorPoseMessage);
 	setEndEffectorPoseMessage = setEndEffectorPoseMessageFromJausMessage(jausMessage);
+	setEndEffectorPoseMessageDestroy(setEndEffectorPoseMessage);
 	jausMessageDestroy(jausMessage);
 
 	setJointEffortsMessage = setJointEffortsMessageCreate();
 	jausMessage = setJointEffortsMessageToJausMessage(setJointEffortsMessage);
+	setJointEffortsMessageDestroy(setJointEffortsMessage);
 	setJointEffortsMessage = setJointEffortsMessageFromJausMessage(jausMessage);
+	setJointEffortsMessageDestroy(setJointEffortsMessage);
 	jausMessageDestroy(jausMessage);
 
 	setJointVelocitiesMessage = setJointVelocitiesMessageCreate();
 	jausMessage = setJointVelocitiesMessageToJausMessage(setJointVelocitiesMessage);
+	setJointVelocitiesMessageDestroy(setJointVelocitiesMessage);
 	setJointVelocitiesMessage = setJointVelocitiesMessageFromJausMessage(jausMessage);
+	setJointVelocitiesMessageDestroy(setJointVelocitiesMessage);
 	jausMessageDestroy(jausMessage);
 
 	setEndEffectorPathMotionMessage = setEndEffectorPathMotionMessageCreate();
 	jausMessage = setEndEffectorPathMotionMessageToJausMessage(setEndEffectorPathMotionMessage);
+	setEndEffectorPathMotionMessageDestroy(setEndEffectorPathMotionMessage);
 	setEndEffectorPathMotionMessage = setEndEffectorPathMotionMessageFromJausMessage(jausMessage);
+	setEndEffectorPathMotionMessageDestroy(setEndEffectorPathMotionMessage);
 	jausMessageDestroy(jausMessage);
 
 	setEndEffectorVelocityStateMessage = setEndEffectorVelocityStateMessageCreate();
 	jausMessage = setEndEffectorVelocityStateMessageToJausMessage(setEndEffectorVelocityStateMessage);
+	setEndEffectorVelocityStateMessageDestroy(setEndEffectorVelocityStateMessage);
 	setEndEffectorVelocityStateMessage = setEndEffectorVelocityStateMessageFromJausMessage(jausMessage);
+	setEndEffectorVelocityStateMessageDestroy(setEndEffectorVelocityStateMessage);
 	jausMessageDestroy(jausMessage);
 
 	createVksObjectsMessage = createVksObjectsMessageCreate();
 	jausMessage = createVksObjectsMessageToJausMessage(createVksObjectsMessage);
+	createVksObjectsMessageDestroy(createVksObjectsMessage);
 	createVksObjectsMessage = createVksObjectsMessageFromJausMessage(jausMessage);
+	createVksObjectsMessageDestroy(createVksObjectsMessage);
 	jausMessageDestroy(jausMessage);
 
 	setVksFeatureClassMetadataMessage = setVksFeatureClassMetadataMessageCreate();
 	jausMessage = setVksFeatureClassMetadataMessageToJausMessage(setVksFeatureClassMetadataMessage);
+	setVksFeatureClassMetadataMessageDestroy(setVksFeatureClassMetadataMessage);
 	setVksFeatureClassMetadataMessage = setVksFeatureClassMetadataMessageFromJausMessage(jausMessage);
+	setVksFeatureClassMetadataMessageDestroy(setVksFeatureClassMetadataMessage);
 	jausMessageDestroy(jausMessage);
 
 	deleteVksObjectsMessage = deleteVksObjectsMessageCreate();
 	jausMessage = deleteVksObjectsMessageToJausMessage(deleteVksObjectsMessage);
+	deleteVksObjectsMessageDestroy(deleteVksObjectsMessage);
 	deleteVksObjectsMessage = deleteVksObjectsMessageFromJausMessage(jausMessage);
+	deleteVksObjectsMessageDestroy(deleteVksObjectsMessage);
 	jausMessageDestroy(jausMessage);
 
 	terminateVksDataTransferMessage = terminateVksDataTransferMessageCreate();
 	jausMessage = terminateVksDataTransferMessageToJausMessage(terminateVksDataTransferMessage);
+	terminateVksDataTransferMessageDestroy(terminateVksDataTransferMessage);
 	terminateVksDataTransferMessage = terminateVksDataTransferMessageFromJausMessage(jausMessage);
+	terminateVksDataTransferMessageDestroy(terminateVksDataTransferMessage);
 	jausMessageDestroy(jausMessage);
 
 	rejectEventRequestMessage = rejectEventRequestMessageCreate();
 	jausMessage = rejectEventRequestMessageToJausMessage(rejectEventRequestMessage);
+	rejectEventRequestMessageDestroy(rejectEventRequestMessage);
 	rejectEventRequestMessage = rejectEventRequestMessageFromJausMessage(jausMessage);
+	rejectEventRequestMessageDestroy(rejectEventRequestMessage);
 	jausMessageDestroy(jausMessage);
 
 	cancelEventMessage = cancelEventMessageCreate();
 	jausMessage = cancelEventMessageToJausMessage(cancelEventMessage);
+	cancelEventMessageDestroy(cancelEventMessage);
 	cancelEventMessage = cancelEventMessageFromJausMessage(jausMessage);
+	cancelEventMessageDestroy(cancelEventMessage);
 	jausMessageDestroy(jausMessage);
 
 	updateEventMessage = updateEventMessageCreate();
 	jausMessage = updateEventMessageToJausMessage(updateEventMessage);
+	updateEventMessageDestroy(updateEventMessage);
 	updateEventMessage = updateEventMessageFromJausMessage(jausMessage);
+	updateEventMessageDestroy(updateEventMessage);
 	jausMessageDestroy(jausMessage);
 
 	createEventMessage = createEventMessageCreate();
 	jausMessage = createEventMessageToJausMessage(createEventMessage);
+	createEventMessageDestroy(createEventMessage);
 	createEventMessage = createEventMessageFromJausMessage(jausMessage);
+	createEventMessageDestroy(createEventMessage);
 	jausMessageDestroy(jausMessage);
 
 	confirmEventRequestMessage = confirmEventRequestMessageCreate();
 	jausMessage = confirmEventRequestMessageToJausMessage(confirmEventRequestMessage);
+	confirmEventRequestMessageDestroy(confirmEventRequestMessage);
 	confirmEventRequestMessage = confirmEventRequestMessageFromJausMessage(jausMessage);
+	confirmEventRequestMessageDestroy(confirmEventRequestMessage);
 	jausMessageDestroy(jausMessage);
 
 	setDataLinkStatusMessage = setDataLinkStatusMessageCreate();
 	jausMessage = setDataLinkStatusMessageToJausMessage(setDataLinkStatusMessage);
+	setDataLinkStatusMessageDestroy(setDataLinkStatusMessage);
 	setDataLinkStatusMessage = setDataLinkStatusMessageFromJausMessage(jausMessage);
+	setDataLinkStatusMessageDestroy(setDataLinkStatusMessage);
 	jausMessageDestroy(jausMessage);
 
 	setSelectedDataLinkStateMessage = setSelectedDataLinkStateMessageCreate();
 	jausMessage = setSelectedDataLinkStateMessageToJausMessage(setSelectedDataLinkStateMessage);
+	setSelectedDataLinkStateMessageDestroy(setSelectedDataLinkStateMessage);
 	setSelectedDataLinkStateMessage = setSelectedDataLinkStateMessageFromJausMessage(jausMessage);
+	setSelectedDataLinkStateMessageDestroy(setSelectedDataLinkStateMessage);
 	jausMessageDestroy(jausMessage);
 
 	setDataLinkSelectMessage = setDataLinkSelectMessageCreate();
 	jausMessage = setDataLinkSelectMessageToJausMessage(setDataLinkSelectMessage);
+	setDataLinkSelectMessageDestroy(setDataLinkSelectMessage);
 	setDataLinkSelectMessage = setDataLinkSelectMessageFromJausMessage(jausMessage);
+	setDataLinkSelectMessageDestroy(setDataLinkSelectMessage);
 	jausMessageDestroy(jausMessage);
 
 	setCameraFormatOptionsMessage = setCameraFormatOptionsMessageCreate();
 	jausMessage = setCameraFormatOptionsMessageToJausMessage(setCameraFormatOptionsMessage);
+	setCameraFormatOptionsMessageDestroy(setCameraFormatOptionsMessage);
 	setCameraFormatOptionsMessage = setCameraFormatOptionsMessageFromJausMessage(jausMessage);
+	setCameraFormatOptionsMessageDestroy(setCameraFormatOptionsMessage);
 	jausMessageDestroy(jausMessage);
 
 	selectCameraMessage = selectCameraMessageCreate();
 	jausMessage = selectCameraMessageToJausMessage(selectCameraMessage);
+	selectCameraMessageDestroy(selectCameraMessage);
 	selectCameraMessage = selectCameraMessageFromJausMessage(jausMessage);
+	selectCameraMessageDestroy(selectCameraMessage);
 	jausMessageDestroy(jausMessage);
 
 	setCameraCapabilitiesMessage = setCameraCapabilitiesMessageCreate();
 	jausMessage = setCameraCapabilitiesMessageToJausMessage(setCameraCapabilitiesMessage);
+	setCameraCapabilitiesMessageDestroy(setCameraCapabilitiesMessage);
 	setCameraCapabilitiesMessage = setCameraCapabilitiesMessageFromJausMessage(jausMessage);
+	setCameraCapabilitiesMessageDestroy(setCameraCapabilitiesMessage);
 	jausMessageDestroy(jausMessage);
 
 	setCameraPoseMessage = setCameraPoseMessageCreate();
 	jausMessage = setCameraPoseMessageToJausMessage(setCameraPoseMessage);
+	setCameraPoseMessageDestroy(setCameraPoseMessage);
 	setCameraPoseMessage = setCameraPoseMessageFromJausMessage(jausMessage);
+	setCameraPoseMessageDestroy(setCameraPoseMessage);
 	jausMessageDestroy(jausMessage);
 
 	queryTimeMessage = queryTimeMessageCreate();
 	jausMessage = queryTimeMessageToJausMessage(queryTimeMessage);
+	queryTimeMessageDestroy(queryTimeMessage);
 	queryTimeMessage = queryTimeMessageFromJausMessage(jausMessage);
+	queryTimeMessageDestroy(queryTimeMessage);
 	jausMessageDestroy(jausMessage);
 
 	queryComponentControlMessage = queryComponentControlMessageCreate();
 	jausMessage = queryComponentControlMessageToJausMessage(queryComponentControlMessage);
+	queryComponentControlMessageDestroy(queryComponentControlMessage);
 	queryComponentControlMessage = queryComponentControlMessageFromJausMessage(jausMessage);
+	queryComponentControlMessageDestroy(queryComponentControlMessage);
 	jausMessageDestroy(jausMessage);
 
 	queryComponentStatusMessage = queryComponentStatusMessageCreate();
 	jausMessage = queryComponentStatusMessageToJausMessage(queryComponentStatusMessage);
+	queryComponentStatusMessageDestroy(queryComponentStatusMessage);
 	queryComponentStatusMessage = queryComponentStatusMessageFromJausMessage(jausMessage);
+	queryComponentStatusMessageDestroy(queryComponentStatusMessage);
 	jausMessageDestroy(jausMessage);
 
 	queryComponentAuthorityMessage = queryComponentAuthorityMessageCreate();
 	jausMessage = queryComponentAuthorityMessageToJausMessage(queryComponentAuthorityMessage);
+	queryComponentAuthorityMessageDestroy(queryComponentAuthorityMessage);
 	queryComponentAuthorityMessage = queryComponentAuthorityMessageFromJausMessage(jausMessage);
+	queryComponentAuthorityMessageDestroy(queryComponentAuthorityMessage);
 	jausMessageDestroy(jausMessage);
 
 	queryGlobalPoseMessage = queryGlobalPoseMessageCreate();
 	jausMessage = queryGlobalPoseMessageToJausMessage(queryGlobalPoseMessage);
+	queryGlobalPoseMessageDestroy(queryGlobalPoseMessage);
 	queryGlobalPoseMessage = queryGlobalPoseMessageFromJausMessage(jausMessage);
+	queryGlobalPoseMessageDestroy(queryGlobalPoseMessage);
 	jausMessageDestroy(jausMessage);
 
 	queryGlobalWaypointMessage = queryGlobalWaypointMessageCreate();
 	jausMessage = queryGlobalWaypointMessageToJausMessage(queryGlobalWaypointMessage);
+	queryGlobalWaypointMessageDestroy(queryGlobalWaypointMessage);
 	queryGlobalWaypointMessage = queryGlobalWaypointMessageFromJausMessage(jausMessage);
+	queryGlobalWaypointMessageDestroy(queryGlobalWaypointMessage);
 	jausMessageDestroy(jausMessage);
 
 	queryPlatformSpecificationsMessage = queryPlatformSpecificationsMessageCreate();
 	jausMessage = queryPlatformSpecificationsMessageToJausMessage(queryPlatformSpecificationsMessage);
+	queryPlatformSpecificationsMessageDestroy(queryPlatformSpecificationsMessage);
 	queryPlatformSpecificationsMessage = queryPlatformSpecificationsMessageFromJausMessage(jausMessage);
+	queryPlatformSpecificationsMessageDestroy(queryPlatformSpecificationsMessage);
 	jausMessageDestroy(jausMessage);
 
 	queryLocalVectorMessage = queryLocalVectorMessageCreate();
 	jausMessage = queryLocalVectorMessageToJausMessage(queryLocalVectorMessage);
+	queryLocalVectorMessageDestroy(queryLocalVectorMessage);
 	queryLocalVectorMessage = queryLocalVectorMessageFromJausMessage(jausMessage);
+	queryLocalVectorMessageDestroy(queryLocalVectorMessage);
 	jausMessageDestroy(jausMessage);
 
 	queryLocalWaypointMessage = queryLocalWaypointMessageCreate();
 	jausMessage = queryLocalWaypointMessageToJausMessage(queryLocalWaypointMessage);
+	queryLocalWaypointMessageDestroy(queryLocalWaypointMessage);
 	queryLocalWaypointMessage = queryLocalWaypointMessageFromJausMessage(jausMessage);
+	queryLocalWaypointMessageDestroy(queryLocalWaypointMessage);
 	jausMessageDestroy(jausMessage);
 
 	queryDiscreteDevicesMessage = queryDiscreteDevicesMessageCreate();
 	jausMessage = queryDiscreteDevicesMessageToJausMessage(queryDiscreteDevicesMessage);
+	queryDiscreteDevicesMessageDestroy(queryDiscreteDevicesMessage);
 	queryDiscreteDevicesMessage = queryDiscreteDevicesMessageFromJausMessage(jausMessage);
+	queryDiscreteDevicesMessageDestroy(queryDiscreteDevicesMessage);
 	jausMessageDestroy(jausMessage);
 
 	queryTravelSpeedMessage = queryTravelSpeedMessageCreate();
 	jausMessage = queryTravelSpeedMessageToJausMessage(queryTravelSpeedMessage);
+	queryTravelSpeedMessageDestroy(queryTravelSpeedMessage);
 	queryTravelSpeedMessage = queryTravelSpeedMessageFromJausMessage(jausMessage);
+	queryTravelSpeedMessageDestroy(queryTravelSpeedMessage);
 	jausMessageDestroy(jausMessage);
 
 	queryPlatformOperationalDataMessage = queryPlatformOperationalDataMessageCreate();
 	jausMessage = queryPlatformOperationalDataMessageToJausMessage(queryPlatformOperationalDataMessage);
+	queryPlatformOperationalDataMessageDestroy(queryPlatformOperationalDataMessage);
 	queryPlatformOperationalDataMessage = queryPlatformOperationalDataMessageFromJausMessage(jausMessage);
+	queryPlatformOperationalDataMessageDestroy(queryPlatformOperationalDataMessage);
 	jausMessageDestroy(jausMessage);
 
 	queryVelocityStateMessage = queryVelocityStateMessageCreate();
 	jausMessage = queryVelocityStateMessageToJausMessage(queryVelocityStateMessage);
+	queryVelocityStateMessageDestroy(queryVelocityStateMessage);
 	queryVelocityStateMessage = queryVelocityStateMessageFromJausMessage(jausMessage);
+	queryVelocityStateMessageDestroy(queryVelocityStateMessage);
 	jausMessageDestroy(jausMessage);
 
 	queryLocalPoseMessage = queryLocalPoseMessageCreate();
 	jausMessage = queryLocalPoseMessageToJausMessage(queryLocalPoseMessage);
+	queryLocalPoseMessageDestroy(queryLocalPoseMessage);
 	queryLocalPoseMessage = queryLocalPoseMessageFromJausMessage(jausMessage);
+	queryLocalPoseMessageDestroy(queryLocalPoseMessage);
 	jausMessageDestroy(jausMessage);
 
 	queryGlobalVectorMessage = queryGlobalVectorMessageCreate();
 	jausMessage = queryGlobalVectorMessageToJausMessage(queryGlobalVectorMessage);
+	queryGlobalVectorMessageDestroy(queryGlobalVectorMessage);
 	queryGlobalVectorMessage = queryGlobalVectorMessageFromJausMessage(jausMessage);
+	queryGlobalVectorMessageDestroy(queryGlobalVectorMessage);
 	jausMessageDestroy(jausMessage);
 
 	queryLocalPathSegmentMessage = queryLocalPathSegmentMessageCreate();
 	jausMessage = queryLocalPathSegmentMessageToJausMessage(queryLocalPathSegmentMessage);
+	queryLocalPathSegmentMessageDestroy(queryLocalPathSegmentMessage);
 	queryLocalPathSegmentMessage = queryLocalPathSegmentMessageFromJausMessage(jausMessage);
+	queryLocalPathSegmentMessageDestroy(queryLocalPathSegmentMessage);
 	jausMessageDestroy(jausMessage);
 
 	queryWaypointCountMessage = queryWaypointCountMessageCreate();
 	jausMessage = queryWaypointCountMessageToJausMessage(queryWaypointCountMessage);
+	queryWaypointCountMessageDestroy(queryWaypointCountMessage);
 	queryWaypointCountMessage = queryWaypointCountMessageFromJausMessage(jausMessage);
+	queryWaypointCountMessageDestroy(queryWaypointCountMessage);
 	jausMessageDestroy(jausMessage);
 
 	queryPathSegmentCountMessage = queryPathSegmentCountMessageCreate();
 	jausMessage = queryPathSegmentCountMessageToJausMessage(queryPathSegmentCountMessage);
+	queryPathSegmentCountMessageDestroy(queryPathSegmentCountMessage);
 	queryPathSegmentCountMessage = queryPathSegmentCountMessageFromJausMessage(jausMessage);
+	queryPathSegmentCountMessageDestroy(queryPathSegmentCountMessage);
 	jausMessageDestroy(jausMessage);
 
 	queryGlobalPathSegmentMessage = queryGlobalPathSegmentMessageCreate();
 	jausMessage = queryGlobalPathSegmentMessageToJausMessage(queryGlobalPathSegmentMessage);
+	queryGlobalPathSegmentMessageDestroy(queryGlobalPathSegmentMessage);
 	queryGlobalPathSegmentMessage = queryGlobalPathSegmentMessageFromJausMessage(jausMessage);
+	queryGlobalPathSegmentMessageDestroy(queryGlobalPathSegmentMessage);
 	jausMessageDestroy(jausMessage);
 
 	queryWrenchEffortMessage = queryWrenchEffortMessageCreate();
 	jausMessage = queryWrenchEffortMessageToJausMessage(queryWrenchEffortMessage);
+	queryWrenchEffortMessageDestroy(queryWrenchEffortMessage);
 	queryWrenchEffortMessage = queryWrenchEffortMessageFromJausMessage(jausMessage);
+	queryWrenchEffortMessageDestroy(queryWrenchEffortMessage);
 	jausMessageDestroy(jausMessage);
 
 	queryManipulatorSpecificationsMessage = queryManipulatorSpecificationsMessageCreate();
 	jausMessage = queryManipulatorSpecificationsMessageToJausMessage(queryManipulatorSpecificationsMessage);
+	queryManipulatorSpecificationsMessageDestroy(queryManipulatorSpecificationsMessage);
 	queryManipulatorSpecificationsMessage = queryManipulatorSpecificationsMessageFromJausMessage(jausMessage);
+	queryManipulatorSpecificationsMessageDestroy(queryManipulatorSpecificationsMessage);
 	jausMessageDestroy(jausMessage);
 
 	queryJointPositionsMessage = queryJointPositionsMessageCreate();
 	jausMessage = queryJointPositionsMessageToJausMessage(queryJointPositionsMessage);
+	queryJointPositionsMessageDestroy(queryJointPositionsMessage);
 	queryJointPositionsMessage = queryJointPositionsMessageFromJausMessage(jausMessage);
+	queryJointPositionsMessageDestroy(queryJointPositionsMessage);
 	jausMessageDestroy(jausMessage);
 
 	queryJointVelocitiesMessage = queryJointVelocitiesMessageCreate();
 	jausMessage = queryJointVelocitiesMessageToJausMessage(queryJointVelocitiesMessage);
+	queryJointVelocitiesMessageDestroy(queryJointVelocitiesMessage);
 	queryJointVelocitiesMessage = queryJointVelocitiesMessageFromJausMessage(jausMessage);
+	queryJointVelocitiesMessageDestroy(queryJointVelocitiesMessage);
 	jausMessageDestroy(jausMessage);
 
 	queryToolPointMessage = queryToolPointMessageCreate();
 	jausMessage = queryToolPointMessageToJausMessage(queryToolPointMessage);
+	queryToolPointMessageDestroy(queryToolPointMessage);
 	queryToolPointMessage = queryToolPointMessageFromJausMessage(jausMessage);
+	queryToolPointMessageDestroy(queryToolPointMessage);
 	jausMessageDestroy(jausMessage);
 
 	queryJointEffortsMessage = queryJointEffortsMessageCreate();
 	jausMessage = queryJointEffortsMessageToJausMessage(queryJointEffortsMessage);
+	queryJointEffortsMessageDestroy(queryJointEffortsMessage);
 	queryJointEffortsMessage = queryJointEffortsMessageFromJausMessage(jausMessage);
+	queryJointEffortsMessageDestroy(queryJointEffortsMessage);
 	jausMessageDestroy(jausMessage);
 
 	queryJointForceTorquesMessage = queryJointForceTorquesMessageCreate();
 	jausMessage = queryJointForceTorquesMessageToJausMessage(queryJointForceTorquesMessage);
+	queryJointForceTorquesMessageDestroy(queryJointForceTorquesMessage);
 	queryJointForceTorquesMessage = queryJointForceTorquesMessageFromJausMessage(jausMessage);
+	queryJointForceTorquesMessageDestroy(queryJointForceTorquesMessage);
 	jausMessageDestroy(jausMessage);
 
 	queryVksFeatureClassMetadataMessage = queryVksFeatureClassMetadataMessageCreate();
 	jausMessage = queryVksFeatureClassMetadataMessageToJausMessage(queryVksFeatureClassMetadataMessage);
+	queryVksFeatureClassMetadataMessageDestroy(queryVksFeatureClassMetadataMessage);
 	queryVksFeatureClassMetadataMessage = queryVksFeatureClassMetadataMessageFromJausMessage(jausMessage);
+	queryVksFeatureClassMetadataMessageDestroy(queryVksFeatureClassMetadataMessage);
 	jausMessageDestroy(jausMessage);
 
 	queryVksObjectsMessage = queryVksObjectsMessageCreate();
 	jausMessage = queryVksObjectsMessageToJausMessage(queryVksObjectsMessage);
+	queryVksObjectsMessageDestroy(queryVksObjectsMessage);
 	queryVksObjectsMessage = queryVksObjectsMessageFromJausMessage(jausMessage);
+	queryVksObjectsMessageDestroy(queryVksObjectsMessage);
 	jausMessageDestroy(jausMessage);
 
 	queryVksBoundsMessage = queryVksBoundsMessageCreate();
 	jausMessage = queryVksBoundsMessageToJausMessage(queryVksBoundsMessage);
+	queryVksBoundsMessageDestroy(queryVksBoundsMessage);
 	queryVksBoundsMessage = queryVksBoundsMessageFromJausMessage(jausMessage);
+	queryVksBoundsMessageDestroy(queryVksBoundsMessage);
 	jausMessageDestroy(jausMessage);
 
 	queryPayloadInterfaceMessage = queryPayloadInterfaceMessageCreate();
 	jausMessage = queryPayloadInterfaceMessageToJausMessage(queryPayloadInterfaceMessage);
+	queryPayloadInterfaceMessageDestroy(queryPayloadInterfaceMessage);
 	queryPayloadInterfaceMessage = queryPayloadInterfaceMessageFromJausMessage(jausMessage);
+	queryPayloadInterfaceMessageDestroy(queryPayloadInterfaceMessage);
 	jausMessageDestroy(jausMessage);
 
 	queryPayloadDataElementMessage = queryPayloadDataElementMessageCreate();
 	jausMessage = queryPayloadDataElementMessageToJausMessage(queryPayloadDataElementMessage);
+	queryPayloadDataElementMessageDestroy(queryPayloadDataElementMessage);
 	queryPayloadDataElementMessage = queryPayloadDataElementMessageFromJausMessage(jausMessage);
+	queryPayloadDataElementMessageDestroy(queryPayloadDataElementMessage);
 	jausMessageDestroy(jausMessage);
 
 	queryEventsMessage = queryEventsMessageCreate();
 	jausMessage = queryEventsMessageToJausMessage(queryEventsMessage);
+	queryEventsMessageDestroy(queryEventsMessage);
 	queryEventsMessage = queryEventsMessageFromJausMessage(jausMessage);
+	queryEventsMessageDestroy(queryEventsMessage);
 	jausMessageDestroy(jausMessage);
 
 	queryServicesMessage = queryServicesMessageCreate();
 	jausMessage = queryServicesMessageToJausMessage(queryServicesMessage);
+	queryServicesMessageDestroy(queryServicesMessage);
 	queryServicesMessage = queryServicesMessageFromJausMessage(jausMessage);
+	queryServicesMessageDestroy(queryServicesMessage);
 	jausMessageDestroy(jausMessage);
 
 	queryConfigurationMessage = queryConfigurationMessageCreate();
 	jausMessage = queryConfigurationMessageToJausMessage(queryConfigurationMessage);
+	queryConfigurationMessageDestroy(queryConfigurationMessage);
 	queryConfigurationMessage = queryConfigurationMessageFromJausMessage(jausMessage);
+	queryConfigurationMessageDestroy(queryConfigurationMessage);
 	jausMessageDestroy(jausMessage);
 
 	querySubsystemListMessage = querySubsystemListMessageCreate();
 	jausMessage = querySubsystemListMessageToJausMessage(querySubsystemListMessage);
+	querySubsystemListMessageDestroy(querySubsystemListMessage);
 	querySubsystemListMessage = querySubsystemListMessageFromJausMessage(jausMessage);
+	querySubsystemListMessageDestroy(querySubsystemListMessage);
 	jausMessageDestroy(jausMessage);
 
 	queryIdentificationMessage = queryIdentificationMessageCreate();
 	jausMessage = queryIdentificationMessageToJausMessage(queryIdentificationMessage);
+	queryIdentificationMessageDestroy(queryIdentificationMessage);
 	queryIdentificationMessage = queryIdentificationMessageFromJausMessage(jausMessage);
+	queryIdentificationMessageDestroy(queryIdentificationMessage);
 	jausMessageDestroy(jausMessage);
 
 	querySelectedDataLinkStatusMessage = querySelectedDataLinkStatusMessageCreate();
 	jausMessage = querySelectedDataLinkStatusMessageToJausMessage(querySelectedDataLinkStatusMessage);
+	querySelectedDataLinkStatusMessageDestroy(querySelectedDataLinkStatusMessage);
 	querySelectedDataLinkStatusMessage = querySelectedDataLinkStatusMessageFromJausMessage(jausMessage);
+	querySelectedDataLinkStatusMessageDestroy(querySelectedDataLinkStatusMessage);
 	jausMessageDestroy(jausMessage);
 
 	queryDataLinkStatusMessage = queryDataLinkStatusMessageCreate();
 	jausMessage = queryDataLinkStatusMessageToJausMessage(queryDataLinkStatusMessage);
+	queryDataLinkStatusMessageDestroy(queryDataLinkStatusMessage);
 	queryDataLinkStatusMessage = queryDataLinkStatusMessageFromJausMessage(jausMessage);
+	queryDataLinkStatusMessageDestroy(queryDataLinkStatusMessage);
 	jausMessageDestroy(jausMessage);
 
 	queryHeartbeatPulseMessage = queryHeartbeatPulseMessageCreate();
 	jausMessage = queryHeartbeatPulseMessageToJausMessage(queryHeartbeatPulseMessage);
+	queryHeartbeatPulseMessageDestroy(queryHeartbeatPulseMessage);
 	queryHeartbeatPulseMessage = queryHeartbeatPulseMessageFromJausMessage(jausMessage);
+	queryHeartbeatPulseMessageDestroy(queryHeartbeatPulseMessage);
 	jausMessageDestroy(jausMessage);
 
 	queryCameraFormatOptionsMessage = queryCameraFormatOptionsMessageCreate();
 	jausMessage = queryCameraFormatOptionsMessageToJausMessage(queryCameraFormatOptionsMessage);
+	queryCameraFormatOptionsMessageDestroy(queryCameraFormatOptionsMessage);
 	queryCameraFormatOptionsMessage = queryCameraFormatOptionsMessageFromJausMessage(jausMessage);
+	queryCameraFormatOptionsMessageDestroy(queryCameraFormatOptionsMessage);
 	jausMessageDestroy(jausMessage);
 
 	queryCameraCountMessage = queryCameraCountMessageCreate();
 	jausMessage = queryCameraCountMessageToJausMessage(queryCameraCountMessage);
+	queryCameraCountMessageDestroy(queryCameraCountMessage);
 	queryCameraCountMessage = queryCameraCountMessageFromJausMessage(jausMessage);
+	queryCameraCountMessageDestroy(queryCameraCountMessage);
 	jausMessageDestroy(jausMessage);
 
 	queryImageMessage = queryImageMessageCreate();
 	jausMessage = queryImageMessageToJausMessage(queryImageMessage);
+	queryImageMessageDestroy(queryImageMessage);
 	queryImageMessage = queryImageMessageFromJausMessage(jausMessage);
+	queryImageMessageDestroy(queryImageMessage);
 	jausMessageDestroy(jausMessage);
 
 	querySelectedCameraMessage = querySelectedCameraMessageCreate();
 	jausMessage = querySelectedCameraMessageToJausMessage(querySelectedCameraMessage);
+	querySelectedCameraMessageDestroy(querySelectedCameraMessage);
 	querySelectedCameraMessage = querySelectedCameraMessageFromJausMessage(jausMessage);
+	querySelectedCameraMessageDestroy(querySelectedCameraMessage);
 	jausMessageDestroy(jausMessage);
 
 	queryRelativeObjectPositionMessage = queryRelativeObjectPositionMessageCreate();
 	jausMessage = queryRelativeObjectPositionMessageToJausMessage(queryRelativeObjectPositionMessage);
+	queryRelativeObjectPositionMessageDestroy(queryRelativeObjectPositionMessage);
 	queryRelativeObjectPositionMessage = queryRelativeObjectPositionMessageFromJausMessage(jausMessage);
+	queryRelativeObjectPositionMessageDestroy(queryRelativeObjectPositionMessage);
 	jausMessageDestroy(jausMessage);
 
 	queryCameraPoseMessage = queryCameraPoseMessageCreate();
 	jausMessage = queryCameraPoseMessageToJausMessage(queryCameraPoseMessage);
+	queryCameraPoseMessageDestroy(queryCameraPoseMessage);
 	queryCameraPoseMessage = queryCameraPoseMessageFromJausMessage(jausMessage);
+	queryCameraPoseMessageDestroy(queryCameraPoseMessage);
 	jausMessageDestroy(jausMessage);
 
 	queryCameraCapabilitiesMessage = queryCameraCapabilitiesMessageCreate();
 	jausMessage = queryCameraCapabilitiesMessageToJausMessage(queryCameraCapabilitiesMessage);
+	queryCameraCapabilitiesMessageDestroy(queryCameraCapabilitiesMessage);
 	queryCameraCapabilitiesMessage = queryCameraCapabilitiesMessageFromJausMessage(jausMessage);
+	queryCameraCapabilitiesMessageDestroy(queryCameraCapabilitiesMessage);
 	jausMessageDestroy(jausMessage);
 
 	return 0;
-
 }

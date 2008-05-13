@@ -29,9 +29,12 @@ do
 
 	echo -e "\t$message = ${message:0}Create();"
 	echo -e "\tjausMessage = ${message:0}ToJausMessage($message);"
+	echo -e "\t${message:0}Destroy($message);"
 	echo -e "\t$message = ${message:0}FromJausMessage(jausMessage);"
+	echo -e "\t${message:0}Destroy($message);"
 	echo -e "\tjausMessageDestroy(jausMessage);"
 	echo
 done
 
+echo -e "\treturn 0;"
 echo "}"
