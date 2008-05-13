@@ -10,6 +10,7 @@ do
 	MESSAGES="$MESSAGES$ofile\n"
 done
 
+echo -e "#include <stdio.h>"
 echo -e "#include <jaus.h>\n\n"
 echo "int main(void)"
 echo "{"
@@ -30,8 +31,22 @@ do
 	echo -e "\t$message = ${message:0}Create();"
 	echo -e "\tjausMessage = ${message:0}ToJausMessage($message);"
 	echo -e "\t${message:0}Destroy($message);"
-	echo -e "\t$message = ${message:0}FromJausMessage(jausMessage);"
-	echo -e "\t${message:0}Destroy($message);"
+	echo -e "\tif(jausMessage->dataSize == 0)"
+	echo -e "\t{"
+	echo -e "\t\tprintf(\"${message:0}ToJausMessage failed\\\n\");"
+	echo -e "\t}"
+	echo -e "\telse"
+	echo -e "\t{"
+	echo -e "\t\t$message = ${message:0}FromJausMessage(jausMessage);"
+	echo -e "\t\tif($message == NULL)"
+	echo -e "\t\t{"
+	echo -e "\t\t\tprintf(\"${message:0}FromJausMessage failed\\\n\");"
+	echo -e "\t\t}"
+	echo -e "\t\telse"
+	echo -e "\t\t{"
+	echo -e "\t\t\t${message:0}Destroy($message);"
+	echo -e "\t\t}"
+	echo -e "\t}"
 	echo -e "\tjausMessageDestroy(jausMessage);"
 	echo
 done
