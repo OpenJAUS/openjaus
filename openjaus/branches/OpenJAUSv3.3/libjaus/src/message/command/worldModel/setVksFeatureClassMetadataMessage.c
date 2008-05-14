@@ -103,6 +103,7 @@ static JausBoolean dataFromBuffer(SetVksFeatureClassMetadataMessage message, uns
 
 		if(bufferSizeBytes-index >= stringLength)
 		{
+			message->featureClassMetadataString = (char *)malloc(stringLength);
 			memcpy(message->featureClassMetadataString, buffer+index, stringLength);
 			index += stringLength;
 		}

@@ -46,7 +46,7 @@
 #include "jaus.h"
 
 static const int commandCode = JAUS_REPORT_SELECTED_DATA_LINK_STATUS;
-static const int maxDataSizeBytes = 0;
+static const int maxDataSizeBytes = 1;
 
 static JausBoolean headerFromBuffer(ReportSelectedDataLinkStatusMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static JausBoolean headerToBuffer(ReportSelectedDataLinkStatusMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
@@ -266,6 +266,7 @@ JausMessage reportSelectedDataLinkStatusMessageToJausMessage(ReportSelectedDataL
 	jausMessage->dataFlag = message->dataFlag;
 	jausMessage->sequenceNumber = message->sequenceNumber;
 	
+
 	jausMessage->data = (unsigned char *)malloc(jausMessage->dataSize);
 	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, jausMessage->dataSize);
 	

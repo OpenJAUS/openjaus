@@ -105,13 +105,20 @@ static JausBoolean dataFromBuffer(RejectEventRequestMessage message, unsigned ch
 
 		if(jausByteIsBitSet(message->presenceVector, REJECT_EVENT_REQUEST_PV_ERROR_MESSAGE_BIT))
 		{
-			message->errorMessage = (char *)malloc(bufferSizeBytes-index);
-			memcpy(message->errorMessage, buffer+index, bufferSizeBytes - index);
-			if(message->errorMessage[bufferSizeBytes - index - 1])
+			if(bufferSizeBytes-index > 0)
 			{
-				message->errorMessage = (char *)realloc(message->errorMessage, bufferSizeBytes-index);
-				message->errorMessage[bufferSizeBytes - index] = '\0';
-			}		
+				message->errorMessage = (char *)malloc(bufferSizeBytes-index);
+				memcpy(message->errorMessage, buffer+index, bufferSizeBytes - index);
+				if(message->errorMessage[bufferSizeBytes - index - 1])
+				{
+					message->errorMessage = (char *)realloc(message->errorMessage, bufferSizeBytes-index);
+					message->errorMessage[bufferSizeBytes - index] = '\0';
+				}		
+			}
+			else
+			{
+				message->errorMessage = NULL;
+			}
 		}
 
 		return JAUS_TRUE;
