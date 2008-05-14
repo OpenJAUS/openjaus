@@ -84,50 +84,26 @@
 
 #else
 
-#ifdef __APPLE__
-	#define HAVE_GETTIMEOFDAY
-#else 
-	#define HAVE_CLOCK_GETTIME
-#endif
-	
 	#include <sys/time.h>
 	#include <time.h>
 	#include <unistd.h>
 
 	double getTimeSeconds(void)
 	{
-		#ifdef HAVE_GETTIMEOFDAY
-		      static struct timeval time;
-		      
-		      gettimeofday(&time, NULL);
-		      
-		      return (double)time.tv_sec + (double)time.tv_usec/1.0e6;
-		      
-		#elif defined(HAVE_CLOCK_GETTIME)
-		      static struct timespec time;
-		      
-		      clock_gettime(CLOCK_REALTIME, &time);
-		      
-		      return (double)time.tv_sec + (double)time.tv_nsec/1.0e9;
-		#endif
+	      static struct timeval time;
+	      
+	      gettimeofday(&time, NULL);
+	      
+	      return (double)time.tv_sec + (double)time.tv_usec/1.0e6;
 	}
 
 	double ojGetTimeSec(void)
 	{
-		#ifdef HAVE_GETTIMEOFDAY
-		      static struct timeval time;
-		      
-		      gettimeofday(&time, NULL);
-		      
-		      return (double)time.tv_sec + (double)time.tv_usec/1.0e6;
-		      
-		#elif defined(HAVE_CLOCK_GETTIME)
-		      static struct timespec time;
-		      
-		      clock_gettime(CLOCK_REALTIME, &time);
-		      
-		      return (double)time.tv_sec + (double)time.tv_nsec/1.0e9;
-		#endif
+		  static struct timeval time;
+	      
+		  gettimeofday(&time, NULL);
+	      
+		  return (double)time.tv_sec + (double)time.tv_usec/1.0e6;
 	}
 
 	void ojSleepMsec(int msec)
