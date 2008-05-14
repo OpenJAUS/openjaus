@@ -1347,8 +1347,8 @@ bool NodeManagerComponent::processQueryIdentification(JausMessage message)
 				}
 
 				reportId->queryType = JAUS_QUERY_FIELD_SS_IDENTITY;
-				jausAddressCopy(txMessage->source, cmpt->address);
-				jausAddressCopy(txMessage->destination, queryId->source);
+				jausAddressCopy(reportId->source, cmpt->address);
+				jausAddressCopy(reportId->destination, queryId->source);
 				txMessage = reportIdentificationMessageToJausMessage(reportId);
 				if(txMessage)
 				{
