@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include <jaus.h>
 
 int main(void)
@@ -271,8 +270,6 @@ int main(void)
 	SetLocalVectorMessage setLocalVectorMessage2;
 	SetLocalWaypointMessage setLocalWaypointMessage1;
 	SetLocalWaypointMessage setLocalWaypointMessage2;
-	SetPayloadDataElementMessage setPayloadDataElementMessage1;
-	SetPayloadDataElementMessage setPayloadDataElementMessage2;
 	SetSelectedDataLinkStateMessage setSelectedDataLinkStateMessage1;
 	SetSelectedDataLinkStateMessage setSelectedDataLinkStateMessage2;
 	SetTimeMessage setTimeMessage1;
@@ -305,14 +302,14 @@ int main(void)
 	jausMessage = activateServiceConnectionMessageToJausMessage(activateServiceConnectionMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("activateServiceConnectionMessageToJausMessage failed\n");
+		printf("\tactivateServiceConnectionMessageToJausMessage failed\n");
 	}
 	else
 	{
 		activateServiceConnectionMessage2 = activateServiceConnectionMessageFromJausMessage(jausMessage);
 		if(activateServiceConnectionMessage2 == NULL)
 		{
-			printf("activateServiceConnectionMessageFromJausMessage failed\n");
+			printf("\tactivateServiceConnectionMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -327,14 +324,14 @@ int main(void)
 	jausMessage = cancelEventMessageToJausMessage(cancelEventMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("cancelEventMessageToJausMessage failed\n");
+		printf("\tcancelEventMessageToJausMessage failed\n");
 	}
 	else
 	{
 		cancelEventMessage2 = cancelEventMessageFromJausMessage(jausMessage);
 		if(cancelEventMessage2 == NULL)
 		{
-			printf("cancelEventMessageFromJausMessage failed\n");
+			printf("\tcancelEventMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -349,14 +346,14 @@ int main(void)
 	jausMessage = clearEmergencyMessageToJausMessage(clearEmergencyMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("clearEmergencyMessageToJausMessage failed\n");
+		printf("\tclearEmergencyMessageToJausMessage failed\n");
 	}
 	else
 	{
 		clearEmergencyMessage2 = clearEmergencyMessageFromJausMessage(jausMessage);
 		if(clearEmergencyMessage2 == NULL)
 		{
-			printf("clearEmergencyMessageFromJausMessage failed\n");
+			printf("\tclearEmergencyMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -371,14 +368,14 @@ int main(void)
 	jausMessage = confirmComponentControlMessageToJausMessage(confirmComponentControlMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("confirmComponentControlMessageToJausMessage failed\n");
+		printf("\tconfirmComponentControlMessageToJausMessage failed\n");
 	}
 	else
 	{
 		confirmComponentControlMessage2 = confirmComponentControlMessageFromJausMessage(jausMessage);
 		if(confirmComponentControlMessage2 == NULL)
 		{
-			printf("confirmComponentControlMessageFromJausMessage failed\n");
+			printf("\tconfirmComponentControlMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -393,14 +390,14 @@ int main(void)
 	jausMessage = confirmEventRequestMessageToJausMessage(confirmEventRequestMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("confirmEventRequestMessageToJausMessage failed\n");
+		printf("\tconfirmEventRequestMessageToJausMessage failed\n");
 	}
 	else
 	{
 		confirmEventRequestMessage2 = confirmEventRequestMessageFromJausMessage(jausMessage);
 		if(confirmEventRequestMessage2 == NULL)
 		{
-			printf("confirmEventRequestMessageFromJausMessage failed\n");
+			printf("\tconfirmEventRequestMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -415,14 +412,14 @@ int main(void)
 	jausMessage = confirmServiceConnectionMessageToJausMessage(confirmServiceConnectionMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("confirmServiceConnectionMessageToJausMessage failed\n");
+		printf("\tconfirmServiceConnectionMessageToJausMessage failed\n");
 	}
 	else
 	{
 		confirmServiceConnectionMessage2 = confirmServiceConnectionMessageFromJausMessage(jausMessage);
 		if(confirmServiceConnectionMessage2 == NULL)
 		{
-			printf("confirmServiceConnectionMessageFromJausMessage failed\n");
+			printf("\tconfirmServiceConnectionMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -437,14 +434,14 @@ int main(void)
 	jausMessage = createEventMessageToJausMessage(createEventMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("createEventMessageToJausMessage failed\n");
+		printf("\tcreateEventMessageToJausMessage failed\n");
 	}
 	else
 	{
 		createEventMessage2 = createEventMessageFromJausMessage(jausMessage);
 		if(createEventMessage2 == NULL)
 		{
-			printf("createEventMessageFromJausMessage failed\n");
+			printf("\tcreateEventMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -459,14 +456,14 @@ int main(void)
 	jausMessage = createServiceConnectionMessageToJausMessage(createServiceConnectionMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("createServiceConnectionMessageToJausMessage failed\n");
+		printf("\tcreateServiceConnectionMessageToJausMessage failed\n");
 	}
 	else
 	{
 		createServiceConnectionMessage2 = createServiceConnectionMessageFromJausMessage(jausMessage);
 		if(createServiceConnectionMessage2 == NULL)
 		{
-			printf("createServiceConnectionMessageFromJausMessage failed\n");
+			printf("\tcreateServiceConnectionMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -481,14 +478,14 @@ int main(void)
 	jausMessage = createVksObjectsMessageToJausMessage(createVksObjectsMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("createVksObjectsMessageToJausMessage failed\n");
+		printf("\tcreateVksObjectsMessageToJausMessage failed\n");
 	}
 	else
 	{
 		createVksObjectsMessage2 = createVksObjectsMessageFromJausMessage(jausMessage);
 		if(createVksObjectsMessage2 == NULL)
 		{
-			printf("createVksObjectsMessageFromJausMessage failed\n");
+			printf("\tcreateVksObjectsMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -503,14 +500,14 @@ int main(void)
 	jausMessage = deleteVksObjectsMessageToJausMessage(deleteVksObjectsMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("deleteVksObjectsMessageToJausMessage failed\n");
+		printf("\tdeleteVksObjectsMessageToJausMessage failed\n");
 	}
 	else
 	{
 		deleteVksObjectsMessage2 = deleteVksObjectsMessageFromJausMessage(jausMessage);
 		if(deleteVksObjectsMessage2 == NULL)
 		{
-			printf("deleteVksObjectsMessageFromJausMessage failed\n");
+			printf("\tdeleteVksObjectsMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -525,14 +522,14 @@ int main(void)
 	jausMessage = eventMessageToJausMessage(eventMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("eventMessageToJausMessage failed\n");
+		printf("\teventMessageToJausMessage failed\n");
 	}
 	else
 	{
 		eventMessage2 = eventMessageFromJausMessage(jausMessage);
 		if(eventMessage2 == NULL)
 		{
-			printf("eventMessageFromJausMessage failed\n");
+			printf("\teventMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -547,14 +544,14 @@ int main(void)
 	jausMessage = queryCameraCapabilitiesMessageToJausMessage(queryCameraCapabilitiesMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("queryCameraCapabilitiesMessageToJausMessage failed\n");
+		printf("\tqueryCameraCapabilitiesMessageToJausMessage failed\n");
 	}
 	else
 	{
 		queryCameraCapabilitiesMessage2 = queryCameraCapabilitiesMessageFromJausMessage(jausMessage);
 		if(queryCameraCapabilitiesMessage2 == NULL)
 		{
-			printf("queryCameraCapabilitiesMessageFromJausMessage failed\n");
+			printf("\tqueryCameraCapabilitiesMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -569,14 +566,14 @@ int main(void)
 	jausMessage = queryCameraCountMessageToJausMessage(queryCameraCountMessage1);
 	if(jausMessage->dataSize != 0)
 	{
-		printf("queryCameraCountMessageToJausMessage failed\n");
+		printf("\tqueryCameraCountMessageToJausMessage failed\n");
 	}
 	else
 	{
 		queryCameraCountMessage2 = queryCameraCountMessageFromJausMessage(jausMessage);
 		if(queryCameraCountMessage2 == NULL)
 		{
-			printf("queryCameraCountMessageFromJausMessage failed\n");
+			printf("\tqueryCameraCountMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -591,14 +588,14 @@ int main(void)
 	jausMessage = queryCameraFormatOptionsMessageToJausMessage(queryCameraFormatOptionsMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("queryCameraFormatOptionsMessageToJausMessage failed\n");
+		printf("\tqueryCameraFormatOptionsMessageToJausMessage failed\n");
 	}
 	else
 	{
 		queryCameraFormatOptionsMessage2 = queryCameraFormatOptionsMessageFromJausMessage(jausMessage);
 		if(queryCameraFormatOptionsMessage2 == NULL)
 		{
-			printf("queryCameraFormatOptionsMessageFromJausMessage failed\n");
+			printf("\tqueryCameraFormatOptionsMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -613,14 +610,14 @@ int main(void)
 	jausMessage = queryCameraPoseMessageToJausMessage(queryCameraPoseMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("queryCameraPoseMessageToJausMessage failed\n");
+		printf("\tqueryCameraPoseMessageToJausMessage failed\n");
 	}
 	else
 	{
 		queryCameraPoseMessage2 = queryCameraPoseMessageFromJausMessage(jausMessage);
 		if(queryCameraPoseMessage2 == NULL)
 		{
-			printf("queryCameraPoseMessageFromJausMessage failed\n");
+			printf("\tqueryCameraPoseMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -635,14 +632,14 @@ int main(void)
 	jausMessage = queryComponentAuthorityMessageToJausMessage(queryComponentAuthorityMessage1);
 	if(jausMessage->dataSize != 0)
 	{
-		printf("queryComponentAuthorityMessageToJausMessage failed\n");
+		printf("\tqueryComponentAuthorityMessageToJausMessage failed\n");
 	}
 	else
 	{
 		queryComponentAuthorityMessage2 = queryComponentAuthorityMessageFromJausMessage(jausMessage);
 		if(queryComponentAuthorityMessage2 == NULL)
 		{
-			printf("queryComponentAuthorityMessageFromJausMessage failed\n");
+			printf("\tqueryComponentAuthorityMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -657,14 +654,14 @@ int main(void)
 	jausMessage = queryComponentControlMessageToJausMessage(queryComponentControlMessage1);
 	if(jausMessage->dataSize != 0)
 	{
-		printf("queryComponentControlMessageToJausMessage failed\n");
+		printf("\tqueryComponentControlMessageToJausMessage failed\n");
 	}
 	else
 	{
 		queryComponentControlMessage2 = queryComponentControlMessageFromJausMessage(jausMessage);
 		if(queryComponentControlMessage2 == NULL)
 		{
-			printf("queryComponentControlMessageFromJausMessage failed\n");
+			printf("\tqueryComponentControlMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -679,14 +676,14 @@ int main(void)
 	jausMessage = queryComponentStatusMessageToJausMessage(queryComponentStatusMessage1);
 	if(jausMessage->dataSize != 0)
 	{
-		printf("queryComponentStatusMessageToJausMessage failed\n");
+		printf("\tqueryComponentStatusMessageToJausMessage failed\n");
 	}
 	else
 	{
 		queryComponentStatusMessage2 = queryComponentStatusMessageFromJausMessage(jausMessage);
 		if(queryComponentStatusMessage2 == NULL)
 		{
-			printf("queryComponentStatusMessageFromJausMessage failed\n");
+			printf("\tqueryComponentStatusMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -701,14 +698,14 @@ int main(void)
 	jausMessage = queryConfigurationMessageToJausMessage(queryConfigurationMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("queryConfigurationMessageToJausMessage failed\n");
+		printf("\tqueryConfigurationMessageToJausMessage failed\n");
 	}
 	else
 	{
 		queryConfigurationMessage2 = queryConfigurationMessageFromJausMessage(jausMessage);
 		if(queryConfigurationMessage2 == NULL)
 		{
-			printf("queryConfigurationMessageFromJausMessage failed\n");
+			printf("\tqueryConfigurationMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -723,14 +720,14 @@ int main(void)
 	jausMessage = queryDataLinkStatusMessageToJausMessage(queryDataLinkStatusMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("queryDataLinkStatusMessageToJausMessage failed\n");
+		printf("\tqueryDataLinkStatusMessageToJausMessage failed\n");
 	}
 	else
 	{
 		queryDataLinkStatusMessage2 = queryDataLinkStatusMessageFromJausMessage(jausMessage);
 		if(queryDataLinkStatusMessage2 == NULL)
 		{
-			printf("queryDataLinkStatusMessageFromJausMessage failed\n");
+			printf("\tqueryDataLinkStatusMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -745,14 +742,14 @@ int main(void)
 	jausMessage = queryDiscreteDevicesMessageToJausMessage(queryDiscreteDevicesMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("queryDiscreteDevicesMessageToJausMessage failed\n");
+		printf("\tqueryDiscreteDevicesMessageToJausMessage failed\n");
 	}
 	else
 	{
 		queryDiscreteDevicesMessage2 = queryDiscreteDevicesMessageFromJausMessage(jausMessage);
 		if(queryDiscreteDevicesMessage2 == NULL)
 		{
-			printf("queryDiscreteDevicesMessageFromJausMessage failed\n");
+			printf("\tqueryDiscreteDevicesMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -767,14 +764,14 @@ int main(void)
 	jausMessage = queryEventsMessageToJausMessage(queryEventsMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("queryEventsMessageToJausMessage failed\n");
+		printf("\tqueryEventsMessageToJausMessage failed\n");
 	}
 	else
 	{
 		queryEventsMessage2 = queryEventsMessageFromJausMessage(jausMessage);
 		if(queryEventsMessage2 == NULL)
 		{
-			printf("queryEventsMessageFromJausMessage failed\n");
+			printf("\tqueryEventsMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -789,14 +786,14 @@ int main(void)
 	jausMessage = queryGlobalPathSegmentMessageToJausMessage(queryGlobalPathSegmentMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("queryGlobalPathSegmentMessageToJausMessage failed\n");
+		printf("\tqueryGlobalPathSegmentMessageToJausMessage failed\n");
 	}
 	else
 	{
 		queryGlobalPathSegmentMessage2 = queryGlobalPathSegmentMessageFromJausMessage(jausMessage);
 		if(queryGlobalPathSegmentMessage2 == NULL)
 		{
-			printf("queryGlobalPathSegmentMessageFromJausMessage failed\n");
+			printf("\tqueryGlobalPathSegmentMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -811,14 +808,14 @@ int main(void)
 	jausMessage = queryGlobalPoseMessageToJausMessage(queryGlobalPoseMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("queryGlobalPoseMessageToJausMessage failed\n");
+		printf("\tqueryGlobalPoseMessageToJausMessage failed\n");
 	}
 	else
 	{
 		queryGlobalPoseMessage2 = queryGlobalPoseMessageFromJausMessage(jausMessage);
 		if(queryGlobalPoseMessage2 == NULL)
 		{
-			printf("queryGlobalPoseMessageFromJausMessage failed\n");
+			printf("\tqueryGlobalPoseMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -833,14 +830,14 @@ int main(void)
 	jausMessage = queryGlobalVectorMessageToJausMessage(queryGlobalVectorMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("queryGlobalVectorMessageToJausMessage failed\n");
+		printf("\tqueryGlobalVectorMessageToJausMessage failed\n");
 	}
 	else
 	{
 		queryGlobalVectorMessage2 = queryGlobalVectorMessageFromJausMessage(jausMessage);
 		if(queryGlobalVectorMessage2 == NULL)
 		{
-			printf("queryGlobalVectorMessageFromJausMessage failed\n");
+			printf("\tqueryGlobalVectorMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -855,14 +852,14 @@ int main(void)
 	jausMessage = queryGlobalWaypointMessageToJausMessage(queryGlobalWaypointMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("queryGlobalWaypointMessageToJausMessage failed\n");
+		printf("\tqueryGlobalWaypointMessageToJausMessage failed\n");
 	}
 	else
 	{
 		queryGlobalWaypointMessage2 = queryGlobalWaypointMessageFromJausMessage(jausMessage);
 		if(queryGlobalWaypointMessage2 == NULL)
 		{
-			printf("queryGlobalWaypointMessageFromJausMessage failed\n");
+			printf("\tqueryGlobalWaypointMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -877,14 +874,14 @@ int main(void)
 	jausMessage = queryHeartbeatPulseMessageToJausMessage(queryHeartbeatPulseMessage1);
 	if(jausMessage->dataSize != 0)
 	{
-		printf("queryHeartbeatPulseMessageToJausMessage failed\n");
+		printf("\tqueryHeartbeatPulseMessageToJausMessage failed\n");
 	}
 	else
 	{
 		queryHeartbeatPulseMessage2 = queryHeartbeatPulseMessageFromJausMessage(jausMessage);
 		if(queryHeartbeatPulseMessage2 == NULL)
 		{
-			printf("queryHeartbeatPulseMessageFromJausMessage failed\n");
+			printf("\tqueryHeartbeatPulseMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -899,14 +896,14 @@ int main(void)
 	jausMessage = queryIdentificationMessageToJausMessage(queryIdentificationMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("queryIdentificationMessageToJausMessage failed\n");
+		printf("\tqueryIdentificationMessageToJausMessage failed\n");
 	}
 	else
 	{
 		queryIdentificationMessage2 = queryIdentificationMessageFromJausMessage(jausMessage);
 		if(queryIdentificationMessage2 == NULL)
 		{
-			printf("queryIdentificationMessageFromJausMessage failed\n");
+			printf("\tqueryIdentificationMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -921,14 +918,14 @@ int main(void)
 	jausMessage = queryImageMessageToJausMessage(queryImageMessage1);
 	if(jausMessage->dataSize != 0)
 	{
-		printf("queryImageMessageToJausMessage failed\n");
+		printf("\tqueryImageMessageToJausMessage failed\n");
 	}
 	else
 	{
 		queryImageMessage2 = queryImageMessageFromJausMessage(jausMessage);
 		if(queryImageMessage2 == NULL)
 		{
-			printf("queryImageMessageFromJausMessage failed\n");
+			printf("\tqueryImageMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -943,14 +940,14 @@ int main(void)
 	jausMessage = queryJointEffortsMessageToJausMessage(queryJointEffortsMessage1);
 	if(jausMessage->dataSize != 0)
 	{
-		printf("queryJointEffortsMessageToJausMessage failed\n");
+		printf("\tqueryJointEffortsMessageToJausMessage failed\n");
 	}
 	else
 	{
 		queryJointEffortsMessage2 = queryJointEffortsMessageFromJausMessage(jausMessage);
 		if(queryJointEffortsMessage2 == NULL)
 		{
-			printf("queryJointEffortsMessageFromJausMessage failed\n");
+			printf("\tqueryJointEffortsMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -965,14 +962,14 @@ int main(void)
 	jausMessage = queryJointForceTorquesMessageToJausMessage(queryJointForceTorquesMessage1);
 	if(jausMessage->dataSize != 0)
 	{
-		printf("queryJointForceTorquesMessageToJausMessage failed\n");
+		printf("\tqueryJointForceTorquesMessageToJausMessage failed\n");
 	}
 	else
 	{
 		queryJointForceTorquesMessage2 = queryJointForceTorquesMessageFromJausMessage(jausMessage);
 		if(queryJointForceTorquesMessage2 == NULL)
 		{
-			printf("queryJointForceTorquesMessageFromJausMessage failed\n");
+			printf("\tqueryJointForceTorquesMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -987,14 +984,14 @@ int main(void)
 	jausMessage = queryJointPositionsMessageToJausMessage(queryJointPositionsMessage1);
 	if(jausMessage->dataSize != 0)
 	{
-		printf("queryJointPositionsMessageToJausMessage failed\n");
+		printf("\tqueryJointPositionsMessageToJausMessage failed\n");
 	}
 	else
 	{
 		queryJointPositionsMessage2 = queryJointPositionsMessageFromJausMessage(jausMessage);
 		if(queryJointPositionsMessage2 == NULL)
 		{
-			printf("queryJointPositionsMessageFromJausMessage failed\n");
+			printf("\tqueryJointPositionsMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -1009,14 +1006,14 @@ int main(void)
 	jausMessage = queryJointVelocitiesMessageToJausMessage(queryJointVelocitiesMessage1);
 	if(jausMessage->dataSize != 0)
 	{
-		printf("queryJointVelocitiesMessageToJausMessage failed\n");
+		printf("\tqueryJointVelocitiesMessageToJausMessage failed\n");
 	}
 	else
 	{
 		queryJointVelocitiesMessage2 = queryJointVelocitiesMessageFromJausMessage(jausMessage);
 		if(queryJointVelocitiesMessage2 == NULL)
 		{
-			printf("queryJointVelocitiesMessageFromJausMessage failed\n");
+			printf("\tqueryJointVelocitiesMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -1031,14 +1028,14 @@ int main(void)
 	jausMessage = queryLocalPathSegmentMessageToJausMessage(queryLocalPathSegmentMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("queryLocalPathSegmentMessageToJausMessage failed\n");
+		printf("\tqueryLocalPathSegmentMessageToJausMessage failed\n");
 	}
 	else
 	{
 		queryLocalPathSegmentMessage2 = queryLocalPathSegmentMessageFromJausMessage(jausMessage);
 		if(queryLocalPathSegmentMessage2 == NULL)
 		{
-			printf("queryLocalPathSegmentMessageFromJausMessage failed\n");
+			printf("\tqueryLocalPathSegmentMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -1053,14 +1050,14 @@ int main(void)
 	jausMessage = queryLocalPoseMessageToJausMessage(queryLocalPoseMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("queryLocalPoseMessageToJausMessage failed\n");
+		printf("\tqueryLocalPoseMessageToJausMessage failed\n");
 	}
 	else
 	{
 		queryLocalPoseMessage2 = queryLocalPoseMessageFromJausMessage(jausMessage);
 		if(queryLocalPoseMessage2 == NULL)
 		{
-			printf("queryLocalPoseMessageFromJausMessage failed\n");
+			printf("\tqueryLocalPoseMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -1075,14 +1072,14 @@ int main(void)
 	jausMessage = queryLocalVectorMessageToJausMessage(queryLocalVectorMessage1);
 	if(jausMessage->dataSize != 0)
 	{
-		printf("queryLocalVectorMessageToJausMessage failed\n");
+		printf("\tqueryLocalVectorMessageToJausMessage failed\n");
 	}
 	else
 	{
 		queryLocalVectorMessage2 = queryLocalVectorMessageFromJausMessage(jausMessage);
 		if(queryLocalVectorMessage2 == NULL)
 		{
-			printf("queryLocalVectorMessageFromJausMessage failed\n");
+			printf("\tqueryLocalVectorMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -1097,14 +1094,14 @@ int main(void)
 	jausMessage = queryLocalWaypointMessageToJausMessage(queryLocalWaypointMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("queryLocalWaypointMessageToJausMessage failed\n");
+		printf("\tqueryLocalWaypointMessageToJausMessage failed\n");
 	}
 	else
 	{
 		queryLocalWaypointMessage2 = queryLocalWaypointMessageFromJausMessage(jausMessage);
 		if(queryLocalWaypointMessage2 == NULL)
 		{
-			printf("queryLocalWaypointMessageFromJausMessage failed\n");
+			printf("\tqueryLocalWaypointMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -1119,14 +1116,14 @@ int main(void)
 	jausMessage = queryManipulatorSpecificationsMessageToJausMessage(queryManipulatorSpecificationsMessage1);
 	if(jausMessage->dataSize != 0)
 	{
-		printf("queryManipulatorSpecificationsMessageToJausMessage failed\n");
+		printf("\tqueryManipulatorSpecificationsMessageToJausMessage failed\n");
 	}
 	else
 	{
 		queryManipulatorSpecificationsMessage2 = queryManipulatorSpecificationsMessageFromJausMessage(jausMessage);
 		if(queryManipulatorSpecificationsMessage2 == NULL)
 		{
-			printf("queryManipulatorSpecificationsMessageFromJausMessage failed\n");
+			printf("\tqueryManipulatorSpecificationsMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -1141,14 +1138,14 @@ int main(void)
 	jausMessage = queryPathSegmentCountMessageToJausMessage(queryPathSegmentCountMessage1);
 	if(jausMessage->dataSize != 0)
 	{
-		printf("queryPathSegmentCountMessageToJausMessage failed\n");
+		printf("\tqueryPathSegmentCountMessageToJausMessage failed\n");
 	}
 	else
 	{
 		queryPathSegmentCountMessage2 = queryPathSegmentCountMessageFromJausMessage(jausMessage);
 		if(queryPathSegmentCountMessage2 == NULL)
 		{
-			printf("queryPathSegmentCountMessageFromJausMessage failed\n");
+			printf("\tqueryPathSegmentCountMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -1163,14 +1160,14 @@ int main(void)
 	jausMessage = queryPayloadDataElementMessageToJausMessage(queryPayloadDataElementMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("queryPayloadDataElementMessageToJausMessage failed\n");
+		printf("\tqueryPayloadDataElementMessageToJausMessage failed\n");
 	}
 	else
 	{
 		queryPayloadDataElementMessage2 = queryPayloadDataElementMessageFromJausMessage(jausMessage);
 		if(queryPayloadDataElementMessage2 == NULL)
 		{
-			printf("queryPayloadDataElementMessageFromJausMessage failed\n");
+			printf("\tqueryPayloadDataElementMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -1185,14 +1182,14 @@ int main(void)
 	jausMessage = queryPayloadInterfaceMessageToJausMessage(queryPayloadInterfaceMessage1);
 	if(jausMessage->dataSize != 0)
 	{
-		printf("queryPayloadInterfaceMessageToJausMessage failed\n");
+		printf("\tqueryPayloadInterfaceMessageToJausMessage failed\n");
 	}
 	else
 	{
 		queryPayloadInterfaceMessage2 = queryPayloadInterfaceMessageFromJausMessage(jausMessage);
 		if(queryPayloadInterfaceMessage2 == NULL)
 		{
-			printf("queryPayloadInterfaceMessageFromJausMessage failed\n");
+			printf("\tqueryPayloadInterfaceMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -1207,14 +1204,14 @@ int main(void)
 	jausMessage = queryPlatformOperationalDataMessageToJausMessage(queryPlatformOperationalDataMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("queryPlatformOperationalDataMessageToJausMessage failed\n");
+		printf("\tqueryPlatformOperationalDataMessageToJausMessage failed\n");
 	}
 	else
 	{
 		queryPlatformOperationalDataMessage2 = queryPlatformOperationalDataMessageFromJausMessage(jausMessage);
 		if(queryPlatformOperationalDataMessage2 == NULL)
 		{
-			printf("queryPlatformOperationalDataMessageFromJausMessage failed\n");
+			printf("\tqueryPlatformOperationalDataMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -1229,14 +1226,14 @@ int main(void)
 	jausMessage = queryPlatformSpecificationsMessageToJausMessage(queryPlatformSpecificationsMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("queryPlatformSpecificationsMessageToJausMessage failed\n");
+		printf("\tqueryPlatformSpecificationsMessageToJausMessage failed\n");
 	}
 	else
 	{
 		queryPlatformSpecificationsMessage2 = queryPlatformSpecificationsMessageFromJausMessage(jausMessage);
 		if(queryPlatformSpecificationsMessage2 == NULL)
 		{
-			printf("queryPlatformSpecificationsMessageFromJausMessage failed\n");
+			printf("\tqueryPlatformSpecificationsMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -1249,16 +1246,16 @@ int main(void)
 	printf("Testing QueryRelativeObjectPositionMessage\n");
 	queryRelativeObjectPositionMessage1 = queryRelativeObjectPositionMessageCreate();
 	jausMessage = queryRelativeObjectPositionMessageToJausMessage(queryRelativeObjectPositionMessage1);
-	if(jausMessage->dataSize != 0)
+	if(jausMessage->dataSize == 0)
 	{
-		printf("queryRelativeObjectPositionMessageToJausMessage failed\n");
+		printf("\tqueryRelativeObjectPositionMessageToJausMessage failed\n");
 	}
 	else
 	{
 		queryRelativeObjectPositionMessage2 = queryRelativeObjectPositionMessageFromJausMessage(jausMessage);
 		if(queryRelativeObjectPositionMessage2 == NULL)
 		{
-			printf("queryRelativeObjectPositionMessageFromJausMessage failed\n");
+			printf("\tqueryRelativeObjectPositionMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -1273,14 +1270,14 @@ int main(void)
 	jausMessage = querySelectedCameraMessageToJausMessage(querySelectedCameraMessage1);
 	if(jausMessage->dataSize != 0)
 	{
-		printf("querySelectedCameraMessageToJausMessage failed\n");
+		printf("\tquerySelectedCameraMessageToJausMessage failed\n");
 	}
 	else
 	{
 		querySelectedCameraMessage2 = querySelectedCameraMessageFromJausMessage(jausMessage);
 		if(querySelectedCameraMessage2 == NULL)
 		{
-			printf("querySelectedCameraMessageFromJausMessage failed\n");
+			printf("\tquerySelectedCameraMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -1295,14 +1292,14 @@ int main(void)
 	jausMessage = querySelectedDataLinkStatusMessageToJausMessage(querySelectedDataLinkStatusMessage1);
 	if(jausMessage->dataSize != 0)
 	{
-		printf("querySelectedDataLinkStatusMessageToJausMessage failed\n");
+		printf("\tquerySelectedDataLinkStatusMessageToJausMessage failed\n");
 	}
 	else
 	{
 		querySelectedDataLinkStatusMessage2 = querySelectedDataLinkStatusMessageFromJausMessage(jausMessage);
 		if(querySelectedDataLinkStatusMessage2 == NULL)
 		{
-			printf("querySelectedDataLinkStatusMessageFromJausMessage failed\n");
+			printf("\tquerySelectedDataLinkStatusMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -1317,14 +1314,14 @@ int main(void)
 	jausMessage = queryServicesMessageToJausMessage(queryServicesMessage1);
 	if(jausMessage->dataSize != 0)
 	{
-		printf("queryServicesMessageToJausMessage failed\n");
+		printf("\tqueryServicesMessageToJausMessage failed\n");
 	}
 	else
 	{
 		queryServicesMessage2 = queryServicesMessageFromJausMessage(jausMessage);
 		if(queryServicesMessage2 == NULL)
 		{
-			printf("queryServicesMessageFromJausMessage failed\n");
+			printf("\tqueryServicesMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -1339,14 +1336,14 @@ int main(void)
 	jausMessage = querySubsystemListMessageToJausMessage(querySubsystemListMessage1);
 	if(jausMessage->dataSize != 0)
 	{
-		printf("querySubsystemListMessageToJausMessage failed\n");
+		printf("\tquerySubsystemListMessageToJausMessage failed\n");
 	}
 	else
 	{
 		querySubsystemListMessage2 = querySubsystemListMessageFromJausMessage(jausMessage);
 		if(querySubsystemListMessage2 == NULL)
 		{
-			printf("querySubsystemListMessageFromJausMessage failed\n");
+			printf("\tquerySubsystemListMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -1361,14 +1358,14 @@ int main(void)
 	jausMessage = queryTimeMessageToJausMessage(queryTimeMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("queryTimeMessageToJausMessage failed\n");
+		printf("\tqueryTimeMessageToJausMessage failed\n");
 	}
 	else
 	{
 		queryTimeMessage2 = queryTimeMessageFromJausMessage(jausMessage);
 		if(queryTimeMessage2 == NULL)
 		{
-			printf("queryTimeMessageFromJausMessage failed\n");
+			printf("\tqueryTimeMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -1383,14 +1380,14 @@ int main(void)
 	jausMessage = queryToolPointMessageToJausMessage(queryToolPointMessage1);
 	if(jausMessage->dataSize != 0)
 	{
-		printf("queryToolPointMessageToJausMessage failed\n");
+		printf("\tqueryToolPointMessageToJausMessage failed\n");
 	}
 	else
 	{
 		queryToolPointMessage2 = queryToolPointMessageFromJausMessage(jausMessage);
 		if(queryToolPointMessage2 == NULL)
 		{
-			printf("queryToolPointMessageFromJausMessage failed\n");
+			printf("\tqueryToolPointMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -1405,14 +1402,14 @@ int main(void)
 	jausMessage = queryTravelSpeedMessageToJausMessage(queryTravelSpeedMessage1);
 	if(jausMessage->dataSize != 0)
 	{
-		printf("queryTravelSpeedMessageToJausMessage failed\n");
+		printf("\tqueryTravelSpeedMessageToJausMessage failed\n");
 	}
 	else
 	{
 		queryTravelSpeedMessage2 = queryTravelSpeedMessageFromJausMessage(jausMessage);
 		if(queryTravelSpeedMessage2 == NULL)
 		{
-			printf("queryTravelSpeedMessageFromJausMessage failed\n");
+			printf("\tqueryTravelSpeedMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -1427,14 +1424,14 @@ int main(void)
 	jausMessage = queryVelocityStateMessageToJausMessage(queryVelocityStateMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("queryVelocityStateMessageToJausMessage failed\n");
+		printf("\tqueryVelocityStateMessageToJausMessage failed\n");
 	}
 	else
 	{
 		queryVelocityStateMessage2 = queryVelocityStateMessageFromJausMessage(jausMessage);
 		if(queryVelocityStateMessage2 == NULL)
 		{
-			printf("queryVelocityStateMessageFromJausMessage failed\n");
+			printf("\tqueryVelocityStateMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -1449,14 +1446,14 @@ int main(void)
 	jausMessage = queryVksBoundsMessageToJausMessage(queryVksBoundsMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("queryVksBoundsMessageToJausMessage failed\n");
+		printf("\tqueryVksBoundsMessageToJausMessage failed\n");
 	}
 	else
 	{
 		queryVksBoundsMessage2 = queryVksBoundsMessageFromJausMessage(jausMessage);
 		if(queryVksBoundsMessage2 == NULL)
 		{
-			printf("queryVksBoundsMessageFromJausMessage failed\n");
+			printf("\tqueryVksBoundsMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -1471,14 +1468,14 @@ int main(void)
 	jausMessage = queryVksFeatureClassMetadataMessageToJausMessage(queryVksFeatureClassMetadataMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("queryVksFeatureClassMetadataMessageToJausMessage failed\n");
+		printf("\tqueryVksFeatureClassMetadataMessageToJausMessage failed\n");
 	}
 	else
 	{
 		queryVksFeatureClassMetadataMessage2 = queryVksFeatureClassMetadataMessageFromJausMessage(jausMessage);
 		if(queryVksFeatureClassMetadataMessage2 == NULL)
 		{
-			printf("queryVksFeatureClassMetadataMessageFromJausMessage failed\n");
+			printf("\tqueryVksFeatureClassMetadataMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -1493,14 +1490,14 @@ int main(void)
 	jausMessage = queryVksObjectsMessageToJausMessage(queryVksObjectsMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("queryVksObjectsMessageToJausMessage failed\n");
+		printf("\tqueryVksObjectsMessageToJausMessage failed\n");
 	}
 	else
 	{
 		queryVksObjectsMessage2 = queryVksObjectsMessageFromJausMessage(jausMessage);
 		if(queryVksObjectsMessage2 == NULL)
 		{
-			printf("queryVksObjectsMessageFromJausMessage failed\n");
+			printf("\tqueryVksObjectsMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -1515,14 +1512,14 @@ int main(void)
 	jausMessage = queryWaypointCountMessageToJausMessage(queryWaypointCountMessage1);
 	if(jausMessage->dataSize != 0)
 	{
-		printf("queryWaypointCountMessageToJausMessage failed\n");
+		printf("\tqueryWaypointCountMessageToJausMessage failed\n");
 	}
 	else
 	{
 		queryWaypointCountMessage2 = queryWaypointCountMessageFromJausMessage(jausMessage);
 		if(queryWaypointCountMessage2 == NULL)
 		{
-			printf("queryWaypointCountMessageFromJausMessage failed\n");
+			printf("\tqueryWaypointCountMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -1537,14 +1534,14 @@ int main(void)
 	jausMessage = queryWrenchEffortMessageToJausMessage(queryWrenchEffortMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("queryWrenchEffortMessageToJausMessage failed\n");
+		printf("\tqueryWrenchEffortMessageToJausMessage failed\n");
 	}
 	else
 	{
 		queryWrenchEffortMessage2 = queryWrenchEffortMessageFromJausMessage(jausMessage);
 		if(queryWrenchEffortMessage2 == NULL)
 		{
-			printf("queryWrenchEffortMessageFromJausMessage failed\n");
+			printf("\tqueryWrenchEffortMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -1559,14 +1556,14 @@ int main(void)
 	jausMessage = rejectComponentControlMessageToJausMessage(rejectComponentControlMessage1);
 	if(jausMessage->dataSize != 0)
 	{
-		printf("rejectComponentControlMessageToJausMessage failed\n");
+		printf("\trejectComponentControlMessageToJausMessage failed\n");
 	}
 	else
 	{
 		rejectComponentControlMessage2 = rejectComponentControlMessageFromJausMessage(jausMessage);
 		if(rejectComponentControlMessage2 == NULL)
 		{
-			printf("rejectComponentControlMessageFromJausMessage failed\n");
+			printf("\trejectComponentControlMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -1581,14 +1578,14 @@ int main(void)
 	jausMessage = rejectEventRequestMessageToJausMessage(rejectEventRequestMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("rejectEventRequestMessageToJausMessage failed\n");
+		printf("\trejectEventRequestMessageToJausMessage failed\n");
 	}
 	else
 	{
 		rejectEventRequestMessage2 = rejectEventRequestMessageFromJausMessage(jausMessage);
 		if(rejectEventRequestMessage2 == NULL)
 		{
-			printf("rejectEventRequestMessageFromJausMessage failed\n");
+			printf("\trejectEventRequestMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -1603,14 +1600,14 @@ int main(void)
 	jausMessage = releaseComponentControlMessageToJausMessage(releaseComponentControlMessage1);
 	if(jausMessage->dataSize != 0)
 	{
-		printf("releaseComponentControlMessageToJausMessage failed\n");
+		printf("\treleaseComponentControlMessageToJausMessage failed\n");
 	}
 	else
 	{
 		releaseComponentControlMessage2 = releaseComponentControlMessageFromJausMessage(jausMessage);
 		if(releaseComponentControlMessage2 == NULL)
 		{
-			printf("releaseComponentControlMessageFromJausMessage failed\n");
+			printf("\treleaseComponentControlMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -1625,14 +1622,14 @@ int main(void)
 	jausMessage = reportCameraCapabilitiesMessageToJausMessage(reportCameraCapabilitiesMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("reportCameraCapabilitiesMessageToJausMessage failed\n");
+		printf("\treportCameraCapabilitiesMessageToJausMessage failed\n");
 	}
 	else
 	{
 		reportCameraCapabilitiesMessage2 = reportCameraCapabilitiesMessageFromJausMessage(jausMessage);
 		if(reportCameraCapabilitiesMessage2 == NULL)
 		{
-			printf("reportCameraCapabilitiesMessageFromJausMessage failed\n");
+			printf("\treportCameraCapabilitiesMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -1647,14 +1644,14 @@ int main(void)
 	jausMessage = reportCameraCountMessageToJausMessage(reportCameraCountMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("reportCameraCountMessageToJausMessage failed\n");
+		printf("\treportCameraCountMessageToJausMessage failed\n");
 	}
 	else
 	{
 		reportCameraCountMessage2 = reportCameraCountMessageFromJausMessage(jausMessage);
 		if(reportCameraCountMessage2 == NULL)
 		{
-			printf("reportCameraCountMessageFromJausMessage failed\n");
+			printf("\treportCameraCountMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -1669,14 +1666,14 @@ int main(void)
 	jausMessage = reportCameraFormatOptionsMessageToJausMessage(reportCameraFormatOptionsMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("reportCameraFormatOptionsMessageToJausMessage failed\n");
+		printf("\treportCameraFormatOptionsMessageToJausMessage failed\n");
 	}
 	else
 	{
 		reportCameraFormatOptionsMessage2 = reportCameraFormatOptionsMessageFromJausMessage(jausMessage);
 		if(reportCameraFormatOptionsMessage2 == NULL)
 		{
-			printf("reportCameraFormatOptionsMessageFromJausMessage failed\n");
+			printf("\treportCameraFormatOptionsMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -1691,14 +1688,14 @@ int main(void)
 	jausMessage = reportCameraPoseMessageToJausMessage(reportCameraPoseMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("reportCameraPoseMessageToJausMessage failed\n");
+		printf("\treportCameraPoseMessageToJausMessage failed\n");
 	}
 	else
 	{
 		reportCameraPoseMessage2 = reportCameraPoseMessageFromJausMessage(jausMessage);
 		if(reportCameraPoseMessage2 == NULL)
 		{
-			printf("reportCameraPoseMessageFromJausMessage failed\n");
+			printf("\treportCameraPoseMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -1713,14 +1710,14 @@ int main(void)
 	jausMessage = reportComponentAuthorityMessageToJausMessage(reportComponentAuthorityMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("reportComponentAuthorityMessageToJausMessage failed\n");
+		printf("\treportComponentAuthorityMessageToJausMessage failed\n");
 	}
 	else
 	{
 		reportComponentAuthorityMessage2 = reportComponentAuthorityMessageFromJausMessage(jausMessage);
 		if(reportComponentAuthorityMessage2 == NULL)
 		{
-			printf("reportComponentAuthorityMessageFromJausMessage failed\n");
+			printf("\treportComponentAuthorityMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -1735,14 +1732,14 @@ int main(void)
 	jausMessage = reportComponentControlMessageToJausMessage(reportComponentControlMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("reportComponentControlMessageToJausMessage failed\n");
+		printf("\treportComponentControlMessageToJausMessage failed\n");
 	}
 	else
 	{
 		reportComponentControlMessage2 = reportComponentControlMessageFromJausMessage(jausMessage);
 		if(reportComponentControlMessage2 == NULL)
 		{
-			printf("reportComponentControlMessageFromJausMessage failed\n");
+			printf("\treportComponentControlMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -1757,14 +1754,14 @@ int main(void)
 	jausMessage = reportComponentStatusMessageToJausMessage(reportComponentStatusMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("reportComponentStatusMessageToJausMessage failed\n");
+		printf("\treportComponentStatusMessageToJausMessage failed\n");
 	}
 	else
 	{
 		reportComponentStatusMessage2 = reportComponentStatusMessageFromJausMessage(jausMessage);
 		if(reportComponentStatusMessage2 == NULL)
 		{
-			printf("reportComponentStatusMessageFromJausMessage failed\n");
+			printf("\treportComponentStatusMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -1779,14 +1776,14 @@ int main(void)
 	jausMessage = reportConfigurationMessageToJausMessage(reportConfigurationMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("reportConfigurationMessageToJausMessage failed\n");
+		printf("\treportConfigurationMessageToJausMessage failed\n");
 	}
 	else
 	{
 		reportConfigurationMessage2 = reportConfigurationMessageFromJausMessage(jausMessage);
 		if(reportConfigurationMessage2 == NULL)
 		{
-			printf("reportConfigurationMessageFromJausMessage failed\n");
+			printf("\treportConfigurationMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -1801,14 +1798,14 @@ int main(void)
 	jausMessage = reportDataLinkStatusMessageToJausMessage(reportDataLinkStatusMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("reportDataLinkStatusMessageToJausMessage failed\n");
+		printf("\treportDataLinkStatusMessageToJausMessage failed\n");
 	}
 	else
 	{
 		reportDataLinkStatusMessage2 = reportDataLinkStatusMessageFromJausMessage(jausMessage);
 		if(reportDataLinkStatusMessage2 == NULL)
 		{
-			printf("reportDataLinkStatusMessageFromJausMessage failed\n");
+			printf("\treportDataLinkStatusMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -1823,14 +1820,14 @@ int main(void)
 	jausMessage = reportDiscreteDevicesMessageToJausMessage(reportDiscreteDevicesMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("reportDiscreteDevicesMessageToJausMessage failed\n");
+		printf("\treportDiscreteDevicesMessageToJausMessage failed\n");
 	}
 	else
 	{
 		reportDiscreteDevicesMessage2 = reportDiscreteDevicesMessageFromJausMessage(jausMessage);
 		if(reportDiscreteDevicesMessage2 == NULL)
 		{
-			printf("reportDiscreteDevicesMessageFromJausMessage failed\n");
+			printf("\treportDiscreteDevicesMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -1845,14 +1842,14 @@ int main(void)
 	jausMessage = reportEventsMessageToJausMessage(reportEventsMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("reportEventsMessageToJausMessage failed\n");
+		printf("\treportEventsMessageToJausMessage failed\n");
 	}
 	else
 	{
 		reportEventsMessage2 = reportEventsMessageFromJausMessage(jausMessage);
 		if(reportEventsMessage2 == NULL)
 		{
-			printf("reportEventsMessageFromJausMessage failed\n");
+			printf("\treportEventsMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -1867,14 +1864,14 @@ int main(void)
 	jausMessage = reportGlobalPathSegmentMessageToJausMessage(reportGlobalPathSegmentMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("reportGlobalPathSegmentMessageToJausMessage failed\n");
+		printf("\treportGlobalPathSegmentMessageToJausMessage failed\n");
 	}
 	else
 	{
 		reportGlobalPathSegmentMessage2 = reportGlobalPathSegmentMessageFromJausMessage(jausMessage);
 		if(reportGlobalPathSegmentMessage2 == NULL)
 		{
-			printf("reportGlobalPathSegmentMessageFromJausMessage failed\n");
+			printf("\treportGlobalPathSegmentMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -1889,14 +1886,14 @@ int main(void)
 	jausMessage = reportGlobalPoseMessageToJausMessage(reportGlobalPoseMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("reportGlobalPoseMessageToJausMessage failed\n");
+		printf("\treportGlobalPoseMessageToJausMessage failed\n");
 	}
 	else
 	{
 		reportGlobalPoseMessage2 = reportGlobalPoseMessageFromJausMessage(jausMessage);
 		if(reportGlobalPoseMessage2 == NULL)
 		{
-			printf("reportGlobalPoseMessageFromJausMessage failed\n");
+			printf("\treportGlobalPoseMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -1911,14 +1908,14 @@ int main(void)
 	jausMessage = reportGlobalVectorMessageToJausMessage(reportGlobalVectorMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("reportGlobalVectorMessageToJausMessage failed\n");
+		printf("\treportGlobalVectorMessageToJausMessage failed\n");
 	}
 	else
 	{
 		reportGlobalVectorMessage2 = reportGlobalVectorMessageFromJausMessage(jausMessage);
 		if(reportGlobalVectorMessage2 == NULL)
 		{
-			printf("reportGlobalVectorMessageFromJausMessage failed\n");
+			printf("\treportGlobalVectorMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -1933,14 +1930,14 @@ int main(void)
 	jausMessage = reportGlobalWaypointMessageToJausMessage(reportGlobalWaypointMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("reportGlobalWaypointMessageToJausMessage failed\n");
+		printf("\treportGlobalWaypointMessageToJausMessage failed\n");
 	}
 	else
 	{
 		reportGlobalWaypointMessage2 = reportGlobalWaypointMessageFromJausMessage(jausMessage);
 		if(reportGlobalWaypointMessage2 == NULL)
 		{
-			printf("reportGlobalWaypointMessageFromJausMessage failed\n");
+			printf("\treportGlobalWaypointMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -1955,14 +1952,14 @@ int main(void)
 	jausMessage = reportHeartbeatPulseMessageToJausMessage(reportHeartbeatPulseMessage1);
 	if(jausMessage->dataSize != 0)
 	{
-		printf("reportHeartbeatPulseMessageToJausMessage failed\n");
+		printf("\treportHeartbeatPulseMessageToJausMessage failed\n");
 	}
 	else
 	{
 		reportHeartbeatPulseMessage2 = reportHeartbeatPulseMessageFromJausMessage(jausMessage);
 		if(reportHeartbeatPulseMessage2 == NULL)
 		{
-			printf("reportHeartbeatPulseMessageFromJausMessage failed\n");
+			printf("\treportHeartbeatPulseMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -1977,14 +1974,14 @@ int main(void)
 	jausMessage = reportIdentificationMessageToJausMessage(reportIdentificationMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("reportIdentificationMessageToJausMessage failed\n");
+		printf("\treportIdentificationMessageToJausMessage failed\n");
 	}
 	else
 	{
 		reportIdentificationMessage2 = reportIdentificationMessageFromJausMessage(jausMessage);
 		if(reportIdentificationMessage2 == NULL)
 		{
-			printf("reportIdentificationMessageFromJausMessage failed\n");
+			printf("\treportIdentificationMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -1999,14 +1996,14 @@ int main(void)
 	jausMessage = reportImageMessageToJausMessage(reportImageMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("reportImageMessageToJausMessage failed\n");
+		printf("\treportImageMessageToJausMessage failed\n");
 	}
 	else
 	{
 		reportImageMessage2 = reportImageMessageFromJausMessage(jausMessage);
 		if(reportImageMessage2 == NULL)
 		{
-			printf("reportImageMessageFromJausMessage failed\n");
+			printf("\treportImageMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -2021,14 +2018,14 @@ int main(void)
 	jausMessage = reportJointEffortsMessageToJausMessage(reportJointEffortsMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("reportJointEffortsMessageToJausMessage failed\n");
+		printf("\treportJointEffortsMessageToJausMessage failed\n");
 	}
 	else
 	{
 		reportJointEffortsMessage2 = reportJointEffortsMessageFromJausMessage(jausMessage);
 		if(reportJointEffortsMessage2 == NULL)
 		{
-			printf("reportJointEffortsMessageFromJausMessage failed\n");
+			printf("\treportJointEffortsMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -2043,14 +2040,14 @@ int main(void)
 	jausMessage = reportJointForceTorquesMessageToJausMessage(reportJointForceTorquesMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("reportJointForceTorquesMessageToJausMessage failed\n");
+		printf("\treportJointForceTorquesMessageToJausMessage failed\n");
 	}
 	else
 	{
 		reportJointForceTorquesMessage2 = reportJointForceTorquesMessageFromJausMessage(jausMessage);
 		if(reportJointForceTorquesMessage2 == NULL)
 		{
-			printf("reportJointForceTorquesMessageFromJausMessage failed\n");
+			printf("\treportJointForceTorquesMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -2065,14 +2062,14 @@ int main(void)
 	jausMessage = reportJointPositionsMessageToJausMessage(reportJointPositionsMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("reportJointPositionsMessageToJausMessage failed\n");
+		printf("\treportJointPositionsMessageToJausMessage failed\n");
 	}
 	else
 	{
 		reportJointPositionsMessage2 = reportJointPositionsMessageFromJausMessage(jausMessage);
 		if(reportJointPositionsMessage2 == NULL)
 		{
-			printf("reportJointPositionsMessageFromJausMessage failed\n");
+			printf("\treportJointPositionsMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -2087,14 +2084,14 @@ int main(void)
 	jausMessage = reportJointVelocitiesMessageToJausMessage(reportJointVelocitiesMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("reportJointVelocitiesMessageToJausMessage failed\n");
+		printf("\treportJointVelocitiesMessageToJausMessage failed\n");
 	}
 	else
 	{
 		reportJointVelocitiesMessage2 = reportJointVelocitiesMessageFromJausMessage(jausMessage);
 		if(reportJointVelocitiesMessage2 == NULL)
 		{
-			printf("reportJointVelocitiesMessageFromJausMessage failed\n");
+			printf("\treportJointVelocitiesMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -2109,14 +2106,14 @@ int main(void)
 	jausMessage = reportLocalPathSegmentMessageToJausMessage(reportLocalPathSegmentMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("reportLocalPathSegmentMessageToJausMessage failed\n");
+		printf("\treportLocalPathSegmentMessageToJausMessage failed\n");
 	}
 	else
 	{
 		reportLocalPathSegmentMessage2 = reportLocalPathSegmentMessageFromJausMessage(jausMessage);
 		if(reportLocalPathSegmentMessage2 == NULL)
 		{
-			printf("reportLocalPathSegmentMessageFromJausMessage failed\n");
+			printf("\treportLocalPathSegmentMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -2131,14 +2128,14 @@ int main(void)
 	jausMessage = reportLocalPoseMessageToJausMessage(reportLocalPoseMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("reportLocalPoseMessageToJausMessage failed\n");
+		printf("\treportLocalPoseMessageToJausMessage failed\n");
 	}
 	else
 	{
 		reportLocalPoseMessage2 = reportLocalPoseMessageFromJausMessage(jausMessage);
 		if(reportLocalPoseMessage2 == NULL)
 		{
-			printf("reportLocalPoseMessageFromJausMessage failed\n");
+			printf("\treportLocalPoseMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -2153,14 +2150,14 @@ int main(void)
 	jausMessage = reportLocalVectorMessageToJausMessage(reportLocalVectorMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("reportLocalVectorMessageToJausMessage failed\n");
+		printf("\treportLocalVectorMessageToJausMessage failed\n");
 	}
 	else
 	{
 		reportLocalVectorMessage2 = reportLocalVectorMessageFromJausMessage(jausMessage);
 		if(reportLocalVectorMessage2 == NULL)
 		{
-			printf("reportLocalVectorMessageFromJausMessage failed\n");
+			printf("\treportLocalVectorMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -2175,14 +2172,14 @@ int main(void)
 	jausMessage = reportLocalWaypointMessageToJausMessage(reportLocalWaypointMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("reportLocalWaypointMessageToJausMessage failed\n");
+		printf("\treportLocalWaypointMessageToJausMessage failed\n");
 	}
 	else
 	{
 		reportLocalWaypointMessage2 = reportLocalWaypointMessageFromJausMessage(jausMessage);
 		if(reportLocalWaypointMessage2 == NULL)
 		{
-			printf("reportLocalWaypointMessageFromJausMessage failed\n");
+			printf("\treportLocalWaypointMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -2197,14 +2194,14 @@ int main(void)
 	jausMessage = reportManipulatorSpecificationsMessageToJausMessage(reportManipulatorSpecificationsMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("reportManipulatorSpecificationsMessageToJausMessage failed\n");
+		printf("\treportManipulatorSpecificationsMessageToJausMessage failed\n");
 	}
 	else
 	{
 		reportManipulatorSpecificationsMessage2 = reportManipulatorSpecificationsMessageFromJausMessage(jausMessage);
 		if(reportManipulatorSpecificationsMessage2 == NULL)
 		{
-			printf("reportManipulatorSpecificationsMessageFromJausMessage failed\n");
+			printf("\treportManipulatorSpecificationsMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -2219,14 +2216,14 @@ int main(void)
 	jausMessage = reportPathSegmentCountMessageToJausMessage(reportPathSegmentCountMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("reportPathSegmentCountMessageToJausMessage failed\n");
+		printf("\treportPathSegmentCountMessageToJausMessage failed\n");
 	}
 	else
 	{
 		reportPathSegmentCountMessage2 = reportPathSegmentCountMessageFromJausMessage(jausMessage);
 		if(reportPathSegmentCountMessage2 == NULL)
 		{
-			printf("reportPathSegmentCountMessageFromJausMessage failed\n");
+			printf("\treportPathSegmentCountMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -2241,14 +2238,14 @@ int main(void)
 	jausMessage = reportPayloadDataElementMessageToJausMessage(reportPayloadDataElementMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("reportPayloadDataElementMessageToJausMessage failed\n");
+		printf("\treportPayloadDataElementMessageToJausMessage failed\n");
 	}
 	else
 	{
 		reportPayloadDataElementMessage2 = reportPayloadDataElementMessageFromJausMessage(jausMessage);
 		if(reportPayloadDataElementMessage2 == NULL)
 		{
-			printf("reportPayloadDataElementMessageFromJausMessage failed\n");
+			printf("\treportPayloadDataElementMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -2263,14 +2260,14 @@ int main(void)
 	jausMessage = reportPayloadInterfaceMessageToJausMessage(reportPayloadInterfaceMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("reportPayloadInterfaceMessageToJausMessage failed\n");
+		printf("\treportPayloadInterfaceMessageToJausMessage failed\n");
 	}
 	else
 	{
 		reportPayloadInterfaceMessage2 = reportPayloadInterfaceMessageFromJausMessage(jausMessage);
 		if(reportPayloadInterfaceMessage2 == NULL)
 		{
-			printf("reportPayloadInterfaceMessageFromJausMessage failed\n");
+			printf("\treportPayloadInterfaceMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -2285,14 +2282,14 @@ int main(void)
 	jausMessage = reportPlatformOperationalDataMessageToJausMessage(reportPlatformOperationalDataMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("reportPlatformOperationalDataMessageToJausMessage failed\n");
+		printf("\treportPlatformOperationalDataMessageToJausMessage failed\n");
 	}
 	else
 	{
 		reportPlatformOperationalDataMessage2 = reportPlatformOperationalDataMessageFromJausMessage(jausMessage);
 		if(reportPlatformOperationalDataMessage2 == NULL)
 		{
-			printf("reportPlatformOperationalDataMessageFromJausMessage failed\n");
+			printf("\treportPlatformOperationalDataMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -2307,14 +2304,14 @@ int main(void)
 	jausMessage = reportPlatformSpecificationsMessageToJausMessage(reportPlatformSpecificationsMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("reportPlatformSpecificationsMessageToJausMessage failed\n");
+		printf("\treportPlatformSpecificationsMessageToJausMessage failed\n");
 	}
 	else
 	{
 		reportPlatformSpecificationsMessage2 = reportPlatformSpecificationsMessageFromJausMessage(jausMessage);
 		if(reportPlatformSpecificationsMessage2 == NULL)
 		{
-			printf("reportPlatformSpecificationsMessageFromJausMessage failed\n");
+			printf("\treportPlatformSpecificationsMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -2329,14 +2326,14 @@ int main(void)
 	jausMessage = reportRelativeObjectPositionMessageToJausMessage(reportRelativeObjectPositionMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("reportRelativeObjectPositionMessageToJausMessage failed\n");
+		printf("\treportRelativeObjectPositionMessageToJausMessage failed\n");
 	}
 	else
 	{
 		reportRelativeObjectPositionMessage2 = reportRelativeObjectPositionMessageFromJausMessage(jausMessage);
 		if(reportRelativeObjectPositionMessage2 == NULL)
 		{
-			printf("reportRelativeObjectPositionMessageFromJausMessage failed\n");
+			printf("\treportRelativeObjectPositionMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -2351,14 +2348,14 @@ int main(void)
 	jausMessage = reportSelectedCameraMessageToJausMessage(reportSelectedCameraMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("reportSelectedCameraMessageToJausMessage failed\n");
+		printf("\treportSelectedCameraMessageToJausMessage failed\n");
 	}
 	else
 	{
 		reportSelectedCameraMessage2 = reportSelectedCameraMessageFromJausMessage(jausMessage);
 		if(reportSelectedCameraMessage2 == NULL)
 		{
-			printf("reportSelectedCameraMessageFromJausMessage failed\n");
+			printf("\treportSelectedCameraMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -2373,14 +2370,14 @@ int main(void)
 	jausMessage = reportSelectedDataLinkStatusMessageToJausMessage(reportSelectedDataLinkStatusMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("reportSelectedDataLinkStatusMessageToJausMessage failed\n");
+		printf("\treportSelectedDataLinkStatusMessageToJausMessage failed\n");
 	}
 	else
 	{
 		reportSelectedDataLinkStatusMessage2 = reportSelectedDataLinkStatusMessageFromJausMessage(jausMessage);
 		if(reportSelectedDataLinkStatusMessage2 == NULL)
 		{
-			printf("reportSelectedDataLinkStatusMessageFromJausMessage failed\n");
+			printf("\treportSelectedDataLinkStatusMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -2395,14 +2392,14 @@ int main(void)
 	jausMessage = reportServicesMessageToJausMessage(reportServicesMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("reportServicesMessageToJausMessage failed\n");
+		printf("\treportServicesMessageToJausMessage failed\n");
 	}
 	else
 	{
 		reportServicesMessage2 = reportServicesMessageFromJausMessage(jausMessage);
 		if(reportServicesMessage2 == NULL)
 		{
-			printf("reportServicesMessageFromJausMessage failed\n");
+			printf("\treportServicesMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -2417,14 +2414,14 @@ int main(void)
 	jausMessage = reportSubsystemListMessageToJausMessage(reportSubsystemListMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("reportSubsystemListMessageToJausMessage failed\n");
+		printf("\treportSubsystemListMessageToJausMessage failed\n");
 	}
 	else
 	{
 		reportSubsystemListMessage2 = reportSubsystemListMessageFromJausMessage(jausMessage);
 		if(reportSubsystemListMessage2 == NULL)
 		{
-			printf("reportSubsystemListMessageFromJausMessage failed\n");
+			printf("\treportSubsystemListMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -2439,14 +2436,14 @@ int main(void)
 	jausMessage = reportTimeMessageToJausMessage(reportTimeMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("reportTimeMessageToJausMessage failed\n");
+		printf("\treportTimeMessageToJausMessage failed\n");
 	}
 	else
 	{
 		reportTimeMessage2 = reportTimeMessageFromJausMessage(jausMessage);
 		if(reportTimeMessage2 == NULL)
 		{
-			printf("reportTimeMessageFromJausMessage failed\n");
+			printf("\treportTimeMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -2461,14 +2458,14 @@ int main(void)
 	jausMessage = reportToolPointMessageToJausMessage(reportToolPointMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("reportToolPointMessageToJausMessage failed\n");
+		printf("\treportToolPointMessageToJausMessage failed\n");
 	}
 	else
 	{
 		reportToolPointMessage2 = reportToolPointMessageFromJausMessage(jausMessage);
 		if(reportToolPointMessage2 == NULL)
 		{
-			printf("reportToolPointMessageFromJausMessage failed\n");
+			printf("\treportToolPointMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -2483,14 +2480,14 @@ int main(void)
 	jausMessage = reportTravelSpeedMessageToJausMessage(reportTravelSpeedMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("reportTravelSpeedMessageToJausMessage failed\n");
+		printf("\treportTravelSpeedMessageToJausMessage failed\n");
 	}
 	else
 	{
 		reportTravelSpeedMessage2 = reportTravelSpeedMessageFromJausMessage(jausMessage);
 		if(reportTravelSpeedMessage2 == NULL)
 		{
-			printf("reportTravelSpeedMessageFromJausMessage failed\n");
+			printf("\treportTravelSpeedMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -2505,14 +2502,14 @@ int main(void)
 	jausMessage = reportVelocityStateMessageToJausMessage(reportVelocityStateMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("reportVelocityStateMessageToJausMessage failed\n");
+		printf("\treportVelocityStateMessageToJausMessage failed\n");
 	}
 	else
 	{
 		reportVelocityStateMessage2 = reportVelocityStateMessageFromJausMessage(jausMessage);
 		if(reportVelocityStateMessage2 == NULL)
 		{
-			printf("reportVelocityStateMessageFromJausMessage failed\n");
+			printf("\treportVelocityStateMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -2527,14 +2524,14 @@ int main(void)
 	jausMessage = reportVksBoundsMessageToJausMessage(reportVksBoundsMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("reportVksBoundsMessageToJausMessage failed\n");
+		printf("\treportVksBoundsMessageToJausMessage failed\n");
 	}
 	else
 	{
 		reportVksBoundsMessage2 = reportVksBoundsMessageFromJausMessage(jausMessage);
 		if(reportVksBoundsMessage2 == NULL)
 		{
-			printf("reportVksBoundsMessageFromJausMessage failed\n");
+			printf("\treportVksBoundsMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -2547,16 +2544,16 @@ int main(void)
 	printf("Testing ReportVksDataTransferTerminationMessage\n");
 	reportVksDataTransferTerminationMessage1 = reportVksDataTransferTerminationMessageCreate();
 	jausMessage = reportVksDataTransferTerminationMessageToJausMessage(reportVksDataTransferTerminationMessage1);
-	if(jausMessage->dataSize == 0)
+	if(jausMessage->dataSize != 0)
 	{
-		printf("reportVksDataTransferTerminationMessageToJausMessage failed\n");
+		printf("\treportVksDataTransferTerminationMessageToJausMessage failed\n");
 	}
 	else
 	{
 		reportVksDataTransferTerminationMessage2 = reportVksDataTransferTerminationMessageFromJausMessage(jausMessage);
 		if(reportVksDataTransferTerminationMessage2 == NULL)
 		{
-			printf("reportVksDataTransferTerminationMessageFromJausMessage failed\n");
+			printf("\treportVksDataTransferTerminationMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -2571,14 +2568,14 @@ int main(void)
 	jausMessage = reportVksFeatureClassMetadataMessageToJausMessage(reportVksFeatureClassMetadataMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("reportVksFeatureClassMetadataMessageToJausMessage failed\n");
+		printf("\treportVksFeatureClassMetadataMessageToJausMessage failed\n");
 	}
 	else
 	{
 		reportVksFeatureClassMetadataMessage2 = reportVksFeatureClassMetadataMessageFromJausMessage(jausMessage);
 		if(reportVksFeatureClassMetadataMessage2 == NULL)
 		{
-			printf("reportVksFeatureClassMetadataMessageFromJausMessage failed\n");
+			printf("\treportVksFeatureClassMetadataMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -2593,14 +2590,14 @@ int main(void)
 	jausMessage = reportVksObjectsCreationMessageToJausMessage(reportVksObjectsCreationMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("reportVksObjectsCreationMessageToJausMessage failed\n");
+		printf("\treportVksObjectsCreationMessageToJausMessage failed\n");
 	}
 	else
 	{
 		reportVksObjectsCreationMessage2 = reportVksObjectsCreationMessageFromJausMessage(jausMessage);
 		if(reportVksObjectsCreationMessage2 == NULL)
 		{
-			printf("reportVksObjectsCreationMessageFromJausMessage failed\n");
+			printf("\treportVksObjectsCreationMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -2615,14 +2612,14 @@ int main(void)
 	jausMessage = reportVksObjectsMessageToJausMessage(reportVksObjectsMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("reportVksObjectsMessageToJausMessage failed\n");
+		printf("\treportVksObjectsMessageToJausMessage failed\n");
 	}
 	else
 	{
 		reportVksObjectsMessage2 = reportVksObjectsMessageFromJausMessage(jausMessage);
 		if(reportVksObjectsMessage2 == NULL)
 		{
-			printf("reportVksObjectsMessageFromJausMessage failed\n");
+			printf("\treportVksObjectsMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -2637,14 +2634,14 @@ int main(void)
 	jausMessage = reportWaypointCountMessageToJausMessage(reportWaypointCountMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("reportWaypointCountMessageToJausMessage failed\n");
+		printf("\treportWaypointCountMessageToJausMessage failed\n");
 	}
 	else
 	{
 		reportWaypointCountMessage2 = reportWaypointCountMessageFromJausMessage(jausMessage);
 		if(reportWaypointCountMessage2 == NULL)
 		{
-			printf("reportWaypointCountMessageFromJausMessage failed\n");
+			printf("\treportWaypointCountMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -2659,14 +2656,14 @@ int main(void)
 	jausMessage = reportWrenchEffortMessageToJausMessage(reportWrenchEffortMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("reportWrenchEffortMessageToJausMessage failed\n");
+		printf("\treportWrenchEffortMessageToJausMessage failed\n");
 	}
 	else
 	{
 		reportWrenchEffortMessage2 = reportWrenchEffortMessageFromJausMessage(jausMessage);
 		if(reportWrenchEffortMessage2 == NULL)
 		{
-			printf("reportWrenchEffortMessageFromJausMessage failed\n");
+			printf("\treportWrenchEffortMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -2681,14 +2678,14 @@ int main(void)
 	jausMessage = requestComponentControlMessageToJausMessage(requestComponentControlMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("requestComponentControlMessageToJausMessage failed\n");
+		printf("\trequestComponentControlMessageToJausMessage failed\n");
 	}
 	else
 	{
 		requestComponentControlMessage2 = requestComponentControlMessageFromJausMessage(jausMessage);
 		if(requestComponentControlMessage2 == NULL)
 		{
-			printf("requestComponentControlMessageFromJausMessage failed\n");
+			printf("\trequestComponentControlMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -2703,14 +2700,14 @@ int main(void)
 	jausMessage = resetMessageToJausMessage(resetMessage1);
 	if(jausMessage->dataSize != 0)
 	{
-		printf("resetMessageToJausMessage failed\n");
+		printf("\tresetMessageToJausMessage failed\n");
 	}
 	else
 	{
 		resetMessage2 = resetMessageFromJausMessage(jausMessage);
 		if(resetMessage2 == NULL)
 		{
-			printf("resetMessageFromJausMessage failed\n");
+			printf("\tresetMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -2725,14 +2722,14 @@ int main(void)
 	jausMessage = resumeMessageToJausMessage(resumeMessage1);
 	if(jausMessage->dataSize != 0)
 	{
-		printf("resumeMessageToJausMessage failed\n");
+		printf("\tresumeMessageToJausMessage failed\n");
 	}
 	else
 	{
 		resumeMessage2 = resumeMessageFromJausMessage(jausMessage);
 		if(resumeMessage2 == NULL)
 		{
-			printf("resumeMessageFromJausMessage failed\n");
+			printf("\tresumeMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -2747,14 +2744,14 @@ int main(void)
 	jausMessage = selectCameraMessageToJausMessage(selectCameraMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("selectCameraMessageToJausMessage failed\n");
+		printf("\tselectCameraMessageToJausMessage failed\n");
 	}
 	else
 	{
 		selectCameraMessage2 = selectCameraMessageFromJausMessage(jausMessage);
 		if(selectCameraMessage2 == NULL)
 		{
-			printf("selectCameraMessageFromJausMessage failed\n");
+			printf("\tselectCameraMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -2769,14 +2766,14 @@ int main(void)
 	jausMessage = setCameraCapabilitiesMessageToJausMessage(setCameraCapabilitiesMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("setCameraCapabilitiesMessageToJausMessage failed\n");
+		printf("\tsetCameraCapabilitiesMessageToJausMessage failed\n");
 	}
 	else
 	{
 		setCameraCapabilitiesMessage2 = setCameraCapabilitiesMessageFromJausMessage(jausMessage);
 		if(setCameraCapabilitiesMessage2 == NULL)
 		{
-			printf("setCameraCapabilitiesMessageFromJausMessage failed\n");
+			printf("\tsetCameraCapabilitiesMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -2791,14 +2788,14 @@ int main(void)
 	jausMessage = setCameraFormatOptionsMessageToJausMessage(setCameraFormatOptionsMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("setCameraFormatOptionsMessageToJausMessage failed\n");
+		printf("\tsetCameraFormatOptionsMessageToJausMessage failed\n");
 	}
 	else
 	{
 		setCameraFormatOptionsMessage2 = setCameraFormatOptionsMessageFromJausMessage(jausMessage);
 		if(setCameraFormatOptionsMessage2 == NULL)
 		{
-			printf("setCameraFormatOptionsMessageFromJausMessage failed\n");
+			printf("\tsetCameraFormatOptionsMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -2813,14 +2810,14 @@ int main(void)
 	jausMessage = setCameraPoseMessageToJausMessage(setCameraPoseMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("setCameraPoseMessageToJausMessage failed\n");
+		printf("\tsetCameraPoseMessageToJausMessage failed\n");
 	}
 	else
 	{
 		setCameraPoseMessage2 = setCameraPoseMessageFromJausMessage(jausMessage);
 		if(setCameraPoseMessage2 == NULL)
 		{
-			printf("setCameraPoseMessageFromJausMessage failed\n");
+			printf("\tsetCameraPoseMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -2835,14 +2832,14 @@ int main(void)
 	jausMessage = setComponentAuthorityMessageToJausMessage(setComponentAuthorityMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("setComponentAuthorityMessageToJausMessage failed\n");
+		printf("\tsetComponentAuthorityMessageToJausMessage failed\n");
 	}
 	else
 	{
 		setComponentAuthorityMessage2 = setComponentAuthorityMessageFromJausMessage(jausMessage);
 		if(setComponentAuthorityMessage2 == NULL)
 		{
-			printf("setComponentAuthorityMessageFromJausMessage failed\n");
+			printf("\tsetComponentAuthorityMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -2857,14 +2854,14 @@ int main(void)
 	jausMessage = setDataLinkSelectMessageToJausMessage(setDataLinkSelectMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("setDataLinkSelectMessageToJausMessage failed\n");
+		printf("\tsetDataLinkSelectMessageToJausMessage failed\n");
 	}
 	else
 	{
 		setDataLinkSelectMessage2 = setDataLinkSelectMessageFromJausMessage(jausMessage);
 		if(setDataLinkSelectMessage2 == NULL)
 		{
-			printf("setDataLinkSelectMessageFromJausMessage failed\n");
+			printf("\tsetDataLinkSelectMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -2879,14 +2876,14 @@ int main(void)
 	jausMessage = setDataLinkStatusMessageToJausMessage(setDataLinkStatusMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("setDataLinkStatusMessageToJausMessage failed\n");
+		printf("\tsetDataLinkStatusMessageToJausMessage failed\n");
 	}
 	else
 	{
 		setDataLinkStatusMessage2 = setDataLinkStatusMessageFromJausMessage(jausMessage);
 		if(setDataLinkStatusMessage2 == NULL)
 		{
-			printf("setDataLinkStatusMessageFromJausMessage failed\n");
+			printf("\tsetDataLinkStatusMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -2901,14 +2898,14 @@ int main(void)
 	jausMessage = setDiscreteDevicesMessageToJausMessage(setDiscreteDevicesMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("setDiscreteDevicesMessageToJausMessage failed\n");
+		printf("\tsetDiscreteDevicesMessageToJausMessage failed\n");
 	}
 	else
 	{
 		setDiscreteDevicesMessage2 = setDiscreteDevicesMessageFromJausMessage(jausMessage);
 		if(setDiscreteDevicesMessage2 == NULL)
 		{
-			printf("setDiscreteDevicesMessageFromJausMessage failed\n");
+			printf("\tsetDiscreteDevicesMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -2923,14 +2920,14 @@ int main(void)
 	jausMessage = setEmergencyMessageToJausMessage(setEmergencyMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("setEmergencyMessageToJausMessage failed\n");
+		printf("\tsetEmergencyMessageToJausMessage failed\n");
 	}
 	else
 	{
 		setEmergencyMessage2 = setEmergencyMessageFromJausMessage(jausMessage);
 		if(setEmergencyMessage2 == NULL)
 		{
-			printf("setEmergencyMessageFromJausMessage failed\n");
+			printf("\tsetEmergencyMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -2945,14 +2942,14 @@ int main(void)
 	jausMessage = setEndEffectorPathMotionMessageToJausMessage(setEndEffectorPathMotionMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("setEndEffectorPathMotionMessageToJausMessage failed\n");
+		printf("\tsetEndEffectorPathMotionMessageToJausMessage failed\n");
 	}
 	else
 	{
 		setEndEffectorPathMotionMessage2 = setEndEffectorPathMotionMessageFromJausMessage(jausMessage);
 		if(setEndEffectorPathMotionMessage2 == NULL)
 		{
-			printf("setEndEffectorPathMotionMessageFromJausMessage failed\n");
+			printf("\tsetEndEffectorPathMotionMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -2967,14 +2964,14 @@ int main(void)
 	jausMessage = setEndEffectorPoseMessageToJausMessage(setEndEffectorPoseMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("setEndEffectorPoseMessageToJausMessage failed\n");
+		printf("\tsetEndEffectorPoseMessageToJausMessage failed\n");
 	}
 	else
 	{
 		setEndEffectorPoseMessage2 = setEndEffectorPoseMessageFromJausMessage(jausMessage);
 		if(setEndEffectorPoseMessage2 == NULL)
 		{
-			printf("setEndEffectorPoseMessageFromJausMessage failed\n");
+			printf("\tsetEndEffectorPoseMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -2989,14 +2986,14 @@ int main(void)
 	jausMessage = setEndEffectorVelocityStateMessageToJausMessage(setEndEffectorVelocityStateMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("setEndEffectorVelocityStateMessageToJausMessage failed\n");
+		printf("\tsetEndEffectorVelocityStateMessageToJausMessage failed\n");
 	}
 	else
 	{
 		setEndEffectorVelocityStateMessage2 = setEndEffectorVelocityStateMessageFromJausMessage(jausMessage);
 		if(setEndEffectorVelocityStateMessage2 == NULL)
 		{
-			printf("setEndEffectorVelocityStateMessageFromJausMessage failed\n");
+			printf("\tsetEndEffectorVelocityStateMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -3011,14 +3008,14 @@ int main(void)
 	jausMessage = setGlobalPathSegmentMessageToJausMessage(setGlobalPathSegmentMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("setGlobalPathSegmentMessageToJausMessage failed\n");
+		printf("\tsetGlobalPathSegmentMessageToJausMessage failed\n");
 	}
 	else
 	{
 		setGlobalPathSegmentMessage2 = setGlobalPathSegmentMessageFromJausMessage(jausMessage);
 		if(setGlobalPathSegmentMessage2 == NULL)
 		{
-			printf("setGlobalPathSegmentMessageFromJausMessage failed\n");
+			printf("\tsetGlobalPathSegmentMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -3033,14 +3030,14 @@ int main(void)
 	jausMessage = setGlobalVectorMessageToJausMessage(setGlobalVectorMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("setGlobalVectorMessageToJausMessage failed\n");
+		printf("\tsetGlobalVectorMessageToJausMessage failed\n");
 	}
 	else
 	{
 		setGlobalVectorMessage2 = setGlobalVectorMessageFromJausMessage(jausMessage);
 		if(setGlobalVectorMessage2 == NULL)
 		{
-			printf("setGlobalVectorMessageFromJausMessage failed\n");
+			printf("\tsetGlobalVectorMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -3055,14 +3052,14 @@ int main(void)
 	jausMessage = setGlobalWaypointMessageToJausMessage(setGlobalWaypointMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("setGlobalWaypointMessageToJausMessage failed\n");
+		printf("\tsetGlobalWaypointMessageToJausMessage failed\n");
 	}
 	else
 	{
 		setGlobalWaypointMessage2 = setGlobalWaypointMessageFromJausMessage(jausMessage);
 		if(setGlobalWaypointMessage2 == NULL)
 		{
-			printf("setGlobalWaypointMessageFromJausMessage failed\n");
+			printf("\tsetGlobalWaypointMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -3077,14 +3074,14 @@ int main(void)
 	jausMessage = setJointEffortsMessageToJausMessage(setJointEffortsMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("setJointEffortsMessageToJausMessage failed\n");
+		printf("\tsetJointEffortsMessageToJausMessage failed\n");
 	}
 	else
 	{
 		setJointEffortsMessage2 = setJointEffortsMessageFromJausMessage(jausMessage);
 		if(setJointEffortsMessage2 == NULL)
 		{
-			printf("setJointEffortsMessageFromJausMessage failed\n");
+			printf("\tsetJointEffortsMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -3099,14 +3096,14 @@ int main(void)
 	jausMessage = setJointMotionMessageToJausMessage(setJointMotionMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("setJointMotionMessageToJausMessage failed\n");
+		printf("\tsetJointMotionMessageToJausMessage failed\n");
 	}
 	else
 	{
 		setJointMotionMessage2 = setJointMotionMessageFromJausMessage(jausMessage);
 		if(setJointMotionMessage2 == NULL)
 		{
-			printf("setJointMotionMessageFromJausMessage failed\n");
+			printf("\tsetJointMotionMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -3121,14 +3118,14 @@ int main(void)
 	jausMessage = setJointPositionsMessageToJausMessage(setJointPositionsMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("setJointPositionsMessageToJausMessage failed\n");
+		printf("\tsetJointPositionsMessageToJausMessage failed\n");
 	}
 	else
 	{
 		setJointPositionsMessage2 = setJointPositionsMessageFromJausMessage(jausMessage);
 		if(setJointPositionsMessage2 == NULL)
 		{
-			printf("setJointPositionsMessageFromJausMessage failed\n");
+			printf("\tsetJointPositionsMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -3143,14 +3140,14 @@ int main(void)
 	jausMessage = setJointVelocitiesMessageToJausMessage(setJointVelocitiesMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("setJointVelocitiesMessageToJausMessage failed\n");
+		printf("\tsetJointVelocitiesMessageToJausMessage failed\n");
 	}
 	else
 	{
 		setJointVelocitiesMessage2 = setJointVelocitiesMessageFromJausMessage(jausMessage);
 		if(setJointVelocitiesMessage2 == NULL)
 		{
-			printf("setJointVelocitiesMessageFromJausMessage failed\n");
+			printf("\tsetJointVelocitiesMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -3165,14 +3162,14 @@ int main(void)
 	jausMessage = setLocalPathSegmentMessageToJausMessage(setLocalPathSegmentMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("setLocalPathSegmentMessageToJausMessage failed\n");
+		printf("\tsetLocalPathSegmentMessageToJausMessage failed\n");
 	}
 	else
 	{
 		setLocalPathSegmentMessage2 = setLocalPathSegmentMessageFromJausMessage(jausMessage);
 		if(setLocalPathSegmentMessage2 == NULL)
 		{
-			printf("setLocalPathSegmentMessageFromJausMessage failed\n");
+			printf("\tsetLocalPathSegmentMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -3187,14 +3184,14 @@ int main(void)
 	jausMessage = setLocalVectorMessageToJausMessage(setLocalVectorMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("setLocalVectorMessageToJausMessage failed\n");
+		printf("\tsetLocalVectorMessageToJausMessage failed\n");
 	}
 	else
 	{
 		setLocalVectorMessage2 = setLocalVectorMessageFromJausMessage(jausMessage);
 		if(setLocalVectorMessage2 == NULL)
 		{
-			printf("setLocalVectorMessageFromJausMessage failed\n");
+			printf("\tsetLocalVectorMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -3209,14 +3206,14 @@ int main(void)
 	jausMessage = setLocalWaypointMessageToJausMessage(setLocalWaypointMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("setLocalWaypointMessageToJausMessage failed\n");
+		printf("\tsetLocalWaypointMessageToJausMessage failed\n");
 	}
 	else
 	{
 		setLocalWaypointMessage2 = setLocalWaypointMessageFromJausMessage(jausMessage);
 		if(setLocalWaypointMessage2 == NULL)
 		{
-			printf("setLocalWaypointMessageFromJausMessage failed\n");
+			printf("\tsetLocalWaypointMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -3231,14 +3228,14 @@ int main(void)
 	jausMessage = setSelectedDataLinkStateMessageToJausMessage(setSelectedDataLinkStateMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("setSelectedDataLinkStateMessageToJausMessage failed\n");
+		printf("\tsetSelectedDataLinkStateMessageToJausMessage failed\n");
 	}
 	else
 	{
 		setSelectedDataLinkStateMessage2 = setSelectedDataLinkStateMessageFromJausMessage(jausMessage);
 		if(setSelectedDataLinkStateMessage2 == NULL)
 		{
-			printf("setSelectedDataLinkStateMessageFromJausMessage failed\n");
+			printf("\tsetSelectedDataLinkStateMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -3253,14 +3250,14 @@ int main(void)
 	jausMessage = setTimeMessageToJausMessage(setTimeMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("setTimeMessageToJausMessage failed\n");
+		printf("\tsetTimeMessageToJausMessage failed\n");
 	}
 	else
 	{
 		setTimeMessage2 = setTimeMessageFromJausMessage(jausMessage);
 		if(setTimeMessage2 == NULL)
 		{
-			printf("setTimeMessageFromJausMessage failed\n");
+			printf("\tsetTimeMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -3275,14 +3272,14 @@ int main(void)
 	jausMessage = setToolPointMessageToJausMessage(setToolPointMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("setToolPointMessageToJausMessage failed\n");
+		printf("\tsetToolPointMessageToJausMessage failed\n");
 	}
 	else
 	{
 		setToolPointMessage2 = setToolPointMessageFromJausMessage(jausMessage);
 		if(setToolPointMessage2 == NULL)
 		{
-			printf("setToolPointMessageFromJausMessage failed\n");
+			printf("\tsetToolPointMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -3297,14 +3294,14 @@ int main(void)
 	jausMessage = setTravelSpeedMessageToJausMessage(setTravelSpeedMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("setTravelSpeedMessageToJausMessage failed\n");
+		printf("\tsetTravelSpeedMessageToJausMessage failed\n");
 	}
 	else
 	{
 		setTravelSpeedMessage2 = setTravelSpeedMessageFromJausMessage(jausMessage);
 		if(setTravelSpeedMessage2 == NULL)
 		{
-			printf("setTravelSpeedMessageFromJausMessage failed\n");
+			printf("\tsetTravelSpeedMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -3319,14 +3316,14 @@ int main(void)
 	jausMessage = setVelocityStateMessageToJausMessage(setVelocityStateMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("setVelocityStateMessageToJausMessage failed\n");
+		printf("\tsetVelocityStateMessageToJausMessage failed\n");
 	}
 	else
 	{
 		setVelocityStateMessage2 = setVelocityStateMessageFromJausMessage(jausMessage);
 		if(setVelocityStateMessage2 == NULL)
 		{
-			printf("setVelocityStateMessageFromJausMessage failed\n");
+			printf("\tsetVelocityStateMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -3341,14 +3338,14 @@ int main(void)
 	jausMessage = setVksFeatureClassMetadataMessageToJausMessage(setVksFeatureClassMetadataMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("setVksFeatureClassMetadataMessageToJausMessage failed\n");
+		printf("\tsetVksFeatureClassMetadataMessageToJausMessage failed\n");
 	}
 	else
 	{
 		setVksFeatureClassMetadataMessage2 = setVksFeatureClassMetadataMessageFromJausMessage(jausMessage);
 		if(setVksFeatureClassMetadataMessage2 == NULL)
 		{
-			printf("setVksFeatureClassMetadataMessageFromJausMessage failed\n");
+			printf("\tsetVksFeatureClassMetadataMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -3363,14 +3360,14 @@ int main(void)
 	jausMessage = setWrenchEffortMessageToJausMessage(setWrenchEffortMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("setWrenchEffortMessageToJausMessage failed\n");
+		printf("\tsetWrenchEffortMessageToJausMessage failed\n");
 	}
 	else
 	{
 		setWrenchEffortMessage2 = setWrenchEffortMessageFromJausMessage(jausMessage);
 		if(setWrenchEffortMessage2 == NULL)
 		{
-			printf("setWrenchEffortMessageFromJausMessage failed\n");
+			printf("\tsetWrenchEffortMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -3385,14 +3382,14 @@ int main(void)
 	jausMessage = shutdownMessageToJausMessage(shutdownMessage1);
 	if(jausMessage->dataSize != 0)
 	{
-		printf("shutdownMessageToJausMessage failed\n");
+		printf("\tshutdownMessageToJausMessage failed\n");
 	}
 	else
 	{
 		shutdownMessage2 = shutdownMessageFromJausMessage(jausMessage);
 		if(shutdownMessage2 == NULL)
 		{
-			printf("shutdownMessageFromJausMessage failed\n");
+			printf("\tshutdownMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -3407,14 +3404,14 @@ int main(void)
 	jausMessage = standbyMessageToJausMessage(standbyMessage1);
 	if(jausMessage->dataSize != 0)
 	{
-		printf("standbyMessageToJausMessage failed\n");
+		printf("\tstandbyMessageToJausMessage failed\n");
 	}
 	else
 	{
 		standbyMessage2 = standbyMessageFromJausMessage(jausMessage);
 		if(standbyMessage2 == NULL)
 		{
-			printf("standbyMessageFromJausMessage failed\n");
+			printf("\tstandbyMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -3429,14 +3426,14 @@ int main(void)
 	jausMessage = suspendServiceConnectionMessageToJausMessage(suspendServiceConnectionMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("suspendServiceConnectionMessageToJausMessage failed\n");
+		printf("\tsuspendServiceConnectionMessageToJausMessage failed\n");
 	}
 	else
 	{
 		suspendServiceConnectionMessage2 = suspendServiceConnectionMessageFromJausMessage(jausMessage);
 		if(suspendServiceConnectionMessage2 == NULL)
 		{
-			printf("suspendServiceConnectionMessageFromJausMessage failed\n");
+			printf("\tsuspendServiceConnectionMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -3451,14 +3448,14 @@ int main(void)
 	jausMessage = terminateServiceConnectionMessageToJausMessage(terminateServiceConnectionMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("terminateServiceConnectionMessageToJausMessage failed\n");
+		printf("\tterminateServiceConnectionMessageToJausMessage failed\n");
 	}
 	else
 	{
 		terminateServiceConnectionMessage2 = terminateServiceConnectionMessageFromJausMessage(jausMessage);
 		if(terminateServiceConnectionMessage2 == NULL)
 		{
-			printf("terminateServiceConnectionMessageFromJausMessage failed\n");
+			printf("\tterminateServiceConnectionMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -3473,14 +3470,14 @@ int main(void)
 	jausMessage = terminateVksDataTransferMessageToJausMessage(terminateVksDataTransferMessage1);
 	if(jausMessage->dataSize != 0)
 	{
-		printf("terminateVksDataTransferMessageToJausMessage failed\n");
+		printf("\tterminateVksDataTransferMessageToJausMessage failed\n");
 	}
 	else
 	{
 		terminateVksDataTransferMessage2 = terminateVksDataTransferMessageFromJausMessage(jausMessage);
 		if(terminateVksDataTransferMessage2 == NULL)
 		{
-			printf("terminateVksDataTransferMessageFromJausMessage failed\n");
+			printf("\tterminateVksDataTransferMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -3495,14 +3492,14 @@ int main(void)
 	jausMessage = updateEventMessageToJausMessage(updateEventMessage1);
 	if(jausMessage->dataSize == 0)
 	{
-		printf("updateEventMessageToJausMessage failed\n");
+		printf("\tupdateEventMessageToJausMessage failed\n");
 	}
 	else
 	{
 		updateEventMessage2 = updateEventMessageFromJausMessage(jausMessage);
 		if(updateEventMessage2 == NULL)
 		{
-			printf("updateEventMessageFromJausMessage failed\n");
+			printf("\tupdateEventMessageFromJausMessage failed\n");
 		}
 		else
 		{
@@ -3511,8 +3508,6 @@ int main(void)
 	}
 	updateEventMessageDestroy(updateEventMessage1);
 	jausMessageDestroy(jausMessage);
-
-	system("pause");
 
 	return 0;
 }

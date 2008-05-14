@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-void main(void)
+int main(void)
 {
 	FILE *outfile;
 	FILE *inFile;
@@ -51,8 +51,6 @@ void main(void)
 		postpackCheck[i] = (char *)malloc(strlen(token) + 1); 
 		strcpy(postpackCheck[i], token);
 
-		printf("%s\n", postpackCheck[i]);
-
 		fprintf(outfile, "\t%s %s1;\n", messageType[i], messageName[i]);
 		fprintf(outfile, "\t%s %s2;\n", messageType[i], messageName[i]);
 
@@ -67,14 +65,14 @@ void main(void)
 		fprintf(outfile, "\tjausMessage = %sToJausMessage(%s1);\n", messageName[i], messageName[i]);
 		fprintf(outfile, "\tif(%s)\n", postpackCheck[i]);
 		fprintf(outfile, "\t{\n");
-		fprintf(outfile, "\t\tprintf(\"%sToJausMessage failed\\n\");\n", messageName[i]);
+		fprintf(outfile, "\t\tprintf(\"\\t%sToJausMessage failed\\n\");\n", messageName[i]);
 		fprintf(outfile, "\t}\n");
 		fprintf(outfile, "\telse\n");
 		fprintf(outfile, "\t{\n");
 		fprintf(outfile, "\t\t%s2 = %sFromJausMessage(jausMessage);\n", messageName[i], messageName[i]);
 		fprintf(outfile, "\t\tif(%s2 == NULL)\n", messageName[i]);
 		fprintf(outfile, "\t\t{\n");
-		fprintf(outfile, "\t\t\tprintf(\"%sFromJausMessage failed\\n\");\n", messageName[i]);
+		fprintf(outfile, "\t\t\tprintf(\"\\t%sFromJausMessage failed\\n\");\n", messageName[i]);
 		fprintf(outfile, "\t\t}\n");
 		fprintf(outfile, "\t\telse\n");
 		fprintf(outfile, "\t\t{\n");
@@ -89,7 +87,7 @@ void main(void)
 	fprintf(outfile, "}\n");
 
 	fclose(outfile);
-
-	system("pause");
+	
+	return 0;
 }
 
