@@ -93,7 +93,6 @@ static JausBoolean dataFromBuffer(ReportServicesMessage message, unsigned char *
 		if(!jausByteFromBuffer(&serviceCount, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
 		
-		if(serviceCount < 1) return JAUS_FALSE;
 		message->jausServices = jausArrayCreate();
 		
 		for(i = 0; i < serviceCount; i++)
