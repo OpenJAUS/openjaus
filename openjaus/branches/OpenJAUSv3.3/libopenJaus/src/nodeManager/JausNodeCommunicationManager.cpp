@@ -117,12 +117,6 @@ bool JausNodeCommunicationManager::sendJausMessage(JausMessage message)
 		return false;
 	}
 
-	//char buf[80] = {0};
-	//jausAddressToString(message->source, buf);
-	//printf("NCommMngr: Process %s from %s", jausMessageCommandCodeString(message), buf);
-	//jausAddressToString(message->destination, buf);
-	//printf(" to %s\n", buf);
-
 	if(message->source->subsystem != mySubsystemId)
 	{
 		if( message->destination->subsystem == JAUS_BROADCAST_SUBSYSTEM_ID ||
@@ -256,12 +250,20 @@ bool JausNodeCommunicationManager::receiveJausMessage(JausMessage message, JausT
 			// Put Interface data on the map
 			interfaceMap[message->source->node] = srcInf;
 
-			if(message->destination->node != myNodeId && message->destination->node != JAUS_BROADCAST_NODE_ID)
+			if(message->destination->subsystem == mySubsystemId)
 			{
-				// ERROR: Message not for this node recv'd from another node
-				// TODO: Log Error. Throw Exception
-				jausMessageDestroy(message);
-				return false;
+				if(message->destination->node == myNodeId || message->destination->node == JAUS_BROADCAST_NODE_ID)
+				{
+					msgRouter->routeNodeSourceMessage(message);
+					return true;
+				}
+				else
+				{
+					// ERROR: Message not for this node recv'd from another node
+					// TODO: Log Error. Throw Exception
+					jausMessageDestroy(message);
+					return false;
+				}
 			}
 			else
 			{
@@ -275,17 +277,17 @@ bool JausNodeCommunicationManager::receiveJausMessage(JausMessage message, JausT
 		if(	message->destination->subsystem == JAUS_BROADCAST_SUBSYSTEM_ID ||
 			message->destination->subsystem == mySubsystemId)
 		{
-			if(message->destination->node == myNodeId)
+			if(message->destination->node == myNodeId || message->destination->node == JAUS_BROADCAST_NODE_ID)
+			{
+				msgRouter->routeNodeSourceMessage(message);
+				return true;
+			}
+			else
 			{
 				// ERROR: Message not for this node recv'd from another node
 				// TODO: Log Error. Throw Exception
 				jausMessageDestroy(message);
 				return false;
-			}
-			else
-			{
-				msgRouter->routeNodeSourceMessage(message);
-				return true;
 			}
 		}
 		else // message->destination->subsystem == X

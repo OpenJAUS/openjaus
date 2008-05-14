@@ -56,7 +56,7 @@ public:
 	JausMessageEvent *cloneEvent();
 
 	std::string toString();
-	JausMessage getJausMessage();
+	JAUS_EXPORT JausMessage getJausMessage();
 	JausTransportInterface *getJausTransportInterface();
 	unsigned char getMessageDirection();
 

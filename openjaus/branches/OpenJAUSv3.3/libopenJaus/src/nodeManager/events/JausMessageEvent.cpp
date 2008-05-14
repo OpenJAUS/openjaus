@@ -65,6 +65,21 @@ JausMessageEvent *JausMessageEvent::cloneEvent()
 	return new JausMessageEvent(jausMessageClone(this->message), this->transport, this->direction);
 }
 
+JausMessage JausMessageEvent::getJausMessage()
+{
+	return this->message;
+}
+
+JausTransportInterface *JausMessageEvent::getJausTransportInterface()
+{
+	return this->transport;
+}
+
+unsigned char JausMessageEvent::getMessageDirection()
+{
+	return this->direction;
+}
+
 std::string JausMessageEvent::toString()
 {
 	char buf[1024] = {0};
@@ -88,18 +103,4 @@ std::string JausMessageEvent::toString()
 	return buf;
 }
 
-JausMessage JausMessageEvent::getJausMessage()
-{
-	return this->message;
-}
-
-JausTransportInterface *JausMessageEvent::getJausTransportInterface()
-{
-	return this->transport;
-}
-
-unsigned char JausMessageEvent::getMessageDirection()
-{
-	return this->direction;
-}
 
