@@ -70,7 +70,7 @@ static void dataInitialize(ReportCameraPoseMessage message)
 	message->cameraName[0] = 0;
 	message->xCameraOriginMeters = newJausDouble(0);	// Scaled Short (-32.767, 32.767)
 	message->yCameraOriginMeters = newJausDouble(0);	// Scaled Short (-32.767, 32.767)
-	message->xCameraOriginMeters = newJausDouble(0);	// Scaled Short (-32.767, 32.767)
+	message->zCameraOriginMeters = newJausDouble(0);	// Scaled Short (-32.767, 32.767)
 	message->xCameraAxisDirectionCosineX = newJausDouble(0); // Scaled Short (-1.0, 1.0)
 	message->xCameraAxisDirectionCosineY = newJausDouble(0); // Scaled Short (-1.0, 1.0)
 	message->xCameraAxisDirectionCosineZ = newJausDouble(0); // Scaled Short (-1.0, 1.0)

@@ -92,8 +92,6 @@ static JausBoolean dataFromBuffer(ReportConfigurationMessage message, unsigned c
 		if(!jausByteFromBuffer(&nodeCount, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
 		
-		if(nodeCount < 1) nodeCount = 1; //TODO: Check Jaus Compliance
-		
 		for(i = 0; i < nodeCount; i++)
 		{
 			// node id

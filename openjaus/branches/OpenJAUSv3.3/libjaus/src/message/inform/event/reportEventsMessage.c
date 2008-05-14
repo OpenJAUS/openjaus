@@ -131,6 +131,11 @@ static JausBoolean dataFromBuffer(ReportEventsMessage message, unsigned char *bu
 		if(!jausByteFromBuffer(&message->count, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
 
+		if(message->count == 0)
+		{
+			return JAUS_TRUE;
+		}
+		
 		message->presenceVector = (JausByte *)malloc(message->count * sizeof(JausByte));
 		message->messageCode = (JausUnsignedShort *)malloc(message->count * sizeof(JausUnsignedShort));
 		message->eventType = (JausByte *)malloc(message->count * sizeof(JausByte));

@@ -131,11 +131,24 @@ static JausBoolean dataFromBuffer(ReportManipulatorSpecificationsMessage message
 	JausUnsignedShort tempUShort;
 	JausUnsignedInteger tempUInt;
 	
+	
 	if(bufferSizeBytes == message->dataSize)
 	{
 		// Unpack Message Fields from Buffer
 		if(!jausByteFromBuffer(&message->numJoints, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
+
+		if(message->numJoints == 0)
+		{
+			message->jointType = NULL;
+			message->jointOffset = NULL;
+			message->linkLength = NULL;
+			message->twistAngle = NULL;
+			message->jointMinValue = NULL;
+			message->jointMaxValue = NULL;
+			message->jointMaxVelocity = NULL;
+			return JAUS_TRUE;
+		}
 
 		message->jointType = (JausByte *)malloc(sizeof(JausByte)*message->numJoints);
 		message->jointOffset = (JausDouble *)malloc(sizeof(JausDouble)*message->numJoints);
@@ -273,16 +286,15 @@ static int dataToBuffer(ReportManipulatorSpecificationsMessage message, unsigned
 
 	if(bufferSizeBytes >= dataSize(message))
 	{
-		// Check to make sure message has valid data
-		if(message->numJoints == 0)
-		{
-			return 0;
-		}
-		
 		// Pack Message Fields to Buffer
 		// Unpack Message Fields from Buffer
 		if(!jausByteToBuffer(message->numJoints, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
+
+		if(message->numJoints == 0)
+		{
+			return index;
+		}
 
 		if(!jausByteToBuffer(message->jointType[message->numJoints - 1], buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
@@ -407,6 +419,11 @@ static unsigned int dataSize(ReportManipulatorSpecificationsMessage message)
 	// Num joints
 	index += JAUS_BYTE_SIZE_BYTES;
 
+	if(message->numJoints == 0)
+	{
+		return index;
+	}
+	
 	// Joint Types
 	index += message->numJoints * JAUS_BYTE_SIZE_BYTES;
 
