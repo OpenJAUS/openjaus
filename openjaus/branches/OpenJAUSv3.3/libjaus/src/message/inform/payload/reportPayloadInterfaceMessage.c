@@ -304,6 +304,11 @@ static int dataToBuffer(ReportPayloadInterfaceMessage message, unsigned char *bu
 
 	if(bufferSizeBytes >= dataSize(message))
 	{
+		if(!message->jausPayloadInterface)
+		{
+			return 0;
+		}
+
 		// Pack Message Fields to Buffer
 		// pack presence vector
 		if(!jausByteToBuffer(message->jausPayloadInterface->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -607,6 +612,11 @@ static unsigned int dataSize(ReportPayloadInterfaceMessage message)
 	char * identifierString = NULL;
 	char * tempString = NULL;
 	JausTypeCode minValue, defaultValue, maxValue;
+
+	if(!message->jausPayloadInterface)
+	{
+		return 0;
+	}
 
 	index += JAUS_BYTE_SIZE_BYTES;
 	
