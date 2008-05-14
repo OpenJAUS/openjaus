@@ -19,3 +19,9 @@ $(TARGET) : $(OBJECTS)
 
 ./Build/messageTest.o : ./messageTest.c
 	gcc $(CCFLAGS) -o ./Build/messageTest.o ./messageTest.c
+
+./messageTest.c : ./testGen
+	./testGen
+
+./testGen : ./testGen.c	
+	gcc -o ./testGen ./testGen.c

@@ -42,7 +42,7 @@ QueryPayloadDataElementMessage,queryPayloadDataElementMessage, ,jausMessage->dat
 QueryPayloadInterfaceMessage,queryPayloadInterfaceMessage, ,jausMessage->dataSize != 0,0
 QueryPlatformOperationalDataMessage,queryPlatformOperationalDataMessage, ,jausMessage->dataSize == 0,0
 QueryPlatformSpecificationsMessage,queryPlatformSpecificationsMessage, ,jausMessage->dataSize == 0,0
-QueryRelativeObjectPositionMessage,queryRelativeObjectPositionMessage, ,jausMessage->dataSize != 0,0
+QueryRelativeObjectPositionMessage,queryRelativeObjectPositionMessage, ,jausMessage->dataSize == 0,0
 QuerySelectedCameraMessage,querySelectedCameraMessage, ,jausMessage->dataSize != 0,0
 QuerySelectedDataLinkStatusMessage,querySelectedDataLinkStatusMessage, ,jausMessage->dataSize != 0,0
 QueryServicesMessage,queryServicesMessage, ,jausMessage->dataSize != 0,0
@@ -101,7 +101,7 @@ ReportToolPointMessage,reportToolPointMessage, ,jausMessage->dataSize == 0,0
 ReportTravelSpeedMessage,reportTravelSpeedMessage, ,jausMessage->dataSize == 0,0
 ReportVelocityStateMessage,reportVelocityStateMessage, ,jausMessage->dataSize == 0,0
 ReportVksBoundsMessage,reportVksBoundsMessage, ,jausMessage->dataSize == 0,0
-ReportVksDataTransferTerminationMessage,reportVksDataTransferTerminationMessage, ,jausMessage->dataSize == 0,0
+ReportVksDataTransferTerminationMessage,reportVksDataTransferTerminationMessage, ,jausMessage->dataSize != 0,0
 ReportVksFeatureClassMetadataMessage,reportVksFeatureClassMetadataMessage, ,jausMessage->dataSize == 0,0
 ReportVksObjectsCreationMessage,reportVksObjectsCreationMessage, ,jausMessage->dataSize == 0,0
 ReportVksObjectsMessage,reportVksObjectsMessage, ,jausMessage->dataSize == 0,0
@@ -132,7 +132,6 @@ SetJointVelocitiesMessage,setJointVelocitiesMessage, ,jausMessage->dataSize == 0
 SetLocalPathSegmentMessage,setLocalPathSegmentMessage, ,jausMessage->dataSize == 0,0
 SetLocalVectorMessage,setLocalVectorMessage, ,jausMessage->dataSize == 0,0
 SetLocalWaypointMessage,setLocalWaypointMessage, ,jausMessage->dataSize == 0,0
-SetPayloadDataElementMessage,setPayloadDataElementMessage, ,jausMessage->dataSize == 0,0
 SetSelectedDataLinkStateMessage,setSelectedDataLinkStateMessage, ,jausMessage->dataSize == 0,0
 SetTimeMessage,setTimeMessage, ,jausMessage->dataSize == 0,0
 SetToolPointMessage,setToolPointMessage, ,jausMessage->dataSize == 0,0
