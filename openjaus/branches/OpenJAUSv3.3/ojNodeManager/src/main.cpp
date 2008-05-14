@@ -88,7 +88,14 @@ class MyHandler : public EventHandler
 				messageEvent = (JausMessageEvent *)e;
 				// TODO: Make this useful somehow
 				// If you turn this on, the system gets spam-y this is just a test of the message event
-				//printf("%s\n", messageEvent->toString().c_str());
+				if(messageEvent->getJausMessage()->commandCode != JAUS_REPORT_HEARTBEAT_PULSE)
+				{
+					//printf("%s\n", messageEvent->toString().c_str());
+				}
+				else
+				{
+					//printf("%s\n", messageEvent->toString().c_str());
+				}
 				delete e;
 				break;
 

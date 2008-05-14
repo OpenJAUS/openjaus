@@ -587,8 +587,11 @@ bool NodeManagerComponent::processReportServices(JausMessage message)
 bool NodeManagerComponent::processReportHeartbeatPulse(JausMessage message)
 {
 	// This function follows the flowchart designed for NM 2.0 by D. Kent and T. Galluzzo
-	//printf("Process HB from: %d.%d.%d.%d\n", message->source->subsystem, message->source->node, message->source->component, message->source->instance);
-	
+	char buf[256];
+	sprintf(buf, "Process HB from: %d.%d.%d.%d", message->source->subsystem, message->source->node, message->source->component, message->source->instance);
+	DebugEvent *e = new DebugEvent("HB", __FUNCTION__, __LINE__, buf);
+	this->eventHandler->handleEvent(e);
+
 	// Has Subs?
 	if(!systemTree->hasSubsystem(message->source))
 	{
