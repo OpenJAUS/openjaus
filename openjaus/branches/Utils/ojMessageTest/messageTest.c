@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <jaus.h>
 
 int main(void)
@@ -3508,6 +3509,8 @@ int main(void)
 	}
 	updateEventMessageDestroy(updateEventMessage1);
 	jausMessageDestroy(jausMessage);
+
+	system("pause");
 
 	return 0;
 }

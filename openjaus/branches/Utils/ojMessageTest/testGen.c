@@ -25,6 +25,7 @@ int main(void)
 	outfile = fopen("messageTest.c", "w");
 	
 	fprintf(outfile, "#include <stdio.h>\n");
+	fprintf(outfile, "#include <stdlib.h>\n");
 	fprintf(outfile, "#include <jaus.h>\n\n");
 	fprintf(outfile, "int main(void)\n");
 	fprintf(outfile, "{\n");
