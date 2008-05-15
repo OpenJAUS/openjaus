@@ -83,7 +83,7 @@ std::string DebugEvent::toString()
 {
 	char buf[256] = {0};
 	
-	sprintf(buf, "(%s:%d) %s: %s", this->function.c_str(), this->line, this->debugClass.c_str(), this->debugString.c_str());
+	sprintf(buf, "(%s:%ld) %s: %s", this->function.c_str(), this->line, this->debugClass.c_str(), this->debugString.c_str());
 
 	return buf;
 }
