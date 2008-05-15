@@ -1,7 +1,7 @@
 TARGET	= 	./bin/ojNodeManager
-CCFLAGS	=	-Wall -fno-strict-aliasing -O2 -c -g -I ./include/ -I /home/mechatronics/workspace/OpenJAUSv3.3/libjaus/include/ -I /home/mechatronics/workspace/OpenJAUSv3.3/libopenJaus/include/
-LFLAGS	=	-L /home/mechatronics/workspace/OpenJAUSv3.3/libjaus/lib/ -L /home/mechatronics/workspace/OpenJAUSv3.3/libopenJaus/lib/
-LIBS	=	-lopenJaus -ljaus -lrt -lcurses
+CCFLAGS	=	-Wall -fno-strict-aliasing -O2 -c -g -I ./include/ -I ../libjaus/include/ -I ../libopenJaus/include/
+LFLAGS	=	-L ../libjaus/lib/ -L ../libopenJaus/lib/
+LIBS	=	-lopenJaus -ljaus -lcurses -lpthread
 
 SOURCES =	./src/main.cpp
 

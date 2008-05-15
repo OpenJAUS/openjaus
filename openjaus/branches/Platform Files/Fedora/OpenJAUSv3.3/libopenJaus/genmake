@@ -7,7 +7,7 @@ OPEN_JAUS_HOME=..
 echo "TARGET	= 	./lib/libopenJaus.so"
 echo "CCFLAGS	=	-Wall -fPIC -fno-strict-aliasing -O2 -c -g -I ./include/ -I $OPEN_JAUS_HOME/libjaus/include/"
 echo "LFLAGS	=	-L $OPEN_JAUS_HOME/libjaus/lib/"
-echo "LIBS		=	-ljaus -lrt"
+echo "LIBS		=	-ljaus"
 
 SOURCE_C_FILES=`find ./src/ -name "*.c"`
 for cfile in $SOURCE_C_FILES

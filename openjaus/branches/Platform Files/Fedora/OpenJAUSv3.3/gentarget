@@ -1,6 +1,6 @@
 #!/bin/sh
 
-if [[ -e ../OjTargetTemp ]]
+if [ -e ../OjTargetTemp ]
 then
 	echo "Old Target Folder Removed"
 	rm -rf ../OjTargetTemp
