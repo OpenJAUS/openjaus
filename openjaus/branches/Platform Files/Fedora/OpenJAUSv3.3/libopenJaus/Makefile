@@ -1,7 +1,7 @@
 TARGET	= 	./lib/libopenJaus.so
 CCFLAGS	=	-Wall -fPIC -fno-strict-aliasing -O2 -c -g -I ./include/ -I ../libjaus/include/
 LFLAGS	=	-L ../libjaus/lib/
-LIBS		=	-ljaus -lrt
+LIBS		=	-ljaus
 SOURCES =	./src/utils/queue.c \
 		./src/utils/multicastSocket.c \
 		./src/utils/datagramPacket.c \
