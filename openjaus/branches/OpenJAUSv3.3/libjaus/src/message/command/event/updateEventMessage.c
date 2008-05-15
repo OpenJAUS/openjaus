@@ -70,7 +70,7 @@ static void dataInitialize(UpdateEventMessage message)
 
 	message->presenceVector = newJausByte(JAUS_BYTE_PRESENCE_VECTOR_ALL_ON);	// 1: Presence Vector
 	message->requestId = newJausByte		(0);			// Local request ID for use in confirm event
-	message->messageCode = newJausUnsignedShort(0);			// Command Code of the resulting query
+	message->reportMessageCode = newJausUnsignedShort(0);			// Command Code of the resulting query
 	message->eventType = newJausByte(0);					// Enumeration of Event types
 	message->eventBoundary = newJausByte(0);				// Enumeration of Event Boundary Conditions
 	message->limitDataField = newJausByte(0);				// Field from Report for Limit Trigger
@@ -115,7 +115,7 @@ static JausBoolean dataFromBuffer(UpdateEventMessage message, unsigned char *buf
 		index += JAUS_BYTE_SIZE_BYTES;
 
 		// Message Code
-		if(!jausUnsignedShortFromBuffer(&message->messageCode, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		if(!jausUnsignedShortFromBuffer(&message->reportMessageCode, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;		
 
 		// Event Type
@@ -244,7 +244,7 @@ static int dataToBuffer(UpdateEventMessage message, unsigned char *buffer, unsig
 		index += JAUS_BYTE_SIZE_BYTES;
 
 		// Message Code
-		if(!jausUnsignedShortToBuffer(message->messageCode, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+		if(!jausUnsignedShortToBuffer(message->reportMessageCode, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
 		
 		// Event Type

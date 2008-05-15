@@ -94,7 +94,8 @@ static JausBoolean dataFromBuffer(ReportPayloadDataElementMessage message, unsig
 		index += JAUS_BYTE_SIZE_BYTES;
 
 		message->numberInterfaces = payloadInformationDataElementCount;
-
+		message->indexes = NULL;
+		
 		if(!payloadInformationDataElementCount) return JAUS_TRUE; // nothing to do
 
 		message->indexes = malloc(payloadInformationDataElementCount * sizeof(int));
