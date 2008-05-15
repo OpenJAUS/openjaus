@@ -137,6 +137,7 @@ typedef struct
 	JausDouble requestedUpdateRate;			// For Periodic Events, Scaled UnsignedShort (0, 1092)
 	JausByte eventId;						// ID of event to be updated
 	JausMessage queryMessage;				// Query Message (including header) to use for response
+	JausUnsignedShort reportMessageCode;	// Command Code of the resulting report message
 }UpdateEventMessageStruct;
 
 typedef UpdateEventMessageStruct* UpdateEventMessage;

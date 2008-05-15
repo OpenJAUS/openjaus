@@ -119,8 +119,11 @@ static int dataToBuffer(ReportImageMessage message, unsigned char *buffer, unsig
 		if(!jausByteToBuffer(message->videoFormat, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
 		
-		memcpy(buffer+index, message->data, message->bufferSizeBytes);
-		index += message->bufferSizeBytes;
+		if(message->data && message->bufferSizeBytes)
+		{
+			memcpy(buffer+index, message->data, message->bufferSizeBytes);
+			index += message->bufferSizeBytes;
+		}
 	}
 
 	return index;
@@ -128,8 +131,15 @@ static int dataToBuffer(ReportImageMessage message, unsigned char *buffer, unsig
 
 static unsigned int dataSize(ReportImageMessage message)
 {
-	// Constant Size
-	return maxDataSizeBytes;
+	int index = 0;
+
+	index += JAUS_BYTE_SIZE_BYTES;
+		
+	index += JAUS_BYTE_SIZE_BYTES;
+	
+	index += message->bufferSizeBytes;
+
+	return index;
 }
 
 // ************************************************************************************************************** //
