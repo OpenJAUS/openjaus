@@ -257,7 +257,6 @@ void parseCommandLine(int argCount, char **argString)
 {
 	int i = 0;
 	int debugLevel = 0;
-	char logFileStr[DEFAULT_STRING_LENGTH] = "";
 	char debugLogicString[DEFAULT_STRING_LENGTH] = "";
 	
 	for(i=1; i<argCount; i++)
@@ -401,8 +400,10 @@ char getUserInput()
 {
 	char retVal = FALSE;
 	int choice;
+#if defined(WIN32)
 	int i = 0;
-
+#endif
+	
 	if(verbose)
 	{
 	#if defined(WIN32)
@@ -462,7 +463,6 @@ char getUserInput()
 
 int main(int argCount, char **argString)
 {
-	int i = 0;
 	char keyPressed = FALSE;
 	int keyboardLock = FALSE;
 	double keyboardLockTime = getTimeSeconds() + KEYBOARD_LOCK_TIMEOUT_SEC;

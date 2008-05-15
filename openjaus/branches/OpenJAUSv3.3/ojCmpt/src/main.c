@@ -281,8 +281,10 @@ char getUserInput()
 {
 	char retVal = FALSE;
 	int choice;
+#if defined(WIN32)
 	int i = 0;
-
+#endif
+	
 	if(verbose)
 	{
 #if defined(WIN32)
