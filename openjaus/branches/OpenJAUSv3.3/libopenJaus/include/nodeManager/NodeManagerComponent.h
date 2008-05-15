@@ -72,6 +72,7 @@ public:
 	bool processMessage(JausMessage message);
 	std::string toString();
 	void handleEvent(NodeManagerEvent *e);
+	bool startInterface(void);
 
 	JausAddress checkInLocalComponent(int cmptId);
 	void checkOutLocalComponent(int subsId, int nodeId, int cmptId, int instId);

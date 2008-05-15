@@ -80,12 +80,17 @@ JausUdpInterface::JausUdpInterface(FileLoader *configData, EventHandler *handler
 	{
 		abort();
 	}
+}
 
+bool JausUdpInterface::startInterface(void)
+{
 	// Setup our pThread
 	this->setupThread();
 
 	// Setup our receiveThread
 	this->setupRecvThread();
+	
+	return true;
 }
 
 JausUdpInterface::~JausUdpInterface(void)

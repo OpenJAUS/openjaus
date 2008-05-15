@@ -71,6 +71,7 @@ public:
 	unsigned int getPort(void);
 	bool routeMessage(JausMessage message);
 	std::string toString();
+	bool startInterface(void);
 
 private:
 	NodeManagerComponent *nodeManager;

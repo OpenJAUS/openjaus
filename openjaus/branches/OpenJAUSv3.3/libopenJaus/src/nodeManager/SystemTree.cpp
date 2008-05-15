@@ -1553,13 +1553,20 @@ void SystemTree::refresh()
 
 							if(jausComponentIsTimedOut(cmpt))
 							{
-								// Create Subsystem Event and send it off
+								//NOTE: The order here is important b/c event handlers may inspect the system tree and 
+								//      we have to remove the cmpt from the tree before we notify of the change
+
+								// Create Subsystem Event 
 								SystemTreeEvent *e = new SystemTreeEvent(SystemTreeEvent::ComponentTimeout, cmpt);
-								this->handleEvent(e);
 
 								// Remove this component
 								jausArrayRemoveAt(node->components, k); k--;
+
+								// Destroy this memory
 								jausComponentDestroy(cmpt);
+							
+								// Send off our event
+								this->handleEvent(e);
 							}
 						}
 					}
@@ -1567,9 +1574,17 @@ void SystemTree::refresh()
 					{
 						if(jausNodeIsTimedOut(node))
 						{
+							//NOTE: The order here is important b/c event handlers may inspect the system tree and 
+							//      we have to remove the node from the tree before we notify of the change
+							
+							// Create a timeout event
 							SystemTreeEvent *e = new SystemTreeEvent(SystemTreeEvent::NodeTimeout, node);
-							this->handleEvent(e);
+							
+							// Remove the Node
 							removeNode(node);
+
+							// Handle the event 
+							this->handleEvent(e);
 						}
 					}
 				}
@@ -1578,9 +1593,17 @@ void SystemTree::refresh()
 			{
 				if(jausSubsystemIsTimedOut(system[i]))
 				{
+					//NOTE: The order here is important b/c event handlers may inspect the system tree and 
+					//      we have to remove the node from the tree before we notify of the change
+					
+					// Create our event with the proper information
 					SystemTreeEvent *e = new SystemTreeEvent(SystemTreeEvent::SubsystemTimeout, system[i]);
-					this->handleEvent(e);
+					
+					// Remove the dead subsystem
 					removeSubsystem(system[i]->id);
+
+					// Handle the event
+					this->handleEvent(e);
 				}
 			}
 		}

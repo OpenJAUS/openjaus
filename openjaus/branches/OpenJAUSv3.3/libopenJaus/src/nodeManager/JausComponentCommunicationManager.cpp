@@ -114,6 +114,17 @@ JausComponentCommunicationManager::~JausComponentCommunicationManager(void)
 	delete this->communicatorCmpt;
 }
 
+bool JausComponentCommunicationManager::startInterfaces(void)
+{
+	bool retVal = true;
+	std::vector <JausTransportInterface *>::iterator iter;
+	for(iter = interfaces.begin(); iter != interfaces.end(); iter++)
+	{
+		retVal = retVal && (*iter)->startInterface();
+	}
+	return retVal;
+}
+
 bool JausComponentCommunicationManager::sendJausMessage(JausMessage message)
 {
 	// This conforms to the CmptCommMngr MsgRouter Source Routing Table v2.0

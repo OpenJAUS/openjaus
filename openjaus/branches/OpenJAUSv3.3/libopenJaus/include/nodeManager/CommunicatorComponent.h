@@ -69,6 +69,7 @@ public:
 
 	bool processMessage(JausMessage message);
 	std::string toString();
+	bool startInterface(void);
 
 private:
 	bool processReportIdentification(JausMessage message);

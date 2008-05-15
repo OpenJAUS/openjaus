@@ -84,6 +84,7 @@ public:
 
 	bool routeMessage(JausMessage message);
 
+	bool startInterface();
 	std::string toString();
 	void run();
 	void recvThreadRun();

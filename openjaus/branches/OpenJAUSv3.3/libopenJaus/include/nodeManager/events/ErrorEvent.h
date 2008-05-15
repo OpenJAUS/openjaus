@@ -47,7 +47,7 @@
 #include <string>
 #include "NodeManagerEvent.h"
 
-class ErrorEvent : public NodeManagerEvent
+class EXPORT ErrorEvent : public NodeManagerEvent
 {
 public:
 	ErrorEvent(unsigned int subType);

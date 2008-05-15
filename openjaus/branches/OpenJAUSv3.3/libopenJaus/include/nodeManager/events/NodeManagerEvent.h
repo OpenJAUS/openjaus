@@ -52,15 +52,15 @@
 	#define EXPORT
 #endif
 
-class NodeManagerEvent
+class EXPORT NodeManagerEvent
 {
 	
 public:
-	EXPORT enum {SystemTreeEvent, ErrorEvent, TransportEvent, JausMessageEvent, DebugEvent};
-	EXPORT unsigned int getType();
-	EXPORT virtual std::string toString();
-	EXPORT virtual ~NodeManagerEvent() = 0;
-	EXPORT virtual NodeManagerEvent *cloneEvent() = 0;
+	enum {SystemTreeEvent, ErrorEvent, TransportEvent, JausMessageEvent, DebugEvent};
+	unsigned int getType();
+	virtual std::string toString();
+	virtual ~NodeManagerEvent() = 0;
+	virtual NodeManagerEvent *cloneEvent() = 0;
 
 protected:
 	unsigned int type;

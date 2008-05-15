@@ -125,17 +125,24 @@ NodeManagerComponent::NodeManagerComponent(FileLoader *configData, EventHandler 
 
 	this->cmpt->node = systemTree->getNode(subsystemId, nodeId);
 	this->cmpt->identification = (char *)this->name.c_str();
+}
 
+NodeManagerComponent::~NodeManagerComponent(void){}
+
+bool NodeManagerComponent::startInterface()
+{
+	// Setup our pThread
 	this->setupThread();
 
 	if(!systemTree->addComponent(this->cmpt->address, this->cmpt))
 	{
 		ErrorEvent *e = new ErrorEvent(ErrorEvent::Configuration, __FUNCTION__, __LINE__, "Cannot add Node Manager component");
 		this->eventHandler->handleEvent(e);
+		return false;
 	}
-}
 
-NodeManagerComponent::~NodeManagerComponent(void){}
+	return true;
+}
 
 bool NodeManagerComponent::processMessage(JausMessage message)
 {

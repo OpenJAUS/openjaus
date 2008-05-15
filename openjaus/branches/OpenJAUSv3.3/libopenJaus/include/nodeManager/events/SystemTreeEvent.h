@@ -48,7 +48,7 @@
 #include "NodeManagerEvent.h"
 #include "jaus.h"
 
-class SystemTreeEvent : public NodeManagerEvent
+class EXPORT SystemTreeEvent : public NodeManagerEvent
 {
 public:
 	SystemTreeEvent(unsigned int type);
