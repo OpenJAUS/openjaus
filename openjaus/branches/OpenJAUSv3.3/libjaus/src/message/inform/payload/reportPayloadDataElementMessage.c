@@ -92,10 +92,12 @@ static JausBoolean dataFromBuffer(ReportPayloadDataElementMessage message, unsig
 		// # payload interfaces
 		if(!jausByteFromBuffer(&payloadInformationDataElementCount, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
+
 		message->numberInterfaces = payloadInformationDataElementCount;
+
+		if(!payloadInformationDataElementCount) return JAUS_TRUE; // nothing to do
+
 		message->indexes = malloc(payloadInformationDataElementCount * sizeof(int));
-		
-		if(!payloadInformationDataElementCount) return JAUS_FALSE; // nothing to do
 		
 		for(i = 0; i < payloadInformationDataElementCount; i++)
 		{			
@@ -136,7 +138,6 @@ static int dataToBuffer(ReportPayloadDataElementMessage message, unsigned char *
 		// Pack Message Fields to Buffer
 		// # payload interfaces
 		payloadInformationDataElementCount = message->numberInterfaces;
-		if(!payloadInformationDataElementCount) return JAUS_FALSE; // nothing to do
 		
 		if(!jausByteToBuffer(payloadInformationDataElementCount, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
@@ -176,7 +177,6 @@ static unsigned int dataSize(ReportPayloadDataElementMessage message)
 	// Pack Message Fields to Buffer
 	// # payload interfaces
 	payloadInformationDataElementCount = message->numberInterfaces;
-	if(!payloadInformationDataElementCount) return 0; // nothing to do
 	
 	index += JAUS_BYTE_SIZE_BYTES;
 	
