@@ -147,12 +147,6 @@ static int dataToBuffer(EventMessage message, unsigned char *buffer, unsigned in
 
 	if(bufferSizeBytes >= dataSize(message))
 	{
-		// Check for valid data
-		if(message->reportMessage == NULL)
-		{
-			return 0;
-		}
-		
 		// Pack Message Fields to Buffer
 
 		// EventID
@@ -160,28 +154,39 @@ static int dataToBuffer(EventMessage message, unsigned char *buffer, unsigned in
 		index += JAUS_BYTE_SIZE_BYTES;		
 		
 		// Report CommandCode
-		if(!jausUnsignedShortToBuffer(message->reportMessage->commandCode, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;		
-		
+		if(message->reportMessage)
+		{
+			if(!jausUnsignedShortToBuffer(message->reportMessage->commandCode, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+			index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;		
+		}
+		else
+		{
+			if(!jausUnsignedShortToBuffer(0, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+			index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;		
+		}
+
 		// Event Sequence Number
 		if(!jausByteToBuffer(message->eventSequenceNumber, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;		
 		
 		// Report DataSize
-		if(!jausUnsignedIntegerToBuffer(message->reportMessage->dataSize, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
-			
-		// Jaus Report Message
+		if(message->reportMessage)
+		{
+			if(!jausUnsignedIntegerToBuffer(message->reportMessage->dataSize, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+			index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
 
-		// Check report message
-		if(!message->reportMessage) return JAUS_FALSE;
+			// Check Buffer Size
+			if(bufferSizeBytes-index < message->reportMessage->dataSize) return JAUS_FALSE;
 
-		// Check Buffer Size
-		if(bufferSizeBytes-index < message->reportMessage->dataSize) return JAUS_FALSE;
-
-		// Copy body of report to buffer
-		memcpy(buffer+index, message->reportMessage->data, message->reportMessage->dataSize);
-		index += message->reportMessage->dataSize;
+			// Copy body of report to buffer
+			memcpy(buffer+index, message->reportMessage->data, message->reportMessage->dataSize);
+			index += message->reportMessage->dataSize;
+		}
+		else
+		{
+			if(!jausUnsignedIntegerToBuffer(0, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+			index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
+		}
 	}
 
 	return index;

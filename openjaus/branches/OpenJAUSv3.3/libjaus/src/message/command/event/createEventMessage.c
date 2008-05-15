@@ -75,8 +75,11 @@ static void dataInitialize(CreateEventMessage message)
 	message->eventBoundary = newJausByte(0);				// Enumeration of Event Boundary Conditions
 	message->limitDataField = newJausByte(0);				// Field from Report for Limit Trigger
 	message->lowerLimit = jausEventLimitCreate();			// Lower Event Limit
+	message->lowerLimit->dataType = EVENT_LIMIT_BYTE_TYPE;
 	message->upperLimit = jausEventLimitCreate();			// Upper Event Limit
+	message->upperLimit->dataType = EVENT_LIMIT_BYTE_TYPE;
 	message->stateLimit = jausEventLimitCreate();			// State Event Limit used for Equal Boundary
+	message->stateLimit->dataType = EVENT_LIMIT_BYTE_TYPE;
 	message->requestedMinimumRate = newJausDouble(0.0);		// For Periodic Events for unchanging value, Scaled UnsignedShort (0, 1092)
 	message->requestedUpdateRate = newJausDouble(0.0);		// For Periodic Events, Scaled UnsignedShort (0, 1092)
 	message->queryMessage = NULL;							// Query Message (not including header) to use for response	
@@ -302,13 +305,21 @@ static int dataToBuffer(CreateEventMessage message, unsigned char *buffer, unsig
 		if(jausByteIsBitSet(message->presenceVector, CREATE_EVENT_PV_QUERY_MESSAGE_BIT))
 		{		
 			//Query Message Size 
-			if(!jausUnsignedIntegerToBuffer(message->queryMessage->dataSize, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-			index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
+			if(message->queryMessage)
+			{
+				if(!jausUnsignedIntegerToBuffer(message->queryMessage->dataSize, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+				index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
 			
-			// Query Message Body
-			if(bufferSizeBytes-index < message->queryMessage->dataSize) return JAUS_FALSE;
-			memcpy(buffer+index, message->queryMessage->data, message->queryMessage->dataSize);
-			index += message->queryMessage->dataSize;
+				// Query Message Body
+				if(bufferSizeBytes-index < message->queryMessage->dataSize) return JAUS_FALSE;
+				memcpy(buffer+index, message->queryMessage->data, message->queryMessage->dataSize);
+				index += message->queryMessage->dataSize;
+			}
+			else
+			{
+				if(!jausUnsignedIntegerToBuffer(0, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+				index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
+			}
 		}
 	}
 
