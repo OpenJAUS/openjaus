@@ -4,9 +4,9 @@ exec > Makefile
 
 OPEN_JAUS_HOME=..
 
-echo "TARGET	= 	./lib/libopenJaus.so"
-echo "CCFLAGS	=	-Wall -fPIC -fno-strict-aliasing -O2 -c -g -I ./include/ -I $OPEN_JAUS_HOME/libjaus/include/"
-echo "LFLAGS	=	-L $OPEN_JAUS_HOME/libjaus/lib/"
+echo "TARGET	= 	./lib/libopenJaus.dylib"
+echo "CCFLAGS	=	-Wall -fPIC -fno-strict-aliasing -O2 -c -g -I./include/ -I$OPEN_JAUS_HOME/libjaus/include/"
+echo "LFLAGS	=	-dynamiclib -L$OPEN_JAUS_HOME/libjaus/lib/"
 echo "LIBS		=	-ljaus"
 
 SOURCE_C_FILES=`find ./src/ -name "*.c"`
@@ -45,7 +45,7 @@ echo "	rm -f ./Build/*.o"
 echo "	rm -f \$(TARGET)"
 echo
 echo "\$(TARGET) : \$(OBJECTS)"
-echo "	g++ -shared \$(LFLAGS) -o \$(TARGET) \$(OBJECTS) \$(LIBS)"
+echo "	g++ \$(LFLAGS) -o \$(TARGET) \$(OBJECTS) \$(LIBS)"
 
 for cfile in $SOURCE_C_FILES
 do

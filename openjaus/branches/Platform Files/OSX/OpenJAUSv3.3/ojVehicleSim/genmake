@@ -5,8 +5,8 @@ exec > Makefile
 OPEN_JAUS_HOME=..
 
 echo "TARGET	= 	./bin/ojVehicleSim"
-echo "CCFLAGS	=	-Wall -fno-strict-aliasing -O2 -c -g -I ./include/ -I $OPEN_JAUS_HOME/libjaus/include/ -I $OPEN_JAUS_HOME/libopenJaus/include/"
-echo "LFLAGS	=	-L $OPEN_JAUS_HOME/libjaus/lib/ -L $OPEN_JAUS_HOME/libopenJaus/lib/"
+echo "CCFLAGS	=	-Wall -fno-strict-aliasing -O2 -c -g -I./include/ -I$OPEN_JAUS_HOME/libjaus/include/ -I$OPEN_JAUS_HOME/libopenJaus/include/"
+echo "LFLAGS	=	-L$OPEN_JAUS_HOME/libjaus/lib/ -L$OPEN_JAUS_HOME/libopenJaus/lib/"
 echo "LIBS		=	-lopenJaus -ljaus -lpthread -lcurses"
 
 SOURCE_C_FILES=`find ./src/ -name "*.c"`

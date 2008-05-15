@@ -2,10 +2,8 @@
 
 exec > Makefile
 
-OPEN_JAUS_HOME=$HOME/workspace/OpenJAUSv3.3
-
-echo "TARGET	= 	./lib/libjaus.so"
-echo "CCFLAGS	=	-Wall -std=c99 -fPIC -fno-strict-aliasing -O2 -c -g -I ./include/"
+echo "TARGET	= 	./lib/libjaus.dylib"
+echo "CCFLAGS	=	-Wall -std=c99 -fPIC -fno-strict-aliasing -O2 -c -g -I./include/"
 
 SOURCE_C_FILES=`find ./src/ -name "*.c"`
 for cfile in $SOURCE_C_FILES
@@ -43,7 +41,7 @@ echo "	rm -f ./Build/*.o"
 echo "	rm -f \$(TARGET)"
 echo
 echo "\$(TARGET) : \$(OBJECTS)"
-echo "	gcc -shared -o \$(TARGET) \$(OBJECTS)"
+echo "	gcc -dynamiclib -o \$(TARGET) \$(OBJECTS)"
 echo
 
 for cfile in $SOURCE_C_FILES
