@@ -93,7 +93,8 @@ static JausBoolean dataFromBuffer(QueryPayloadDataElementMessage message, unsign
 		index += JAUS_BYTE_SIZE_BYTES;
 
 		message->numberInterfaces = payloadInformationDataElementCount;
-
+		message->indexes = NULL;
+		
 		if(!payloadInformationDataElementCount) return JAUS_TRUE; // nothing to do
 
 		message->indexes = (int *)malloc(payloadInformationDataElementCount * sizeof(int));
