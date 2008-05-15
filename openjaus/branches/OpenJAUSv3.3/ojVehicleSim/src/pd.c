@@ -450,10 +450,6 @@ void pdInitState(void)
 
 void pdStandbyState(void)
 {
-	static double readyTransitionTime = -1;
-	static int runPause = -1;
-	static int prevRunPause = -1;	
-
 	if(	vehicleSimGetState() != VEHICLE_SIM_READY_STATE )
 	{
 		pd->state = JAUS_EMERGENCY_STATE;
