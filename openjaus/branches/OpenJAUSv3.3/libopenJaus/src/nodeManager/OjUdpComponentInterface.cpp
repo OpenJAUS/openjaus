@@ -60,9 +60,6 @@ OjUdpComponentInterface::OjUdpComponentInterface(FileLoader *configData, EventHa
 
 	// Open our socket
 	this->openSocket();
-
-	// Setup our pThread
-	this->setupThread();
 }
 
 OjUdpComponentInterface::~OjUdpComponentInterface(void){}
@@ -70,6 +67,14 @@ OjUdpComponentInterface::~OjUdpComponentInterface(void){}
 unsigned int OjUdpComponentInterface::getPort(void)
 {
 	return this->socket->port;
+}
+
+bool OjUdpComponentInterface::startInterface()
+{
+	// Setup our pThread
+	this->setupThread();
+
+	return true;
 }
 
 bool OjUdpComponentInterface::routeMessage(JausMessage message)

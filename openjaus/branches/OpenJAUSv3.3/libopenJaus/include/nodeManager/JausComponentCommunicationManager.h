@@ -56,6 +56,7 @@ public:
 	~JausComponentCommunicationManager(void);
 	bool sendJausMessage(JausMessage message);
 	bool receiveJausMessage(JausMessage message, JausTransportInterface *srcInf);
+	bool startInterfaces(void);
 
 	NodeManagerComponent *getNodeManagerComponent(void);
 	

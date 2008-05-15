@@ -111,20 +111,6 @@ SystemTree *JausCommunicationManager::getSystemTree()
 	return this->systemTree;
 }
 
-bool JausCommunicationManager::sendJausMessage(JausMessage message)
-{
-	// Does nothing
-	// TODO: Throw an error
-	return false;
-}
-
-bool JausCommunicationManager::receiveJausMessage(JausMessage message, JausTransportInterface *srcInf)
-{
-	// Does nothing
-	// TODO: Throw an error
-	return false;
-}
-
 MessageRouter *JausCommunicationManager::getMessageRouter()
 {
 	return this->msgRouter;

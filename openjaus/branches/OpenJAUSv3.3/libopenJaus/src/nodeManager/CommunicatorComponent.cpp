@@ -114,14 +114,23 @@ CommunicatorComponent::CommunicatorComponent(FileLoader *configData, EventHandle
 	this->cmpt->node = systemTree->getNode(subsystemId, nodeId);
 	this->cmpt->identification = (char *)this->name.c_str();
 
-	this->setupThread();
-	if(!systemTree->addComponent(this->cmpt))
-	{
-		// TODO: Log Error, we can't add our communicator with instance 1
-	}
 }
 
 CommunicatorComponent::~CommunicatorComponent(void){}
+
+bool CommunicatorComponent::startInterface()
+{
+	// Setup our pThread
+	this->setupThread();
+
+	if(!systemTree->addComponent(this->cmpt))
+	{
+		// TODO: Log Error, we can't add our communicator with instance 1
+		return false;
+	}
+
+	return true;
+}
 
 bool CommunicatorComponent::processMessage(JausMessage message)
 {

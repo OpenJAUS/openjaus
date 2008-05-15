@@ -74,9 +74,10 @@ public:
 	void disable(void);
 	bool isEnabled(void);
 	SystemTree *getSystemTree();
-	virtual bool sendJausMessage(JausMessage message);
-	virtual bool receiveJausMessage(JausMessage message, JausTransportInterface *jtInterface);
+	virtual bool sendJausMessage(JausMessage message) = 0;
+	virtual bool receiveJausMessage(JausMessage message, JausTransportInterface *jtInterface) = 0;
 	MessageRouter *getMessageRouter();
+	virtual bool startInterfaces(void) = 0;
 
 protected:
 	MessageRouter *msgRouter;

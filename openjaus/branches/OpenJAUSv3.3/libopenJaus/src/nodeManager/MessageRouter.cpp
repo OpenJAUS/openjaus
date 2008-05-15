@@ -79,6 +79,10 @@ MessageRouter::MessageRouter(FileLoader *configData, SystemTree *sysTree, EventH
 	this->subsComms = new JausSubsystemCommunicationManager(configData, this, systemTree, handler);
 	this->nodeComms = new JausNodeCommunicationManager(configData, this, systemTree, handler);
 	this->cmptComms = new JausComponentCommunicationManager(configData, this, systemTree, handler);
+
+	this->subsComms->startInterfaces();
+	this->nodeComms->startInterfaces();
+	this->cmptComms->startInterfaces();
 }
 
 MessageRouter::~MessageRouter(void){}

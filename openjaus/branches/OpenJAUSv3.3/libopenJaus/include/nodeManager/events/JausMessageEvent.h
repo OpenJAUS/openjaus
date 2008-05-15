@@ -48,7 +48,7 @@
 #include "nodeManager/events/NodeManagerEvent.h"
 #include "nodeManager/JausTransportInterface.h"
 
-class JausMessageEvent : public NodeManagerEvent
+class EXPORT JausMessageEvent : public NodeManagerEvent
 {
 public:
 	JausMessageEvent(JausMessage message, JausTransportInterface *transport, unsigned char direction);
@@ -56,7 +56,7 @@ public:
 	JausMessageEvent *cloneEvent();
 
 	std::string toString();
-	JAUS_EXPORT JausMessage getJausMessage();
+	JausMessage getJausMessage();
 	JausTransportInterface *getJausTransportInterface();
 	unsigned char getMessageDirection();
 

@@ -82,6 +82,7 @@ public:
 	unsigned long queueSize();
 	void queueJausMessage(JausMessage message);
 
+	virtual bool startInterface(void) = 0;
 	virtual bool processMessage(JausMessage message);
 	virtual std::string toString();
 	virtual void run();

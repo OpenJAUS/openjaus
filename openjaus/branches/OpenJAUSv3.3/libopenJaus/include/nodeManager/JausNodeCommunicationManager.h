@@ -53,6 +53,7 @@ public:
 	~JausNodeCommunicationManager(void);
 	bool sendJausMessage(JausMessage message);
 	bool receiveJausMessage(JausMessage message, JausTransportInterface *srcInf);
+	bool startInterfaces(void);
 
 private:
 	bool sendToSubsystemGateway(JausMessage message);

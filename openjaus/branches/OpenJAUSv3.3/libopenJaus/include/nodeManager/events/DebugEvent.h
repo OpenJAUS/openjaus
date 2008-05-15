@@ -47,7 +47,7 @@
 #include <string>
 #include "NodeManagerEvent.h"
 
-class DebugEvent : public NodeManagerEvent
+class EXPORT DebugEvent : public NodeManagerEvent
 {
 public:
 	DebugEvent(std::string debugClass);
