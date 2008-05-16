@@ -383,17 +383,19 @@ void defaultJausMessageProcessor(JausMessage message, NodeManagerInterface nmi, 
 						//jausMessageDestroy(txMessage);
 						//queryConfigurationMessageDestroy(queryConfMsg);
 						//jausMessageDestroy(message);
-						return;
+//						return;		// NMJ
 		        	}
 		        	else
 		        	{
-						return;
+//						return;		// NMJ
 		        	}
 		            break;
 		            
-		        default: 
-		        	return; // Do not bother to query any other component for its config
+		        default:
+		        	break;
+//		        	return; // Do not bother to query any other component for its config	// NMJ
 		    }
+		    jausMessageDestroy(message);	// NMJ
 			break;
 			
 		case JAUS_REPORT_CONFIGURATION:
