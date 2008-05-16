@@ -121,7 +121,7 @@ void OjUdpComponentInterface::closeSocket(void)
 void OjUdpComponentInterface::run()
 {
 	DatagramPacket packet;
-	JausAddress address;
+	JausAddress address, currentAddress;
 	JausAddress lookupAddress;
 	int bytesRecv = 0;
 	char buf[256] = {0};
@@ -276,7 +276,15 @@ void OjUdpComponentInterface::run()
 					packet->buffer[4] = (unsigned char) (address->subsystem & 0xFF);
 					packet->address = this->ipAddress;
 					datagramSocketSend(this->socket, packet);
-					jausAddressDestroy(address);
+					
+					while (address)								// NMJ
+					{											// NMJ
+						currentAddress = address;				// NMJ
+						address = address->next;				// NMJ
+						jausAddressDestroy(currentAddress);		// NMJ
+//						jausAddressDestroy(address);			// NMJ
+					}											// NMJ
+					
 					jausAddressDestroy(lookupAddress);
 					break;
 
@@ -330,7 +338,8 @@ void OjUdpComponentInterface::run()
 						packet->buffer[5] = (unsigned char) JAUS_FALSE;
 					}
 
-						datagramSocketSend(this->socket, packet);
+					datagramSocketSend(this->socket, packet);
+					
 					if(address)
 					{
 						jausAddressDestroy(address);
@@ -399,6 +408,8 @@ void OjUdpComponentInterface::run()
 			}
 		}
 	}
+	
+	if (packet)	datagramPacketDestroy(packet);
 }
 
 bool OjUdpComponentInterface::processOjNodemanagerInterfaceMessage(char *buffer)
