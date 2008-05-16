@@ -368,6 +368,7 @@ JausAddress SystemTree::lookUpAddress(int lookupSubs, int lookupNode, int lookup
 	JausAddress returnAddress = address;
 
 	// Find this address
+	// If the subsystem is a wild card 
 	if(lookupSubs == JAUS_ADDRESS_WILDCARD_OCTET)
 	{
 		// Look through all subsystems
@@ -379,12 +380,15 @@ JausAddress SystemTree::lookUpAddress(int lookupSubs, int lookupNode, int lookup
 				continue;
 			}
 
+			// If the node is a wild card
 			if(lookupNode == JAUS_ADDRESS_WILDCARD_OCTET)
 			{
 				// Look through all nodes
 				for(int j = 0; j < subs->nodes->elementCount; j++)
 				{
 					node = (JausNode) subs->nodes->elementData[j];
+					
+					// If the component or the instance is a wild card
 					if(lookupCmpt == JAUS_ADDRESS_WILDCARD_OCTET || lookupInst == JAUS_ADDRESS_WILDCARD_OCTET)
 					{
 						// Look through all components
@@ -392,12 +396,13 @@ JausAddress SystemTree::lookUpAddress(int lookupSubs, int lookupNode, int lookup
 						{
 							cmpt = (JausComponent) node->components->elementData[k];
 
-							if(	lookupCmpt == JAUS_ADDRESS_WILDCARD_OCTET &&
-								cmpt->address->instance == lookupInst)
+							// If the component is wild card and this is the instance we are looking for
+							if(	lookupCmpt == JAUS_ADDRESS_WILDCARD_OCTET && cmpt->address->instance == lookupInst)
 							{
+								// If the address is valid (it should never be)
 								if(jausAddressIsValid(address))
 								{
-									address->next = jausAddressClone(cmpt->address);
+									address->next = jausAddressClone(cmpt->address);	// Why do we clone if the address is valid??
 									if(!address->next)
 									{
 										return returnAddress;
@@ -407,10 +412,11 @@ JausAddress SystemTree::lookUpAddress(int lookupSubs, int lookupNode, int lookup
 										address = address->next;
 									}
 								}
+								// Address was not valid
 								else
 								{
-									jausAddressCopy(address, cmpt->address);
-									address->next = jausAddressCreate();
+									jausAddressCopy(address, cmpt->address);	// Copy the address of the component we are looking at
+									address->next = jausAddressCreate();		// Create a new address. Gets created even if we don't do anything else?
 									if(!address->next)
 									{
 										return returnAddress;
@@ -421,8 +427,8 @@ JausAddress SystemTree::lookUpAddress(int lookupSubs, int lookupNode, int lookup
 									}
 								}
 							}
-							else if(lookupInst == JAUS_ADDRESS_WILDCARD_OCTET &&
-									cmpt->address->component == lookupCmpt)
+							// If the instance is a wild card and this is the component we are looking for
+							else if(lookupInst == JAUS_ADDRESS_WILDCARD_OCTET && cmpt->address->component == lookupCmpt)
 							{
 								if(jausAddressIsValid(address))
 								{
@@ -593,6 +599,7 @@ JausAddress SystemTree::lookUpAddress(int lookupSubs, int lookupNode, int lookup
 			}
 		}
 	}
+	// We are looking within a specific subsystem
 	else
 	{
 		subs = system[lookupSubs];
@@ -609,6 +616,7 @@ JausAddress SystemTree::lookUpAddress(int lookupSubs, int lookupNode, int lookup
 			for(int j = 0; j < subs->nodes->elementCount; j++)
 			{
 				node = (JausNode) subs->nodes->elementData[j];
+				
 				if(lookupCmpt == JAUS_ADDRESS_WILDCARD_OCTET || lookupInst == JAUS_ADDRESS_WILDCARD_OCTET)
 				{
 					// Look through all components
@@ -616,8 +624,7 @@ JausAddress SystemTree::lookUpAddress(int lookupSubs, int lookupNode, int lookup
 					{
 						cmpt = (JausComponent) node->components->elementData[k];
 
-						if(	lookupCmpt == JAUS_ADDRESS_WILDCARD_OCTET &&
-							cmpt->address->instance == lookupInst)
+						if(	lookupCmpt == JAUS_ADDRESS_WILDCARD_OCTET && cmpt->address->instance == lookupInst)
 						{
 							if(jausAddressIsValid(address))
 							{
@@ -645,8 +652,7 @@ JausAddress SystemTree::lookUpAddress(int lookupSubs, int lookupNode, int lookup
 								}
 							}
 						}
-						else if(lookupInst == JAUS_ADDRESS_WILDCARD_OCTET &&
-								cmpt->address->component == lookupCmpt)
+						else if(lookupInst == JAUS_ADDRESS_WILDCARD_OCTET && cmpt->address->component == lookupCmpt)
 						{
 							if(jausAddressIsValid(address))
 							{

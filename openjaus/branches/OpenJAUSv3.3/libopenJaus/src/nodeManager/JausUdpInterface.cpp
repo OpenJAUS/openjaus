@@ -111,8 +111,8 @@ InetAddress JausUdpInterface::getInetAddress(void)
 
 bool JausUdpInterface::routeMessage(JausMessage message)
 {
-	DatagramPacket packet;
-	packet = datagramPacketCreate();
+//	DatagramPacket packet;				// NMJ
+//	packet = datagramPacketCreate();	// NMJ
 
 	switch(this->type)
 	{

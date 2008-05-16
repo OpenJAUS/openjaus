@@ -774,7 +774,8 @@ bool CommunicatorComponent::processCreateEvent(JausMessage message)
 			confirmEventRequest->eventId = 0;
 
 			char buf[256];
-			sprintf(buf, "Rejected event from %d.%d.%d.%d. No available Event Ids.", createEvent->source->subsystem, createEvent->source->node, createEvent->source->component, createEvent->source->instance); 
+//			sprintf(buf, "Rejected event from %d.%d.%d.%d. No available Event Ids.", createEvent->source->subsystem, createEvent->source->node, createEvent->source->component, createEvent->source->instance, createEvent->reportMessageCode);	// NMJ 
+			sprintf(buf, "Rejected event from %d.%d.%d.%d. No available Event Ids.", createEvent->source->subsystem, createEvent->source->node, createEvent->source->component, createEvent->source->instance);		// NMJ
 			DebugEvent *e = new DebugEvent("Event", __FUNCTION__, __LINE__, buf);
 			this->eventHandler->handleEvent(e);
 		}
