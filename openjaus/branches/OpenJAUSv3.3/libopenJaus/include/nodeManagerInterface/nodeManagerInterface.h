@@ -50,6 +50,9 @@
 
 #define	OJ_NODE_MANAGER_INTERFACE_VERSION	"3.3.0"
 
+#define	NMI_MESSAGE_RECEIVED	1
+#define	NMI_RECEIVE_TIMED_OUT	2
+
 #ifdef __cplusplus
 extern "C" 
 {
@@ -141,6 +144,8 @@ typedef struct
 	pthread_t receiveThreadId;
 	int receiveThreadRunning;
 	
+	pthread_cond_t recvCondition;
+	       
 	InetAddress ipAddress;
 	
 	Queue receiveQueue;
@@ -163,6 +168,7 @@ typedef NodeManagerInterfaceStruct *NodeManagerInterface;
 JAUS_EXPORT NodeManagerInterface nodeManagerOpen(JausComponent);
 JAUS_EXPORT int nodeManagerClose(NodeManagerInterface);
 JAUS_EXPORT int nodeManagerReceive(NodeManagerInterface, JausMessage *);
+JAUS_EXPORT int nodeManagerTimedReceive(NodeManagerInterface nmi, JausMessage *message, double timeLimitSec);
 JAUS_EXPORT int nodeManagerSend(NodeManagerInterface, JausMessage);
 JAUS_EXPORT int nodeManagerSendSingleMessage(NodeManagerInterface, JausMessage);
 JAUS_EXPORT JausAddressList *nodeManagerGetComponentAddressList(NodeManagerInterface, unsigned char);

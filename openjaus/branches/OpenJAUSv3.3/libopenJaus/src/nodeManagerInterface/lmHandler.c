@@ -241,6 +241,7 @@ void lmHandlerReceiveLargeMessage(NodeManagerInterface nmi, JausMessage message)
 				}
 				else
 				{
+					pthread_cond_signal(&nmi->recvCondition);
 					queuePush(nmi->receiveQueue, (void *)outMessage);
 				}
 				
