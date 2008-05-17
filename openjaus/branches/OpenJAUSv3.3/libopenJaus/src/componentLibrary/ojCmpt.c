@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include <jaus.h>
 #include "nodeManagerInterface/nodeManagerInterface.h"
@@ -219,20 +220,19 @@ void* ojCmptThread(void *threadData)
 {
 	OjCmpt ojCmpt;
 	JausMessage rxMessage;
-	double time, prevTime, nextExcecuteTime = 0.0;
 	int i;
-
-	time = ojGetTimeSec();
+	double prevTime = 0;
+	double time = ojGetTimeSec();
+	double nextStateTime = ojGetTimeSec();
 
 	// Get handle to OpenJausComponent that was created 
 	ojCmpt = (OjCmpt)threadData;
 	
 	while(ojCmpt->run) // Execute state machine code while not in the SHUTDOWN state
 	{
-		do
+		switch(nodeManagerTimedReceive(ojCmpt->nmi, &rxMessage, nextStateTime))
 		{
-			if(nodeManagerReceive(ojCmpt->nmi, &rxMessage))
-			{
+			case NMI_MESSAGE_RECEIVED:
 				for(i=0; i<ojCmpt->messageCallbackCount; i++)
 				{
 					if(ojCmpt->messageCallback[i].commandCode == rxMessage->commandCode && ojCmpt->messageCallback[i].function)
@@ -254,35 +254,31 @@ void* ojCmptThread(void *threadData)
 						defaultJausMessageProcessor(rxMessage, ojCmpt->nmi, ojCmpt->jaus);
 					}
 				}
-			}
-			else 
-			{
-				if(ojGetTimeSec() > nextExcecuteTime)
+				break;
+				
+			case NMI_RECEIVE_TIMED_OUT:
+				prevTime = time;
+				time = ojGetTimeSec();
+				ojCmpt->rateHz = 1.0/(time-prevTime); // Compute the update rate of this thread
+				nextStateTime = time + 1.0/ojCmpt->frequencyHz;
+				
+				if(ojCmpt->mainCallback)
 				{
-					break;
+					ojCmpt->mainCallback(ojCmpt);
 				}
-				else
+
+				if(ojCmpt->state != JAUS_UNDEFINED_STATE && ojCmpt->stateCallback[ojCmpt->state])
 				{
-					ojSleepMsec(1);
+					ojCmpt->stateCallback[ojCmpt->state](ojCmpt);
 				}
-			}
-		}while(ojGetTimeSec() < nextExcecuteTime);
-
-		prevTime = time;
-		time = ojGetTimeSec();
-		ojCmpt->rateHz = 1.0/(time-prevTime); // Compute the update rate of this thread
-
-		if(ojCmpt->mainCallback)
-		{
-			ojCmpt->mainCallback(ojCmpt);
+				break;
+				
+			default:
+				printf("ojCmpt.c : Error in nodeManagerTimedReceive, Exiting ojCmpt Thread\n");
+				ojCmpt->run = FALSE;
+				break;
 		}
-
-		if(ojCmpt->state != JAUS_UNDEFINED_STATE && ojCmpt->stateCallback[ojCmpt->state])
-		{
-			ojCmpt->stateCallback[ojCmpt->state](ojCmpt);
-		}
-
-		nextExcecuteTime = 2.0 * time + 1.0/ojCmpt->frequencyHz - ojGetTimeSec();
+				
 	}	
 
 	return NULL;

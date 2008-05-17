@@ -49,6 +49,7 @@
 #elif defined(__linux) || defined(linux) || defined(__linux__) || defined(__APPLE__)
 	#include <unistd.h>
 	#include <sys/time.h>
+	#include <errno.h>
 #endif
 
 #include "nodeManagerInterface/nodeManagerInterface.h"
@@ -102,7 +103,8 @@ NodeManagerInterface nodeManagerOpen(JausComponent cmpt)
 	
 	nmi->cmpt = cmpt;
 	nmi->timestamp = getTimeSeconds();
-
+	pthread_cond_init(&nmi->recvCondition, NULL);
+	
 	nmi->ipAddress = inetAddressGetLocalHost();
 	if(nmi->ipAddress == NULL)
 	{
@@ -280,6 +282,7 @@ int nodeManagerClose(NodeManagerInterface nmi)
 		datagramSocketDestroy(nmi->messageSocket);
 		datagramSocketDestroy(nmi->interfaceSocket);
 		inetAddressDestroy(nmi->ipAddress);
+		pthread_cond_destroy(&nmi->recvCondition);
 		free(nmi);
 	}
 	else
@@ -443,6 +446,7 @@ void *receiveThread(void *threadArgument)
 							// to the regular receiveQueue. JAUS 3.2 RA says to set the properties.scFlag bit if it is
 							// a Service Connection Control message, but logically they do not need to go
 							// to the scManager and instead to the component
+							pthread_cond_signal(&nmi->recvCondition);
 							queuePush(nmi->receiveQueue, (void *)message);
 						}
 						else
@@ -452,6 +456,7 @@ void *receiveThread(void *threadArgument)
 					}
 					else
 					{
+						pthread_cond_signal(&nmi->recvCondition);
 						queuePush(nmi->receiveQueue, (void *)message);
 					}
 				}
@@ -770,6 +775,49 @@ int nodeManagerReceive(NodeManagerInterface nmi, JausMessage *message)
 	{
 		*message = (JausMessage)queuePop(nmi->receiveQueue);
 		return 1;		
+	}
+	else
+	{
+		return 0;
+	}
+}
+
+int nodeManagerTimedReceive(NodeManagerInterface nmi, JausMessage *message, double timeLimitSec)
+{
+	pthread_mutex_t recvMutex = PTHREAD_MUTEX_INITIALIZER;
+	int condition = -1;
+	struct timespec timeLimitSpec;
+		
+	if(nmi->isOpen)
+	{
+		if(ojGetTimeSec() > timeLimitSec)
+		{
+			return NMI_RECEIVE_TIMED_OUT;			
+		}
+		else if(nmi->receiveQueue->size)
+		{
+			*message = (JausMessage)queuePop(nmi->receiveQueue);
+			return NMI_MESSAGE_RECEIVED;
+		}
+		else
+		{
+			timeLimitSpec.tv_sec = (time_t)timeLimitSec;
+			timeLimitSpec.tv_nsec = 1e9 * (timeLimitSec - (double)timeLimitSpec.tv_sec);
+
+			condition = pthread_cond_timedwait(&nmi->recvCondition, &recvMutex, &timeLimitSpec);
+			switch(condition)
+			{
+				case 0: // Conditional Signaled
+					*message = (JausMessage)queuePop(nmi->receiveQueue);
+					return NMI_MESSAGE_RECEIVED;
+				
+				case ETIMEDOUT: // our time is up
+					return NMI_RECEIVE_TIMED_OUT;
+					
+				default: // Some other error occured
+					return 0;
+			}
+		}
 	}
 	else
 	{
