@@ -101,7 +101,6 @@ int ojCmptRun(OjCmpt ojCmpt)
 	ojCmpt->run = TRUE;
 
 	pthread_attr_init(&attr);
-	pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
 	if(pthread_create(&ojCmpt->thread, &attr, ojCmptThread, (void*)ojCmpt) != 0)
 	{
 		nodeManagerClose(ojCmpt->nmi); // Close Node Manager Connection
@@ -118,13 +117,24 @@ int ojCmptRun(OjCmpt ojCmpt)
 
 void ojCmptDestroy(OjCmpt ojCmpt)
 {
+	int i = 0;
+	
 	if(ojCmpt->run == TRUE)
 	{
 		ojCmpt->run = FALSE;
-		
-		pthread_cancel(ojCmpt->thread);
+		pthread_join(ojCmpt->thread, NULL);
 	}
 
+	for(i=0; i<ojCmpt->inConnectionCount; i++)
+	{
+		if(ojCmpt->inConnection[i]->isActive)
+		{	
+			scManagerTerminateServiceConnection(ojCmpt->nmi, ojCmpt->inConnection[i]);
+		}
+		serviceConnectionDestroy(ojCmpt->inConnection[i]);		
+	}
+	free(ojCmpt->inConnection);
+	
 	if(ojCmpt->messageCallback)
 	{
 		free(ojCmpt->messageCallback);
@@ -253,6 +263,7 @@ double ojCmptGetRateHz(OjCmpt ojCmpt)
 
 void* ojCmptThread(void *threadData)
 {
+	int i = 0;
 	OjCmpt ojCmpt;
 	JausMessage rxMessage;
 	double prevTime = 0;
@@ -267,7 +278,23 @@ void* ojCmptThread(void *threadData)
 		switch(nodeManagerTimedReceive(ojCmpt->nmi, &rxMessage, nextStateTime))
 		{
 			case NMI_MESSAGE_RECEIVED:
-				ojCmptProcessMessage(ojCmpt, rxMessage);
+				// If we were sent a message
+				if(rxMessage)
+				{	
+					ojCmptProcessMessage(ojCmpt, rxMessage);
+				}
+				
+				// Always check for messages on incomming SC queues
+				for(i=0; i<ojCmpt->inConnectionCount; i++)
+				{
+					if(ojCmpt->inConnection[i]->isActive) // Attempt to process incomming message
+					{
+						if(scManagerReceiveServiceConnection(ojCmpt->nmi, ojCmpt->inConnection[i], &rxMessage))
+						{
+							ojCmptProcessMessage(ojCmpt, rxMessage);
+						}
+					}
+				}
 				break;
 				
 			case NMI_RECEIVE_TIMED_OUT:
@@ -392,26 +419,16 @@ void ojCmptManageServiceConnections(OjCmpt ojCmpt)
 {
 	int i = 0;
 	double time = ojGetTimeSec();
-	JausMessage message = NULL;
 	
 	// Manage Incomming Connections
 	for(i=0; i<ojCmpt->inConnectionCount; i++)
 	{
-		if(ojCmpt->inConnection[i]->isActive) // Attempt to process incomming message
+		// If not active then attempt to initiate SC
+		if(!ojCmpt->inConnection[i]->isActive && time > ojCmpt->inConnection[i]->nextRequestTimeSec)
 		{
-			if(scManagerReceiveServiceConnection(ojCmpt->nmi, ojCmpt->inConnection[i], &message))
-			{
-				ojCmptProcessMessage(ojCmpt, message);
-			}
-		}
-		else // If sc is not active, then send the create
-		{
-			if(time > ojCmpt->inConnection[i]->nextRequestTimeSec)
-			{
-				// set up the service connection
-				scManagerCreateServiceConnection(ojCmpt->nmi, ojCmpt->inConnection[i]);
-				ojCmpt->inConnection[i]->nextRequestTimeSec = time + ojCmpt->inConnection[i]->timeoutSec;
-			}			
+			// set up the service connection
+			scManagerCreateServiceConnection(ojCmpt->nmi, ojCmpt->inConnection[i]);
+			ojCmpt->inConnection[i]->nextRequestTimeSec = time + ojCmpt->inConnection[i]->timeoutSec;
 		}
 	}
 }
@@ -466,7 +483,14 @@ int ojCmptTerminateSc(OjCmpt ojCmpt, int scIndex)
 	}
 
 	ojCmpt->inConnectionCount--;
-	ojCmpt->inConnection = (ServiceConnection *)realloc(ojCmpt->inConnection, ojCmpt->inConnectionCount * sizeof(ServiceConnection));	
+	if(ojCmpt->inConnectionCount)
+	{
+		ojCmpt->inConnection = (ServiceConnection *)realloc(ojCmpt->inConnection, ojCmpt->inConnectionCount * sizeof(ServiceConnection));	
+	}
+	else
+	{
+		free(ojCmpt->inConnection);
+	}
 
 	return TRUE;
 }

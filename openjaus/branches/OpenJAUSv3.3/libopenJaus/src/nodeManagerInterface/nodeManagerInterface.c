@@ -446,7 +446,6 @@ void *receiveThread(void *threadArgument)
 							// to the regular receiveQueue. JAUS 3.2 RA says to set the properties.scFlag bit if it is
 							// a Service Connection Control message, but logically they do not need to go
 							// to the scManager and instead to the component
-							pthread_cond_signal(&nmi->recvCondition);
 							queuePush(nmi->receiveQueue, (void *)message);
 						}
 						else
@@ -456,10 +455,10 @@ void *receiveThread(void *threadArgument)
 					}
 					else
 					{
-						pthread_cond_signal(&nmi->recvCondition);
 						queuePush(nmi->receiveQueue, (void *)message);
 					}
 				}
+				pthread_cond_signal(&nmi->recvCondition);
 				nmi->receiveCount++;
 				//printf("NMI: Receive Count: %d\n", nmi->receiveCount);
 			}
