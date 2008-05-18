@@ -58,7 +58,9 @@ int ojCmptTerminateSc(OjCmpt ojCmpt, int scIndex);
 void ojCmptAddSupportedSc(OjCmpt ojCmpt, unsigned short commandCode);		// Add service connection support for this message
 void ojCmptRemoveSupportedSc(OjCmpt ojCmpt, unsigned short commandCode);	// Removes service connection support for this message
 ServiceConnection ojCmptGetScSendList(OjCmpt ojCmpt, unsigned short commandCode);
-
+void ojCmptDestroySendList(ServiceConnection scList);
+JausBoolean ojCmptIsOutgoingScActive(OjCmpt ojCmpt, unsigned short commandCode);
+	
 // System Discovery
 int ojCmptLookupAddress(OjCmpt ojCmpt, JausAddress address);
 

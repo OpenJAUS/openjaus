@@ -372,6 +372,21 @@ void ojCmptRemoveSupportedSc(OjCmpt ojCmpt, unsigned short commandCode)	// Remov
 	scManagerRemoveSupportedMessage(ojCmpt->nmi, commandCode);
 }
 
+ServiceConnection ojCmptGetScSendList(OjCmpt ojCmpt, unsigned short commandCode)
+{
+	return scManagerGetSendList(ojCmpt->nmi, commandCode);
+}
+
+void ojCmptDestroySendList(ServiceConnection scList)
+{
+	scManagerDestroySendList(scList);
+}
+
+JausBoolean ojCmptIsOutgoingScActive(OjCmpt ojCmpt, unsigned short commandCode)
+{
+	return scManagerQueryActiveMessage(ojCmpt->nmi, commandCode);
+}
+
 // Incomming Service Connections
 void ojCmptManageServiceConnections(OjCmpt ojCmpt)
 {
@@ -455,20 +470,3 @@ int ojCmptTerminateSc(OjCmpt ojCmpt, int scIndex)
 
 	return TRUE;
 }
-
-//void ojCmpt
-//	if(gposSc && gposSc->isActive)
-//	{
-//		if(scManagerReceiveServiceConnection(wdNmi, gposSc, &message))
-
-//
-//bool OpenJausComponent::scIsActive(unsigned short commandCode)
-//{
-//	return messageHandler.scIsActive(commandCode);
-//}
-//
-//
-//ServiceConnection OpenJausComponent::getScSendList(unsigned short commandCode)
-//{
-//	return messageHandler.getScSendList(commandCode);
-//}
