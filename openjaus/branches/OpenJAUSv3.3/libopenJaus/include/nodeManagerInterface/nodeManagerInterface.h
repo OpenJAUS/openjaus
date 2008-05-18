@@ -73,6 +73,7 @@ typedef struct ServiceConnectionStruct
 	double confirmedUpdateRateHz;
 	double lastSentTime;
 	double timeoutSec;
+	double nextRequestTimeSec;
 
 	JausAddress address;
 	JausUnsignedInteger presenceVector;

@@ -18,6 +18,7 @@ struct OjCmptStruct
 	JausComponent jaus;				// A pointer to the JausComponent structure found in the OpenJAUS libjaus library.
 
 	pthread_t thread;			// Pointer to the pthread that is running the component thread
+	pthread_mutex_t scMutex;	// TODO: Lock mutex when accessing service connection arrays
 
 	void (*stateCallback[OJ_CMPT_MAX_STATE_COUNT])(OjCmpt);	// An array to hold the pointers to the callback functions
 	void (*mainCallback)(OjCmpt);					
@@ -38,6 +39,8 @@ struct OjCmptStruct
 };
 
 void* ojCmptThread(void *threadData);
+void ojCmptProcessMessage(OjCmpt ojCmpt, JausMessage message);
+void ojCmptManageServiceConnections(OjCmpt ojCmpt);
 
 OjCmpt ojCmptCreate(char *name, JausByte id, double stateFrequencyHz)
 {
@@ -115,18 +118,23 @@ int ojCmptRun(OjCmpt ojCmpt)
 
 void ojCmptDestroy(OjCmpt ojCmpt)
 {
-	ojCmpt->run = FALSE;
-
-	ojSleepMsec((int)(2000.0 / ojCmpt->frequencyHz));
-
-	pthread_cancel(ojCmpt->thread);
+	if(ojCmpt->run == TRUE)
+	{
+		ojCmpt->run = FALSE;
+		
+		pthread_cancel(ojCmpt->thread);
+	}
 
 	if(ojCmpt->messageCallback)
 	{
 		free(ojCmpt->messageCallback);
 	}
-
-	nodeManagerClose(ojCmpt->nmi); // Close Node Manager Connection
+	
+	if(ojCmpt->nmi)
+	{
+		nodeManagerClose(ojCmpt->nmi); // Close Node Manager Connection
+	}
+	
 	free(ojCmpt->jaus->identification);
 	jausComponentDestroy(ojCmpt->jaus);
 	free(ojCmpt);	
@@ -211,6 +219,33 @@ void ojCmptSetMessageProcessorCallback(OjCmpt ojCmpt, void (*processMessageFunct
 	ojCmpt->processMessageCallback = processMessageFunction;
 }
 
+void ojCmptProcessMessage(OjCmpt ojCmpt, JausMessage message)
+{
+	int i = 0;
+	
+	for(i=0; i<ojCmpt->messageCallbackCount; i++)
+	{
+		if(ojCmpt->messageCallback[i].commandCode == message->commandCode && ojCmpt->messageCallback[i].function)
+		{
+			ojCmpt->messageCallback[i].function(ojCmpt, message);
+			i = -1;
+			break;
+		}
+	}
+	
+	if(i == ojCmpt->messageCallbackCount)
+	{
+		if(ojCmpt->processMessageCallback)
+		{
+			ojCmpt->processMessageCallback(ojCmpt, message);
+		}
+		else
+		{
+			defaultJausMessageProcessor(message, ojCmpt->nmi, ojCmpt->jaus);
+		}
+	}
+}
+
 double ojCmptGetRateHz(OjCmpt ojCmpt)
 {
 	return ojCmpt->rateHz;
@@ -220,7 +255,6 @@ void* ojCmptThread(void *threadData)
 {
 	OjCmpt ojCmpt;
 	JausMessage rxMessage;
-	int i;
 	double prevTime = 0;
 	double time = ojGetTimeSec();
 	double nextStateTime = ojGetTimeSec();
@@ -233,27 +267,7 @@ void* ojCmptThread(void *threadData)
 		switch(nodeManagerTimedReceive(ojCmpt->nmi, &rxMessage, nextStateTime))
 		{
 			case NMI_MESSAGE_RECEIVED:
-				for(i=0; i<ojCmpt->messageCallbackCount; i++)
-				{
-					if(ojCmpt->messageCallback[i].commandCode == rxMessage->commandCode && ojCmpt->messageCallback[i].function)
-					{
-						ojCmpt->messageCallback[i].function(ojCmpt, rxMessage);
-						i = -1;
-						break;
-					}
-				}
-				
-				if(i == ojCmpt->messageCallbackCount)
-				{
-					if(ojCmpt->processMessageCallback)
-					{
-						ojCmpt->processMessageCallback(ojCmpt, rxMessage);
-					}
-					else
-					{
-						defaultJausMessageProcessor(rxMessage, ojCmpt->nmi, ojCmpt->jaus);
-					}
-				}
+				ojCmptProcessMessage(ojCmpt, rxMessage);
 				break;
 				
 			case NMI_RECEIVE_TIMED_OUT:
@@ -271,6 +285,8 @@ void* ojCmptThread(void *threadData)
 				{
 					ojCmpt->stateCallback[ojCmpt->state](ojCmpt);
 				}
+				
+				ojCmptManageServiceConnections(ojCmpt);
 				break;
 				
 			default:
@@ -359,13 +375,30 @@ void ojCmptRemoveSupportedSc(OjCmpt ojCmpt, unsigned short commandCode)	// Remov
 // Incomming Service Connections
 void ojCmptManageServiceConnections(OjCmpt ojCmpt)
 {
+	int i = 0;
+	double time = ojGetTimeSec();
+	JausMessage message = NULL;
+	
 	// Manage Incomming Connections
-		// For all incomming SCs in array
-		// If sc is not active, then send the create
-		// else attempt to receive process incomming message
-
-	// Manage outgoing connections
-		// For 	
+	for(i=0; i<ojCmpt->inConnectionCount; i++)
+	{
+		if(ojCmpt->inConnection[i]->isActive) // Attempt to process incomming message
+		{
+			if(scManagerReceiveServiceConnection(ojCmpt->nmi, ojCmpt->inConnection[i], &message))
+			{
+				ojCmptProcessMessage(ojCmpt, message);
+			}
+		}
+		else // If sc is not active, then send the create
+		{
+			if(time > ojCmpt->inConnection[i]->nextRequestTimeSec)
+			{
+				// set up the service connection
+				scManagerCreateServiceConnection(ojCmpt->nmi, ojCmpt->inConnection[i]);
+				ojCmpt->inConnection[i]->nextRequestTimeSec = time + ojCmpt->inConnection[i]->timeoutSec;
+			}			
+		}
+	}
 }
 
 int ojCmptEstablishSc(OjCmpt ojCmpt, JausUnsignedShort cCode, JausUnsignedInteger pv, JausAddress address, double rateHz, double timeoutSec, int qSize)
@@ -392,16 +425,35 @@ int ojCmptEstablishSc(OjCmpt ojCmpt, JausUnsignedShort cCode, JausUnsignedIntege
 	ojCmpt->inConnection[scIndex]->isActive = JAUS_FALSE;
 	ojCmpt->inConnection[scIndex]->queueSize = qSize;
 	ojCmpt->inConnection[scIndex]->timeoutSec = timeoutSec;
+	ojCmpt->inConnection[scIndex]->nextRequestTimeSec = 0;
 
 	return scIndex;	
 }
 
-void ojCmptTerminateSc(OjCmpt ojCmpt, ServiceConnection cmptSc)
-{
-	if(cmptSc->isActive)
-	{	
-		scManagerTerminateServiceConnection(ojCmpt->nmi, cmptSc);
+int ojCmptTerminateSc(OjCmpt ojCmpt, int scIndex)
+{	
+	int i;
+	
+	if(scIndex < 0 || scIndex >= ojCmpt->inConnectionCount)
+	{
+		return FALSE;
 	}
+	
+	if(ojCmpt->inConnection[scIndex]->isActive)
+	{	
+		scManagerTerminateServiceConnection(ojCmpt->nmi, ojCmpt->inConnection[scIndex]);
+	}
+	serviceConnectionDestroy(ojCmpt->inConnection[scIndex]);
+	
+	for(i=scIndex; i<ojCmpt->inConnectionCount - 1; i++)
+	{
+		ojCmpt->inConnection[i] = ojCmpt->inConnection[i+1];
+	}
+
+	ojCmpt->inConnectionCount--;
+	ojCmpt->inConnection = (ServiceConnection *)realloc(ojCmpt->inConnection, ojCmpt->inConnectionCount * sizeof(ServiceConnection));	
+
+	return TRUE;
 }
 
 //void ojCmpt

@@ -19,7 +19,7 @@ extern "C"
 #define OJ_CMPT_MIN_FREQUENCY_HZ		0.1
 #define OJ_CMPT_MAX_FREQUENCY_HZ		1000.0
 #define OJ_CMPT_DEFAULT_FREQUENCY_HZ	1.0
-
+	
 typedef struct OjCmptStruct *OjCmpt;
 
 JAUS_EXPORT OjCmpt ojCmptCreate(char *name, JausByte id, double frequency);
@@ -51,7 +51,7 @@ JAUS_EXPORT JausBoolean ojCmptAddServiceOutputMessage(OjCmpt ojCmpt, JausUnsigne
 
 // Incomming Service Connections
 int ojCmptEstablishSc(OjCmpt ojCmpt, JausUnsignedShort cCode, JausUnsignedInteger pv, JausAddress address, double rateHz, double timeoutSec, int qSize);
-void ojCmptTerminateSc(OjCmpt ojCmpt, ServiceConnection cmptSc);
+int ojCmptTerminateSc(OjCmpt ojCmpt, int scIndex);
 // OjCmpt add receive SC method
 
 // Outgoing Service Connections
