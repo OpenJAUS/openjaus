@@ -133,7 +133,10 @@ void ojCmptDestroy(OjCmpt ojCmpt)
 		}
 		serviceConnectionDestroy(ojCmpt->inConnection[i]);		
 	}
-	free(ojCmpt->inConnection);
+	if(ojCmpt->inConnectionCount)
+	{
+		free(ojCmpt->inConnection);
+	}
 	
 	if(ojCmpt->messageCallback)
 	{
@@ -439,7 +442,7 @@ int ojCmptEstablishSc(OjCmpt ojCmpt, JausUnsignedShort cCode, JausUnsignedIntege
 	
 	ojCmpt->inConnectionCount++;
 	
-	if(ojCmpt->inConnection)
+	if(ojCmpt->inConnectionCount > 1)
 	{
 		ojCmpt->inConnection = (ServiceConnection *)realloc(ojCmpt->inConnection, ojCmpt->inConnectionCount * sizeof(ServiceConnection));
 	}
