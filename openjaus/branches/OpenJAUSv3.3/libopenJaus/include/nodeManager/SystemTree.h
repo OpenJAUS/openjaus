@@ -156,6 +156,9 @@ public:
 
 	JausAddress lookUpAddress(JausAddress address);
 	JausAddress lookUpAddress(int lookupSubs, int lookupNode, int lookupCmpt, int lookupInst);
+	JausAddress lookUpAddress2(int lookupSubs, int lookupNode, int lookupCmpt, int lookupInst);
+	JausAddress lookUpAddressInNode(JausNode node, int lookupCmpt, int lookupInst);
+	JausAddress lookUpAddressInSubsystem(JausSubsystem subs, int lookupNode, int lookupCmpt, int lookupInst);
 	
 	JausAddress lookUpServiceInNode(int nodeId, int commandCode, int serviceType);
 	JausAddress lookUpServiceInNode(JausNode node, int commandCode, int serviceType);

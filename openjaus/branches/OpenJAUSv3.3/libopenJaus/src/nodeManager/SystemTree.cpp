@@ -347,6 +347,93 @@ JausAddress SystemTree::lookUpAddress(JausAddress address)
 	return lookUpAddress(address->subsystem, address->node, address->component, address->instance);
 }
 
+JausAddress SystemTree::lookUpAddressInNode(JausNode node, int lookupCmpt, int lookupInst)
+{
+	if(node)
+	{
+		for(int i = 0; i < node->components->elementCount; i++)
+		{
+			JausComponent cmpt = (JausComponent)node->components->elementData[i];
+			if(lookupCmpt == JAUS_ADDRESS_WILDCARD_OCTET)
+			{
+				if(lookupInst == JAUS_ADDRESS_WILDCARD_OCTET)
+				{
+					return jausAddressClone(cmpt->address);
+				}
+				else
+				{
+					if(cmpt->address->instance == lookupInst)
+					{
+						return jausAddressClone(cmpt->address);
+					}
+				}
+			}
+			else
+			{
+				if(cmpt->address->component == lookupCmpt)
+				{
+					if(lookupInst == JAUS_ADDRESS_WILDCARD_OCTET)
+					{
+						return jausAddressClone(cmpt->address);
+					}
+					else
+					{
+						if(cmpt->address->instance == lookupInst)
+						{
+							return jausAddressClone(cmpt->address);
+						}
+					}					
+				}
+			}
+		}		
+	}
+	return NULL;
+}
+
+JausAddress SystemTree::lookUpAddressInSubsystem(JausSubsystem subs, int lookupNode, int lookupCmpt, int lookupInst)
+{
+	if(subs)
+	{
+		if(lookupNode == JAUS_ADDRESS_WILDCARD_OCTET)
+		{
+			for(int i = 0; i < subs->nodes->elementCount; i++)
+			{
+				JausNode node = (JausNode)subs->nodes->elementData[i];
+				JausAddress address = lookUpAddressInNode(node, lookupCmpt, lookupInst);
+				if(address)
+				{
+					return address;
+				}
+			}
+		}
+		else
+		{
+			return lookUpAddressInNode(findNode(subs->id, lookupNode), lookupCmpt, lookupInst);
+		}
+	}
+	return NULL;
+}
+
+JausAddress SystemTree::lookUpAddress2(int lookupSubs, int lookupNode, int lookupCmpt, int lookupInst)
+{
+	if(lookupSubs == JAUS_ADDRESS_WILDCARD_OCTET)
+	{
+		for(int i = JAUS_MINIMUM_SUBSYSTEM_ID; i < JAUS_MAXIMUM_SUBSYSTEM_ID; i++)
+		{
+			JausAddress address = lookUpAddressInSubsystem(system[i], lookupNode, lookupCmpt, lookupInst);
+			if(address)
+			{
+				return address;
+			}
+		}
+	}
+	else
+	{
+		return lookUpAddressInSubsystem(system[lookupSubs], lookupNode, lookupCmpt, lookupInst);
+	}
+	return NULL;
+}
+
 JausAddress SystemTree::lookUpAddress(int lookupSubs, int lookupNode, int lookupCmpt, int lookupInst)
 {
 	JausSubsystem subs = NULL;
