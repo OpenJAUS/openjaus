@@ -69,6 +69,7 @@ JausSubsystem jausSubsystemCreate(void)
 void jausSubsystemDestroy(JausSubsystem subsystem)
 {
 	jausArrayDestroy(subsystem->nodes, (void *)jausNodeDestroy);
+	if(subsystem->identification) free(subsystem->identification);
 	free(subsystem);
 }
 

@@ -101,6 +101,7 @@ void jausComponentDestroy(JausComponent component)
 		jausServicesDestroy(component->services);
 		jausAddressDestroy(component->controller.address);
 		jausAddressDestroy(component->address);
+		if(component->identification) free(component->identification);
 		free(component);
 	}	
 }

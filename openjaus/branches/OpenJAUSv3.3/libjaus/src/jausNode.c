@@ -71,6 +71,7 @@ JausNode jausNodeCreate(void)
 void jausNodeDestroy(JausNode node)
 {
 	jausArrayDestroy(node->components, (void *)jausComponentDestroy);
+	if(node->identification) free(node->identification);
 	free(node);
 }
 
