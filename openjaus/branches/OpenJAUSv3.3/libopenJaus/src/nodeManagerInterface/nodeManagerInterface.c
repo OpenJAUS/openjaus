@@ -800,8 +800,8 @@ int nodeManagerTimedReceive(NodeManagerInterface nmi, JausMessage *message, doub
 		}
 		else
 		{
-			timeLimitSpec.tv_sec = (time_t)timeLimitSec;
-			timeLimitSpec.tv_nsec = 1e9 * (timeLimitSec - (double)timeLimitSpec.tv_sec);
+			timeLimitSpec.tv_sec = (long)timeLimitSec;
+			timeLimitSpec.tv_nsec = (long)(1e9 * (timeLimitSec - (double)timeLimitSpec.tv_sec));
 
 			condition = pthread_cond_timedwait(&nmi->recvCondition, &recvMutex, &timeLimitSpec);
 			switch(condition)
