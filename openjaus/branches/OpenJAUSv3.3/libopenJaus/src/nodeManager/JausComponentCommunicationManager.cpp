@@ -89,6 +89,10 @@ JausComponentCommunicationManager::JausComponentCommunicationManager(FileLoader 
 		this->communicatorCmpt = new CommunicatorComponent(this->configData, this->handler, this);
 		this->interfaces.push_back(communicatorCmpt);
 	}
+	else
+	{
+		this->communicatorCmpt = NULL;
+	}
 
 	// Start component interface(s)
 	if(configData->GetConfigDataBool("Component_Communications", "JAUS_UDP"))
@@ -111,7 +115,11 @@ JausComponentCommunicationManager::JausComponentCommunicationManager(FileLoader 
 JausComponentCommunicationManager::~JausComponentCommunicationManager(void)
 {
 	delete this->nodeManagerCmpt;
-	delete this->communicatorCmpt;
+	
+	if(this->communicatorCmpt)
+	{
+		delete this->communicatorCmpt;
+	}
 }
 
 bool JausComponentCommunicationManager::startInterfaces(void)

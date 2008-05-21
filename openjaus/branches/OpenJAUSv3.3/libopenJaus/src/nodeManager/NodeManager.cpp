@@ -108,6 +108,8 @@ NodeManager::NodeManager(FileLoader *configData, EventHandler *handler)
 
 NodeManager::~NodeManager(void)
 {
+	jausSubsystemDestroy(subsystem);
+	
 	delete msgRouter;
 	delete systemTree;
 }

@@ -330,6 +330,7 @@ bool JausUdpInterface::openSocket(void)
 		sprintf(errorString, "Could not open socket: %s:%d", buf, this->portNumber);
 		ErrorEvent *e = new ErrorEvent(ErrorEvent::Configuration, __FUNCTION__, __LINE__, errorString);
 		this->eventHandler->handleEvent(e);
+		
 		return false;
 	}
 	else
