@@ -60,6 +60,13 @@ SystemTree::SystemTree(FileLoader *configData, EventHandler *handler)
 
 SystemTree::~SystemTree(void)
 {
+	for(int i = JAUS_MINIMUM_SUBSYSTEM_ID; i < JAUS_MAXIMUM_SUBSYSTEM_ID; i++)
+	{
+		if(system[i])
+		{
+			jausSubsystemDestroy(system[i]);
+		}
+	}
 	// TODO: Delete all the memory I own (system)
 }
 

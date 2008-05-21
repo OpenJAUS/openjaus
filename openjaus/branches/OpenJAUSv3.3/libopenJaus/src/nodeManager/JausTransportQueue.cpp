@@ -52,7 +52,7 @@ JausTransportQueue::JausTransportQueue(void)
 
 JausTransportQueue::~JausTransportQueue(void)
 {
-	list.~queue();
+	//list.~queue();
 	pthread_mutex_destroy(&mutex);
 }
 

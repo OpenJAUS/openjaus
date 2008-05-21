@@ -59,10 +59,12 @@ static NodeManager *nm;
 
 class MyHandler : public EventHandler
 {
+public:
 	~MyHandler()
 	{
 
 	}
+	
 	void handleEvent(NodeManagerEvent *e)
 	{
 		SystemTreeEvent *treeEvent;
@@ -220,6 +222,10 @@ int main(int argc, char *args)
 		}
 	}
 
+	delete nm;
+	delete handler;
+	delete configData;
+	
 	tcsetattr(0, TCSANOW, &storedTermio);
 	return 0;
 }
