@@ -124,7 +124,9 @@ NodeManagerComponent::NodeManagerComponent(FileLoader *configData, EventHandler 
 	this->setupJausServices();
 
 	this->cmpt->node = systemTree->getNode(subsystemId, nodeId);
-	this->cmpt->identification = (char *)this->name.c_str();
+	
+	this->cmpt->identification = (char *)calloc(strlen(this->name.c_str()) + 1, sizeof(char));
+	strcpy(this->cmpt->identification, this->name.c_str());
 }
 
 NodeManagerComponent::~NodeManagerComponent(void)
