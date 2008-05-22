@@ -127,7 +127,10 @@ NodeManagerComponent::NodeManagerComponent(FileLoader *configData, EventHandler 
 	this->cmpt->identification = (char *)this->name.c_str();
 }
 
-NodeManagerComponent::~NodeManagerComponent(void){}
+NodeManagerComponent::~NodeManagerComponent(void)
+{
+	jausComponentDestroy(this->cmpt);
+}
 
 bool NodeManagerComponent::startInterface()
 {

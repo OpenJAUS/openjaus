@@ -175,7 +175,6 @@ void OjUdpComponentInterface::run()
 					packet->buffer[2] = (unsigned char)(address->component & 0xFF);
 					packet->buffer[3] = (unsigned char)(address->node & 0xFF);
 					packet->buffer[4] = (unsigned char)(address->subsystem & 0xFF);
-					packet->address = this->ipAddress;
 
 					datagramSocketSend(this->socket, packet);
 					jausAddressDestroy(address);
@@ -202,7 +201,6 @@ void OjUdpComponentInterface::run()
 					{
 						packet->buffer[1] = JAUS_FALSE;
 					}
-					packet->address = this->ipAddress;
 
 					datagramSocketSend(this->socket, packet);
 					jausAddressDestroy(lookupAddress);
@@ -240,7 +238,6 @@ void OjUdpComponentInterface::run()
 //						packet->buffer[4] = (unsigned char)(address->instance & 0xFF);
 						//if(log.isDebugEnabled())log.debug("Get address for component ID: " + componentId + " returning: " + address);
 					}
-					packet->address = this->ipAddress;
 					datagramSocketSend(this->socket, packet);
 					jausAddressDestroy(address);
 				break;
@@ -274,7 +271,6 @@ void OjUdpComponentInterface::run()
 					packet->buffer[2] = (unsigned char) (address->component & 0xFF);
 					packet->buffer[3] = (unsigned char) (address->node & 0xFF);
 					packet->buffer[4] = (unsigned char) (address->subsystem & 0xFF);
-					packet->address = this->ipAddress;
 					datagramSocketSend(this->socket, packet);
 					
 					while (address)								// NMJ
@@ -327,7 +323,6 @@ void OjUdpComponentInterface::run()
 						packet->buffer[2] = (unsigned char) (address->component & 0xFF);
 						packet->buffer[3] = (unsigned char) (address->node & 0xFF);
 						packet->buffer[4] = (unsigned char) (address->subsystem & 0xFF);
-						packet->address = this->ipAddress;
 					}
 					else
 					{
@@ -350,7 +345,6 @@ void OjUdpComponentInterface::run()
 // 					packet->buffer[2] = (unsigned char) (address->component & 0xFF);
 // 					packet->buffer[3] = (unsigned char) (address->node & 0xFF);
 // 					packet->buffer[4] = (unsigned char) (address->subsystem & 0xFF);
-// 					packet->address = this->ipAddress;
 // 					datagramSocketSend(this->socket, packet);
 // 					jausAddressDestroy(address);
 // 					jausAddressDestroy(lookupAddress);
