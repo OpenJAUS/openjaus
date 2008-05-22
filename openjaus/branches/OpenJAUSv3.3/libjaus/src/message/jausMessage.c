@@ -702,9 +702,13 @@ JausMessage jausMessageClone(JausMessage inputMessage)
 	outputMessage->dataFlag = inputMessage->dataFlag;
 	outputMessage->sequenceNumber = inputMessage->sequenceNumber;
 
-	outputMessage->data =  (unsigned char *)malloc(inputMessage->dataSize);
-	memcpy(outputMessage->data, inputMessage->data, inputMessage->dataSize);
-	
+	outputMessage->data = NULL;
+	if(inputMessage->dataSize)
+	{
+		outputMessage->data =  (unsigned char *)malloc(inputMessage->dataSize);
+		memcpy(outputMessage->data, inputMessage->data, inputMessage->dataSize);
+	}
+		
 	return outputMessage;
 }
 
