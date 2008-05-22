@@ -7,10 +7,6 @@
 static double sendTimeSec[1000] = {0};
 static double pingTimeSec[1000] = {0};
 
-void echoReadyState(OjCmpt myCmpt)
-{
-}
-
 void echoMsgCallback(OjCmpt myCmpt, JausMessage msg)
 {
 	//char addrString[128] = {0};
@@ -109,8 +105,6 @@ int main(void)
 	tcsetattr(0,TCSANOW,&newTermio);
 	
 	echoCmpt = ojCmptCreate("Echo Component", 88, 1.0);
-	ojCmptSetState(echoCmpt, JAUS_READY_STATE);
-	ojCmptSetStateCallback(echoCmpt, JAUS_READY_STATE, echoReadyState);
 	ojCmptSetMessageProcessorCallback(echoCmpt, echoMsgCallback);
 	ojCmptRun(echoCmpt);
 
