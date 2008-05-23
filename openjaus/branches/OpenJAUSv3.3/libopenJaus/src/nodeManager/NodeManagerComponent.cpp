@@ -1638,6 +1638,7 @@ void NodeManagerComponent::sendSubsystemChangedEvents()
 		this->eventHandler->handleEvent(e);
 	}
 
+	eventMessageDestroy(eventMessage);
 	jausMessageDestroy(txMessage);
 	reportConfigurationMessageDestroy(reportConf);
 }

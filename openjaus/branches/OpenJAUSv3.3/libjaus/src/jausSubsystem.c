@@ -193,7 +193,9 @@ int jausSubsystemTableToString(JausSubsystem subsystem, char *buf)
 
 		jausNodeToString(node, tempBuf);
 		
-		sprintf(buf, "%s   %s\n", buf, tempBuf);
+		strcat(buf, "   ");
+		strcat(buf, tempBuf);
+		strcat(buf, "\n");
 		
 		for(j = 0; j < node->components->elementCount; j++)
 		{
@@ -203,19 +205,23 @@ int jausSubsystemTableToString(JausSubsystem subsystem, char *buf)
 			
 			jausComponentToString(comp, tempBuf);
 			
-			sprintf(buf, "%s      %s\n", buf, tempBuf);
+			strcat(buf, "      ");
+			strcat(buf, tempBuf);
+			strcat(buf,"\n");
 		
 			memset(tempBuf, 0, 256);
 
 			sprintf(tempBuf, "         Services (%d):", comp->services->elementCount);
+			strcat(buf, tempBuf);
+			
 			for(k = 0; k < comp->services->elementCount; k++)
 			{
 				service = (JausService) comp->services->elementData[k];
-				sprintf(tempBuf, "%s %d,", tempBuf, service->type);
+				sprintf(tempBuf, " %d,", service->type);
+				strcat(buf, tempBuf);
 			}
 			
-			strncat(buf, tempBuf, strlen(tempBuf)-1);
-			sprintf(buf, "%s\n", buf);
+			strcat(buf, "\n");
 		}
 	}
 
@@ -242,7 +248,9 @@ int jausSubsystemTableToDetailedString(JausSubsystem subsystem, char *buf)
 
 		jausNodeToString(node, tempBuf);
 		
-		sprintf(buf, "%s   %s\n", buf, tempBuf);
+		strcat(buf, "   ");
+		strcat(buf, tempBuf);
+		strcat(buf, "\n");
 		
 		for(j = 0; j < node->components->elementCount; j++)
 		{
@@ -252,25 +260,31 @@ int jausSubsystemTableToDetailedString(JausSubsystem subsystem, char *buf)
 			
 			jausComponentToString(comp, tempBuf);
 			
-			sprintf(buf, "%s      %s\n", buf, tempBuf);
+			strcat(buf, "      ");
+			strcat(buf, tempBuf);
+			strcat(buf, "\n");
+
 			for(k = 0; k < comp->services->elementCount; k++)
 			{
 				service = (JausService) comp->services->elementData[k];
-				sprintf(buf, "%s         Service Type: %d\n", buf, service->type);
+				sprintf(tempBuf, "         Service Type: %d\n", service->type);
+				strcat(buf, tempBuf);
 				
-				sprintf(buf, "%s         INPUT:\n", buf);
+				strcat(buf, "         INPUT:\n");
 				command = service->inputCommandList;
 				while(command)
 				{
-					sprintf(buf, "%s            %s (0x%04X)\n", buf, jausCommandCodeString(command->commandCode), command->presenceVector);
+					sprintf(tempBuf, "            %s (0x%04X)\n", jausCommandCodeString(command->commandCode), command->presenceVector);
+					strcat(buf, tempBuf);
 					command = command->next;
 				}
 				
-				sprintf(buf, "%s         OUTPUT:\n", buf);
+				strcat(buf, "         OUTPUT:\n");
 				command = service->outputCommandList;
 				while(command)
 				{
-					sprintf(buf, "%s            %s (0x%04X)\n", buf, jausCommandCodeString(command->commandCode), command->presenceVector);
+					sprintf(tempBuf, "            %s (0x%04X)\n", jausCommandCodeString(command->commandCode), command->presenceVector);
+					strcat(buf, tempBuf);
 					command = command->next;
 				};
 			}
