@@ -129,12 +129,19 @@ NodeManagerComponent::NodeManagerComponent(FileLoader *configData, EventHandler 
 
 NodeManagerComponent::~NodeManagerComponent(void)
 {
+	HASH_MAP <int, JausAddress>::iterator iterator;
+
 	if(running)
 	{
 		this->stopThread();
 	}
 	
 	jausComponentDestroy(this->cmpt);
+
+	for(iterator = subsystemChangeList.begin(); iterator != subsystemChangeList.end(); iterator++)
+	{
+		jausAddressDestroy( iterator->second);
+	}	
 }
 
 bool NodeManagerComponent::startInterface()
@@ -988,8 +995,10 @@ bool NodeManagerComponent::processCreateEvent(JausMessage message)
 		this->commMngr->receiveJausMessage(txMessage, this);
 	}
 
+	confirmEventRequestMessageDestroy(confirmEventRequest);
 	queryConfigurationMessageDestroy(queryConf);
 	createEventMessageDestroy(createEvent);
+	jausMessageDestroy(message);
 	return true;
 }
 
