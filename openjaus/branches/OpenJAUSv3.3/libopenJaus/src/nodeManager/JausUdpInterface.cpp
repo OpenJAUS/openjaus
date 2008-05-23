@@ -98,6 +98,11 @@ JausUdpInterface::~JausUdpInterface(void)
 	if(running)
 	{
 		this->stopThread();
+
+		printf("Waiting for join\n");
+		pthread_join(this->recvThread, NULL);
+		printf("Joined\n");
+		
 	}
 	this->closeSocket();
 
@@ -335,9 +340,10 @@ bool JausUdpInterface::openSocket(void)
 	}
 	else
 	{
-		this->ipAddress = socket->address;
+		this->ipAddress->value = socket->address->value;
 		this->portNumber = socket->port;
 	}
+	inetAddressDestroy(this->ipAddress);
 
 	// Setup Timeout
 	multicastSocketSetTimeout(this->socket, this->configData->GetConfigDataInt(categoryString, "JAUS_UDP_Timeout_Sec"));
@@ -369,6 +375,8 @@ bool JausUdpInterface::openSocket(void)
 		// Setup Multicast UdpData
 		multicastData.addressValue = multicastGroup->value;
 		multicastData.port = this->socket->port;
+		
+		inetAddressDestroy(this->multicastGroup);
 	}
 	return true;
 }
@@ -437,7 +445,7 @@ void JausUdpInterface::closeSocket(void)
 void JausUdpInterface::setupRecvThread()
 {
 	pthread_attr_init(&this->recvThreadAttr);
-	pthread_attr_setdetachstate(&this->recvThreadAttr, PTHREAD_CREATE_DETACHED);
+	//pthread_attr_setdetachstate(&this->recvThreadAttr, PTHREAD_CREATE_DETACHED);
 
 	this->recvThreadId = pthread_create(&this->recvThread, &this->recvThreadAttr, UdpRecvThread, this);
 }
@@ -507,6 +515,9 @@ void JausUdpInterface::recvThreadRun()
 			}
 		}
 	}
+
+	free(packet->buffer);
+	datagramPacketDestroy(packet);
 }
 
 void *UdpRecvThread(void *obj)

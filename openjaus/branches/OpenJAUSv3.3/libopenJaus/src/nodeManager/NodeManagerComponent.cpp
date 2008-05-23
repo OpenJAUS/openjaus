@@ -123,14 +123,17 @@ NodeManagerComponent::NodeManagerComponent(FileLoader *configData, EventHandler 
 	this->cmpt->address->instance = JAUS_MINIMUM_INSTANCE_ID;
 	this->setupJausServices();
 
-	this->cmpt->node = systemTree->getNode(subsystemId, nodeId);
-	
 	this->cmpt->identification = (char *)calloc(strlen(this->name.c_str()) + 1, sizeof(char));
 	strcpy(this->cmpt->identification, this->name.c_str());
 }
 
 NodeManagerComponent::~NodeManagerComponent(void)
 {
+	if(running)
+	{
+		this->stopThread();
+	}
+	
 	jausComponentDestroy(this->cmpt);
 }
 
@@ -481,7 +484,6 @@ bool NodeManagerComponent::processReportConfiguration(JausMessage message)
 	jausMessageDestroy(message);
 	return true;
 }
-
 
 bool NodeManagerComponent::processReportIdentification(JausMessage message)
 {
@@ -1834,6 +1836,7 @@ bool NodeManagerComponent::sendQueryComponentServices(JausAddress address)
 	}
 	return false;
 }
+
 bool NodeManagerComponent::sendQueryNodeConfiguration(JausAddress address, bool createEvent)
 {
 	QueryConfigurationMessage query = NULL;

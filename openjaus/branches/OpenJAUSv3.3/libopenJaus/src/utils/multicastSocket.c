@@ -106,7 +106,8 @@ MulticastSocket multicastSocketCreate(short port, InetAddress ipAddress)
 	}
 
 	ipAddress->value = address.sin_addr.s_addr;
-	multicastSocket->address = ipAddress;
+	multicastSocket->address = inetAddressCreate();
+	multicastSocket->address->value = ipAddress->value;
 	multicastSocket->port = ntohs(address.sin_port);
 	multicastSocket->timeout.tv_sec = 0;
 	multicastSocket->timeout.tv_usec = 0;
@@ -125,6 +126,7 @@ void multicastSocketDestroy(MulticastSocket multicastSocket)
 		CLOSE_SOCKET(multicastSocket->multicastSocketDescriptor);
 	}
 	
+	inetAddressDestroy(multicastSocket->address);	
 	free(multicastSocket);
 
 #ifdef WIN32	

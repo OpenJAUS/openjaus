@@ -49,6 +49,8 @@
 #include "NodeManagerComponent.h"
 #include "CommunicatorComponent.h"
 
+class OjUdpComponentInterface;
+
 class JausComponentCommunicationManager : public JausCommunicationManager
 {
 public:
@@ -61,6 +63,7 @@ public:
 	NodeManagerComponent *getNodeManagerComponent(void);
 	
 private:
+	OjUdpComponentInterface *udpCmptInf;
 	NodeManagerComponent *nodeManagerCmpt;
 	CommunicatorComponent *communicatorCmpt;
 

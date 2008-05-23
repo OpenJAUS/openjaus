@@ -106,20 +106,20 @@ JausComponentCommunicationManager::JausComponentCommunicationManager(FileLoader 
 	if(configData->GetConfigDataBool("Component_Communications", "OpenJAUS_UDP"))
 	{
 		printf("Opening Component Interface:\t");
-		OjUdpComponentInterface *udpCmptInf = new OjUdpComponentInterface(configData, this->handler, this);
+		this->udpCmptInf = new OjUdpComponentInterface(configData, this->handler, this);
 		printf("[DONE: %s]\n", udpCmptInf->toString().c_str());
-		this->interfaces.push_back(udpCmptInf);
 	}
 }
 
 JausComponentCommunicationManager::~JausComponentCommunicationManager(void)
 {
-	delete this->nodeManagerCmpt;
-	
-	if(this->communicatorCmpt)
+	std::vector<JausTransportInterface *>::iterator iterator;
+	for(iterator = interfaces.begin(); iterator != interfaces.end(); iterator++) 
 	{
-		delete this->communicatorCmpt;
+		delete *iterator;
 	}
+	
+	delete udpCmptInf;
 }
 
 bool JausComponentCommunicationManager::startInterfaces(void)
@@ -130,6 +130,9 @@ bool JausComponentCommunicationManager::startInterfaces(void)
 	{
 		retVal = retVal && (*iter)->startInterface();
 	}
+
+	this->udpCmptInf->startInterface();
+
 	return retVal;
 }
 

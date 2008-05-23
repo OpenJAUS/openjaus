@@ -87,6 +87,10 @@ JausNodeCommunicationManager::JausNodeCommunicationManager(FileLoader *configDat
 	{
 		this->enabled = true;
 	}
+	else
+	{
+		this->enabled = false;		
+	}
 }
 
 

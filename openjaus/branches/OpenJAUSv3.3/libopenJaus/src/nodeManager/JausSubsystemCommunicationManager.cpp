@@ -87,6 +87,10 @@ JausSubsystemCommunicationManager::JausSubsystemCommunicationManager(FileLoader 
 	{
 		this->enabled = true;
 	}
+	else
+	{
+		this->enabled = false;		
+	}
 
 }
 

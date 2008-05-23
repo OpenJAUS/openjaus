@@ -62,7 +62,14 @@ OjUdpComponentInterface::OjUdpComponentInterface(FileLoader *configData, EventHa
 	this->openSocket();
 }
 
-OjUdpComponentInterface::~OjUdpComponentInterface(void){}
+OjUdpComponentInterface::~OjUdpComponentInterface(void)
+{
+	if(running)
+	{
+		this->stopThread();
+	}
+	this->closeSocket();	
+}
 
 unsigned int OjUdpComponentInterface::getPort(void)
 {
@@ -108,6 +115,8 @@ void OjUdpComponentInterface::openSocket(void)
 		// Error creating our socket
 		return;
 	}
+	
+	inetAddressDestroy(this->ipAddress);
 
 	// Setup Timeout
 	datagramSocketSetTimeout(this->socket, this->configData->GetConfigDataInt("Component_Communications", "OpenJAUS_UDP_Timeout_Sec"));
@@ -403,7 +412,8 @@ void OjUdpComponentInterface::run()
 		}
 	}
 	
-	if (packet)	datagramPacketDestroy(packet);
+	free(packet->buffer);
+	datagramPacketDestroy(packet);
 }
 
 bool OjUdpComponentInterface::processOjNodemanagerInterfaceMessage(char *buffer)
