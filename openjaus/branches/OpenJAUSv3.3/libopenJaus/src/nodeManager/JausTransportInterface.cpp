@@ -71,8 +71,11 @@ bool JausTransportInterface::isRunning()
 void JausTransportInterface::stopThread()
 {
 	this->running = false;
+	this->queue.emptyQueue();
 	wakeThread();
 	pthread_join(this->pThread, NULL);
+	pthread_mutex_destroy(&this->threadMutex);
+	pthread_cond_destroy(&this->threadConditional);
 }
 
 void JausTransportInterface::setupThread()

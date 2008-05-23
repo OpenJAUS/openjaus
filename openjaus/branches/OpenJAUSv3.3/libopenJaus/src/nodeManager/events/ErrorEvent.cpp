@@ -62,7 +62,7 @@ ErrorEvent::ErrorEvent(unsigned int subType, const char *function, long line, st
 	this->line = line;
 }
 
-ErrorEvent::~ErrorEvent(){}
+ErrorEvent::~ErrorEvent() {}
 
 ErrorEvent *ErrorEvent::cloneEvent()
 {

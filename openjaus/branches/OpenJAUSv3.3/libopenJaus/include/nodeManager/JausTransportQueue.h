@@ -26,6 +26,7 @@ public:
 	JausMessage pop(void);
 	bool isEmpty(void);
 	unsigned long size(void);
+	void emptyQueue(void);
 
 private:
 	std::queue <JausMessage> list;

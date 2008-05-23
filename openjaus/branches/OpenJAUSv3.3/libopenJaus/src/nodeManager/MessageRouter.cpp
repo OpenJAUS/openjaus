@@ -87,9 +87,9 @@ MessageRouter::MessageRouter(FileLoader *configData, SystemTree *sysTree, EventH
 
 MessageRouter::~MessageRouter(void)
 {
-	delete subsComms;
-	delete nodeComms;
 	delete cmptComms;
+	delete nodeComms;
+	delete subsComms;
 }
 
 bool MessageRouter::routeSubsystemSourceMessage(JausMessage message)
