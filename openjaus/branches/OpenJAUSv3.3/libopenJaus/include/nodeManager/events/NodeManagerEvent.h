@@ -59,7 +59,7 @@ public:
 	enum {SystemTreeEvent, ErrorEvent, TransportEvent, JausMessageEvent, DebugEvent};
 	unsigned int getType();
 	virtual std::string toString();
-	virtual ~NodeManagerEvent() = 0;
+	virtual ~NodeManagerEvent();
 	virtual NodeManagerEvent *cloneEvent() = 0;
 
 protected:

@@ -56,6 +56,19 @@ JausTransportQueue::~JausTransportQueue(void)
 	pthread_mutex_destroy(&mutex);
 }
 
+void JausTransportQueue::emptyQueue(void)
+{
+	pthread_mutex_lock(&mutex);
+	while(!list.empty())
+	{
+		JausMessage out = list.front();
+		list.pop();
+		jausMessageDestroy(out);
+	}
+
+	pthread_mutex_unlock(&mutex);
+}
+
 void JausTransportQueue::push(JausMessage inc)
 {
 	pthread_mutex_lock(&mutex);

@@ -82,9 +82,20 @@ SystemTreeEvent::SystemTreeEvent(unsigned int type, JausComponent cmpt)
 
 SystemTreeEvent::~SystemTreeEvent()
 {
-	if(subs) jausSubsystemDestroy(subs);
-	if(node) jausNodeDestroy(node);
-	if(cmpt) jausComponentDestroy(cmpt);
+	if(subs)
+	{ 
+		jausSubsystemDestroy(subs);
+	}
+
+	if(node)
+	{
+		jausNodeDestroy(node);
+	}
+
+	if(cmpt)
+	{
+		jausComponentDestroy(cmpt);
+	}
 }
 
 SystemTreeEvent *SystemTreeEvent::cloneEvent()

@@ -176,6 +176,11 @@ int main(int argc, char *args)
 
 		Sleep((DWORD)(0.2*1e3));
 	}
+
+	delete nm;
+	delete configData;
+	delete handler;
+
 	return 0;
 }
 

@@ -444,6 +444,7 @@ void JausUdpInterface::setupRecvThread()
 	//pthread_attr_setdetachstate(&this->recvThreadAttr, PTHREAD_CREATE_DETACHED);
 
 	this->recvThreadId = pthread_create(&this->recvThread, &this->recvThreadAttr, UdpRecvThread, this);
+	pthread_attr_destroy(&this->recvThreadAttr);
 }
 
 void JausUdpInterface::recvThreadRun()
