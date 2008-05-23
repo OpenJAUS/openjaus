@@ -146,6 +146,9 @@ NodeManagerComponent::~NodeManagerComponent(void)
 
 bool NodeManagerComponent::startInterface()
 {
+	// Set our thread control flag to true
+	this->running = true;
+
 	// Setup our pThread
 	this->startThread();
 
