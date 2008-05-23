@@ -111,7 +111,6 @@ CommunicatorComponent::CommunicatorComponent(FileLoader *configData, EventHandle
 	this->cmpt->address->node = nodeId;
 	this->cmpt->address->component = JAUS_COMMUNICATOR;
 	this->cmpt->address->instance = JAUS_MINIMUM_INSTANCE_ID;
-	this->cmpt->node = systemTree->getNode(subsystemId, nodeId);
 	
 	this->cmpt->identification = (char *)calloc(strlen(this->name.c_str()) + 1, sizeof(char));
 	strcpy(this->cmpt->identification, this->name.c_str());
@@ -370,6 +369,9 @@ void CommunicatorComponent::readyState()
 		jausAddressCopy(txMessage->source, cmpt->address);
 		this->commMngr->receiveJausMessage(txMessage, this);
 
+		createEventMessageDestroy(createEventMsg);
+		queryConfigurationMessageDestroy(query);
+		
 		nextSendTime = getTimeSeconds() + 1.0;
 	}
 }
@@ -907,6 +909,7 @@ void CommunicatorComponent::sendSubsystemChangedEvents()
 		this->eventHandler->handleEvent(e);
 	}
 
+	eventMessageDestroy(eventMessage);
 	jausMessageDestroy(txMessage);
 	reportConfigurationMessageDestroy(reportConf);
 }
@@ -1518,7 +1521,7 @@ bool CommunicatorComponent::processConfirmEvent(JausMessage message)
 		this->nodeManagerSubsystemEventConfirmed = true;
 	}
 
-
+	confirmEventRequestMessageDestroy(confirm);
 	jausMessageDestroy(message);
 	return true;
 }
@@ -1539,6 +1542,7 @@ bool CommunicatorComponent::processEvent(JausMessage message)
 
 	processMessage(jausMessageClone(eventMessage->reportMessage));
 	eventMessageDestroy(eventMessage);
+	jausMessageDestroy(message);
 	return true;
 }
 
