@@ -116,7 +116,16 @@ CommunicatorComponent::CommunicatorComponent(FileLoader *configData, EventHandle
 
 }
 
-CommunicatorComponent::~CommunicatorComponent(void){}
+CommunicatorComponent::~CommunicatorComponent(void)
+{
+	if(running)
+	{
+		this->stopThread();
+		pthread_join(this->pThread, NULL);
+	}
+
+	jausComponentDestroy(this->cmpt);
+}
 
 bool CommunicatorComponent::startInterface()
 {

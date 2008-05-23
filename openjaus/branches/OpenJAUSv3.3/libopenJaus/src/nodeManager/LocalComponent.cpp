@@ -172,7 +172,14 @@ void LocalComponent::run()
 		}
 	}
 	
+	while(!this->queue.isEmpty())
+	{
+		// Pop a packet off the queue and send it off
+		processMessage(queue.pop());
+	}
+	
 	pthread_mutex_unlock(&this->threadMutex);
+	
 	shutdownState();
 }
 

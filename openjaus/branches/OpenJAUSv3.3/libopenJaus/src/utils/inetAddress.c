@@ -163,10 +163,16 @@ InetAddress inetAddressGetByString(char *addressString)
 
 int inetAddressToString(InetAddress address, char *string)
 {
+	char *addrString;
 	struct in_addr inAddress;
+	int retval;
 	
 	memset(&inAddress, 0, sizeof(inAddress));
 	inAddress.s_addr = address->value;
 	
-	return sprintf(string, "%s", inet_ntoa(inAddress));
+	addrString =inet_ntoa(inAddress);
+	retval = sprintf(string, "%s", addrString);
+	free(addrString);
+	
+	return retval;
 }
