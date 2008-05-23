@@ -78,6 +78,9 @@ unsigned int OjUdpComponentInterface::getPort(void)
 
 bool OjUdpComponentInterface::startInterface()
 {
+	// Setup our thread control flag
+	this->running = true;
+
 	// Setup our pThread
 	this->startThread();
 

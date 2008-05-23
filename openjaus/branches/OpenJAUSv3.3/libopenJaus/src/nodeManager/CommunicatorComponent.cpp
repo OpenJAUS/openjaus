@@ -143,7 +143,7 @@ bool CommunicatorComponent::startInterface()
 
 bool CommunicatorComponent::stopInterface()
 {
-	// Set out thread control flag to false
+	// Set our thread control flag to false
 	this->running = false;
 
 	// Setup our pThread
