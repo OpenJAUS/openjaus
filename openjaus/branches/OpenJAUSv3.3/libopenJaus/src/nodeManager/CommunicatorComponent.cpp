@@ -112,7 +112,9 @@ CommunicatorComponent::CommunicatorComponent(FileLoader *configData, EventHandle
 	this->cmpt->address->component = JAUS_COMMUNICATOR;
 	this->cmpt->address->instance = JAUS_MINIMUM_INSTANCE_ID;
 	this->cmpt->node = systemTree->getNode(subsystemId, nodeId);
-	this->cmpt->identification = (char *)this->name.c_str();
+	
+	this->cmpt->identification = (char *)calloc(strlen(this->name.c_str()) + 1, sizeof(char));
+	strcpy(this->cmpt->identification, this->name.c_str());
 
 }
 
@@ -121,7 +123,6 @@ CommunicatorComponent::~CommunicatorComponent(void)
 	if(running)
 	{
 		this->stopThread();
-		pthread_join(this->pThread, NULL);
 	}
 
 	jausComponentDestroy(this->cmpt);
