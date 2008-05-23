@@ -129,6 +129,9 @@ CommunicatorComponent::~CommunicatorComponent(void)
 
 bool CommunicatorComponent::startInterface()
 {
+	// Set our thread control flag to true
+	this->running = true;
+
 	// Setup our pThread
 	this->startThread();
 
