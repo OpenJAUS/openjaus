@@ -83,12 +83,13 @@ public:
 	void queueJausMessage(JausMessage message);
 
 	virtual bool startInterface(void) = 0;
+	virtual bool stopInterface(void) = 0;
 	virtual bool processMessage(JausMessage message);
 	virtual std::string toString();
 	virtual void run();
 
 protected:
-	void setupThread();
+	void startThread();
 	void wakeThread();
 
 	EventHandler *eventHandler;

@@ -85,6 +85,7 @@ public:
 	bool routeMessage(JausMessage message);
 
 	bool startInterface();
+	bool stopInterface();
 	std::string toString();
 	void run();
 	void recvThreadRun();
@@ -104,7 +105,8 @@ private:
 	pthread_attr_t recvThreadAttr;
 
 	void sendJausMessage(UdpTransportData data, JausMessage message);
-	void setupRecvThread();
+	void startRecvThread();
+	void stopRecvThread();
 
 	HASH_MAP <int, UdpTransportData> addressMap;
 	UdpTransportData multicastData;

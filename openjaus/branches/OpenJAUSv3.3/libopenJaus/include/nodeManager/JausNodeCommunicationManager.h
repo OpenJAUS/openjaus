@@ -54,6 +54,7 @@ public:
 	bool sendJausMessage(JausMessage message);
 	bool receiveJausMessage(JausMessage message, JausTransportInterface *srcInf);
 	bool startInterfaces(void);
+	bool stopInterfaces(void);
 
 private:
 	bool sendToSubsystemGateway(JausMessage message);

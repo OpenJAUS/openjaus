@@ -133,7 +133,7 @@ NodeManagerComponent::~NodeManagerComponent(void)
 
 	if(running)
 	{
-		this->stopThread();
+		this->stopInterface();
 	}
 	
 	jausComponentDestroy(this->cmpt);
@@ -147,7 +147,7 @@ NodeManagerComponent::~NodeManagerComponent(void)
 bool NodeManagerComponent::startInterface()
 {
 	// Setup our pThread
-	this->setupThread();
+	this->startThread();
 
 	if(!systemTree->addComponent(this->cmpt->address, this->cmpt))
 	{
@@ -155,6 +155,17 @@ bool NodeManagerComponent::startInterface()
 		this->eventHandler->handleEvent(e);
 		return false;
 	}
+
+	return true;
+}
+
+bool NodeManagerComponent::stopInterface()
+{
+	// Set out thread control flag to false
+	this->running = false;
+
+	// Setup our pThread
+	this->stopThread();
 
 	return true;
 }

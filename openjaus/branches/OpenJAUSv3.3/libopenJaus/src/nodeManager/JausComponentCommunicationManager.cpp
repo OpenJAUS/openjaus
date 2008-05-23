@@ -136,6 +136,20 @@ bool JausComponentCommunicationManager::startInterfaces(void)
 	return retVal;
 }
 
+bool JausComponentCommunicationManager::stopInterfaces(void)
+{
+	bool retVal = true;
+	std::vector <JausTransportInterface *>::iterator iter;
+	for(iter = interfaces.begin(); iter != interfaces.end(); iter++)
+	{
+		retVal = retVal && (*iter)->stopInterface();
+	}
+
+	this->udpCmptInf->stopInterface();
+
+	return retVal;
+}
+
 bool JausComponentCommunicationManager::sendJausMessage(JausMessage message)
 {
 	// This conforms to the CmptCommMngr MsgRouter Source Routing Table v2.0

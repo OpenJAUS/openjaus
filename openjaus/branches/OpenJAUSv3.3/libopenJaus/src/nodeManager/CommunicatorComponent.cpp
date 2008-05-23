@@ -130,13 +130,24 @@ CommunicatorComponent::~CommunicatorComponent(void)
 bool CommunicatorComponent::startInterface()
 {
 	// Setup our pThread
-	this->setupThread();
+	this->startThread();
 
 	if(!systemTree->addComponent(this->cmpt))
 	{
 		// TODO: Log Error, we can't add our communicator with instance 1
 		return false;
 	}
+
+	return true;
+}
+
+bool CommunicatorComponent::stopInterface()
+{
+	// Set out thread control flag to false
+	this->running = false;
+
+	// Setup our pThread
+	this->stopThread();
 
 	return true;
 }
@@ -1499,6 +1510,7 @@ bool CommunicatorComponent::processQueryServices(JausMessage message)
 
 	reportServicesMessageDestroy(reportServices);
 	queryServicesMessageDestroy(queryServices);
+	jausMessageDestroy(message);
 	return true;
 }
 

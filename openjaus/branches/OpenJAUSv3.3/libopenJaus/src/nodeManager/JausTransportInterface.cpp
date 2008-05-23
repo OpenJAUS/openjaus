@@ -70,15 +70,14 @@ bool JausTransportInterface::isRunning()
 
 void JausTransportInterface::stopThread()
 {
-	this->running = false;
-	this->queue.emptyQueue();
 	wakeThread();
 	pthread_join(this->pThread, NULL);
+	this->queue.emptyQueue();
 	pthread_mutex_destroy(&this->threadMutex);
 	pthread_cond_destroy(&this->threadConditional);
 }
 
-void JausTransportInterface::setupThread()
+void JausTransportInterface::startThread()
 {
 	int retVal;
 	
@@ -88,7 +87,6 @@ void JausTransportInterface::setupThread()
 	pthread_attr_init(&this->threadAttributes);
 	//pthread_attr_setdetachstate(&this->threadAttributes, PTHREAD_CREATE_DETACHED);
 
-	this->running = true;
 	this->pThreadId = pthread_create(&this->pThread, &this->threadAttributes, ThreadRun, this);
 
 	pthread_attr_destroy(&this->threadAttributes);
