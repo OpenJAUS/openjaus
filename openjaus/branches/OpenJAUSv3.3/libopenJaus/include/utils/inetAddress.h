@@ -88,6 +88,7 @@ JAUS_EXPORT InetAddress inetAddressGetLocalHost(void);
 JAUS_EXPORT InetAddress inetAddressGetByName(char *);
 JAUS_EXPORT InetAddress inetAddressGetByString(char *);
 JAUS_EXPORT int inetAddressToString(InetAddress, char *);
+JAUS_EXPORT void inetAddressToBuffer(InetAddress address, char *string, int length);
 
 #ifdef __cplusplus
 }

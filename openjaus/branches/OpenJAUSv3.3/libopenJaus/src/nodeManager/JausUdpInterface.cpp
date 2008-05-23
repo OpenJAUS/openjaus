@@ -98,11 +98,7 @@ JausUdpInterface::~JausUdpInterface(void)
 	if(running)
 	{
 		this->stopThread();
-
-		printf("Waiting for join\n");
 		pthread_join(this->recvThread, NULL);
-		printf("Joined\n");
-		
 	}
 	this->closeSocket();
 
@@ -278,7 +274,7 @@ std::string JausUdpInterface::toString()
 	char buf[80] = {0};
 	if(this->socket)
 	{
-		inetAddressToString(this->socket->address, buf);
+		inetAddressToBuffer(this->socket->address, buf, 80);
 		sprintf(ret, "%s %s:%d", JAUS_UDP_NAME, buf, this->socket->port);
 		return ret;
 	}
