@@ -66,7 +66,7 @@ OjUdpComponentInterface::~OjUdpComponentInterface(void)
 {
 	if(running)
 	{
-		this->stopThread();
+		this->stopInterface();
 	}
 	this->closeSocket();	
 }
@@ -79,7 +79,18 @@ unsigned int OjUdpComponentInterface::getPort(void)
 bool OjUdpComponentInterface::startInterface()
 {
 	// Setup our pThread
-	this->setupThread();
+	this->startThread();
+
+	return true;
+}
+
+bool OjUdpComponentInterface::stopInterface()
+{
+	// Set our thread control flag to false 
+	this->running = false;
+
+	// Stop our pThread
+	this->stopThread();
 
 	return true;
 }

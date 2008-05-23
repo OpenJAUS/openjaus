@@ -73,6 +73,7 @@ public:
 	std::string toString();
 	void handleEvent(NodeManagerEvent *e);
 	bool startInterface(void);
+	bool stopInterface(void);
 
 	JausAddress checkInLocalComponent(int cmptId);
 	void checkOutLocalComponent(int subsId, int nodeId, int cmptId, int instId);

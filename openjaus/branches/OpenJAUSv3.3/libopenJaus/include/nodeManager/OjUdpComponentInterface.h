@@ -72,6 +72,7 @@ public:
 	bool routeMessage(JausMessage message);
 	std::string toString();
 	bool startInterface(void);
+	bool stopInterface(void);
 
 private:
 	NodeManagerComponent *nodeManager;

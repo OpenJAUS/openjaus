@@ -114,6 +114,18 @@ bool JausSubsystemCommunicationManager::startInterfaces(void)
 	return retVal;
 }
 
+bool JausSubsystemCommunicationManager::stopInterfaces(void)
+{
+	bool retVal = true;
+	std::vector <JausTransportInterface *>::iterator iter;
+	for(iter = interfaces.begin(); iter != interfaces.end(); iter++)
+	{
+		retVal = retVal && (*iter)->stopInterface();
+	}
+
+	return retVal;
+}
+
 bool JausSubsystemCommunicationManager::sendJausMessage(JausMessage message)
 {
 	if(!this->enabled)

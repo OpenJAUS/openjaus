@@ -84,21 +84,37 @@ JausUdpInterface::JausUdpInterface(FileLoader *configData, EventHandler *handler
 
 bool JausUdpInterface::startInterface(void)
 {
+	// Set our thread running flag
+	this->running = true;
+
 	// Setup our pThread
-	this->setupThread();
+	this->startThread();
 
 	// Setup our receiveThread
-	this->setupRecvThread();
-	
+	this->startRecvThread();
+
 	return true;
 }
+
+bool JausUdpInterface::stopInterface(void)
+{
+	this->running = false;
+	
+	// Stop our pThread
+	this->stopThread();
+
+	// Stop our receiveThread
+	this->stopRecvThread();
+
+	return true;
+}
+
 
 JausUdpInterface::~JausUdpInterface(void)
 {
 	if(running)
 	{
-		this->stopThread();
-		pthread_join(this->recvThread, NULL);
+		this->stopInterface();
 	}
 	this->closeSocket();
 
@@ -438,7 +454,7 @@ void JausUdpInterface::closeSocket(void)
 	multicastSocketDestroy(this->socket);
 }
 
-void JausUdpInterface::setupRecvThread()
+void JausUdpInterface::startRecvThread()
 {
 	pthread_attr_init(&this->recvThreadAttr);
 	//pthread_attr_setdetachstate(&this->recvThreadAttr, PTHREAD_CREATE_DETACHED);
@@ -446,6 +462,12 @@ void JausUdpInterface::setupRecvThread()
 	this->recvThreadId = pthread_create(&this->recvThread, &this->recvThreadAttr, UdpRecvThread, this);
 	pthread_attr_destroy(&this->recvThreadAttr);
 }
+
+void JausUdpInterface::stopRecvThread()
+{
+	pthread_join(this->recvThread, NULL);
+}
+
 
 void JausUdpInterface::recvThreadRun()
 {
