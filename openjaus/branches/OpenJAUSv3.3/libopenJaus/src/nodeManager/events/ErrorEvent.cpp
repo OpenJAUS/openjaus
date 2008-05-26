@@ -80,11 +80,11 @@ std::string ErrorEvent::toString()
 
 	if(subType != ErrorEvent::Warning)
 	{
-		sprintf(buf, "ERROR (%s:%ld): %s\n", function.c_str(), line, this->userString.c_str());
+		sprintf(buf, "ERROR (%s:%ld): %s", function.c_str(), line, this->userString.c_str());
 	}
 	else
 	{
-		sprintf(buf, "WARN (%s:%ld): %s\n", function.c_str(), line, this->userString.c_str());
+		sprintf(buf, "WARN (%s:%ld): %s", function.c_str(), line, this->userString.c_str());
 	}
 
 	return buf;

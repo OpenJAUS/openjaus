@@ -134,9 +134,16 @@ int main(int argc, char *args)
 	MyHandler *handler = new MyHandler();
 	FileLoader *configData = new FileLoader("nodeManager.conf");
 
-	nm = new NodeManager(configData, handler);
-
-	printHelpMenu();
+	try
+	{
+		nm = new NodeManager(configData, handler);
+		printHelpMenu();
+	}
+	catch(...)
+	{
+		printf("Node Manager Construction Failed. Terminating Program...\n");
+		running = false;
+	}
 
 	while(running)
 	{
@@ -209,8 +216,16 @@ int main(int argc, char *args)
 	FileLoader *configData = new FileLoader("nodeManager.conf");
 	MyHandler *handler = new MyHandler();
 
-	nm = new NodeManager(configData, handler);
-	printHelpMenu();
+	try
+	{
+		nm = new NodeManager(configData, handler);
+		printHelpMenu();
+	}
+	catch(...)
+	{
+		printf("Node Manager Construction Failed. Terminating Program...\n");
+		running = false;
+	}
 	
 	while(running)
 	{

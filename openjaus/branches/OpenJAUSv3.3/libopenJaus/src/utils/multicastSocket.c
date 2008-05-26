@@ -68,14 +68,17 @@ MulticastSocket multicastSocketCreate(short port, InetAddress ipAddress)
 	multicastSocket = (MulticastSocket)malloc( sizeof(MulticastSocketStruct) );
 	if(multicastSocket == NULL)
 	{
-		printf("Malloc Error\n");
 		return NULL;
 	}
+	multicastSocket->address = inetAddressCreate();
+	multicastSocket->unicastSocketDescriptor = -1;
+	multicastSocket->multicastSocketDescriptor = -1;
 	
 	// Open a socket with: Protocol Family (PF) IPv4, of Datagram Socket Type, and using UDP IP protocol explicitly
 	multicastSocket->unicastSocketDescriptor = (int) socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP); 
 	if(multicastSocket->unicastSocketDescriptor  == -1)
 	{
+		multicastSocketDestroy(multicastSocket);
 		return NULL;
 	}
 
@@ -87,26 +90,24 @@ MulticastSocket multicastSocketCreate(short port, InetAddress ipAddress)
 	// Bind our open socket to a free port on the given interface, with our defined ipAddress
 	if(bind(multicastSocket->unicastSocketDescriptor, (struct sockaddr *)&address, sizeof(address)))
 	{
-		printf("Error: Cannot bind to %s:%d\n", inet_ntoa(address.sin_addr), ntohs(address.sin_port));
-		CLOSE_SOCKET(multicastSocket->unicastSocketDescriptor);
+		multicastSocketDestroy(multicastSocket);
 		return NULL;
 	}
 
 	if(getsockname(multicastSocket->unicastSocketDescriptor, (struct sockaddr *)&address, &addressLength))
 	{
-		CLOSE_SOCKET(multicastSocket->unicastSocketDescriptor);
+		multicastSocketDestroy(multicastSocket);
 		return NULL;
 	}
 
 	// Tell the kernel to send multicast packets from this interface
 	if(setsockopt(multicastSocket->unicastSocketDescriptor, IPPROTO_IP, IP_MULTICAST_IF, (char *)&ipAddress->value, sizeof(ipAddress->value)))
 	{
-		CLOSE_SOCKET(multicastSocket->unicastSocketDescriptor);
+		multicastSocketDestroy(multicastSocket);
 		return NULL;
 	}
 
 	ipAddress->value = address.sin_addr.s_addr;
-	multicastSocket->address = inetAddressCreate();
 	multicastSocket->address->value = ipAddress->value;
 	multicastSocket->port = ntohs(address.sin_port);
 	multicastSocket->timeout.tv_sec = 0;
@@ -119,8 +120,11 @@ MulticastSocket multicastSocketCreate(short port, InetAddress ipAddress)
 
 void multicastSocketDestroy(MulticastSocket multicastSocket)
 {
-	CLOSE_SOCKET(multicastSocket->unicastSocketDescriptor);
-
+	if(multicastSocket->unicastSocketDescriptor != -1)
+	{
+		CLOSE_SOCKET(multicastSocket->unicastSocketDescriptor);
+	}
+	
 	if(multicastSocket->multicastSocketDescriptor != -1)
 	{
 		CLOSE_SOCKET(multicastSocket->multicastSocketDescriptor);

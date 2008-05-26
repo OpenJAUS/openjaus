@@ -44,7 +44,10 @@
 #include "nodeManager/JausTransportInterface.h"
 #include "nodeManager/JausCommunicationManager.h"
 
-JausTransportInterface::JausTransportInterface(void){}
+JausTransportInterface::JausTransportInterface(void)
+{
+	this->running = false;
+}
 
 JausTransportInterface::~JausTransportInterface(void) {}
 

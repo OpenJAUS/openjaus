@@ -103,7 +103,16 @@ NodeManager::NodeManager(FileLoader *configData, EventHandler *handler)
 	this->systemTree->addSubsystem(subsystem);
 
 	// Create our MsgRouter
-	this->msgRouter = new MessageRouter(configData, systemTree, this);
+	try
+	{
+		this->msgRouter = new MessageRouter(configData, systemTree, this);
+	}
+	catch(...)
+	{
+		jausSubsystemDestroy(subsystem);
+		delete systemTree;
+		throw;
+	}
 }
 
 NodeManager::~NodeManager(void)

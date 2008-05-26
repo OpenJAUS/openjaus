@@ -56,7 +56,7 @@ JausUdpInterface::JausUdpInterface(FileLoader *configData, EventHandler *handler
 	this->name = JAUS_UDP_NAME;
 	this->configData = configData;
 	this->multicast = false;
-
+	
 	// Determine the type of our commMngr
 	if(dynamic_cast<JausSubsystemCommunicationManager  *>(this->commMngr))
 	{
@@ -78,7 +78,7 @@ JausUdpInterface::JausUdpInterface(FileLoader *configData, EventHandler *handler
 	// Setup our UDP Socket
 	if(!this->openSocket())
 	{
-		abort();
+		throw "JausUdpInterface: Could not open socket\n";
 	}
 }
 
@@ -108,7 +108,6 @@ bool JausUdpInterface::stopInterface(void)
 
 	return true;
 }
-
 
 JausUdpInterface::~JausUdpInterface(void)
 {
@@ -343,11 +342,12 @@ bool JausUdpInterface::openSocket(void)
 		char errorString[128] = {0};
 		char buf[24] = {0};
 		
-		inetAddressToString(this->ipAddress, buf);
+		inetAddressToBuffer(this->ipAddress, buf, 24);
 		sprintf(errorString, "Could not open socket: %s:%d", buf, this->portNumber);
 		ErrorEvent *e = new ErrorEvent(ErrorEvent::Configuration, __FUNCTION__, __LINE__, errorString);
 		this->eventHandler->handleEvent(e);
 		
+		inetAddressDestroy(this->ipAddress);
 		return false;
 	}
 	else
