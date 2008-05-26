@@ -145,13 +145,13 @@ void *jausArrayRemoveAt(JausArray jausArray, int index)
 //	int newCapacity = jausArray->capacity - jausArray->capacityIncrement;
 	void *retValue;
 	
-	if(jausArray->elementCount < index)
+	if(jausArray->elementCount <= index)
 	{
 		return NULL;
 	}
 	
 	retValue = jausArray->elementData[index];
-	for(i = index; i < jausArray->elementCount; i++)
+	for(i = index; i < jausArray->elementCount - 1; i++)
 	{
 		jausArray->elementData[i] = jausArray->elementData[i+1];
 	}
