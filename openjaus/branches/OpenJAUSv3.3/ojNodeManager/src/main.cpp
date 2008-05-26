@@ -139,6 +139,12 @@ int main(int argc, char *args)
 		nm = new NodeManager(configData, handler);
 		printHelpMenu();
 	}
+	catch(char *exceptionString)
+	{
+		printf("%s", exceptionString);
+		printf("Terminating Program...\n");
+		running = false;
+	}
 	catch(...)
 	{
 		printf("Node Manager Construction Failed. Terminating Program...\n");
@@ -221,12 +227,18 @@ int main(int argc, char *args)
 		nm = new NodeManager(configData, handler);
 		printHelpMenu();
 	}
+	catch(char *exceptionString)
+	{
+		printf("%s", exceptionString);
+		printf("Terminating Program...\n");
+		running = false;
+	}
 	catch(...)
 	{
 		printf("Node Manager Construction Failed. Terminating Program...\n");
 		running = false;
 	}
-	
+
 	while(running)
 	{
 		bzero(choice, 8);

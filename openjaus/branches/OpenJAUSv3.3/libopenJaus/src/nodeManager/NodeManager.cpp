@@ -47,47 +47,39 @@ NodeManager::NodeManager(FileLoader *configData, EventHandler *handler)
 {
 	this->registerEventHandler(handler);
 	
-	// Create our systemTable
-	this->systemTree = new SystemTree(configData, this);
+	// Read subsystem id config
+	int	subsystemId = configData->GetConfigDataInt("JAUS", "SubsystemId");
+	if(subsystemId < JAUS_MINIMUM_SUBSYSTEM_ID || subsystemId > JAUS_MAXIMUM_SUBSYSTEM_ID)
+	{
+		throw "NodeManager: Config file [JAUS] SubsystemId is invalid\n";
+	}
+
+	// Read node id config
+	int nodeId = configData->GetConfigDataInt("JAUS", "NodeId");
+	if(nodeId < JAUS_MINIMUM_NODE_ID || nodeId > JAUS_MAXIMUM_NODE_ID)
+	{
+		throw "NodeManager: Config file [JAUS] NodeId is invalid\n";
+	}
 
 	// Create this subsystem
 	this->subsystem = jausSubsystemCreate();
 	if(!subsystem)
 	{
-		//TODO: Log Error. Throw Exception.
-		return;
+		throw "NodeManager: Could not create subsystem\n";
 	}
-	
-	// Setup this subsystem
-	int	subsystemId = configData->GetConfigDataInt("JAUS", "SubsystemId");
-	if(subsystemId < JAUS_MINIMUM_SUBSYSTEM_ID || subsystemId > JAUS_MAXIMUM_SUBSYSTEM_ID)
-	{
-		// Invalid ID
-		// TODO: Throw an exception? Log an error.
-		return;
-	}
-	this->subsystem->id = subsystemId;
-	
-	size_t identificationLength = strlen(configData->GetConfigDataString("JAUS", "Subsystem_Identification").c_str()) + 1;
-	this->subsystem->identification = (char *) malloc(identificationLength);
-	sprintf(this->subsystem->identification, configData->GetConfigDataString("JAUS", "Subsystem_Identification").c_str());
-	
+
 	// Create this node
 	this->node = jausNodeCreate();
 	if(!node)
 	{
-		//TODO: Log Error. Throw Exception.
-		return;
+		throw "NodeManager: Could not create node\n";
 	}
 
-	// Setup this node
-	int nodeId = configData->GetConfigDataInt("JAUS", "NodeId");
-	if(nodeId < JAUS_MINIMUM_NODE_ID || nodeId > JAUS_MAXIMUM_NODE_ID)
-	{
-		// Invalid ID
-		// TODO: Throw an exception? Log an error.
-		return;
-	}
+	this->subsystem->id = subsystemId;
+	size_t identificationLength = strlen(configData->GetConfigDataString("JAUS", "Subsystem_Identification").c_str()) + 1;
+	this->subsystem->identification = (char *) malloc(identificationLength);
+	sprintf(this->subsystem->identification, configData->GetConfigDataString("JAUS", "Subsystem_Identification").c_str());
+
 	this->node->id = nodeId;
 	identificationLength = strlen(configData->GetConfigDataString("JAUS", "Node_Identification").c_str()) + 1;
 	this->node->identification = (char *) malloc(identificationLength);
@@ -99,7 +91,8 @@ NodeManager::NodeManager(FileLoader *configData, EventHandler *handler)
 	// Initialize our eventHandler list
 	eventHandlers.empty();
 
-	// Add this subsystem
+	// Create our systemTable and add our subsystem
+	this->systemTree = new SystemTree(configData, this);
 	this->systemTree->addSubsystem(subsystem);
 
 	// Create our MsgRouter
