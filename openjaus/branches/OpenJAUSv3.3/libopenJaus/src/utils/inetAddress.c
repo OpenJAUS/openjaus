@@ -48,10 +48,10 @@
 
 #include "utils/inetAddress.h"
 
-#ifdef WIN32
-	const char *inet_ntop(int af, const void *src, char *dst, socklen_t cnt);
-	int inet_pton(int af, const char *src, void *dst);
-#endif 
+//#ifdef WIN32
+//	const char *inet_ntop(int af, const void *src, char *dst, socklen_t cnt);
+//	int inet_pton(int af, const char *src, void *dst);
+//#endif 
 
 InetAddress inetAddressCreate(void)
 {
@@ -178,66 +178,79 @@ int inetAddressToString(InetAddress address, char *string)
 
 void inetAddressToBuffer(InetAddress address, char *string, int length)
 {
+#ifdef WIN32
+	struct in_addr inAddress;
+	struct sockaddr_in in;
+
+	memset(&inAddress, 0, sizeof(inAddress));
+	inAddress.s_addr = address->value;
+
+	memset(&in, 0, sizeof(in));
+	in.sin_family = AF_INET;
+	memcpy(&in.sin_addr, &inAddress, sizeof(struct in_addr));
+	getnameinfo((struct sockaddr *)&in, sizeof(struct sockaddr_in), string, length, NULL, 0, NI_NUMERICHOST);
+
+#else
 	struct in_addr inAddress;
 	
 	memset(&inAddress, 0, sizeof(inAddress));
 	inAddress.s_addr = address->value;
-	
 	inet_ntop(AF_INET, &inAddress, string, length);
+#endif
 }
 
 // Winsock does not have support for inet_ntop or inet_pton
 // These functions were found online at the following URL: http://osdir.com/ml/network.ipv6.general/2005-09/msg00030.html
 // These provide an implementation of inet_ntop and inet_pton for Windows cross-platform compatibility
 
-#ifdef WIN32
-const char *inet_ntop(int af, const void *src, char *dst, socklen_t cnt)
-{
-    if (af == AF_INET)
-    {
-        struct sockaddr_in in;
-        memset(&in, 0, sizeof(in));
-        in.sin_family = AF_INET;
-        memcpy(&in.sin_addr, src, sizeof(struct in_addr));
-        getnameinfo((struct sockaddr *)&in, sizeof(struct sockaddr_in), dst, cnt, NULL, 0, NI_NUMERICHOST);
-        return dst;
-    }
-    else if (af == AF_INET6)
-    {
-        struct sockaddr_in6 in;
-        memset(&in, 0, sizeof(in));
-        in.sin6_family = AF_INET6;
-        memcpy(&in.sin6_addr, src, sizeof(struct in_addr6));
-        getnameinfo((struct sockaddr *)&in, sizeof(struct sockaddr_in6), dst, cnt, NULL, 0, NI_NUMERICHOST);
-        return dst;
-    }
-    return NULL;
-}
-
-int inet_pton(int af, const char *src, void *dst)
-{
-    struct addrinfo hints, *res, *ressave;
-
-    memset(&hints, 0, sizeof(struct addrinfo));
-    hints.ai_family = af;
-
-    if (getaddrinfo(src, NULL, &hints, &res) != 0)
-    {
-        // TODO: Log Error
-		//dolog(LOG_ERR, "Couldn't resolve host %s\n", src);
-        return -1;
-    }
-
-    ressave = res;
-
-    while (res)
-    {
-        memcpy(dst, res->ai_addr, res->ai_addrlen);
-        res = res->ai_next;
-    }
-
-    freeaddrinfo(ressave);
-    return 0;
-}
-
-#endif
+//#ifdef WIN32
+//const char *inet_ntop(int af, const void *src, char *dst, socklen_t cnt)
+//{
+//    if (af == AF_INET)
+//    {
+//        struct sockaddr_in in;
+//        memset(&in, 0, sizeof(in));
+//        in.sin_family = AF_INET;
+//        memcpy(&in.sin_addr, src, sizeof(struct in_addr));
+//        getnameinfo((struct sockaddr *)&in, sizeof(struct sockaddr_in), dst, cnt, NULL, 0, NI_NUMERICHOST);
+//        return dst;
+//    }
+//    else if (af == AF_INET6)
+//    {
+//        struct sockaddr_in6 in;
+//        memset(&in, 0, sizeof(in));
+//        in.sin6_family = AF_INET6;
+//        memcpy(&in.sin6_addr, src, sizeof(struct in_addr6));
+//        getnameinfo((struct sockaddr *)&in, sizeof(struct sockaddr_in6), dst, cnt, NULL, 0, NI_NUMERICHOST);
+//        return dst;
+//    }
+//    return NULL;
+//}
+//
+//int inet_pton(int af, const char *src, void *dst)
+//{
+//    struct addrinfo hints, *res, *ressave;
+//
+//    memset(&hints, 0, sizeof(struct addrinfo));
+//    hints.ai_family = af;
+//
+//    if (getaddrinfo(src, NULL, &hints, &res) != 0)
+//    {
+//        // TODO: Log Error
+//		//dolog(LOG_ERR, "Couldn't resolve host %s\n", src);
+//        return -1;
+//    }
+//
+//    ressave = res;
+//
+//    while (res)
+//    {
+//        memcpy(dst, res->ai_addr, res->ai_addrlen);
+//        res = res->ai_next;
+//    }
+//
+//    freeaddrinfo(ressave);
+//    return 0;
+//}
+//
+//#endif
