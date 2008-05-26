@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libjaus", "libjaus\libjaus.vcproj", "{52091163-47D9-4966-BB41-C4E76207838F}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libopenJaus", "libopenJaus\libopenJaus.vcproj", "{E920EAFC-17DC-428C-AFFD-A495252F61A8}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ojNodeManager", "ojNodeManager\ojNodeManager.vcproj", "{858ABAB2-65BF-41D4-A879-52B00269C693}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ojVehicleSim", "ojVehicleSim\ojVehicleSim.vcproj", "{7AA35022-D6D7-4155-9F56-8F57CE420F28}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ojCmpt Template", "ojCmpt\ojCmpt Template.vcproj", "{9FECE86D-4A8B-4440-9D2A-5DEB9A0AA152}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug Static|Win32 = Debug Static|Win32
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{52091163-47D9-4966-BB41-C4E76207838F}.Debug Static|Win32.ActiveCfg = Debug|Win32
+		{52091163-47D9-4966-BB41-C4E76207838F}.Debug Static|Win32.Build.0 = Debug|Win32
+		{52091163-47D9-4966-BB41-C4E76207838F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{52091163-47D9-4966-BB41-C4E76207838F}.Debug|Win32.Build.0 = Debug|Win32
+		{52091163-47D9-4966-BB41-C4E76207838F}.Release|Win32.ActiveCfg = Release|Win32
+		{52091163-47D9-4966-BB41-C4E76207838F}.Release|Win32.Build.0 = Release|Win32
+		{E920EAFC-17DC-428C-AFFD-A495252F61A8}.Debug Static|Win32.ActiveCfg = Debug|Win32
+		{E920EAFC-17DC-428C-AFFD-A495252F61A8}.Debug Static|Win32.Build.0 = Debug|Win32
+		{E920EAFC-17DC-428C-AFFD-A495252F61A8}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E920EAFC-17DC-428C-AFFD-A495252F61A8}.Debug|Win32.Build.0 = Debug|Win32
+		{E920EAFC-17DC-428C-AFFD-A495252F61A8}.Release|Win32.ActiveCfg = Release|Win32
+		{E920EAFC-17DC-428C-AFFD-A495252F61A8}.Release|Win32.Build.0 = Release|Win32
+		{858ABAB2-65BF-41D4-A879-52B00269C693}.Debug Static|Win32.ActiveCfg = Debug|Win32
+		{858ABAB2-65BF-41D4-A879-52B00269C693}.Debug Static|Win32.Build.0 = Debug|Win32
+		{858ABAB2-65BF-41D4-A879-52B00269C693}.Debug|Win32.ActiveCfg = Debug|Win32
+		{858ABAB2-65BF-41D4-A879-52B00269C693}.Debug|Win32.Build.0 = Debug|Win32
+		{858ABAB2-65BF-41D4-A879-52B00269C693}.Release|Win32.ActiveCfg = Release|Win32
+		{858ABAB2-65BF-41D4-A879-52B00269C693}.Release|Win32.Build.0 = Release|Win32
+		{7AA35022-D6D7-4155-9F56-8F57CE420F28}.Debug Static|Win32.ActiveCfg = Debug|Win32
+		{7AA35022-D6D7-4155-9F56-8F57CE420F28}.Debug Static|Win32.Build.0 = Debug|Win32
+		{7AA35022-D6D7-4155-9F56-8F57CE420F28}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7AA35022-D6D7-4155-9F56-8F57CE420F28}.Debug|Win32.Build.0 = Debug|Win32
+		{7AA35022-D6D7-4155-9F56-8F57CE420F28}.Release|Win32.ActiveCfg = Release|Win32
+		{7AA35022-D6D7-4155-9F56-8F57CE420F28}.Release|Win32.Build.0 = Release|Win32
+		{9FECE86D-4A8B-4440-9D2A-5DEB9A0AA152}.Debug Static|Win32.ActiveCfg = Debug|Win32
+		{9FECE86D-4A8B-4440-9D2A-5DEB9A0AA152}.Debug Static|Win32.Build.0 = Debug|Win32
+		{9FECE86D-4A8B-4440-9D2A-5DEB9A0AA152}.Debug|Win32.ActiveCfg = Debug|Win32
+		{9FECE86D-4A8B-4440-9D2A-5DEB9A0AA152}.Debug|Win32.Build.0 = Debug|Win32
+		{9FECE86D-4A8B-4440-9D2A-5DEB9A0AA152}.Release|Win32.ActiveCfg = Release|Win32
+		{9FECE86D-4A8B-4440-9D2A-5DEB9A0AA152}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
