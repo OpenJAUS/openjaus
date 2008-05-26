@@ -24,7 +24,7 @@ typedef struct VehicleState
 VehicleState vehicleStateCreate(void);
 void vehicleStateDestroy(VehicleState);
 
-void vehicleModelTimeStep(VehicleState, double);
-void vehicleModelDistStep(VehicleState, double);
+void vehicleModelTimeStep(VehicleState, float);
+void vehicleModelDistStep(VehicleState, float);
 
 #endif // VEHICLE_H

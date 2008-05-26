@@ -32,12 +32,12 @@ void vehicleStateDestroy( VehicleState state)
 	free(state);
 }
 
-void vehicleModelTimeStep( VehicleState state, double dTime)
+void vehicleModelTimeStep( VehicleState state, float dTime)
 {
 	float kAve = state->phiEffort;
 	float dPhi = state->desiredPhiEffort - state->phiEffort;
-	double dMaxPhi = VEHICLE_MAX_PHI_RATE_EFFORT_PER_SEC * dTime;
-	double dDistM = state->speedMps * dTime;
+	float dMaxPhi = (float)VEHICLE_MAX_PHI_RATE_EFFORT_PER_SEC * dTime;
+	float dDistM = state->speedMps * dTime;
 	float dYawRad;
 	
 	if(dPhi > 0)
@@ -58,20 +58,20 @@ void vehicleModelTimeStep( VehicleState state, double dTime)
 	if(kAve < K_MINIMUM_THRESHOLD && kAve > -K_MINIMUM_THRESHOLD)
 	{
 		// Project straight line
-		state->xM += sin(state->yawRad) * dDistM; 
-		state->yM += cos(state->yawRad) * dDistM; 
+		state->xM += sinf(state->yawRad) * dDistM; 
+		state->yM += cosf(state->yawRad) * dDistM; 
 	}
 	else
 	{
 		// Project path along curve
-		state->xM += (cos(state->yawRad)*(1.0 - cos(dYawRad)) + sin(state->yawRad)*sin(dYawRad)) / kAve; 
-		state->yM += (cos(state->yawRad)*sin(dYawRad) - sin(state->yawRad)*(1.0 - cos(dYawRad))) / kAve; 
+		state->xM += (cosf(state->yawRad)*(1.0f - cosf(dYawRad)) + sinf(state->yawRad)*sinf(dYawRad)) / kAve; 
+		state->yM += (cosf(state->yawRad)*sinf(dYawRad) - sinf(state->yawRad)*(1.0f - cosf(dYawRad))) / kAve; 
 	}
 	
 	state->yawRad += dYawRad;
 }
 
-void vehicleModelDistStep( VehicleState state, double dDistM)
+void vehicleModelDistStep( VehicleState state, float dDistM)
 {
 	float kAve;
 	float dYawRad;
@@ -93,14 +93,14 @@ void vehicleModelDistStep( VehicleState state, double dDistM)
 		if(kAve < K_MINIMUM_THRESHOLD && kAve > -K_MINIMUM_THRESHOLD)
 		{
 			// Project straight line
-			state->xM += sin(state->yawRad) * dDistM; 
-			state->yM += cos(state->yawRad) * dDistM; 
+			state->xM += sinf(state->yawRad) * dDistM; 
+			state->yM += cosf(state->yawRad) * dDistM; 
 		}
 		else
 		{
 			// Project path along curve
-			state->xM += (cos(state->yawRad)*(1.0 - cos(dYawRad)) + sin(state->yawRad)*sin(dYawRad)) / kAve; 
-			state->yM += (cos(state->yawRad)*sin(dYawRad) - sin(state->yawRad)*(1.0 - cos(dYawRad))) / kAve; 
+			state->xM += (cosf(state->yawRad)*(1.0f - cosf(dYawRad)) + sinf(state->yawRad)*sinf(dYawRad)) / kAve; 
+			state->yM += (cosf(state->yawRad)*sinf(dYawRad) - sinf(state->yawRad)*(1.0f - cosf(dYawRad))) / kAve; 
 		}
 		
 		state->yawRad += dYawRad;
