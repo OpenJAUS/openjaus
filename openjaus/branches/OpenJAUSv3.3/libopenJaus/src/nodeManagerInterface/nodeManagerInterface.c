@@ -803,7 +803,10 @@ int nodeManagerTimedReceive(NodeManagerInterface nmi, JausMessage *message, doub
 			timeLimitSpec.tv_sec = (long)timeLimitSec;
 			timeLimitSpec.tv_nsec = (long)(1e9 * (timeLimitSec - (double)timeLimitSpec.tv_sec));
 
+			pthread_mutex_lock(&recvMutex);
 			condition = pthread_cond_timedwait(&nmi->recvCondition, &recvMutex, &timeLimitSpec);
+			pthread_mutex_unlock(&recvMutex);
+			
 			switch(condition)
 			{
 				case 0: // Conditional Signaled
