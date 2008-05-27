@@ -44,7 +44,7 @@
 #include "utils/timeLib.h"
 
 #ifdef WIN32
-
+	#include <time.h>
 	#include <windows.h>
 	
 	double getTimeSeconds(void)
@@ -64,17 +64,30 @@
 
 	double ojGetTimeSec(void)
 	{
-		static char init = 0;
-		static TIMECAPS timerInfo;
-		
-		if(!init)
-		{
-			timeGetDevCaps(&timerInfo, sizeof(TIMECAPS));
-			timeBeginPeriod(timerInfo.wPeriodMin);
-			init = 1;
-		}	
-		
-		return (double) (timeGetTime() / 1000.0);
+		//static LARGE_INTEGER freq = {0};
+		//static LARGE_INTEGER perfStart = {0};
+		//static double tStart = 0;
+		//LARGE_INTEGER perfTime;
+		//SYSTEMTIME st;
+
+		//if(tStart)
+		//{
+		//	QueryPerformanceCounter(&perfTime);
+		//}
+		//else
+		//{
+		//	GetSystemTime(&st);
+		//	tStart = time(NULL) + st.wMilliseconds / 1000.0;
+		//	QueryPerformanceCounter(&perfStart);
+		//	QueryPerformanceCounter(&perfTime);
+		//	QueryPerformanceFrequency(&freq); 			
+		//}
+		//
+		//return tStart + ((double)perfTime.QuadPart - (double)perfStart.QuadPart) / (double)freq.QuadPart;
+
+		SYSTEMTIME st;
+		GetSystemTime(&st);
+		return time(NULL) + st.wMilliseconds / 1000.0;
 	}
 	
 	void ojSleepMsec(int msec)
