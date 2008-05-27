@@ -149,6 +149,7 @@ void ojCmptDestroy(OjCmpt ojCmpt)
 	}
 	
 	free(ojCmpt->jaus->identification);
+	ojCmpt->jaus->identification = NULL;
 	jausComponentDestroy(ojCmpt->jaus);
 	free(ojCmpt);	
 };
