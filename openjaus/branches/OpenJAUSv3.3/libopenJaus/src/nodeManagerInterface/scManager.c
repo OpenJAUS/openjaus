@@ -738,6 +738,7 @@ JausBoolean scManagerCreateServiceConnection(NodeManagerInterface nmi, ServiceCo
 		return JAUS_FALSE;
 	}
 	
+	// Remove this service connection from the list of incoming service connections
 	while(testSc)
 	{                      
 		if(sc == testSc)
@@ -770,6 +771,7 @@ JausBoolean scManagerCreateServiceConnection(NodeManagerInterface nmi, ServiceCo
 	createSc->requestedPeriodicUpdateRateHertz = sc->requestedUpdateRateHz;
 	createSc->presenceVector = sc->presenceVector;
 	
+	// If the subsystem for this service connection is known
 	if(sc->address && sc->address->subsystem != 0)
 	{
 		jausAddressCopy(createSc->destination, sc->address);
@@ -779,11 +781,13 @@ JausBoolean scManagerCreateServiceConnection(NodeManagerInterface nmi, ServiceCo
 		jausMessageDestroy(txMessage);
 		createServiceConnectionMessageDestroy(createSc);
 
+		// Add the service connection to the front of the incoming service connection list
 		sc->nextSc = nmi->scm->incommingSc;
 		nmi->scm->incommingSc = sc;		
 		nmi->scm->incommingScCount++;
 		return JAUS_TRUE;
 	}
+	// otherwise the subsystem is unknown so we assume it is the same subsystem?
 	else
 	{		
 		localAddress = jausAddressCreate();
@@ -806,6 +810,7 @@ JausBoolean scManagerCreateServiceConnection(NodeManagerInterface nmi, ServiceCo
 			jausAddressDestroy(localAddress);
 			createServiceConnectionMessageDestroy(createSc);
 	
+			// Add the service connection to the front of the incoming service connection list
 			sc->nextSc = nmi->scm->incommingSc;
 			nmi->scm->incommingSc = sc;		
 			nmi->scm->incommingScCount++;
