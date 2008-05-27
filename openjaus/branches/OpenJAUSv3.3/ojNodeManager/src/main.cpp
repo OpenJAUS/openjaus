@@ -194,6 +194,8 @@ int main(int argc, char *args)
 	delete configData;
 	delete handler;
 
+	system("pause");
+
 	return 0;
 }
 
