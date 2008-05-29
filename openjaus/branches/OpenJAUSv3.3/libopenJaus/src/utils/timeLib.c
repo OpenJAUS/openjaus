@@ -84,7 +84,8 @@
 		//}
 		//
 		//return tStart + ((double)perfTime.QuadPart - (double)perfStart.QuadPart) / (double)freq.QuadPart;
-
+		
+		// TODO: the following code could have a 1 second inaccuracy if a second transition occurs after the GetSystemTime call
 		SYSTEMTIME st;
 		GetSystemTime(&st);
 		return time(NULL) + st.wMilliseconds / 1000.0;
