@@ -868,6 +868,7 @@ bool NodeManagerComponent::processCreateEvent(JausMessage message)
 	if(!confirmEventRequest)
 	{
 		//TODO: Log Error. Throw Exception
+		jausMessageDestroy(message);
 		return false;
 	}
 	jausAddressCopy(confirmEventRequest->destination, message->source);
@@ -884,6 +885,7 @@ bool NodeManagerComponent::processCreateEvent(JausMessage message)
 			this->commMngr->receiveJausMessage(txMessage, this);
 		}
 		confirmEventRequestMessageDestroy(confirmEventRequest);
+		jausMessageDestroy(message);
 		return false;
 	}
 
@@ -903,6 +905,7 @@ bool NodeManagerComponent::processCreateEvent(JausMessage message)
 		DebugEvent *e = new DebugEvent("Event", __FUNCTION__, __LINE__, buf);
 		this->eventHandler->handleEvent(e);
 		
+		jausMessageDestroy(message);
 		return false;
 	}
 	confirmEventRequest->messageCode = JAUS_REPORT_CONFIGURATION;
@@ -919,6 +922,7 @@ bool NodeManagerComponent::processCreateEvent(JausMessage message)
 			this->commMngr->receiveJausMessage(txMessage, this);
 		}
 		confirmEventRequestMessageDestroy(confirmEventRequest);
+		jausMessageDestroy(message);
 		return false;
 	}
 	
@@ -1010,6 +1014,7 @@ bool NodeManagerComponent::processCreateEvent(JausMessage message)
 				this->commMngr->receiveJausMessage(txMessage, this);
 			}
 			confirmEventRequestMessageDestroy(confirmEventRequest);
+			jausMessageDestroy(message);
 			return false;
 	}
 
@@ -1036,6 +1041,7 @@ bool NodeManagerComponent::processCancelEvent(JausMessage message)
 	{
 		// Error unpacking message
 		// TODO: Throw Exception. Log Error.
+		jausMessageDestroy(message);
 		return false;
 	}
 
@@ -1059,6 +1065,7 @@ bool NodeManagerComponent::processCancelEvent(JausMessage message)
 	}
 
 	cancelEventMessageDestroy(cancelEvent);
+	jausMessageDestroy(message);
 	return true;
 }
 
@@ -1102,6 +1109,7 @@ bool NodeManagerComponent::processRequestComponentControl(JausMessage message)
 	{
 		// Error unpacking message
 		// TODO: Log Error. Throw Exception
+		jausMessageDestroy(message);
 		return false;
 	}
 
@@ -1189,6 +1197,7 @@ bool NodeManagerComponent::processRequestComponentControl(JausMessage message)
 	}
 
 	requestComponentControlMessageDestroy(requestComponentControl);
+	jausMessageDestroy(message);
 	return true;
 }
 
@@ -1216,6 +1225,7 @@ bool NodeManagerComponent::processQueryComponentAuthority(JausMessage message)
 	}
 
 	reportComponentAuthorityMessageDestroy(report);
+	jausMessageDestroy(message);
 	return true;
 }
 
@@ -1237,6 +1247,7 @@ bool NodeManagerComponent::processQueryComponentStatus(JausMessage message)
 	}
 
 	reportComponentStatusMessageDestroy(reportComponentStatus);
+	jausMessageDestroy(message);
 	return true;
 }
 
@@ -1250,6 +1261,7 @@ bool NodeManagerComponent::processQueryHeartbeatPulse(JausMessage message)
 	if(!reportHeartbeat)
 	{
 		// TODO: Log Error. Throw Exception.
+		jausMessageDestroy(message);
 		return false;
 	}
 
@@ -1260,6 +1272,7 @@ bool NodeManagerComponent::processQueryHeartbeatPulse(JausMessage message)
 	{
 		this->commMngr->receiveJausMessage(txMessage, this);
 	}
+	jausMessageDestroy(message);
 	return true;
 }
 
@@ -1274,7 +1287,8 @@ bool NodeManagerComponent::processQueryConfiguration(JausMessage message)
 	if(!queryConf)
 	{
 		// TODO: Log Error. Throw Exception.
-		// Error unpacking message	
+		// Error unpacking message
+		jausMessageDestroy(message);	
 		return false;
 	}
 	
@@ -1290,6 +1304,7 @@ bool NodeManagerComponent::processQueryConfiguration(JausMessage message)
 				{
 					// TODO: Log Error. Throw Exception
 					queryConfigurationMessageDestroy(queryConf);
+					jausMessageDestroy(message);
 					return false;
 				}
 				
@@ -1311,6 +1326,7 @@ bool NodeManagerComponent::processQueryConfiguration(JausMessage message)
 
 				reportConfigurationMessageDestroy(reportConf);
 				queryConfigurationMessageDestroy(queryConf);
+				jausMessageDestroy(message);
 				return true;
 			}
 			else
@@ -1319,6 +1335,7 @@ bool NodeManagerComponent::processQueryConfiguration(JausMessage message)
 				// therefore no one should be asking us for subsystem configuration
 				// TODO: Log Error. Throw Exception.
 				queryConfigurationMessageDestroy(queryConf);
+				jausMessageDestroy(message);
 				return false;
 			}
 
@@ -1328,6 +1345,7 @@ bool NodeManagerComponent::processQueryConfiguration(JausMessage message)
 			{
 				// TODO: Log Error. Throw Exception
 				queryConfigurationMessageDestroy(queryConf);
+				jausMessageDestroy(message);
 				return false;
 			}
 			
@@ -1348,12 +1366,14 @@ bool NodeManagerComponent::processQueryConfiguration(JausMessage message)
 
 			reportConfigurationMessageDestroy(reportConf);
 			queryConfigurationMessageDestroy(queryConf);
+			jausMessageDestroy(message);
 			return true;
 
 		default:
 			// TODO: Log Error. Throw Exception.
 			// Unknown query type
 			queryConfigurationMessageDestroy(queryConf);
+			jausMessageDestroy(message);
 			return false;
 	}
 }
@@ -1370,6 +1390,7 @@ bool NodeManagerComponent::processQueryIdentification(JausMessage message)
 	{
 		// TODO: Log Error. Throw Exception.
 		// Error unpacking message	
+		jausMessageDestroy(message);
 		return false;
 	}
 	
@@ -1385,6 +1406,7 @@ bool NodeManagerComponent::processQueryIdentification(JausMessage message)
 				{
 					// TODO: Log Error. Throw Exception
 					queryIdentificationMessageDestroy(queryId);
+					jausMessageDestroy(message);
 					return false;
 				}
 
@@ -1410,6 +1432,7 @@ bool NodeManagerComponent::processQueryIdentification(JausMessage message)
 
 				reportIdentificationMessageDestroy(reportId);
 				queryIdentificationMessageDestroy(queryId);
+				jausMessageDestroy(message);
 				return true;
 			}
 			else
@@ -1418,6 +1441,7 @@ bool NodeManagerComponent::processQueryIdentification(JausMessage message)
 				// therefore no one should be asking us for subsystem configuration
 				// TODO: Log Error. Throw Exception.
 				queryIdentificationMessageDestroy(queryId);
+				jausMessageDestroy(message);
 				return false;
 			}
 		case JAUS_QUERY_FIELD_NODE_IDENTITY:
@@ -1426,6 +1450,7 @@ bool NodeManagerComponent::processQueryIdentification(JausMessage message)
 			{
 				// TODO: Log Error. Throw Exception
 				queryIdentificationMessageDestroy(queryId);
+				jausMessageDestroy(message);
 				return false;
 			}
 			
@@ -1452,6 +1477,7 @@ bool NodeManagerComponent::processQueryIdentification(JausMessage message)
 
 			reportIdentificationMessageDestroy(reportId);
 			queryIdentificationMessageDestroy(queryId);
+			jausMessageDestroy(message);
 			return true;
 
 		case JAUS_QUERY_FIELD_COMPONENT_IDENTITY:
@@ -1460,6 +1486,7 @@ bool NodeManagerComponent::processQueryIdentification(JausMessage message)
 			{
 				// TODO: Log Error. Throw Exception
 				queryIdentificationMessageDestroy(queryId);
+				jausMessageDestroy(message);
 				return false;
 			}
 			
@@ -1485,10 +1512,12 @@ bool NodeManagerComponent::processQueryIdentification(JausMessage message)
 
 			reportIdentificationMessageDestroy(reportId);
 			queryIdentificationMessageDestroy(queryId);
+			jausMessageDestroy(message);
 			return true;
 
 		default:
 			queryIdentificationMessageDestroy(queryId);
+			jausMessageDestroy(message);
 			return false;
 	}
 }
@@ -1504,6 +1533,7 @@ bool NodeManagerComponent::processQueryServices(JausMessage message)
 	if(!queryServices)
 	{
 		// TODO: Log Error. Throw Exception.
+		jausMessageDestroy(message);
 		return false;
 	}
 
@@ -1513,6 +1543,7 @@ bool NodeManagerComponent::processQueryServices(JausMessage message)
 	{
 		// TODO: Log Error. Throw Exception.
 		queryServicesMessageDestroy(queryServices);
+		jausMessageDestroy(message);
 		return false;
 	}
 
@@ -1529,12 +1560,14 @@ bool NodeManagerComponent::processQueryServices(JausMessage message)
 
 	reportServicesMessageDestroy(reportServices);
 	queryServicesMessageDestroy(queryServices);
+	jausMessageDestroy(message);
 	return true;
 }
 
 bool NodeManagerComponent::processConfirmEvent(JausMessage message)
 {
 	// Not currently implemented
+	jausMessageDestroy(message);
 	return true;
 }
 
@@ -1554,6 +1587,7 @@ bool NodeManagerComponent::processEvent(JausMessage message)
 
 	processMessage(jausMessageClone(eventMessage->reportMessage));
 	eventMessageDestroy(eventMessage);
+	jausMessageDestroy(message);
 	return true;
 }
 
