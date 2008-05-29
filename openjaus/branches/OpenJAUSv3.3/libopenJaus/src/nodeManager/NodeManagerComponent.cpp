@@ -142,6 +142,16 @@ NodeManagerComponent::~NodeManagerComponent(void)
 	{
 		jausAddressDestroy( iterator->second);
 	}	
+	
+	for(iterator = subsystemChangeList.begin(); iterator != subsystemChangeList.end(); iterator++)
+	{
+		jausAddressDestroy( iterator->second);
+	}	
+
+	for(iterator = nodeChangeList.begin(); iterator != nodeChangeList.end(); iterator++)
+	{
+		jausAddressDestroy( iterator->second);
+	}	
 }
 
 bool NodeManagerComponent::startInterface()
@@ -810,6 +820,7 @@ bool NodeManagerComponent::processReportHeartbeatPulse(JausMessage message)
 				}
 			}
 
+			jausNodeDestroy(node);
 			jausMessageDestroy(message);
 			return false;
 		} 
@@ -1428,7 +1439,8 @@ bool NodeManagerComponent::processQueryIdentification(JausMessage message)
 				memcpy(reportId->identification, identification, JAUS_IDENTIFICATION_LENGTH_BYTES-1);
 				reportId->identification[JAUS_IDENTIFICATION_LENGTH_BYTES-1] = 0;
 			}
-
+			free(identification);
+			
 			reportId->queryType = JAUS_QUERY_FIELD_NODE_IDENTITY;
 			txMessage = reportIdentificationMessageToJausMessage(reportId);
 			jausAddressCopy(txMessage->source, cmpt->address);
@@ -1928,6 +1940,8 @@ bool NodeManagerComponent::sendQueryNodeConfiguration(JausAddress address, bool 
 			jausAddressCopy(txMessage->destination, address);
 			jausAddressCopy(txMessage->source, cmpt->address);
 			this->commMngr->receiveJausMessage(txMessage, this);
+
+			createEventMessageDestroy(createEventMsg);
 		}
 
 		queryConfigurationMessageDestroy(query);
