@@ -40,7 +40,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\ThirdParty\PThreads2\include;.\include;..\libjaus\include"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CRT_SECURE_NO_WARNINGS"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -428,10 +428,6 @@
 			</File>
 			<File
 				RelativePath=".\src\nodemanagerinterface\scManager.c"
-				>
-			</File>
-			<File
-				RelativePath=".\src\nodeManager\events\shutdownEvent.cpp"
 				>
 			</File>
 			<File
