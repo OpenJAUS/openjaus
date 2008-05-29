@@ -88,7 +88,7 @@ void JausTransportInterface::startThread()
 	retVal = pthread_cond_init(&this->threadConditional, NULL);
 	pthread_mutex_init(&this->threadMutex, NULL);
 	pthread_attr_init(&this->threadAttributes);
-	//pthread_attr_setdetachstate(&this->threadAttributes, PTHREAD_CREATE_DETACHED);
+	pthread_attr_setdetachstate(&this->threadAttributes, PTHREAD_CREATE_JOINABLE);
 
 	this->pThreadId = pthread_create(&this->pThread, &this->threadAttributes, ThreadRun, this);
 
