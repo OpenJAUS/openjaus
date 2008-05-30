@@ -80,7 +80,14 @@ OjCmpt ojCmptCreate(char *name, JausByte id, double stateFrequencyHz)
 	ojCmpt->outConnection = NULL;
 	ojCmpt->outConnectionCount = 0;
 	
-	ojCmpt->nmi = NULL;
+	ojCmpt->nmi = nodeManagerOpen(ojCmpt->jaus);
+	if(ojCmpt->nmi == NULL)
+	{
+		free(ojCmpt->jaus->identification);
+		jausComponentDestroy(ojCmpt->jaus);
+		free(ojCmpt);
+		return NULL; 
+	}
 
 	return ojCmpt;
 }
@@ -88,15 +95,6 @@ OjCmpt ojCmptCreate(char *name, JausByte id, double stateFrequencyHz)
 int ojCmptRun(OjCmpt ojCmpt)
 {
 	pthread_attr_t attr;	// Thread attributed for the component threads spawned in this function
-
-	ojCmpt->nmi = nodeManagerOpen(ojCmpt->jaus);
-	if(ojCmpt->nmi == NULL)
-	{
-		free(ojCmpt->jaus->identification);
-		jausComponentDestroy(ojCmpt->jaus);
-		free(ojCmpt);
-		return -1; 
-	}
 
 	ojCmpt->run = TRUE;
 
@@ -108,12 +106,13 @@ int ojCmptRun(OjCmpt ojCmpt)
 		jausComponentDestroy(ojCmpt->jaus);
 		free(ojCmpt);
 		pthread_attr_destroy(&attr);
-		return -2;
+		return -1;
 	}
 	pthread_attr_destroy(&attr);
 
 	return 0;
 }
+
 
 void ojCmptDestroy(OjCmpt ojCmpt)
 {
