@@ -125,6 +125,8 @@ void ojCmptDestroy(OjCmpt ojCmpt)
 		pthread_join(ojCmpt->thread, NULL);
 	}
 
+	// TODO: cleanup anything from defaultMsgProcessing i.e. rejectController
+	
 	for(i=0; i<ojCmpt->inConnectionCount; i++)
 	{
 		if(ojCmpt->inConnection[i]->isActive)
@@ -318,6 +320,7 @@ void* ojCmptThread(void *threadData)
 				}
 				
 				ojCmptManageServiceConnections(ojCmpt);
+				nodeManagerSendCoreServiceConnections(ojCmpt->nmi);
 				break;
 				
 			default:
