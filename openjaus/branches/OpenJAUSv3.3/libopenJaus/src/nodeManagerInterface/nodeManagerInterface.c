@@ -817,13 +817,13 @@ int nodeManagerTimedReceive(NodeManagerInterface nmi, JausMessage *message, doub
 					return NMI_RECEIVE_TIMED_OUT;
 					
 				default: // Some other error occured
-					return 0;
+					return NMI_CONDITIONAL_WAIT_ERROR;
 			}
 		}
 	}
 	else
 	{
-		return 0;
+		return NMI_CLOSED_ERROR;
 	}
 }
 

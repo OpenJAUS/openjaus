@@ -322,6 +322,16 @@ void* ojCmptThread(void *threadData)
 				nodeManagerSendCoreServiceConnections(ojCmpt->nmi);
 				break;
 				
+			case NMI_CONDITIONAL_WAIT_ERROR:
+				printf("ojCmpt.c : Conditional Wait Error in nodeManagerTimedReceive, Exiting ojCmpt Thread\n");
+				ojCmpt->run = FALSE;
+				break;
+
+			case NMI_CLOSED_ERROR:
+				printf("ojCmpt.c : Node Manager Interface closed when calling nodeManagerTimedReceive, Exiting ojCmpt Thread\n");
+				ojCmpt->run = FALSE;
+				break;
+
 			default:
 				printf("ojCmpt.c : Error in nodeManagerTimedReceive, Exiting ojCmpt Thread\n");
 				ojCmpt->run = FALSE;
