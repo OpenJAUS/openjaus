@@ -5,50 +5,24 @@
 // Description:	This file contains the skeleton C code for implementing a JAUS component in a Linux environment
 //				This code is designed to work with the node manager and JAUS library software written by CIMAR
 
-#include "jaus.h"			// JAUS message set (USER: JAUS libraries must be installed first)
-#include "openJaus.h"	// Node managment functions for sending and receiving JAUS messages (USER: Node Manager must be installed)
-#include <pthread.h>			// Multi-threading functions (standard to unix)
+#include <jaus.h>			// JAUS message set (USER: JAUS libraries must be installed first)
+#include <openJaus.h>	// Node managment functions for sending and receiving JAUS messages (USER: Node Manager must be installed)
 #include <stdlib.h>	
 #include <string.h>
-#include "properties.h"
 
-// USER: Add include files here as appropriate
 
 #include "gpos.h"	// USER: Implement and rename this header file. Include prototypes for all public functions contained in this file.
 #include "vehicleSim.h"
 #include "utm/pointLla.h"
 
 #if defined (WIN32)
-	#define _USE_MATH_DEFINES
-	#define CONFIG_DIRECTORY ".\\config\\"
 	#include <math.h>
-#elif defined(__linux) || defined(linux) || defined(__linux__) || defined(__APPLE__)
-	#define CONFIG_DIRECTORY "./config/"
 #endif
 
 // Private function prototypes
-void *gposThread(void *);
-void gposProcessMessage(JausMessage rxMessage);
-void gposStartupState(void);
-void gposInitState(void);
-void gposStandbyState(void);
 void gposReadyState(void);
-void gposEmergencyState(void);
-void gposFailureState(void);
 void gposShutdownState(void);
-void gposAllState(void);
-
-static JausComponent gpos = NULL;
-static JausNode gposNode;
-static JausSubsystem gposSubsystem;
-
-static int gposRun = FALSE;
-static double gposThreadHz = 0;									// Stores the calculated update rate for main state thread
-static int gposThreadRunning = FALSE;
-static pthread_t gposThreadId;							// pthread component thread identifier
-
-static Properties gposProperties;
-static NodeManagerInterface gposNmi;	// A data structure containing the Node Manager Interface for this component
+void gposQueryGlobalPoseCallback(OjCmpt gpos, JausMessage query);
 
 //Gpos Variables
 static ReportGlobalPoseMessage gposMessage;
@@ -59,72 +33,39 @@ static JausBoolean gposScActive = JAUS_FALSE;
 // Description: This function allows the abstracted component functionality contained in this file to be started from an external source.
 // 				It must be called first before the component state machine and node manager interaction will begin
 //				Each call to "gposStartup" should be followed by one call to the "gposShutdown" function
-int gposStartup(void)
+OjCmpt gposCreate(void)
 {
-	FILE * propertyFile;
-	pthread_attr_t attr;	// Thread attributed for the component threads spawned in this function
-	char fileName[128] = {0};
 
-	if(!gpos)
-	{
-		gpos = jausComponentCreate();
-		gpos->address->component = JAUS_GLOBAL_POSE_SENSOR;
-		gpos->identification  = "gpos";
-		gpos->state = JAUS_SHUTDOWN_STATE;
-	}
+	OjCmpt gpos;
+	JausAddress gposAddr;
 	
-	if(gpos->state == JAUS_SHUTDOWN_STATE)	// Execute the startup routines only if the component is not running
-	{
-		sprintf(fileName, "%sgpos.conf", CONFIG_DIRECTORY);
-		propertyFile = fopen(fileName, "r");
-		if(propertyFile)
-		{
-			gposProperties = propertiesCreate();
-			gposProperties = propertiesLoad(gposProperties, propertyFile);
-			fclose(propertyFile);
-		}
-		else
-		{
-			////cError("gpos: Cannot find or open properties file\n");
-			return GPOS_LOAD_CONFIGURATION_ERROR;
-		}
-		
-		// Check in to the Node Manager and obtain Instance, Node and Subsystem IDs
-		gposNode = jausNodeCreate();
-		gposSubsystem = jausSubsystemCreate();
-		gposNode->subsystem = gposSubsystem;
-		gpos->node = gposNode;
-		gpos->services = jausServicesCreate();
-		gpos->state = JAUS_INITIALIZE_STATE; // Set the state of the JAUS state machine to INITIALIZE
-		
-		gposNmi = nodeManagerOpen(gpos); 
-		if(gposNmi == NULL)
-		{
-			////cError("gpos: Could not open connection to node manager\n");
-			return GPOS_NODE_MANAGER_OPEN_ERROR; 
-		}
+	gpos = ojCmptCreate(JAUS_GLOBAL_POSE_SENSOR, "gpos", GPOS_THREAD_DESIRED_RATE_HZ);
 
-		pthread_attr_init(&attr);
-		pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
+	ojCmptAddService(gpos, JAUS_GLOBAL_POSE_SENSOR);
+	ojCmptAddServiceInputMessage(gpos, JAUS_GLOBAL_POSE_SENSOR, JAUS_QUERY_GLOBAL_POSE, 0xFF);
+	ojCmptAddServiceOutputMessage(gpos, JAUS_GLOBAL_POSE_SENSOR, JAUS_REPORT_GLOBAL_POSE, 0xFF);
 
-		gposRun = TRUE;
+ 	ojCmptSetStateCallback(gpos, JAUS_READY_STATE, gposReadyState);
 
-		if(pthread_create(&gposThreadId, &attr, gposThread, NULL) != 0)
-		{
-			////cError("gpos: Could not create gposThread\n");
-			gposShutdown();
-			pthread_attr_destroy(&attr);
-			return GPOS_THREAD_CREATE_ERROR;
-		}
-		pthread_attr_destroy(&attr);
-	}
-	else
-	{
-		////cError("gpos: Attempted startup while not shutdown\n");
-		return GPOS_STARTUP_BEFORE_SHUTDOWN_ERROR;
-	}
+	ojCmptSetMessageCallback(gpos, JAUS_QUERY_GLOBAL_POSE, gposQueryGlobalPoseCallback);
 	
-	return 0;
+	ojCmptAddSupportedSc(gpos, JAUS_REPORT_GLOBAL_POSE);
+	
+	if(ojCmptRun(gpos))
+	{
+		ojCmptDestroy(gpos);
+		return NULL;
+	}
+
+	gposMessage = reportGlobalPoseMessageCreate();
+	
+	gposAddr = ojCmptGetAddress(gpos);
+	jausAddressCopy(gposMessage->source, gposAddr);
+	jausAddressDestroy(gposAddr);
+			
+	ojCmptSetState(gpos, JAUS_READY_STATE);
+	
+	return gpos;
 }
 
 // Function: gposShutdown
@@ -132,39 +73,13 @@ int gposStartup(void)
 // Description:	This function allows the abstracted component functionality contained in this file to be stoped from an external source.
 // 				If the component is in the running state, this function will terminate all threads running in this file
 //				This function will also close the Jms connection to the Node Manager and check out the component from the Node Manager
-int gposShutdown(void)
-{
-	double timeOutSec;
+void gposDestroy(OjCmpt gpos)
+{	
+	// Remove support for ReportGlovalPose Service Connections
+	ojCmptRemoveSupportedSc(gpos, JAUS_REPORT_GLOBAL_POSE);	
+	ojCmptDestroy(gpos);
 
-	if(gpos && gpos->state != JAUS_SHUTDOWN_STATE)	// Execute the shutdown routines only if the component is running
-	{
-		gposRun = FALSE;
-
-		timeOutSec = getTimeSeconds() + GPOS_THREAD_TIMEOUT_SEC;
-		while(gposThreadRunning)
-		{
-			ojSleepMsec(100);
-			if(getTimeSeconds() >= timeOutSec)
-			{
-				pthread_cancel(gposThreadId);
-				gposThreadRunning = FALSE;
-				////cError("gpos: gposThread Shutdown Improperly\n");
-				break;
-			}
-		}
-
-		nodeManagerClose(gposNmi); // Close Node Manager Connection
-				
-		jausSubsystemDestroy(gpos->node->subsystem);
-		jausNodeDestroy(gpos->node);
-		jausServicesDestroy(gpos->services);
-	
-		gpos->state = JAUS_SHUTDOWN_STATE;
-
-		propertiesDestroy(gposProperties);
-	}
-
-	return 0;
+	reportGlobalPoseMessageDestroy(gposMessage);
 }
 
 // The series of functions below allow public access to essential component information
@@ -202,94 +117,6 @@ double gposGetYaw(void)
 int gposGetScActive(void)
 {
 	return gposScActive;
-}
-
-// Function: gposThread
-// Access:		Private
-// Description:	All core component functionality is contained in this thread.
-//				All of the JAUS component state machine code can be found here.
-void *gposThread(void *threadData)
-{
-	JausMessage rxMessage;
-	double time, prevTime, nextExcecuteTime = 0.0;
-
-	gposThreadRunning = TRUE;
-
-	time = getTimeSeconds();
-	gpos->state = JAUS_INITIALIZE_STATE; // Set JAUS state to INITIALIZE
-	
-	gposStartupState();
-		
-	while(gposRun) // Execute state machine code while not in the SHUTDOWN state
-	{
-		do
-		{
-			if(nodeManagerReceive(gposNmi, &rxMessage))
-			{
-				//cDebug(4, "GPOS: Got message: %s from %d.%d.%d.%d\n", jausMessageCommandCodeString(rxMessage), rxMessage->source->subsystem, rxMessage->source->node, rxMessage->source->component, rxMessage->source->instance);
-				gposProcessMessage(rxMessage);
-			}
-			else 
-			{
-				if(getTimeSeconds() > nextExcecuteTime)
-				{
-					break;
-				}
-				else
-				{
-					ojSleepMsec(1);
-				}
-			}
-		}while(getTimeSeconds() < nextExcecuteTime);
-		
-		prevTime = time;
-		time = getTimeSeconds();
-		gposThreadHz = 1.0/(time-prevTime); // Compute the update rate of this thread
-		
-		switch(gpos->state) // Switch component behavior based on which state the machine is in
-		{
-			case JAUS_INITIALIZE_STATE:
-				gposInitState();
-				break;
-				
-			case JAUS_STANDBY_STATE:
-				gposStandbyState();
-				break;
-				
-			case JAUS_READY_STATE:
-				gposReadyState();
-				break;
-				
-			case JAUS_EMERGENCY_STATE:
-				gposEmergencyState();
-				break;
-				
-			case JAUS_FAILURE_STATE:
-				gposFailureState();
-				break;		
-						
-			case JAUS_SHUTDOWN_STATE:
-				gposRun = FALSE;			
-				break;		
-
-			default:
-				gpos->state = JAUS_FAILURE_STATE; // The default case JAUS_is undefined, therefore go into Failure State
-				break;
-		}	
-		
-		gposAllState();
-		nodeManagerSendCoreServiceConnections(gposNmi);
-
-		nextExcecuteTime = 2.0 * time + 1.0/GPOS_THREAD_DESIRED_RATE_HZ - getTimeSeconds();
-	}	
-	
-	gposShutdownState();
-	
-	ojSleepMsec(50);	// Sleep for 50 milliseconds and then exit
-
-	gposThreadRunning = FALSE;
-	
-	return NULL;
 }
 
 // Function: gposProcessMessage
@@ -337,45 +164,6 @@ void gposProcessMessage(JausMessage message)
 			defaultJausMessageProcessor(message, gposNmi, gpos);
 			break;
 	}
-}
-
-void gposStartupState(void)
-{
-	JausService service;
-	
-	// Populate Core Service
-	if(!jausServiceAddCoreServices(gpos->services))
-	{
-		////cError("gpos: Addition of Core Services FAILED! Switching to FAILURE_STATE\n");
-		gpos->state = JAUS_FAILURE_STATE;
-	}
-	// USER: Add the rest of your component specific service(s) here
-	service = jausServiceCreate(gpos->address->component);
-        if(!service)
-        {
-                ////cError("gpos:%d: Creation of JausService FAILED! Switching to FAILURE_STATE\n", __LINE__);
-                gpos->state = JAUS_FAILURE_STATE;
-        }
-        jausServiceAddService(gpos->services, service);
-        jausServiceAddInputCommand(service, JAUS_QUERY_GLOBAL_POSE, 0xFF);
-        jausServiceAddOutputCommand(service, JAUS_REPORT_GLOBAL_POSE, 0xFF);
-	
-
-	gposMessage = reportGlobalPoseMessageCreate();
-	jausAddressCopy(gposMessage->source, gpos->address);
-
-	//add support for ReportGlovalPose Service Connections
-	scManagerAddSupportedMessage(gposNmi, JAUS_REPORT_GLOBAL_POSE);
-}
-
-void gposInitState(void)
-{
-	gpos->state = JAUS_READY_STATE;
-}
-
-void gposStandbyState(void)
-{
-	// USER: Insert Standby Code Here
 }
 
 void gposReadyState(void)
@@ -435,44 +223,4 @@ void gposReadyState(void)
 	{
 		gposScActive = JAUS_FALSE;
 	}
-}
-
-void gposEmergencyState(void)
-{
-	// USER: Insert Emergency Code Here
-}
-
-void gposFailureState(void)
-{
-	// USER: Insert Failure Code Here
-}
-
-void gposShutdownState(void)
-{
-	RejectComponentControlMessage rejectComponentControl;
-	JausMessage txMessage;
-		
-	if(gpos->controller.active)
-	{
-		// Terminate control of current component
-		rejectComponentControl = rejectComponentControlMessageCreate();
-		jausAddressCopy(rejectComponentControl->source, gpos->address);
-		jausAddressCopy(rejectComponentControl->destination, gpos->controller.address);
-
-		txMessage = rejectComponentControlMessageToJausMessage(rejectComponentControl);
-		nodeManagerSend(gposNmi, txMessage);
-		jausMessageDestroy(txMessage);
-
-		rejectComponentControlMessageDestroy(rejectComponentControl);
-	}
-	
-	// Remove support for ReportGlovalPose Service Connections
-	scManagerRemoveSupportedMessage(gposNmi, JAUS_REPORT_GLOBAL_POSE);
-
-	reportGlobalPoseMessageDestroy(gposMessage);
-}
-
-void gposAllState(void)
-{
-	// USER: Insert Code Here that is Common to All states
 }
