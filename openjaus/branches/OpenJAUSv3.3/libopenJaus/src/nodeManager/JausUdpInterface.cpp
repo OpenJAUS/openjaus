@@ -140,9 +140,6 @@ InetAddress JausUdpInterface::getInetAddress(void)
 
 bool JausUdpInterface::routeMessage(JausMessage message)
 {
-//	DatagramPacket packet;				// NMJ
-//	packet = datagramPacketCreate();	// NMJ
-
 	switch(this->type)
 	{
 		case SUBSYSTEM_INTERFACE:
@@ -187,14 +184,18 @@ bool JausUdpInterface::routeMessage(JausMessage message)
 			break;
 
 		case NODE_INTERFACE:
-			if(message->destination->subsystem == mySubsystemId)
+			if(message->commandCode == JAUS_REPORT_HEARTBEAT_PULSE && message->source->subsystem != mySubsystemId)
+			{
+				printf("HB");
+			}
+			if(	message->destination->subsystem == mySubsystemId || 
+				message->destination->subsystem == JAUS_BROADCAST_SUBSYSTEM_ID )
 			{
 				// if node==BROADCAST send multicast
 				if(message->destination->node == JAUS_BROADCAST_NODE_ID)
 				{
 					if(this->multicast)
 					{
-						//if(message->commandCode == JAUS_QUERY_SERVICES) printf("Sending Node Multicast JAUS_QUERY_SERVICES\n");
 						// Send multicast packet
 						sendJausMessage(this->multicastData, message);
 						jausMessageDestroy(message);
