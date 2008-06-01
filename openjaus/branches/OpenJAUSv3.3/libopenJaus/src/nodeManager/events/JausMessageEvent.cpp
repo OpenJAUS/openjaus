@@ -83,24 +83,25 @@ unsigned char JausMessageEvent::getMessageDirection()
 std::string JausMessageEvent::toString()
 {
 	char buf[1024] = {0};
-	char addressString[80] = {0};
-
+	char sourceString[80] = {0};
+	char destinationString[80] = {0};
+	
+	jausAddressToString(this->message->source, sourceString);
+	jausAddressToString(this->message->destination, destinationString);
+	
 	if(direction == JausMessageEvent::Inbound)
 	{
-		sprintf(buf, "RECEIVED:");
+		sprintf(buf, "RECEIVED: %s from %s to %s on interface: %s", jausMessageCommandCodeString(this->message), sourceString, destinationString, this->transport->toString().c_str());
+		return buf;	
 	}
 
 	if(direction == JausMessageEvent::Outbound)
 	{
-		sprintf(buf, "SENDING:");
+		sprintf(buf, "SENDING: %s from %s to %s on interface: %s", jausMessageCommandCodeString(this->message), sourceString, destinationString, this->transport->toString().c_str());		
+		return buf;
 	}
 
-	jausAddressToString(this->message->source, addressString);
-	sprintf(buf, "%s %s from %s", buf, jausMessageCommandCodeString(this->message), addressString);
-	jausAddressToString(this->message->destination, addressString);
-	sprintf(buf, "%s to %s on interface: %s", buf, addressString, this->transport->toString().c_str());
 
-	return buf;
 }
 
 
