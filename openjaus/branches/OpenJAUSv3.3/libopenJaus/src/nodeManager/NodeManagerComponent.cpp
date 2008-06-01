@@ -140,12 +140,12 @@ NodeManagerComponent::~NodeManagerComponent(void)
 	
 	for(iterator = subsystemChangeList.begin(); iterator != subsystemChangeList.end(); iterator++)
 	{
-		jausAddressDestroy( iterator->second);
+		jausAddressDestroy(iterator->second);
 	}	
 
 	for(iterator = nodeChangeList.begin(); iterator != nodeChangeList.end(); iterator++)
 	{
-		jausAddressDestroy( iterator->second);
+		jausAddressDestroy(iterator->second);
 	}	
 }
 

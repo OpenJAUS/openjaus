@@ -372,24 +372,8 @@ bool MessageRouter::sendToCommunicator(JausMessage message)
 	}
 	else
 	{
-		JausAddress communicatorAddress = systemTree->lookUpAddress(mySubsystemId, JAUS_ADDRESS_WILDCARD_OCTET, JAUS_COMMUNICATOR, JAUS_ADDRESS_WILDCARD_OCTET);
-		if(!jausAddressIsValid(communicatorAddress) || 
-			communicatorAddress->node == myNodeId || 
-			myNodeId == JAUS_PRIMARY_NODE_MANAGER_NODE)
-		{
-			// We can't route this subsystem level message to a communicator or primary node
-			// Either there is no communicator, we're it and our subsInf is turned off
-			// Just destroy this message
-			ErrorEvent *e = new ErrorEvent(ErrorEvent::Routing,  __FUNCTION__, __LINE__, "Either there is no communicator, we're it and our subsInf is turned off");
-			this->eventHandler->handleEvent(e);
-			jausMessageDestroy(message);
-			return false;
-		}
-		else
-		{
-			nodeComms->sendJausMessage(message);
-			return true;
-		}
+		nodeComms->sendJausMessage(message);
+		return true;
 	}
 }
 
