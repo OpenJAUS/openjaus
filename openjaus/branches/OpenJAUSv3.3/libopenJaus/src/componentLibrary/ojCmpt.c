@@ -36,6 +36,8 @@ struct OjCmptStruct
 	int outConnectionCount;
 
 	NodeManagerInterface nmi;	
+	
+	void *userData;
 };
 
 void* ojCmptThread(void *threadData);
@@ -232,6 +234,16 @@ void ojCmptSetMessageCallback(OjCmpt ojCmpt, unsigned short commandCode, void (*
 void ojCmptSetMessageProcessorCallback(OjCmpt ojCmpt, void (*processMessageFunction)(OjCmpt, JausMessage))	// Calls method from messageHandler
 {
 	ojCmpt->processMessageCallback = processMessageFunction;
+}
+
+void ojCmptSetUserData(OjCmpt ojCmpt, void *data)
+{
+	ojCmpt->userData = data;
+}
+
+void *ojCmptGetUserData(OjCmpt ojCmpt)
+{
+	return ojCmpt->userData;
 }
 
 void ojCmptProcessMessage(OjCmpt ojCmpt, JausMessage message)
