@@ -137,11 +137,6 @@ NodeManagerComponent::~NodeManagerComponent(void)
 	}
 	
 	jausComponentDestroy(this->cmpt);
-
-	for(iterator = subsystemChangeList.begin(); iterator != subsystemChangeList.end(); iterator++)
-	{
-		jausAddressDestroy( iterator->second);
-	}	
 	
 	for(iterator = subsystemChangeList.begin(); iterator != subsystemChangeList.end(); iterator++)
 	{

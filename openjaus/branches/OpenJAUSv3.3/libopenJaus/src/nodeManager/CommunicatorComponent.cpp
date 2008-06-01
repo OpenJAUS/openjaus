@@ -125,6 +125,12 @@ CommunicatorComponent::~CommunicatorComponent(void)
 	}
 
 	jausComponentDestroy(this->cmpt);
+
+	HASH_MAP <int, JausAddress>::iterator iterator;
+	for(iterator = subsystemChangeList.begin(); iterator != subsystemChangeList.end(); iterator++)
+	{
+		jausAddressDestroy( iterator->second);
+	}
 }
 
 bool CommunicatorComponent::startInterface()

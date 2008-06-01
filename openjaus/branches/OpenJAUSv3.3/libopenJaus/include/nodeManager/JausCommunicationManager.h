@@ -86,8 +86,8 @@ protected:
 	FileLoader *configData;
 	SystemTree *systemTree;
 	EventHandler *handler;
-	int mySubsystemId;
-	int myNodeId;
+	JausByte mySubsystemId;
+	JausByte myNodeId;
 	bool enabled;
 };
 
