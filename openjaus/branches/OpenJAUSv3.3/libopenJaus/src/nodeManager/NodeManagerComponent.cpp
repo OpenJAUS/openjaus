@@ -13,7 +13,6 @@
  *       notice, this list of conditions and the following disclaimer.
  *     * Redistributions in binary form must reproduce the above
  *       copyright notice, this list of conditions and the following
- *       disclaimer in the documentation and/or other materials provided
  *       with the distribution.
  *     * Neither the name of the University of Florida nor the names of its 
  *       contributors may be used to endorse or promote products derived from 
@@ -714,6 +713,7 @@ bool NodeManagerComponent::processReportHeartbeatPulse(JausMessage message)
 			} // end For(Components)
 		} // end For(Nodes)
 
+		jausSubsystemDestroy(subs);
 		jausMessageDestroy(message);
 		return true;
 	} // End !MySubs
@@ -2046,6 +2046,7 @@ bool NodeManagerComponent::sendQuerySubsystemConfiguration(JausAddress address, 
 			jausAddressCopy(txMessage->destination, address);
 			jausAddressCopy(txMessage->source, cmpt->address);
 			this->commMngr->receiveJausMessage(txMessage, this);
+			createEventMessageDestroy(createEventMsg);
 		}
 
 		queryConfigurationMessageDestroy(query);

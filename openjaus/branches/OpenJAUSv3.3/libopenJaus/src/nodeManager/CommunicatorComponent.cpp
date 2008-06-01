@@ -720,6 +720,7 @@ bool CommunicatorComponent::processCreateEvent(JausMessage message)
 	if(!confirmEventRequest)
 	{
 		//TODO: Log Error. Throw Exception
+		jausMessageDestroy(message);
 		return false;
 	}
 	jausAddressCopy(confirmEventRequest->destination, message->source);
@@ -736,6 +737,7 @@ bool CommunicatorComponent::processCreateEvent(JausMessage message)
 			this->commMngr->receiveJausMessage(txMessage, this);
 		}
 		confirmEventRequestMessageDestroy(confirmEventRequest);
+		jausMessageDestroy(message);
 		return false;
 	}
 
@@ -755,6 +757,7 @@ bool CommunicatorComponent::processCreateEvent(JausMessage message)
 		this->eventHandler->handleEvent(e);
 
 		confirmEventRequestMessageDestroy(confirmEventRequest);
+		jausMessageDestroy(message);
 		return false;
 	}
 	confirmEventRequest->messageCode = JAUS_REPORT_CONFIGURATION;
@@ -771,6 +774,7 @@ bool CommunicatorComponent::processCreateEvent(JausMessage message)
 			this->commMngr->receiveJausMessage(txMessage, this);
 		}
 		confirmEventRequestMessageDestroy(confirmEventRequest);
+		jausMessageDestroy(message);
 		return false;
 	}
 	
@@ -806,7 +810,6 @@ bool CommunicatorComponent::processCreateEvent(JausMessage message)
 			confirmEventRequest->eventId = 0;
 
 			char buf[256];
-//			sprintf(buf, "Rejected event from %d.%d.%d.%d. No available Event Ids.", createEvent->source->subsystem, createEvent->source->node, createEvent->source->component, createEvent->source->instance, createEvent->reportMessageCode);	// NMJ 
 			sprintf(buf, "Rejected event from %d.%d.%d.%d. No available Event Ids.", createEvent->source->subsystem, createEvent->source->node, createEvent->source->component, createEvent->source->instance);		// NMJ
 			DebugEvent *e = new DebugEvent("Event", __FUNCTION__, __LINE__, buf);
 			this->eventHandler->handleEvent(e);
@@ -823,6 +826,7 @@ bool CommunicatorComponent::processCreateEvent(JausMessage message)
 			this->commMngr->receiveJausMessage(txMessage, this);
 		}
 		confirmEventRequestMessageDestroy(confirmEventRequest);
+		jausMessageDestroy(message);
 		return false;
 	}
 
@@ -835,6 +839,8 @@ bool CommunicatorComponent::processCreateEvent(JausMessage message)
 
 	queryConfigurationMessageDestroy(queryConf);
 	createEventMessageDestroy(createEvent);
+	confirmEventRequestMessageDestroy(confirmEventRequest);
+	jausMessageDestroy(message);
 	return true;
 }
 
@@ -847,6 +853,7 @@ bool CommunicatorComponent::processCancelEvent(JausMessage message)
 	{
 		// Error unpacking message
 		// TODO: Throw Exception. Log Error.
+		jausMessageDestroy(message);
 		return false;
 	}
 
@@ -870,6 +877,7 @@ bool CommunicatorComponent::processCancelEvent(JausMessage message)
 	}
 
 	cancelEventMessageDestroy(cancelEvent);
+	jausMessageDestroy(message);
 	return true;
 }
 
@@ -1080,24 +1088,28 @@ bool CommunicatorComponent::sendQueryComponentIdentification(JausAddress address
 bool CommunicatorComponent::processCreateServiceConnection(JausMessage message)
 {
 	// Not implemented right now
+	jausMessageDestroy(message);
 	return true;
 }
 
 bool CommunicatorComponent::processActivateServiceConnection(JausMessage message)
 {
 	// Not Implemented right now
+	jausMessageDestroy(message);
 	return true;
 }
 
 bool CommunicatorComponent::processSuspendServiceConnection(JausMessage message)
 {
 	// Not Implemented right now
+	jausMessageDestroy(message);
 	return true;
 }
 
 bool CommunicatorComponent::processTerminateServiceConnection(JausMessage message)
 {
 	// Not Implemented right now
+	jausMessageDestroy(message);
 	return true;
 }
 
@@ -1113,6 +1125,7 @@ bool CommunicatorComponent::processRequestComponentControl(JausMessage message)
 	{
 		// Error unpacking message
 		// TODO: Log Error. Throw Exception
+		jausMessageDestroy(message);
 		return false;
 	}
 
@@ -1200,6 +1213,7 @@ bool CommunicatorComponent::processRequestComponentControl(JausMessage message)
 	}
 
 	requestComponentControlMessageDestroy(requestComponentControl);
+	jausMessageDestroy(message);
 	return true;
 }
 
@@ -1208,11 +1222,11 @@ bool CommunicatorComponent::processQueryComponentAuthority(JausMessage message)
 	ReportComponentAuthorityMessage report = NULL;
 	JausMessage txMessage = NULL;
 
-
 	report = reportComponentAuthorityMessageCreate();
 	if(!report)
 	{
 		// TODO: Throw Exception. Log Error.
+		jausMessageDestroy(message);
 		return false;
 	}
 
@@ -1227,6 +1241,7 @@ bool CommunicatorComponent::processQueryComponentAuthority(JausMessage message)
 	}
 
 	reportComponentAuthorityMessageDestroy(report);
+	jausMessageDestroy(message);
 	return true;
 }
 
@@ -1234,7 +1249,6 @@ bool CommunicatorComponent::processQueryComponentStatus(JausMessage message)
 {
 	ReportComponentStatusMessage reportComponentStatus = NULL;
 	JausMessage txMessage = NULL;
-
 
 	reportComponentStatus = reportComponentStatusMessageCreate();
 	jausAddressCopy(reportComponentStatus->source, cmpt->address);
@@ -1248,6 +1262,7 @@ bool CommunicatorComponent::processQueryComponentStatus(JausMessage message)
 	}
 
 	reportComponentStatusMessageDestroy(reportComponentStatus);
+	jausMessageDestroy(message);
 	return true;
 }
 
@@ -1261,6 +1276,7 @@ bool CommunicatorComponent::processQueryHeartbeatPulse(JausMessage message)
 	if(!reportHeartbeat)
 	{
 		// TODO: Log Error. Throw Exception.
+		jausMessageDestroy(message);
 		return false;
 	}
 
@@ -1271,6 +1287,7 @@ bool CommunicatorComponent::processQueryHeartbeatPulse(JausMessage message)
 	{
 		this->commMngr->receiveJausMessage(txMessage, this);
 	}
+	jausMessageDestroy(message);
 	return true;
 }
 
@@ -1285,7 +1302,8 @@ bool CommunicatorComponent::processQueryConfiguration(JausMessage message)
 	if(!queryConf)
 	{
 		// TODO: Log Error. Throw Exception.
-		// Error unpacking message	
+		// Error unpacking message
+		jausMessageDestroy(message);
 		return false;
 	}
 	
@@ -1299,6 +1317,7 @@ bool CommunicatorComponent::processQueryConfiguration(JausMessage message)
 			{
 				// TODO: Log Error. Throw Exception
 				queryConfigurationMessageDestroy(queryConf);
+				jausMessageDestroy(message);
 				return false;
 			}
 			
@@ -1320,6 +1339,7 @@ bool CommunicatorComponent::processQueryConfiguration(JausMessage message)
 
 			reportConfigurationMessageDestroy(reportConf);
 			queryConfigurationMessageDestroy(queryConf);
+			jausMessageDestroy(message);
 			return true;
 
 		case JAUS_NODE_CONFIGURATION:
@@ -1330,6 +1350,7 @@ bool CommunicatorComponent::processQueryConfiguration(JausMessage message)
 			{
 				// TODO: Log Error. Throw Exception
 				queryConfigurationMessageDestroy(queryConf);
+				jausMessageDestroy(message);
 				return false;
 			}
 			
@@ -1350,12 +1371,14 @@ bool CommunicatorComponent::processQueryConfiguration(JausMessage message)
 
 			reportConfigurationMessageDestroy(reportConf);
 			queryConfigurationMessageDestroy(queryConf);
+			jausMessageDestroy(message);
 			return true;
 
 		default:
 			// TODO: Log Error. Throw Exception.
 			// Unknown query type
 			queryConfigurationMessageDestroy(queryConf);
+			jausMessageDestroy(message);
 			return false;
 	}
 }
@@ -1371,7 +1394,8 @@ bool CommunicatorComponent::processQueryIdentification(JausMessage message)
 	if(!queryId)
 	{
 		// TODO: Log Error. Throw Exception.
-		// Error unpacking message	
+		// Error unpacking message
+		jausMessageDestroy(message);
 		return false;
 	}
 	
@@ -1383,6 +1407,7 @@ bool CommunicatorComponent::processQueryIdentification(JausMessage message)
 			{
 				// TODO: Log Error. Throw Exception
 				queryIdentificationMessageDestroy(queryId);
+				jausMessageDestroy(message);		
 				return false;
 			}
 
@@ -1396,6 +1421,7 @@ bool CommunicatorComponent::processQueryIdentification(JausMessage message)
 				memcpy(reportId->identification, identification, JAUS_IDENTIFICATION_LENGTH_BYTES-1);
 				reportId->identification[JAUS_IDENTIFICATION_LENGTH_BYTES-1] = 0;
 			}
+			free(identification);
 
 			reportId->queryType = JAUS_QUERY_FIELD_SS_IDENTITY;
 			txMessage = reportIdentificationMessageToJausMessage(reportId);
@@ -1408,6 +1434,7 @@ bool CommunicatorComponent::processQueryIdentification(JausMessage message)
 
 			reportIdentificationMessageDestroy(reportId);
 			queryIdentificationMessageDestroy(queryId);
+			jausMessageDestroy(message);
 			return true;
 
 		case JAUS_QUERY_FIELD_NODE_IDENTITY:
@@ -1418,6 +1445,7 @@ bool CommunicatorComponent::processQueryIdentification(JausMessage message)
 			{
 				// TODO: Log Error. Throw Exception
 				queryIdentificationMessageDestroy(queryId);
+				jausMessageDestroy(message);
 				return false;
 			}
 			
@@ -1443,6 +1471,7 @@ bool CommunicatorComponent::processQueryIdentification(JausMessage message)
 
 			reportIdentificationMessageDestroy(reportId);
 			queryIdentificationMessageDestroy(queryId);
+			jausMessageDestroy(message);
 			return true;
 
 		case JAUS_QUERY_FIELD_COMPONENT_IDENTITY:
@@ -1451,6 +1480,7 @@ bool CommunicatorComponent::processQueryIdentification(JausMessage message)
 			{
 				// TODO: Log Error. Throw Exception
 				queryIdentificationMessageDestroy(queryId);
+				jausMessageDestroy(message);
 				return false;
 			}
 			
@@ -1476,10 +1506,12 @@ bool CommunicatorComponent::processQueryIdentification(JausMessage message)
 
 			reportIdentificationMessageDestroy(reportId);
 			queryIdentificationMessageDestroy(queryId);
+			jausMessageDestroy(message);
 			return true;
 
 		default:
 			queryIdentificationMessageDestroy(queryId);
+			jausMessageDestroy(message);
 			return false;
 	}
 }
@@ -1494,6 +1526,7 @@ bool CommunicatorComponent::processQueryServices(JausMessage message)
 	if(!queryServices)
 	{
 		// TODO: Log Error. Throw Exception.
+		jausMessageDestroy(message);
 		return false;
 	}
 
@@ -1503,6 +1536,7 @@ bool CommunicatorComponent::processQueryServices(JausMessage message)
 	{
 		// TODO: Log Error. Throw Exception.
 		queryServicesMessageDestroy(queryServices);
+		jausMessageDestroy(message);
 		return false;
 	}
 
@@ -1598,6 +1632,7 @@ bool CommunicatorComponent::sendQueryComponentServices(JausAddress address)
 		queryServicesMessageDestroy(query);
 		return true;
 	}
+
 	return false;
 }
 bool CommunicatorComponent::sendQueryNodeConfiguration(JausAddress address, bool createEvent)

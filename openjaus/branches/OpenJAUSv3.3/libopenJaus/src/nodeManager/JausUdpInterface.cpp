@@ -184,10 +184,6 @@ bool JausUdpInterface::routeMessage(JausMessage message)
 			break;
 
 		case NODE_INTERFACE:
-			if(message->commandCode == JAUS_REPORT_HEARTBEAT_PULSE && message->source->subsystem != mySubsystemId)
-			{
-				printf("HB");
-			}
 			if(	message->destination->subsystem == mySubsystemId || 
 				message->destination->subsystem == JAUS_BROADCAST_SUBSYSTEM_ID )
 			{
