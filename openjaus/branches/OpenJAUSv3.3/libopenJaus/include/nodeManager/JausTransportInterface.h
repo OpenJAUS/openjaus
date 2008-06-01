@@ -104,6 +104,8 @@ protected:
 	pthread_attr_t threadAttributes;
 	pthread_cond_t threadConditional;
 	pthread_mutex_t threadMutex;
+
+	JausByte mySubsystemId;
 };
 
 #endif

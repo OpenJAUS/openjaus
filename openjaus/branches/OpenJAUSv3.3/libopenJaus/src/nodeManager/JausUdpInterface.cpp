@@ -56,6 +56,7 @@ JausUdpInterface::JausUdpInterface(FileLoader *configData, EventHandler *handler
 	this->name = JAUS_UDP_NAME;
 	this->configData = configData;
 	this->multicast = false;
+	this->subsystemGatewayDiscovered = false;
 	
 	// Determine the type of our commMngr
 	if(dynamic_cast<JausSubsystemCommunicationManager  *>(this->commMngr))
@@ -73,6 +74,18 @@ JausUdpInterface::JausUdpInterface(FileLoader *configData, EventHandler *handler
 	else
 	{
 		this->type = UNKNOWN_INTERFACE;
+	}
+
+
+	// NOTE: These two values should exist in the properties file and should be checked 
+	// in the NodeManager class prior to constructing this object
+	mySubsystemId = configData->GetConfigDataInt("JAUS", "SubsystemId");
+	if(mySubsystemId < JAUS_MINIMUM_SUBSYSTEM_ID || mySubsystemId > JAUS_MAXIMUM_SUBSYSTEM_ID)
+	{
+		// Invalid ID
+		// TODO: Throw an exception? Log an error.
+		mySubsystemId = JAUS_INVALID_SUBSYSTEM_ID;
+		return;
 	}
 
 	// Setup our UDP Socket
@@ -174,35 +187,54 @@ bool JausUdpInterface::routeMessage(JausMessage message)
 			break;
 
 		case NODE_INTERFACE:
-			// if node==BROADCAST send multicast
-			if(message->destination->node == JAUS_BROADCAST_NODE_ID)
+			if(message->destination->subsystem == mySubsystemId)
 			{
-				if(this->multicast)
+				// if node==BROADCAST send multicast
+				if(message->destination->node == JAUS_BROADCAST_NODE_ID)
 				{
-					//if(message->commandCode == JAUS_QUERY_SERVICES) printf("Sending Node Multicast JAUS_QUERY_SERVICES\n");
-					// Send multicast packet
-					sendJausMessage(this->multicastData, message);
-					jausMessageDestroy(message);
-					return true;
+					if(this->multicast)
+					{
+						//if(message->commandCode == JAUS_QUERY_SERVICES) printf("Sending Node Multicast JAUS_QUERY_SERVICES\n");
+						// Send multicast packet
+						sendJausMessage(this->multicastData, message);
+						jausMessageDestroy(message);
+						return true;
+					}
+					else
+					{
+						// Unicast to all known nodes
+						HASH_MAP<int, UdpTransportData>::iterator iter;
+						for(iter = addressMap.begin(); iter != addressMap.end(); iter++)
+						{
+							sendJausMessage(iter->second, message);
+						}
+						jausMessageDestroy(message);
+						return true;
+					}
 				}
 				else
 				{
-					// Unicast to all known subsystems
-					HASH_MAP<int, UdpTransportData>::iterator iter;
-					for(iter = addressMap.begin(); iter != addressMap.end(); iter++)
+					// Unicast
+					if(addressMap.find(message->destination->node) != addressMap.end())
 					{
-						sendJausMessage(iter->second, message);
+						sendJausMessage(addressMap.find(message->destination->node)->second, message);
+						jausMessageDestroy(message);
+						return true;
 					}
-					jausMessageDestroy(message);
-					return true;
+					else
+					{
+						// Don't know how to send this message
+						jausMessageDestroy(message);
+						return false;
+					}
 				}
 			}
 			else
 			{
-				// Unicast
-				if(addressMap.find(message->destination->node) != addressMap.end())
+				// Message for other subsystem
+				if(subsystemGatewayDiscovered)
 				{
-					sendJausMessage(addressMap.find(message->destination->node)->second, message);
+					sendJausMessage(subsystemGatewayData, message);
 					jausMessageDestroy(message);
 					return true;
 				}
@@ -457,8 +489,7 @@ void JausUdpInterface::closeSocket(void)
 void JausUdpInterface::startRecvThread()
 {
 	pthread_attr_init(&this->recvThreadAttr);
-	//pthread_attr_setdetachstate(&this->recvThreadAttr, PTHREAD_CREATE_DETACHED);
-
+	pthread_attr_setdetachstate(&this->recvThreadAttr, PTHREAD_CREATE_JOINABLE);
 	this->recvThreadId = pthread_create(&this->recvThread, &this->recvThreadAttr, UdpRecvThread, this);
 	pthread_attr_destroy(&this->recvThreadAttr);
 }
@@ -467,7 +498,6 @@ void JausUdpInterface::stopRecvThread()
 {
 	pthread_join(this->recvThread, NULL);
 }
-
 
 void JausUdpInterface::recvThreadRun()
 {
@@ -512,7 +542,15 @@ void JausUdpInterface::recvThreadRun()
 					case NODE_INTERFACE:
 						data.addressValue = packet->address->value;
 						data.port = JAUS_UDP_DATA_PORT;
-						this->addressMap[rxMessage->source->node] = data;
+						if(rxMessage->source->subsystem == mySubsystemId)
+						{
+							this->addressMap[rxMessage->source->node] = data;
+						}
+						else
+						{
+							this->subsystemGatewayData = data;
+							this->subsystemGatewayDiscovered = true;
+						}
 						break;
 
 					case COMPONENT_INTERFACE:

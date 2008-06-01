@@ -109,6 +109,8 @@ private:
 	void stopRecvThread();
 
 	HASH_MAP <int, UdpTransportData> addressMap;
+	bool subsystemGatewayDiscovered;
+	UdpTransportData subsystemGatewayData;
 	UdpTransportData multicastData;
 };
 

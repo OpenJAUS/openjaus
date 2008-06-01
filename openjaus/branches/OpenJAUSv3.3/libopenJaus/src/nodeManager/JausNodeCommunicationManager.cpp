@@ -52,6 +52,7 @@ JausNodeCommunicationManager::JausNodeCommunicationManager(FileLoader *configDat
 	this->systemTree = systemTree;
 	this->msgRouter = msgRouter;
 	this->configData = configData;
+	this->subsystemGatewayInterface = NULL;
 
 	// NOTE: These two values should exist in the properties file and should be checked 
 	// in the NodeManager class prior to constructing this object
@@ -275,8 +276,16 @@ bool JausNodeCommunicationManager::receiveJausMessage(JausMessage message, JausT
 		}
 		else
 		{
-			// Put Interface data on the map
-			interfaceMap[message->source->node] = srcInf;
+			if(message->source->subsystem == mySubsystemId)
+			{
+				// Put Interface data on the map
+				interfaceMap[message->source->node] = srcInf;
+			}
+			else
+			{
+				// Message is from another subsystem
+				this->subsystemGatewayInterface = srcInf;
+			}
 
 			if(message->destination->subsystem == mySubsystemId)
 			{
@@ -298,6 +307,8 @@ bool JausNodeCommunicationManager::receiveJausMessage(JausMessage message, JausT
 				msgRouter->routeNodeSourceMessage(message);
 				return true;
 			}
+
+
 		}
 	}
 	else //message->source->subsystem != mySubsystemId
@@ -344,29 +355,18 @@ bool JausNodeCommunicationManager::sendToSubsystemGateway(JausMessage message)
 		jausMessageDestroy(message);
 		return false;
 	}
-
-	// Find the Communicator's Address
-	JausAddress commAddress = systemTree->lookUpAddress(mySubsystemId, JAUS_ADDRESS_WILDCARD_OCTET, JAUS_COMMUNICATOR, JAUS_ADDRESS_WILDCARD_OCTET);
-	if(commAddress)
+	
+	// Send to the subsystemGatewayInterface
+	if(subsystemGatewayInterface)
 	{
 		// Send to the Communicator's Node
-		JausTransportInterface *jtInf = interfaceMap[commAddress->node];
-		if(jtInf)
-		{
-			jtInf->queueJausMessage(message);
-			return true;
-		}
-		else
-		{
-			// I don't know how to send something to that node
-			jausMessageDestroy(message);
-			return false;
-		}
+		subsystemGatewayInterface->queueJausMessage(message);
+		return true;
 	}
 	else if(myNodeId != JAUS_PRIMARY_NODE_MANAGER_NODE)
 	{
 		// Send to the Primary Node Manager (note this is mainly for backwards compatibility)
-		JausTransportInterface *jtInf = interfaceMap[commAddress->node];
+		JausTransportInterface *jtInf = interfaceMap[JAUS_PRIMARY_NODE_MANAGER_NODE];
 		if(jtInf)
 		{
 			jtInf->queueJausMessage(message);
@@ -381,7 +381,7 @@ bool JausNodeCommunicationManager::sendToSubsystemGateway(JausMessage message)
 	}
 	else
 	{
-		// No known communicator
+		// No known subsystem interface
 		// This is the Primary Node
 		// And I don't have an active SubsCommMngr
 		jausMessageDestroy(message);
