@@ -41,7 +41,7 @@
 #define KEYBOARD_LOCK_TIMEOUT_SEC	60.0
 
 static int mainRunning = FALSE;
-static int verbose = TRUE;
+static int verbose = FALSE;
 static int keyboardLock = FALSE;
 static FILE *logFile = NULL;
 static char timeString[DEFAULT_STRING_LENGTH] = "";
@@ -54,7 +54,8 @@ static char timeString[DEFAULT_STRING_LENGTH] = "";
 	static struct termios storedTermio;
 #endif
 
-
+OjCmpt gpos;
+	
 // Refresh screen in curses mode
 void updateScreen(int keyboardLock, int keyPress)
 {
@@ -63,6 +64,7 @@ void updateScreen(int keyboardLock, int keyPress)
 	char string[256] = {0};
 	PointLla vehiclePosLla;
 	static int lastChoice = '1';
+	JausAddress address;
 	
 	if(!keyboardLock && keyPress != -1 && keyPress != 27 && keyPress != 12) //Magic Numbers: 27 = ESC, 12 = Ctrl+l
 	{
@@ -153,11 +155,13 @@ void updateScreen(int keyboardLock, int keyPress)
 		
 		case '3':
 			mvprintw(row++,col,"Global Pose Sensor");	
-			mvprintw(row++,col,"GPOS Update Rate: %7.2f", gposGetUpdateRate());	
-			jausAddressToString(gposGetAddress(), string );	
+			mvprintw(row++,col,"GPOS Update Rate: %7.2f", gposGetUpdateRate(gpos));	
+			address = gposGetAddress(gpos);
+			jausAddressToString(address, string );
+			jausAddressDestroy(address);
 			mvprintw(row++,col,"GPOS Address:\t    %s", string);	
-			mvprintw(row++,col,"GPOS State:\t    %s", jausStateGetString(gposGetState()));	
-			mvprintw(row++,col,"GPOS SC State:\t    %s", gposGetScActive()? "Active" : "Inactive");	
+			mvprintw(row++,col,"GPOS State:\t    %s", jausStateGetString(gposGetState(gpos)));	
+			mvprintw(row++,col,"GPOS SC State:\t    %s", gposGetScActive(gpos)? "Active" : "Inactive");	
 			
 			row++;
 			mvprintw(row++,col,"Velocity State Sensor");	
@@ -517,7 +521,8 @@ int main(int argCount, char **argString)
 #endif
 		return 0;
 	}
-
+	gpos = gposCreate();
+	
 	setupTerminal();
 
 	mainRunning = TRUE;
@@ -551,6 +556,7 @@ int main(int argCount, char **argString)
 	cleanupConsole();
 	
 	//cDebug(1, "main: Shutting Down %s Node Software\n", simulatorGetName());
+	gposDestroy(gpos);
 	simulatorShutdown();
 	
 	if(logFile != NULL)
