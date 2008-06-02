@@ -182,7 +182,7 @@ char *jausComponentGetTypeString(JausComponent component)
 				return "GlobalPathSegmentDriver";
 		case JAUS_LOCAL_PATH_SEGMENT_DRIVER:
 				return "LocalPathSegmentDriver";
-		case JAUS_PRIMATIVE_MANIPULATOR:
+		case JAUS_PRIMITIVE_MANIPULATOR:
 				return "PrimativeManipulator";
 		case JAUS_MANIPULATOR_JOINT_POSITION_SENSOR:
 				return "ManipulatorJointPositionSensor";

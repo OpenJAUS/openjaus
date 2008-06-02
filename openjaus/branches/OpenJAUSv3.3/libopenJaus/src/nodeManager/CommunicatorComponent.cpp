@@ -57,7 +57,7 @@ CommunicatorComponent::CommunicatorComponent(FileLoader *configData, EventHandle
 	if(configData == NULL)
 	{
 		// OK, don't do this. This is bad.
-		// TODO: Throw an exception? Log an error.
+		throw "CommunicatorComponent: Configuration file is NULL\n";
 		return;
 	}
 
@@ -66,7 +66,7 @@ CommunicatorComponent::CommunicatorComponent(FileLoader *configData, EventHandle
 	if(cmptComms == NULL)
 	{
 		// OK, don't do this. This is bad.
-		// TODO: Throw an exception? Log an error.
+		throw "CommunicatorComponent: Component Communication Manager is NULL\n";
 		return;
 	}
 
@@ -88,7 +88,7 @@ CommunicatorComponent::CommunicatorComponent(FileLoader *configData, EventHandle
 	if(subsystemId < JAUS_MINIMUM_SUBSYSTEM_ID || subsystemId > JAUS_MAXIMUM_SUBSYSTEM_ID)
 	{
 		// Invalid ID
-		// TODO: Throw an exception? Log an error.
+		throw "CommunicatorComponent: Config file [JAUS] SubsystemId is invalid\n";
 		return;
 	}
 
@@ -96,14 +96,14 @@ CommunicatorComponent::CommunicatorComponent(FileLoader *configData, EventHandle
 	if(nodeId < JAUS_MINIMUM_NODE_ID || nodeId > JAUS_MAXIMUM_NODE_ID)
 	{
 		// Invalid ID
-		// TODO: Throw an exception? Log an error.
+		throw "CommunicatorComponent: Config file [JAUS] NodeId is invalid\n";
 		return;
 	}
 
 	this->cmpt = jausComponentCreate();
 	if(!this->cmpt)
 	{
-		// TODO: Throw exception? Log error.
+		throw "CommunicatorComponent: Could not create JausComponent\n";
 		return;
 	}
 
@@ -114,7 +114,6 @@ CommunicatorComponent::CommunicatorComponent(FileLoader *configData, EventHandle
 	
 	this->cmpt->identification = (char *)calloc(strlen(this->name.c_str()) + 1, sizeof(char));
 	strcpy(this->cmpt->identification, this->name.c_str());
-
 }
 
 CommunicatorComponent::~CommunicatorComponent(void)
@@ -143,7 +142,8 @@ bool CommunicatorComponent::startInterface()
 
 	if(!systemTree->addComponent(this->cmpt))
 	{
-		// TODO: Log Error, we can't add our communicator with instance 1
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::Configuration, __FUNCTION__, __LINE__, "Cannot add Communicator component");
+		this->eventHandler->handleEvent(e);
 		return false;
 	}
 
@@ -163,22 +163,13 @@ bool CommunicatorComponent::stopInterface()
 
 bool CommunicatorComponent::processMessage(JausMessage message)
 {
-	// Check for loopback of message from myself
-	if(jausAddressEqual(message->source, cmpt->address))
+	if(!message || !message->destination)
 	{
-		// We sent a broadcast (*.*.255.255) message probably
-		// Just eat it.
-		jausMessageDestroy(message);
-		return true;
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::NullPointer, __FUNCTION__, __LINE__, "Invalid JausMessage.");
+		this->eventHandler->handleEvent(e);
+		return false;
 	}
-
-	//char buf[80] = {0};
-	//jausAddressToString(message->source, buf);
-	//printf("Com: Process %s from %s", jausMessageCommandCodeString(message), buf);
-	//jausAddressToString(message->destination, buf);
-	//printf(" to %s\n", buf);
-
-	// TODO: Let's add our hack here for making every message look like a heartbeat!
+	
 	switch(message->commandCode)
 	{
 		case JAUS_SET_COMPONENT_AUTHORITY:
@@ -414,7 +405,6 @@ void CommunicatorComponent::shutdownState()
 void CommunicatorComponent::allState()
 {
 	generateHeartbeats();
-	// TODO: Create SystemTree refresh trigger at some rate
 	// TODO: Check for serviceConnections
 }
 
@@ -427,7 +417,8 @@ bool CommunicatorComponent::processReportIdentification(JausMessage message)
 	if(!reportId)
 	{
 		// Error unpacking the reportId msg
-		// TODO: Log Error. Throw Exception?
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::Memory, __FUNCTION__, __LINE__, "Cannot unpack ReportId message");
+		this->eventHandler->handleEvent(e);
 		jausMessageDestroy(message);
 		return false;
 	}
@@ -445,7 +436,8 @@ bool CommunicatorComponent::processReportIdentification(JausMessage message)
 			if(!systemTree->hasSubsystem(reportId->source))
 			{
 				// Report ID from unknown Subsystem
-				// TODO: Log Error. Throw Exception
+				ErrorEvent *e = new ErrorEvent(ErrorEvent::Message, __FUNCTION__, __LINE__, "Recieved ReportID from an unknown Subsystem");
+				this->eventHandler->handleEvent(e);
 				reportIdentificationMessageDestroy(reportId);
 				jausMessageDestroy(message);
 				return false;
@@ -465,7 +457,8 @@ bool CommunicatorComponent::processReportIdentification(JausMessage message)
 			if(!systemTree->hasNode(reportId->source))
 			{
 				// Report ID from unknown Node
-				// TODO: Log Error. Throw Exception
+				ErrorEvent *e = new ErrorEvent(ErrorEvent::Message, __FUNCTION__, __LINE__, "Recieved ReportID from an unknown Node");
+				this->eventHandler->handleEvent(e);
 				reportIdentificationMessageDestroy(reportId);
 				jausMessageDestroy(message);
 				return false;
@@ -485,7 +478,8 @@ bool CommunicatorComponent::processReportIdentification(JausMessage message)
 			if(!systemTree->hasComponent(reportId->source))
 			{
 				// Report ID from unknown Component
-				// TODO: Log Error. Throw Exception
+				ErrorEvent *e = new ErrorEvent(ErrorEvent::Message, __FUNCTION__, __LINE__, "Recieved ReportID from an unknown Component");
+				this->eventHandler->handleEvent(e);
 				reportIdentificationMessageDestroy(reportId);
 				jausMessageDestroy(message);
 				return false;
@@ -498,7 +492,8 @@ bool CommunicatorComponent::processReportIdentification(JausMessage message)
 			return true;
 
 		default:
-			// TODO: Log Error. Throw Exception.
+			ErrorEvent *e = new ErrorEvent(ErrorEvent::Message, __FUNCTION__, __LINE__, "Recieved ReportID with undefined queryType");
+			this->eventHandler->handleEvent(e);
 			reportIdentificationMessageDestroy(reportId);
 			jausMessageDestroy(message);
 			return true;
@@ -527,7 +522,8 @@ bool CommunicatorComponent::processReportConfiguration(JausMessage message)
 	if(!reportConf)
 	{
 		// Error unpacking the reportConf
-		// TODO: Log Error
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::Memory, __FUNCTION__, __LINE__, "Cannot unpack reportConf");
+		this->eventHandler->handleEvent(e);
 		jausMessageDestroy(message);
 		return false;
 	}
@@ -535,7 +531,8 @@ bool CommunicatorComponent::processReportConfiguration(JausMessage message)
 	// Has Subs?
 	if(!systemTree->hasSubsystem(reportConf->source))
 	{
-		// TODO: Throw Exception. Log Error.
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::Message, __FUNCTION__, __LINE__, "Report Configuration from unknown Subsystem");
+		this->eventHandler->handleEvent(e);
 		reportConfigurationMessageDestroy(reportConf);
 		jausMessageDestroy(message);
 		return false;
@@ -554,7 +551,8 @@ bool CommunicatorComponent::processReportConfiguration(JausMessage message)
 			JausAddress address = jausAddressCreate();
 			if(!address)
 			{
-				// TODO: Throw Exception. Log Error.
+				ErrorEvent *e = new ErrorEvent(ErrorEvent::Message, __FUNCTION__, __LINE__, "Report Configuration from unknown Subsystem");
+				this->eventHandler->handleEvent(e);
 				reportConfigurationMessageDestroy(reportConf);
 				jausMessageDestroy(message);
 				return false;
@@ -597,7 +595,8 @@ bool CommunicatorComponent::processReportServices(JausMessage message)
 	reportServices = reportServicesMessageFromJausMessage(message);
 	if(!reportServices)
 	{
-		// TODO: Log error. Throw Exception.
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::Memory, __FUNCTION__, __LINE__, "Cannot unpack reportServices");
+		this->eventHandler->handleEvent(e);
 		jausMessageDestroy(message);
 		return false;
 	}
@@ -615,10 +614,11 @@ bool CommunicatorComponent::processReportServices(JausMessage message)
 bool CommunicatorComponent::processReportHeartbeatPulse(JausMessage message)
 {
 	// This function follows the flowchart designed for NM 2.0 by D. Kent and T. Galluzzo
-	if(message->source->subsystem == cmpt->address->subsystem)
+	if(jausAddressEqual(message->source, cmpt->address))
 	{
 		// Should not receive my own heartbeats
-		// TODO: Throw Exception. Log Error.
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::Message, __FUNCTION__, __LINE__, "Received Heartbeat message from myself!");
+		this->eventHandler->handleEvent(e);
 		jausMessageDestroy(message);
 		return false;
 	}
@@ -658,7 +658,8 @@ bool CommunicatorComponent::processReportHeartbeatPulse(JausMessage message)
 	JausSubsystem subs = systemTree->getSubsystem(message->source);
 	if(!subs)
 	{
-		// TODO: Throw Exception. Log Error.
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::Memory, __FUNCTION__, __LINE__, "Could not retrieve Subsystem pointer from System Tree");
+		this->eventHandler->handleEvent(e);
 		jausMessageDestroy(message);
 		return false;
 	}
@@ -672,7 +673,9 @@ bool CommunicatorComponent::processReportHeartbeatPulse(JausMessage message)
 			JausAddress address = jausAddressCreate();
 			if(!address)
 			{
-				// TODO: Throw Exception. Log Error.
+				ErrorEvent *e = new ErrorEvent(ErrorEvent::Memory, __FUNCTION__, __LINE__, "Cannot create JausAddress memory");
+				this->eventHandler->handleEvent(e);
+
 				jausSubsystemDestroy(subs);
 				jausMessageDestroy(message);
 				return false;
@@ -702,6 +705,7 @@ bool CommunicatorComponent::processReportHeartbeatPulse(JausMessage message)
 		} // end For(Components)
 	} // end For(Nodes)
 
+	jausSubsystemDestroy(subs);
 	jausMessageDestroy(message);
 	return true;
 }
@@ -719,7 +723,9 @@ bool CommunicatorComponent::processCreateEvent(JausMessage message)
 	confirmEventRequest = confirmEventRequestMessageCreate();
 	if(!confirmEventRequest)
 	{
-		//TODO: Log Error. Throw Exception
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::Memory, __FUNCTION__, __LINE__, "Cannot create ConfirmEvent structure");
+		this->eventHandler->handleEvent(e);
+
 		jausMessageDestroy(message);
 		return false;
 	}
@@ -729,7 +735,9 @@ bool CommunicatorComponent::processCreateEvent(JausMessage message)
 	createEvent = createEventMessageFromJausMessage(message);
 	if(!createEvent)
 	{
-		//TODO: Log Error. Throw Exception
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::Message, __FUNCTION__, __LINE__, "Cannot unpack Create Event Message");
+		this->eventHandler->handleEvent(e);
+
 		confirmEventRequest->responseCode = INVALID_EVENT_RESPONSE;
 		txMessage = confirmEventRequestMessageToJausMessage(confirmEventRequest);
 		if(txMessage)
@@ -766,7 +774,9 @@ bool CommunicatorComponent::processCreateEvent(JausMessage message)
 	if(!queryConf)
 	{
 		// ERROR: Cannot unpack query message
-		// TODO: Log Error. Throw Exception
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::Message, __FUNCTION__, __LINE__, "Cannot unpack Query Configuration Message");
+		this->eventHandler->handleEvent(e);
+
 		confirmEventRequest->responseCode = INVALID_EVENT_RESPONSE;
 		txMessage = confirmEventRequestMessageToJausMessage(confirmEventRequest);
 		if(txMessage)
@@ -817,7 +827,9 @@ bool CommunicatorComponent::processCreateEvent(JausMessage message)
 	}
 	else
 	{
-		// TODO: Log Error. Throw Exception.
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::Message, __FUNCTION__, __LINE__, "Create Event: Invalid Query Type");
+		this->eventHandler->handleEvent(e);
+
 		// Invalid Query Type
 		confirmEventRequest->responseCode = INVALID_EVENT_RESPONSE;
 		txMessage = confirmEventRequestMessageToJausMessage(confirmEventRequest);
@@ -852,7 +864,8 @@ bool CommunicatorComponent::processCancelEvent(JausMessage message)
 	if(!cancelEvent)
 	{
 		// Error unpacking message
-		// TODO: Throw Exception. Log Error.
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::Message, __FUNCTION__, __LINE__, "Cannot unpack Cancel Event Message");
+		this->eventHandler->handleEvent(e);
 		jausMessageDestroy(message);
 		return false;
 	}
@@ -891,14 +904,17 @@ void CommunicatorComponent::sendSubsystemChangedEvents()
 	JausSubsystem thisSubs = systemTree->getSubsystem(this->cmpt->address);
 	if(!thisSubs)
 	{
-		// TODO: Record an error. Throw Exception
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::Memory, __FUNCTION__, __LINE__, "Cannot get my subsystem from System Tree");
+		this->eventHandler->handleEvent(e);
 		return;
 	}
 
 	reportConf = reportConfigurationMessageCreate();
 	if(!reportConf)
 	{
-		// TODO: Record an error. Throw Exception
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::Memory, __FUNCTION__, __LINE__, "Cannot create reportConf");
+		this->eventHandler->handleEvent(e);
+
 		jausSubsystemDestroy(thisSubs);
 		return;
 	}
@@ -908,7 +924,8 @@ void CommunicatorComponent::sendSubsystemChangedEvents()
 	eventMessage = eventMessageCreate();
 	if(!eventMessage)
 	{
-		// TODO: Record an error. Throw Exception
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::Memory, __FUNCTION__, __LINE__, "Cannot create eventMessage");
+		this->eventHandler->handleEvent(e);
 		reportConfigurationMessageDestroy(reportConf);
 		return;
 	}
@@ -916,7 +933,9 @@ void CommunicatorComponent::sendSubsystemChangedEvents()
 	eventMessage->reportMessage = reportConfigurationMessageToJausMessage(reportConf);
 	if(!eventMessage->reportMessage)
 	{
-		// TODO: Record an error. Throw Exception
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::Message, __FUNCTION__, __LINE__, "Cannot pack reportConf");
+		this->eventHandler->handleEvent(e);
+
 		reportConfigurationMessageDestroy(reportConf);
 		eventMessageDestroy(eventMessage);
 		return;
@@ -954,7 +973,9 @@ void CommunicatorComponent::generateHeartbeats()
 		if(!heartbeat)
 		{
 			// Error constructing message
-			// TODO: Log Error.
+			ErrorEvent *e = new ErrorEvent(ErrorEvent::Memory, __FUNCTION__, __LINE__, "Cannot create heartbeat structure");
+			this->eventHandler->handleEvent(e);
+			
 			return;
 		}
 		jausAddressCopy(heartbeat->source, cmpt->address);
@@ -963,7 +984,9 @@ void CommunicatorComponent::generateHeartbeats()
 		if(!subsHeartbeat)
 		{
 			// Error constructing message
-			// TODO: Log Error.
+			ErrorEvent *e = new ErrorEvent(ErrorEvent::Message, __FUNCTION__, __LINE__, "Cannot pack Report Heartbeat Message");
+			this->eventHandler->handleEvent(e);
+
 			reportHeartbeatPulseMessageDestroy(heartbeat);
 			return;
 		}
@@ -1124,7 +1147,9 @@ bool CommunicatorComponent::processRequestComponentControl(JausMessage message)
 	if(!requestComponentControl)
 	{
 		// Error unpacking message
-		// TODO: Log Error. Throw Exception
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::Message, __FUNCTION__, __LINE__, "Cannot unpack Request Comp. Control Message");
+		this->eventHandler->handleEvent(e);
+
 		jausMessageDestroy(message);
 		return false;
 	}
@@ -1225,7 +1250,9 @@ bool CommunicatorComponent::processQueryComponentAuthority(JausMessage message)
 	report = reportComponentAuthorityMessageCreate();
 	if(!report)
 	{
-		// TODO: Throw Exception. Log Error.
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::Memory, __FUNCTION__, __LINE__, "Cannot create Report Comp. Authority Message");
+		this->eventHandler->handleEvent(e);
+
 		jausMessageDestroy(message);
 		return false;
 	}
@@ -1275,7 +1302,9 @@ bool CommunicatorComponent::processQueryHeartbeatPulse(JausMessage message)
 	reportHeartbeat = reportHeartbeatPulseMessageCreate();
 	if(!reportHeartbeat)
 	{
-		// TODO: Log Error. Throw Exception.
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::Memory, __FUNCTION__, __LINE__, "Cannot create Report Heartbeat Pulse Message");
+		this->eventHandler->handleEvent(e);
+
 		jausMessageDestroy(message);
 		return false;
 	}
@@ -1301,8 +1330,10 @@ bool CommunicatorComponent::processQueryConfiguration(JausMessage message)
 	queryConf = queryConfigurationMessageFromJausMessage(message);
 	if(!queryConf)
 	{
-		// TODO: Log Error. Throw Exception.
 		// Error unpacking message
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::Message, __FUNCTION__, __LINE__, "Cannot unpack Query Configuration Message");
+		this->eventHandler->handleEvent(e);
+		
 		jausMessageDestroy(message);
 		return false;
 	}
@@ -1315,7 +1346,9 @@ bool CommunicatorComponent::processQueryConfiguration(JausMessage message)
 			reportConf = reportConfigurationMessageCreate();
 			if(!reportConf)
 			{
-				// TODO: Log Error. Throw Exception
+				ErrorEvent *e = new ErrorEvent(ErrorEvent::Memory, __FUNCTION__, __LINE__, "Cannot create Report Configuration Message");
+				this->eventHandler->handleEvent(e);
+
 				queryConfigurationMessageDestroy(queryConf);
 				jausMessageDestroy(message);
 				return false;
@@ -1348,7 +1381,9 @@ bool CommunicatorComponent::processQueryConfiguration(JausMessage message)
 			reportConf = reportConfigurationMessageCreate();
 			if(!reportConf)
 			{
-				// TODO: Log Error. Throw Exception
+				ErrorEvent *e = new ErrorEvent(ErrorEvent::Memory, __FUNCTION__, __LINE__, "Cannot create Report Configuration Message");
+				this->eventHandler->handleEvent(e);
+
 				queryConfigurationMessageDestroy(queryConf);
 				jausMessageDestroy(message);
 				return false;
@@ -1375,8 +1410,10 @@ bool CommunicatorComponent::processQueryConfiguration(JausMessage message)
 			return true;
 
 		default:
-			// TODO: Log Error. Throw Exception.
 			// Unknown query type
+			ErrorEvent *e = new ErrorEvent(ErrorEvent::Message, __FUNCTION__, __LINE__, "Invalid queryField in Query Configuration Message");
+			this->eventHandler->handleEvent(e);
+			
 			queryConfigurationMessageDestroy(queryConf);
 			jausMessageDestroy(message);
 			return false;
@@ -1393,8 +1430,10 @@ bool CommunicatorComponent::processQueryIdentification(JausMessage message)
 	queryId = queryIdentificationMessageFromJausMessage(message);
 	if(!queryId)
 	{
-		// TODO: Log Error. Throw Exception.
 		// Error unpacking message
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::Message, __FUNCTION__, __LINE__, "Cannot unpack Query Identification Message");
+		this->eventHandler->handleEvent(e);
+		
 		jausMessageDestroy(message);
 		return false;
 	}
@@ -1405,7 +1444,9 @@ bool CommunicatorComponent::processQueryIdentification(JausMessage message)
 			reportId = reportIdentificationMessageCreate();
 			if(!reportId)
 			{
-				// TODO: Log Error. Throw Exception
+				ErrorEvent *e = new ErrorEvent(ErrorEvent::Memory, __FUNCTION__, __LINE__, "Cannot create Report Identification Message");
+				this->eventHandler->handleEvent(e);
+
 				queryIdentificationMessageDestroy(queryId);
 				jausMessageDestroy(message);		
 				return false;
@@ -1443,7 +1484,9 @@ bool CommunicatorComponent::processQueryIdentification(JausMessage message)
 			reportId = reportIdentificationMessageCreate();
 			if(!reportId)
 			{
-				// TODO: Log Error. Throw Exception
+				ErrorEvent *e = new ErrorEvent(ErrorEvent::Memory, __FUNCTION__, __LINE__, "Cannot create Report Identification Message");
+				this->eventHandler->handleEvent(e);
+
 				queryIdentificationMessageDestroy(queryId);
 				jausMessageDestroy(message);
 				return false;
@@ -1478,7 +1521,9 @@ bool CommunicatorComponent::processQueryIdentification(JausMessage message)
 			reportId = reportIdentificationMessageCreate();
 			if(!reportId)
 			{
-				// TODO: Log Error. Throw Exception
+				ErrorEvent *e = new ErrorEvent(ErrorEvent::Memory, __FUNCTION__, __LINE__, "Cannot create Report Identification Message");
+				this->eventHandler->handleEvent(e);
+				
 				queryIdentificationMessageDestroy(queryId);
 				jausMessageDestroy(message);
 				return false;
@@ -1510,6 +1555,9 @@ bool CommunicatorComponent::processQueryIdentification(JausMessage message)
 			return true;
 
 		default:
+			ErrorEvent *e = new ErrorEvent(ErrorEvent::Message, __FUNCTION__, __LINE__, "Unknown queryField in Query Identification Message");
+			this->eventHandler->handleEvent(e);
+			
 			queryIdentificationMessageDestroy(queryId);
 			jausMessageDestroy(message);
 			return false;
@@ -1525,7 +1573,9 @@ bool CommunicatorComponent::processQueryServices(JausMessage message)
 	queryServices = queryServicesMessageFromJausMessage(message);
 	if(!queryServices)
 	{
-		// TODO: Log Error. Throw Exception.
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::Message, __FUNCTION__, __LINE__, "Cannot unpack Query Services Message");
+		this->eventHandler->handleEvent(e);
+
 		jausMessageDestroy(message);
 		return false;
 	}
@@ -1534,7 +1584,9 @@ bool CommunicatorComponent::processQueryServices(JausMessage message)
 	reportServices = reportServicesMessageCreate();
 	if(!reportServices)
 	{
-		// TODO: Log Error. Throw Exception.
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::Memory, __FUNCTION__, __LINE__, "Cannot create Report Services Message");
+		this->eventHandler->handleEvent(e);
+
 		queryServicesMessageDestroy(queryServices);
 		jausMessageDestroy(message);
 		return false;

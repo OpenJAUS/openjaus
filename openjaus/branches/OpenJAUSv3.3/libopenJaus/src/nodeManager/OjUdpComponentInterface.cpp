@@ -98,7 +98,7 @@ bool OjUdpComponentInterface::stopInterface()
 	return true;
 }
 
-bool OjUdpComponentInterface::routeMessage(JausMessage message)
+bool OjUdpComponentInterface::processMessage(JausMessage message)
 { 
 	// This interface does not transport jaus messages
 	// This isn't an "error" because the cmptMngr send JausMessages to all known interfaces for broadcasts

@@ -45,13 +45,15 @@
 
 #include "nodeManager/JausSubsystemCommunicationManager.h"
 #include "nodeManager/JausUdpInterface.h"
+#include "nodeManager/events/ErrorEvent.h"
+#include "nodeManager/events/ConfigurationEvent.h"
 
 JausSubsystemCommunicationManager::JausSubsystemCommunicationManager(FileLoader *configData, MessageRouter *msgRouter, SystemTree *systemTree, EventHandler *handler)
 {
 	this->systemTree = systemTree;
 	this->msgRouter = msgRouter;
 	this->configData = configData;
-	this->handler = handler;
+	this->eventHandler = handler;
 
 	// NOTE: These two values should exist in the properties file and should be checked 
 	// in the NodeManager class prior to constructing this object
@@ -59,7 +61,7 @@ JausSubsystemCommunicationManager::JausSubsystemCommunicationManager(FileLoader 
 	if(mySubsystemId < JAUS_MINIMUM_SUBSYSTEM_ID || mySubsystemId > JAUS_MAXIMUM_SUBSYSTEM_ID)
 	{
 		// Invalid ID
-		// TODO: Throw an exception? Log an error.
+		throw "JausSubsystemCommunicationManager: Config file [JAUS] SubsystemId is invalid\n";
 		mySubsystemId = JAUS_INVALID_SUBSYSTEM_ID;
 		return;
 	}
@@ -68,7 +70,7 @@ JausSubsystemCommunicationManager::JausSubsystemCommunicationManager(FileLoader 
 	if(myNodeId < JAUS_MINIMUM_NODE_ID || myNodeId > JAUS_MAXIMUM_NODE_ID)
 	{
 		// Invalid ID
-		// TODO: Throw an exception? Log an error.
+		throw "JausSubsystemCommunicationManager: Config file [JAUS] NodeId is invalid\n";
 		myNodeId= JAUS_INVALID_NODE_ID;
 		return;
 	}
@@ -76,10 +78,13 @@ JausSubsystemCommunicationManager::JausSubsystemCommunicationManager(FileLoader 
 	// Start subsystem interface(s)
 	if(configData->GetConfigDataBool("Subsystem_Communications", "JAUS_UDP"))
 	{
-		printf("Opening Subsystem Interface:\t");
 		JausUdpInterface *udpInterface = new JausUdpInterface(configData, handler, this);
-		printf("[DONE: %s]\n", udpInterface->toString().c_str());
 		this->interfaces.push_back(udpInterface);
+
+		char buf[128] = {0};
+		sprintf(buf, "Opened Subsystem Interface:\t%s", udpInterface->toString().c_str());
+		ConfigurationEvent *e = new ConfigurationEvent(__FUNCTION__, __LINE__, buf);
+		this->eventHandler->handleEvent(e);
 	}
 
 	if( configData->GetConfigDataBool("Subsystem_Communications", "Enabled") &&
@@ -140,7 +145,8 @@ bool JausSubsystemCommunicationManager::sendJausMessage(JausMessage message)
 	if(!message)
 	{
 		// Error: Invalid message
-		// TODO: Log Error. Throw Exception
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::NullPointer, __FUNCTION__, __LINE__, "Invalid JausMessage.");
+		this->eventHandler->handleEvent(e);
 		return false;
 	}
 	
@@ -148,7 +154,8 @@ bool JausSubsystemCommunicationManager::sendJausMessage(JausMessage message)
 	if(message->source->subsystem != mySubsystemId)
 	{
 		// ERROR: Message from another Subs coming in from MsgRouter
-		// TODO: Log Error. Throw Exception.
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::Routing, __FUNCTION__, __LINE__, "Message from another Subs coming in from MsgRouter");
+		this->eventHandler->handleEvent(e);
 		jausMessageDestroy(message);
 		return false;
 	}
@@ -156,7 +163,8 @@ bool JausSubsystemCommunicationManager::sendJausMessage(JausMessage message)
 	if(message->destination->subsystem == mySubsystemId)
 	{
 		// ERROR: Message for this Subs coming in from MsgRouter
-		// TODO: Log Error. Throw Exception.
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::Routing, __FUNCTION__, __LINE__, "Message for this Subs coming in from MsgRouter");
+		this->eventHandler->handleEvent(e);
 		jausMessageDestroy(message);
 		return false;
 	}
@@ -185,14 +193,16 @@ bool JausSubsystemCommunicationManager::receiveJausMessage(JausMessage message, 
 	if(!message)
 	{
 		// Error: Invalid message
-		// TODO: Log Error. Throw Exception
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::NullPointer, __FUNCTION__, __LINE__, "Invalid JausMessage.");
+		this->eventHandler->handleEvent(e);
 		return false;
 	}
 
 	if(!srcInf)
 	{
 		// Error: Invalid interface
-		// TODO: Log Error. Throw Exception.
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::NullPointer, __FUNCTION__, __LINE__, "srcInf is invalid");
+		this->eventHandler->handleEvent(e);
 		jausMessageDestroy(message);
 		return false;
 	}
@@ -200,7 +210,8 @@ bool JausSubsystemCommunicationManager::receiveJausMessage(JausMessage message, 
 	if(message->source->subsystem == mySubsystemId)
 	{
 		// Error: Cannot receive messages for myself through a subsInterface!
-		// TODO: Log Error. Throw Exception.
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::Routing, __FUNCTION__, __LINE__, "Message received from MsgRouter that is not from this subs is for this node");
+		this->eventHandler->handleEvent(e);
 		jausMessageDestroy(message);
 		return false;
 	}
@@ -217,7 +228,8 @@ bool JausSubsystemCommunicationManager::receiveJausMessage(JausMessage message, 
 	else
 	{
 		// Error: Somehow I received a message intended for another subsystem
-		// TODO: Log Error. Throw Exception.
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::Routing, __FUNCTION__, __LINE__, "Message received on my Subsystem Interface for another subsystem ID!");
+		this->eventHandler->handleEvent(e);
 		jausMessageDestroy(message);
 		return false;
 	}
@@ -228,7 +240,8 @@ bool JausSubsystemCommunicationManager::sendToSubsystemX(JausMessage message)
 	if(!message)
 	{
 		// Error: Invalid message
-		// TODO: Log Error. Throw Exception
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::NullPointer, __FUNCTION__, __LINE__, "Invalid JausMessage.");
+		this->eventHandler->handleEvent(e);
 		return false;
 	}
 
@@ -254,7 +267,8 @@ bool JausSubsystemCommunicationManager::sendToAllInterfaces(JausMessage message)
 	if(!message)
 	{
 		// Error: Invalid message
-		// TODO: Log Error. Throw Exception
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::NullPointer, __FUNCTION__, __LINE__, "Invalid JausMessage.");
+		this->eventHandler->handleEvent(e);
 		return false;
 	}
 

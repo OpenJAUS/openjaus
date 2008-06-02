@@ -63,16 +63,14 @@ NodeManagerComponent::NodeManagerComponent(FileLoader *configData, EventHandler 
 	if(configData == NULL)
 	{
 		// OK, don't do this. This is bad.
-		ErrorEvent *e = new ErrorEvent(ErrorEvent::NullPointer, __FUNCTION__, __LINE__, "configData is NULL");
-		this->eventHandler->handleEvent(e);
+		throw "NodeManagerComponent: configData is NULL";
 		return;
 	}
 
 	if(cmptComms == NULL)
 	{
 		// OK, don't do this. This is bad.
-		ErrorEvent *e = new ErrorEvent(ErrorEvent::NullPointer, __FUNCTION__, __LINE__, "cmptComms is NULL");
-		this->eventHandler->handleEvent(e);
+		throw "NodeManagerComponent: cmptComms is NULL";
 		return;
 	}
 
@@ -94,8 +92,7 @@ NodeManagerComponent::NodeManagerComponent(FileLoader *configData, EventHandler 
 	if(subsystemId < JAUS_MINIMUM_SUBSYSTEM_ID || subsystemId > JAUS_MAXIMUM_SUBSYSTEM_ID)
 	{
 		// Invalid ID
-		ErrorEvent *e = new ErrorEvent(ErrorEvent::Configuration, __FUNCTION__, __LINE__, "Invalid SubsystemId");
-		this->eventHandler->handleEvent(e);
+		throw "NodeManagerComponent: Invalid SubsystemId";
 		return;
 	}
 
@@ -103,16 +100,14 @@ NodeManagerComponent::NodeManagerComponent(FileLoader *configData, EventHandler 
 	if(nodeId < JAUS_MINIMUM_NODE_ID || nodeId > JAUS_MAXIMUM_NODE_ID)
 	{
 		// Invalid ID
-		ErrorEvent *e = new ErrorEvent(ErrorEvent::Configuration, __FUNCTION__, __LINE__, "Invalid NodeId");
-		this->eventHandler->handleEvent(e);
+		throw "NodeManagerComponent: Invalid NodeId";
 		return;
 	}
 
 	this->cmpt = jausComponentCreate();
 	if(!this->cmpt)
 	{
-		ErrorEvent *e = new ErrorEvent(ErrorEvent::Memory, __FUNCTION__, __LINE__, "Cannot create component");
-		this->eventHandler->handleEvent(e);
+		throw "NodeManagerComponent: Cannot create component";
 		return;
 	}
 
@@ -186,22 +181,6 @@ bool NodeManagerComponent::processMessage(JausMessage message)
 		return false;
 	}
 
-	//// Check for loopback of message from myself
-	//if(jausAddressEqual(message->source, cmpt->address))
-	//{
-	//	// We sent a broadcast (*.*.255.255) message probably
-	//	// Just eat it.
-	//	jausMessageDestroy(message);
-	//	return true;
-	//}
-
-	//char buf[80] = {0};
-	//jausAddressToString(message->source, buf);
-	//printf("NM Process %s from %s", jausMessageCommandCodeString(message), buf);
-	//jausAddressToString(message->destination, buf);
-	//printf(" to %s\n", buf);
-
-	// TODO: Let's add our hack here for making every message look like a heartbeat!
 	switch(message->commandCode)
 	{
 		case JAUS_SET_COMPONENT_AUTHORITY:
@@ -404,7 +383,8 @@ bool NodeManagerComponent::processReportConfiguration(JausMessage message)
 	// Has Subs?
 	if(!systemTree->hasSubsystem(reportConf->source))
 	{
-		// TODO: Throw Exception. Log Error.
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::Message, __FUNCTION__, __LINE__, "Received ReportConf from unknown subsystem");
+		this->eventHandler->handleEvent(e);
 		reportConfigurationMessageDestroy(reportConf);
 		jausMessageDestroy(message);
 		return false;

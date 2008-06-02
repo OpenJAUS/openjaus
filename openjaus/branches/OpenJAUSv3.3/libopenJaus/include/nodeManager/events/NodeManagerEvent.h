@@ -56,7 +56,7 @@ class EXPORT NodeManagerEvent
 {
 	
 public:
-	enum {SystemTreeEvent, ErrorEvent, TransportEvent, JausMessageEvent, DebugEvent};
+	enum {SystemTreeEvent, ErrorEvent, JausMessageEvent, DebugEvent, ConfigurationEvent};
 	unsigned int getType();
 	virtual std::string toString();
 	virtual ~NodeManagerEvent();

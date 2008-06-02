@@ -71,6 +71,7 @@ public:
 		ErrorEvent *errorEvent;
 		JausMessageEvent *messageEvent;
 		DebugEvent *debugEvent;
+		ConfigurationEvent *configEvent;
 
 		switch(e->getType())
 		{
@@ -104,6 +105,12 @@ public:
 			case NodeManagerEvent::DebugEvent:
 				debugEvent = (DebugEvent *)e;
 				//printf("%s\n", debugEvent->toString().c_str());
+				delete e;
+				break;
+
+			case NodeManagerEvent::ConfigurationEvent:
+				configEvent = (ConfigurationEvent *)e;
+				printf("%s\n", configEvent->toString().c_str());
 				delete e;
 				break;
 

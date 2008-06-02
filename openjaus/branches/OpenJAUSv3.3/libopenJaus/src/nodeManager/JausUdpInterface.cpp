@@ -138,7 +138,7 @@ InetAddress JausUdpInterface::getInetAddress(void)
 	return this->socket->address;
 }
 
-bool JausUdpInterface::routeMessage(JausMessage message)
+bool JausUdpInterface::processMessage(JausMessage message)
 {
 	switch(this->type)
 	{
@@ -306,7 +306,7 @@ void JausUdpInterface::run()
 		while(!this->queue.isEmpty())
 		{
 			// Pop a packet off the queue and send it off
-			routeMessage(queue.pop());
+			processMessage(queue.pop());
 		}
 	}
 	pthread_mutex_unlock(&threadMutex);

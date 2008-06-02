@@ -83,16 +83,49 @@ void JausTransportInterface::stopThread()
 void JausTransportInterface::startThread()
 {
 	int retVal;
+	char errorString[128] = {0};
 	
-	// TODO: Check for errors
-	retVal = pthread_cond_init(&this->threadConditional, NULL);
-	pthread_mutex_init(&this->threadMutex, NULL);
-	pthread_attr_init(&this->threadAttributes);
-	pthread_attr_setdetachstate(&this->threadAttributes, PTHREAD_CREATE_JOINABLE);
+	retVal = pthread_cond_init(&this->threadConditional, NULL); 
+	if(retVal != 0)
+	{
+		sprintf(errorString, "JausTransportInterface: pthread_cond_init returned error code: %d", retVal);
+		throw errorString;
+	}
+	
+	retVal = pthread_mutex_init(&this->threadMutex, NULL);
+	if(retVal != 0)
+	{
+		sprintf(errorString, "JausTransportInterface: pthread_mutex_init returned error code: %d", retVal);
+		throw errorString;
+	}
+	
+	retVal = pthread_attr_init(&this->threadAttributes);
+	if(retVal != 0)
+	{
+		sprintf(errorString, "JausTransportInterface: pthread_attr_init returned error code: %d", retVal);
+		throw errorString;
+	}
 
-	this->pThreadId = pthread_create(&this->pThread, &this->threadAttributes, ThreadRun, this);
+	retVal = pthread_attr_setdetachstate(&this->threadAttributes, PTHREAD_CREATE_JOINABLE);
+	if(retVal != 0)
+	{
+		sprintf(errorString, "JausTransportInterface: pthread_attr_setdetachstate returned error code: %d", retVal);
+		throw errorString;
+	}
 
-	pthread_attr_destroy(&this->threadAttributes);
+	retVal = pthread_create(&this->pThread, &this->threadAttributes, ThreadRun, this);
+	if(retVal != 0)
+	{
+		sprintf(errorString, "JausTransportInterface: pthread_attr_destroy returned error code: %d", retVal);
+		throw errorString;
+	}
+
+	retVal = pthread_attr_destroy(&this->threadAttributes);
+	if(retVal != 0)
+	{
+		sprintf(errorString, "JausTransportInterface: pthread_attr_destroy returned error code: %d", retVal);
+		throw errorString;
+	}
 }
 
 JausTransportType JausTransportInterface::getType(void)
@@ -105,16 +138,16 @@ unsigned long JausTransportInterface::queueSize()
 	return this->queue.size();
 }
 
-bool JausTransportInterface::processMessage(JausMessage message)
-{
-	// Should never be used!
-	// TODO: Throw exception. Log Error.
-
-	// Force Segfault
-	abort();
-
-	return false;
-}
+//bool JausTransportInterface::processMessage(JausMessage message)
+//{
+//	// Should never be used!
+//	// TODO: Throw exception. Log Error.
+//
+//	// Force Segfault
+//	abort();
+//
+//	return false;
+//}
 
 void JausTransportInterface::queueJausMessage(JausMessage message)
 {
@@ -134,19 +167,19 @@ void JausTransportInterface::wakeThread()
 	pthread_cond_signal(&this->threadConditional);
 }
 
-void JausTransportInterface::run()
-{
-	// Should never be used!
-	printf("JausTransportInterface::run should never be used\n");
-	
-	// Force Segfault
-	abort();
-}
+//void JausTransportInterface::run()
+//{
+//	// Should never be used!
+//	printf("JausTransportInterface::run should never be used\n");
+//	
+//	// Force Segfault
+//	abort();
+//}
 
-std::string JausTransportInterface::toString()
-{
-	return "I should never be called!";
-}
+//std::string JausTransportInterface::toString()
+//{
+//	return "I should never be called!";
+//}
 
 void *ThreadRun(void *obj)
 {

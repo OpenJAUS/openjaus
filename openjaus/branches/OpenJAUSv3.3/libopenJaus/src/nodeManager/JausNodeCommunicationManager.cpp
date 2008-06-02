@@ -45,10 +45,12 @@
 
 #include "nodeManager/JausNodeCommunicationManager.h"
 #include "nodeManager/JausUdpInterface.h"
+#include "nodeManager/events/ErrorEvent.h"
+#include "nodeManager/events/ConfigurationEvent.h"
 
 JausNodeCommunicationManager::JausNodeCommunicationManager(FileLoader *configData, MessageRouter *msgRouter, SystemTree *systemTree, EventHandler *handler)
 {
-	this->handler = handler;
+	this->eventHandler = handler;
 	this->systemTree = systemTree;
 	this->msgRouter = msgRouter;
 	this->configData = configData;
@@ -60,7 +62,7 @@ JausNodeCommunicationManager::JausNodeCommunicationManager(FileLoader *configDat
 	if(mySubsystemId < JAUS_MINIMUM_SUBSYSTEM_ID || mySubsystemId > JAUS_MAXIMUM_SUBSYSTEM_ID)
 	{
 		// Invalid ID
-		// TODO: Throw an exception? Log an error.
+		throw "JausNodeCommunicationManager: Config file [JAUS] SubsystemId is invalid\n";
 		mySubsystemId = JAUS_INVALID_SUBSYSTEM_ID;
 		return;
 	}
@@ -69,7 +71,7 @@ JausNodeCommunicationManager::JausNodeCommunicationManager(FileLoader *configDat
 	if(myNodeId < JAUS_MINIMUM_NODE_ID || myNodeId > JAUS_MAXIMUM_NODE_ID)
 	{
 		// Invalid ID
-		// TODO: Throw an exception? Log an error.
+		throw "JausNodeCommunicationManager: Config file [JAUS] NodeId is invalid\n";
 		myNodeId= JAUS_INVALID_NODE_ID;
 		return;
 	}
@@ -77,10 +79,13 @@ JausNodeCommunicationManager::JausNodeCommunicationManager(FileLoader *configDat
 	// Start subsystem interface(s)
 	if(configData->GetConfigDataBool("Node_Communications", "JAUS_UDP"))
 	{
-		printf("Opening Node Interface:\t\t");
 		JausUdpInterface *udpInterface = new JausUdpInterface(configData, handler, this);
-		printf("[DONE: %s]\n", udpInterface->toString().c_str());
 		this->interfaces.push_back(udpInterface);
+
+		char buf[128] = {0};
+		sprintf(buf, "Opened Node Interface:\t\t%s", udpInterface->toString().c_str());
+		ConfigurationEvent *e = new ConfigurationEvent(__FUNCTION__, __LINE__, buf);
+		this->eventHandler->handleEvent(e);
 	}
 
 	if( configData->GetConfigDataBool("Node_Communications", "Enabled") &&
@@ -142,7 +147,8 @@ bool JausNodeCommunicationManager::sendJausMessage(JausMessage message)
 	if(!message)
 	{
 		// Error: Invalid message
-		// TODO: Log Error. Throw Exception
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::NullPointer, __FUNCTION__, __LINE__, "Invalid JausMessage.");
+		this->eventHandler->handleEvent(e);
 		return false;
 	}
 
@@ -164,7 +170,8 @@ bool JausNodeCommunicationManager::sendJausMessage(JausMessage message)
 			else
 			{
 				// ERROR: Message received from MsgRouter that is not from this subs is for this node!
-				// TODO: Log Error. Throw Exception.
+				ErrorEvent *e = new ErrorEvent(ErrorEvent::Routing, __FUNCTION__, __LINE__, "Message received from MsgRouter that is not from this subs is for this node");
+				this->eventHandler->handleEvent(e);
 				jausMessageDestroy(message);
 				return false;
 			}
@@ -172,7 +179,8 @@ bool JausNodeCommunicationManager::sendJausMessage(JausMessage message)
 		else
 		{
 			// ERROR: Message received from MsgRouter that is not from this subs and not for this subs!
-			// TODO: Log Error. Throw Exception.
+			ErrorEvent *e = new ErrorEvent(ErrorEvent::Routing, __FUNCTION__, __LINE__, "Message received from MsgRouter that is not from this subs and not for this subs!");
+			this->eventHandler->handleEvent(e);
 			jausMessageDestroy(message);
 			return false;
 		}
@@ -182,7 +190,8 @@ bool JausNodeCommunicationManager::sendJausMessage(JausMessage message)
 		if(message->source->node != myNodeId)
 		{
 			// ERROR: Message received from MsgRouter that has address of another node on this system
-			// TODO: Log Error. Throw Exception.
+			ErrorEvent *e = new ErrorEvent(ErrorEvent::Routing, __FUNCTION__, __LINE__, "Message received from MsgRouter that has address of another node on this system");
+			this->eventHandler->handleEvent(e);
 			jausMessageDestroy(message);
 			return false;
 		}
@@ -227,7 +236,8 @@ bool JausNodeCommunicationManager::sendJausMessage(JausMessage message)
 				if(message->destination->node == myNodeId)
 				{
 					// ERROR: Msg recv'd which is for this node!
-					// TODO: Log Error. Throw Exception.
+					ErrorEvent *e = new ErrorEvent(ErrorEvent::Routing, __FUNCTION__, __LINE__, "Message received from MsgRouter that is for my Node!");
+					this->eventHandler->handleEvent(e);
 					jausMessageDestroy(message);
 					return false;
 				}
@@ -260,7 +270,8 @@ bool JausNodeCommunicationManager::receiveJausMessage(JausMessage message, JausT
 	if(!message)
 	{
 		// Error: Invalid message
-		// TODO: Log Error. Throw Exception
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::NullPointer, __FUNCTION__, __LINE__, "Invalid JausMessage.");
+		this->eventHandler->handleEvent(e);
 		return false;
 	}
 
@@ -270,7 +281,8 @@ bool JausNodeCommunicationManager::receiveJausMessage(JausMessage message, JausT
 		if(message->source->node == myNodeId)
 		{
 			// Error: Msg recv'd from this node through NodeInf, invalid!
-			// TODO: Log Error. Throw Exception
+			ErrorEvent *e = new ErrorEvent(ErrorEvent::Routing, __FUNCTION__, __LINE__, "Message received from NodeInterface that is from my Node!");
+			this->eventHandler->handleEvent(e);
 			jausMessageDestroy(message);
 			return false;
 		}
@@ -297,7 +309,8 @@ bool JausNodeCommunicationManager::receiveJausMessage(JausMessage message, JausT
 				else
 				{
 					// ERROR: Message not for this node recv'd from another node
-					// TODO: Log Error. Throw Exception
+					ErrorEvent *e = new ErrorEvent(ErrorEvent::Routing, __FUNCTION__, __LINE__, "Message not for this node recv'd from another node");
+					this->eventHandler->handleEvent(e);
 					jausMessageDestroy(message);
 					return false;
 				}
@@ -324,7 +337,8 @@ bool JausNodeCommunicationManager::receiveJausMessage(JausMessage message, JausT
 			else
 			{
 				// ERROR: Message not for this node recv'd from another node
-				// TODO: Log Error. Throw Exception
+				ErrorEvent *e = new ErrorEvent(ErrorEvent::Routing, __FUNCTION__, __LINE__, "Message not for this node recv'd from another node");
+				this->eventHandler->handleEvent(e);
 				jausMessageDestroy(message);
 				return false;
 			}
@@ -332,7 +346,8 @@ bool JausNodeCommunicationManager::receiveJausMessage(JausMessage message, JausT
 		else // message->destination->subsystem == X
 		{
 			// ERROR: Message not for this subsystem and not from this subsystem recv'd from another node
-			// TODO: Log Error. Throw Exception
+			ErrorEvent *e = new ErrorEvent(ErrorEvent::Routing, __FUNCTION__, __LINE__, "Message not for this subsystem and not from this subsystem recv'd from another node");
+			this->eventHandler->handleEvent(e);
 			jausMessageDestroy(message);
 			return false;
 		}
@@ -344,14 +359,16 @@ bool JausNodeCommunicationManager::sendToSubsystemGateway(JausMessage message)
 	if(!message)
 	{
 		// Error: Invalid message
-		// TODO: Log Error. Throw Exception
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::NullPointer, __FUNCTION__, __LINE__, "Invalid JausMessage.");
+		this->eventHandler->handleEvent(e);
 		return false;
 	}
 
 	if(msgRouter->subsystemCommunicationEnabled())
 	{
 		// ERROR: This should have gone out to the SubsCommMngr
-		// TODO: Log Error. Throw Exception.
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::Routing, __FUNCTION__, __LINE__, "Message received in Node Communication Manager which should have gone out the Subsystem Communication manager.");
+		this->eventHandler->handleEvent(e);
 		jausMessageDestroy(message);
 		return false;
 	}
@@ -394,7 +411,8 @@ bool JausNodeCommunicationManager::sendToNodeX(JausMessage message)
 	if(!message)
 	{
 		// Error: Invalid message
-		// TODO: Log Error. Throw Exception
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::NullPointer, __FUNCTION__, __LINE__, "Invalid JausMessage.");
+		this->eventHandler->handleEvent(e);
 		return false;
 	}
 
@@ -418,7 +436,8 @@ bool JausNodeCommunicationManager::sendToAllInterfaces(JausMessage message)
 	if(!message)
 	{
 		// Error: Invalid message
-		// TODO: Log Error. Throw Exception
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::NullPointer, __FUNCTION__, __LINE__, "Invalid JausMessage.");
+		this->eventHandler->handleEvent(e);
 		return false;
 	}
 
