@@ -51,19 +51,19 @@ JAUS_EXPORT JausBoolean ojCmptAddServiceInputMessage(OjCmpt ojCmpt, JausUnsigned
 JAUS_EXPORT JausBoolean ojCmptAddServiceOutputMessage(OjCmpt ojCmpt, JausUnsignedShort serviceType, JausUnsignedShort commandCode, JausUnsignedInteger presenceVector);
 
 // Incomming Service Connections
-int ojCmptEstablishSc(OjCmpt ojCmpt, JausUnsignedShort cCode, JausUnsignedInteger pv, JausAddress address, double rateHz, double timeoutSec, int qSize);
-int ojCmptTerminateSc(OjCmpt ojCmpt, int scIndex);
+JAUS_EXPORT int ojCmptEstablishSc(OjCmpt ojCmpt, JausUnsignedShort cCode, JausUnsignedInteger pv, JausAddress address, double rateHz, double timeoutSec, int qSize);
+JAUS_EXPORT int ojCmptTerminateSc(OjCmpt ojCmpt, int scIndex);
 // OjCmpt add receive SC method
 
 // Outgoing Service Connections
-void ojCmptAddSupportedSc(OjCmpt ojCmpt, unsigned short commandCode);		// Add service connection support for this message
-void ojCmptRemoveSupportedSc(OjCmpt ojCmpt, unsigned short commandCode);	// Removes service connection support for this message
-ServiceConnection ojCmptGetScSendList(OjCmpt ojCmpt, unsigned short commandCode);
-void ojCmptDestroySendList(ServiceConnection scList);
-JausBoolean ojCmptIsOutgoingScActive(OjCmpt ojCmpt, unsigned short commandCode);
+JAUS_EXPORT void ojCmptAddSupportedSc(OjCmpt ojCmpt, unsigned short commandCode);		// Add service connection support for this message
+JAUS_EXPORT void ojCmptRemoveSupportedSc(OjCmpt ojCmpt, unsigned short commandCode);	// Removes service connection support for this message
+JAUS_EXPORT ServiceConnection ojCmptGetScSendList(OjCmpt ojCmpt, unsigned short commandCode);
+JAUS_EXPORT void ojCmptDestroySendList(ServiceConnection scList);
+JAUS_EXPORT JausBoolean ojCmptIsOutgoingScActive(OjCmpt ojCmpt, unsigned short commandCode);
 	
 // System Discovery
-int ojCmptLookupAddress(OjCmpt ojCmpt, JausAddress address);
+JAUS_EXPORT int ojCmptLookupAddress(OjCmpt ojCmpt, JausAddress address);
 
 
 #ifdef __cplusplus
