@@ -61,8 +61,8 @@ std::string NodeManagerEvent::toString()
 		case NodeManagerEvent::ErrorEvent:
 			return "Error Event";
 		
-		case NodeManagerEvent::TransportEvent:
-			return "Transport Event";
+		case NodeManagerEvent::ConfigurationEvent:
+			return "Configuration Event";
 
 		case NodeManagerEvent::JausMessageEvent:
 			return "JAUS Message Event";

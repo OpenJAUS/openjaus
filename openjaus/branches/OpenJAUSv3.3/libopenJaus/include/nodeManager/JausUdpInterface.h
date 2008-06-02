@@ -82,7 +82,7 @@ public:
 
 	InetAddress getInetAddress(void);
 
-	bool routeMessage(JausMessage message);
+	bool processMessage(JausMessage message);
 
 	bool startInterface();
 	bool stopInterface();

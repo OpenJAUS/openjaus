@@ -85,7 +85,7 @@ protected:
 	HASH_MAP<int, JausTransportInterface *> interfaceMap;
 	FileLoader *configData;
 	SystemTree *systemTree;
-	EventHandler *handler;
+	EventHandler *eventHandler;
 	JausByte mySubsystemId;
 	JausByte myNodeId;
 	bool enabled;

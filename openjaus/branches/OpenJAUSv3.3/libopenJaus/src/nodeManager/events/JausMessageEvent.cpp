@@ -94,14 +94,11 @@ std::string JausMessageEvent::toString()
 		sprintf(buf, "RECEIVED: %s from %s to %s on interface: %s", jausMessageCommandCodeString(this->message), sourceString, destinationString, this->transport->toString().c_str());
 		return buf;	
 	}
-
-	if(direction == JausMessageEvent::Outbound)
+	else
 	{
 		sprintf(buf, "SENDING: %s from %s to %s on interface: %s", jausMessageCommandCodeString(this->message), sourceString, destinationString, this->transport->toString().c_str());		
 		return buf;
 	}
-
-
 }
 
 

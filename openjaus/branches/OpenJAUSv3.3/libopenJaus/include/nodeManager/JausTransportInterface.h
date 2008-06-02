@@ -84,9 +84,9 @@ public:
 
 	virtual bool startInterface(void) = 0;
 	virtual bool stopInterface(void) = 0;
-	virtual bool processMessage(JausMessage message);
-	virtual std::string toString();
-	virtual void run();
+	virtual bool processMessage(JausMessage message) = 0;
+	virtual std::string toString() = 0;
+	virtual void run() = 0;
 
 protected:
 	void startThread();

@@ -48,6 +48,8 @@
 #include "nodeManager/CommunicatorComponent.h"
 #include "nodeManager/JausUdpInterface.h"
 #include "nodeManager/OjUdpComponentInterface.h"
+#include "nodeManager/events/ErrorEvent.h"
+#include "nodeManager/events/ConfigurationEvent.h"
 
 JausComponentCommunicationManager::JausComponentCommunicationManager(FileLoader *configData, MessageRouter *msgRouter, SystemTree *systemTree, EventHandler *handler)
 {
@@ -55,7 +57,7 @@ JausComponentCommunicationManager::JausComponentCommunicationManager(FileLoader 
 	this->msgRouter = msgRouter;
 	this->systemTree = systemTree;
 	this->configData = configData;
-	this->handler = handler;
+	this->eventHandler = handler;
 	this->interfaces.empty();
 	this->interfaceMap.empty();
 
@@ -65,7 +67,7 @@ JausComponentCommunicationManager::JausComponentCommunicationManager(FileLoader 
 	if(mySubsystemId < JAUS_MINIMUM_SUBSYSTEM_ID || mySubsystemId > JAUS_MAXIMUM_SUBSYSTEM_ID)
 	{
 		// Invalid ID
-		// TODO: Throw an exception? Log an error.
+		throw "JausComponentCommunicationManager: Invalid Subsystem ID";
 		mySubsystemId = JAUS_INVALID_SUBSYSTEM_ID;
 		return;
 	}
@@ -74,19 +76,19 @@ JausComponentCommunicationManager::JausComponentCommunicationManager(FileLoader 
 	if(myNodeId < JAUS_MINIMUM_NODE_ID || myNodeId > JAUS_MAXIMUM_NODE_ID)
 	{
 		// Invalid ID
-		// TODO: Throw an exception? Log an error.
+		throw "JausComponentCommunicationManager: Invalid Node ID";
 		myNodeId= JAUS_INVALID_NODE_ID;
 		return;
 	}
 
 	// Start Local Components
-	this->nodeManagerCmpt = new NodeManagerComponent(this->configData, this->handler, this);
+	this->nodeManagerCmpt = new NodeManagerComponent(this->configData, this->eventHandler, this);
 	this->interfaces.push_back(nodeManagerCmpt);
 	
 	// Only start the Communicator if the SubsystemCommunications is enabled
 	if( configData->GetConfigDataBool("Subsystem_Communications", "Enabled"))
 	{
-		this->communicatorCmpt = new CommunicatorComponent(this->configData, this->handler, this);
+		this->communicatorCmpt = new CommunicatorComponent(this->configData, this->eventHandler, this);
 		this->interfaces.push_back(communicatorCmpt);
 	}
 	else
@@ -97,17 +99,23 @@ JausComponentCommunicationManager::JausComponentCommunicationManager(FileLoader 
 	// Start component interface(s)
 	if(configData->GetConfigDataBool("Component_Communications", "JAUS_UDP"))
 	{
-		printf("Opening Component Interface:\t");
-		JausUdpInterface *udpInterface = new JausUdpInterface(configData, this->handler, this);
-		printf("[DONE: %s]\n", udpInterface->toString().c_str());
+		JausUdpInterface *udpInterface = new JausUdpInterface(configData, this->eventHandler, this);
 		this->interfaces.push_back(udpInterface);
+
+		char buf[128] = {0};
+		sprintf(buf, "Opened Component Interface:\t%s", udpInterface->toString().c_str());
+		ConfigurationEvent *e = new ConfigurationEvent(__FUNCTION__, __LINE__, buf);
+		this->eventHandler->handleEvent(e);
 	}
 	
 	if(configData->GetConfigDataBool("Component_Communications", "OpenJAUS_UDP"))
 	{
-		printf("Opening Component Interface:\t");
-		this->udpCmptInf = new OjUdpComponentInterface(configData, this->handler, this);
-		printf("[DONE: %s]\n", udpCmptInf->toString().c_str());
+		this->udpCmptInf = new OjUdpComponentInterface(configData, this->eventHandler, this);
+
+		char buf[128] = {0};
+		sprintf(buf, "Opened Component Interface:\t%s", udpCmptInf->toString().c_str());
+		ConfigurationEvent *e = new ConfigurationEvent(__FUNCTION__, __LINE__, buf);
+		this->eventHandler->handleEvent(e);
 	}
 }
 
@@ -156,7 +164,8 @@ bool JausComponentCommunicationManager::sendJausMessage(JausMessage message)
 	if(!message)
 	{
 		// Error: Invalid message
-		// TODO: Log Error. Throw Exception
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::NullPointer, __FUNCTION__, __LINE__, "Invalid message pointer");
+		this->eventHandler->handleEvent(e);
 		return false;
 	}
 
@@ -165,7 +174,8 @@ bool JausComponentCommunicationManager::sendJausMessage(JausMessage message)
 		message->destination->subsystem != JAUS_BROADCAST_SUBSYSTEM_ID )
 	{
 		// ERROR: Message not for this subsystem has been routed from the MsgRouter
-		// TODO: Log Error. Throw Exception.
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::Routing, __FUNCTION__, __LINE__, "Message not for this subsystem has been routed from the MsgRouter");
+		this->eventHandler->handleEvent(e);
 		jausMessageDestroy(message);
 		return false;
 	}
@@ -173,7 +183,8 @@ bool JausComponentCommunicationManager::sendJausMessage(JausMessage message)
 	if(message->source->subsystem == mySubsystemId && message->source->node == myNodeId)
 	{
 		// ERROR: Message from this node has been routed from the MsgRouter
-		// TODO: Log Error. Throw Exception.
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::Routing, __FUNCTION__, __LINE__, "Message from this node has been routed from the MsgRouter");
+		this->eventHandler->handleEvent(e);
 		jausMessageDestroy(message);
 		return false;
 	}
@@ -194,7 +205,8 @@ bool JausComponentCommunicationManager::sendJausMessage(JausMessage message)
 	else
 	{
 		// ERROR: Message not for components on this node received
-		// TODO: Log Error. Throw Exception.
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::Routing, __FUNCTION__, __LINE__, "Message not for components on this node received");
+		this->eventHandler->handleEvent(e);
 		jausMessageDestroy(message);
 		return false;
 	}
@@ -206,31 +218,28 @@ bool JausComponentCommunicationManager::receiveJausMessage(JausMessage message, 
 	if(!message)
 	{
 		// Error: Invalid message
-		// TODO: Log Error. Throw Exception
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::NullPointer, __FUNCTION__, __LINE__, "Invalid message pointer");
+		this->eventHandler->handleEvent(e);
 		return false;
 	}
 
 	if(message->source->subsystem != mySubsystemId)
 	{
 		// ERROR: Received a message from a component that is not from my subsystem!
-		// TODO: Log Error. Throw Exception.
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::Routing, __FUNCTION__, __LINE__, "Received a message from a component that is not from my subsystem!");
+		this->eventHandler->handleEvent(e);
 		jausMessageDestroy(message);
 		return false;
 	}
 
 	if(message->source->node != myNodeId)
 	{
-		// ERROR: Received a message from a component that is not from my subsystem!
-		// TODO: Log Error. Throw Exception.
+		// ERROR: Received a message from a component with a source node that is not my node ID!
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::Routing, __FUNCTION__, __LINE__, "Received a message from a component with a source node that is not my node ID!");
+		this->eventHandler->handleEvent(e);
 		jausMessageDestroy(message);
 		return false;
 	}
-
-	//char buf[80] = {0};
-	//jausAddressToString(message->source, buf);
-	//printf("CmptMngr: Process %s from %s", jausMessageCommandCodeString(message), buf);
-	//jausAddressToString(message->destination, buf);
-	//printf(" to %s\n", buf);
 
 	// Add this source to our interface table
 	interfaceMap[jausAddressHash(message->source)] = srcInf;
@@ -296,7 +305,8 @@ bool JausComponentCommunicationManager::sendToComponentX(JausMessage message)
 	if(!message)
 	{
 		// Error: Invalid message
-		// TODO: Log Error. Throw Exception
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::NullPointer, __FUNCTION__, __LINE__, "Invalid message pointer");
+		this->eventHandler->handleEvent(e);
 		return false;
 	}
 
@@ -337,13 +347,13 @@ bool JausComponentCommunicationManager::sendToAllInterfaces(JausMessage message)
 	if(!message)
 	{
 		// Error: Invalid message
-		// TODO: Log Error. Throw Exception
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::NullPointer, __FUNCTION__, __LINE__, "Invalid message pointer");
+		this->eventHandler->handleEvent(e);
 		return false;
 	}
 
 	for(iter = interfaces.begin(); iter != interfaces.end(); iter++)
 	{
-		//printf("Sending 0x%4X to %s\n", message->commandCode, (*iter)->toString().c_str());
 		(*iter)->queueJausMessage(jausMessageClone(message));
 	}
 	jausMessageDestroy(message);
