@@ -40,7 +40,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\ThirdParty\PThreads2\include;.\include;..\libjaus\include"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -183,6 +183,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\nodeManager\events\ConfigurationEvent.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\utils\datagramPacket.h"
 				>
 			</File>
@@ -287,10 +291,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\include\nodeManager\events\shutdownEvent.h"
-				>
-			</File>
-			<File
 				RelativePath=".\include\nodemanager\SystemTree.h"
 				>
 			</File>
@@ -320,6 +320,10 @@
 			>
 			<File
 				RelativePath=".\src\nodemanager\CommunicatorComponent.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\nodeManager\events\ConfigurationEvent.cpp"
 				>
 			</File>
 			<File
