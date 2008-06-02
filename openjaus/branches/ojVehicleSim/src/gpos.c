@@ -9,8 +9,6 @@
 #include <openJaus.h>	// Node managment functions for sending and receiving JAUS messages (USER: Node Manager must be installed)
 #include <stdlib.h>	
 #include <string.h>
-
-
 #include "gpos.h"	// USER: Implement and rename this header file. Include prototypes for all public functions contained in this file.
 #include "vehicleSim.h"
 #include "utm/pointLla.h"
@@ -19,14 +17,17 @@
 	#include <math.h>
 #endif
 
-// Private function prototypes
-void gposReadyState(void);
-void gposShutdownState(void);
-void gposQueryGlobalPoseCallback(OjCmpt gpos, JausMessage query);
+#define GPOS_THREAD_DESIRED_RATE_HZ			50.0
 
-//Gpos Variables
-static ReportGlobalPoseMessage gposMessage;
-static JausBoolean gposScActive = JAUS_FALSE;
+typedef struct GposData
+{
+	ReportGlobalPoseMessage message;
+	JausBoolean scActive;
+}*GposData;
+
+// Private function prototypes
+void gposReadyState(OjCmpt gpos);
+void gposQueryGlobalPoseCallback(OjCmpt gpos, JausMessage query);
 
 // Function: 	gposStartup
 // Access:		Public	
@@ -35,37 +36,38 @@ static JausBoolean gposScActive = JAUS_FALSE;
 //				Each call to "gposStartup" should be followed by one call to the "gposShutdown" function
 OjCmpt gposCreate(void)
 {
-
-	OjCmpt gpos;
+	OjCmpt cmpt;
+	GposData gposData;
 	JausAddress gposAddr;
 	
-	gpos = ojCmptCreate(JAUS_GLOBAL_POSE_SENSOR, "gpos", GPOS_THREAD_DESIRED_RATE_HZ);
+	cmpt = ojCmptCreate("gpos", JAUS_GLOBAL_POSE_SENSOR, GPOS_THREAD_DESIRED_RATE_HZ);
 
-	ojCmptAddService(gpos, JAUS_GLOBAL_POSE_SENSOR);
-	ojCmptAddServiceInputMessage(gpos, JAUS_GLOBAL_POSE_SENSOR, JAUS_QUERY_GLOBAL_POSE, 0xFF);
-	ojCmptAddServiceOutputMessage(gpos, JAUS_GLOBAL_POSE_SENSOR, JAUS_REPORT_GLOBAL_POSE, 0xFF);
+	ojCmptAddService(cmpt, JAUS_GLOBAL_POSE_SENSOR);
+	ojCmptAddServiceInputMessage(cmpt, JAUS_GLOBAL_POSE_SENSOR, JAUS_QUERY_GLOBAL_POSE, 0xFF);
+	ojCmptAddServiceOutputMessage(cmpt, JAUS_GLOBAL_POSE_SENSOR, JAUS_REPORT_GLOBAL_POSE, 0xFF);
 
- 	ojCmptSetStateCallback(gpos, JAUS_READY_STATE, gposReadyState);
-
-	ojCmptSetMessageCallback(gpos, JAUS_QUERY_GLOBAL_POSE, gposQueryGlobalPoseCallback);
+	ojCmptSetStateCallback(cmpt, JAUS_READY_STATE, gposReadyState);
+	ojCmptSetMessageCallback(cmpt, JAUS_QUERY_GLOBAL_POSE, gposQueryGlobalPoseCallback);
+	ojCmptAddSupportedSc(cmpt, JAUS_REPORT_GLOBAL_POSE);
 	
-	ojCmptAddSupportedSc(gpos, JAUS_REPORT_GLOBAL_POSE);
+	gposData = (GposData)malloc(sizeof(struct GposData));
 	
-	if(ojCmptRun(gpos))
+	gposData->message = reportGlobalPoseMessageCreate();
+	gposAddr = ojCmptGetAddress(cmpt);
+	jausAddressCopy(gposData->message->source, gposAddr);
+	jausAddressDestroy(gposAddr);
+	
+	ojCmptSetUserData(cmpt, (void *)gposData);
+	
+	ojCmptSetState(cmpt, JAUS_READY_STATE);
+
+	if(ojCmptRun(cmpt))
 	{
-		ojCmptDestroy(gpos);
+		ojCmptDestroy(cmpt);
 		return NULL;
 	}
 
-	gposMessage = reportGlobalPoseMessageCreate();
-	
-	gposAddr = ojCmptGetAddress(gpos);
-	jausAddressCopy(gposMessage->source, gposAddr);
-	jausAddressDestroy(gposAddr);
-			
-	ojCmptSetState(gpos, JAUS_READY_STATE);
-	
-	return gpos;
+	return cmpt;
 }
 
 // Function: gposShutdown
@@ -75,152 +77,146 @@ OjCmpt gposCreate(void)
 //				This function will also close the Jms connection to the Node Manager and check out the component from the Node Manager
 void gposDestroy(OjCmpt gpos)
 {	
+	GposData gposData;
+
+	gposData = (GposData)ojCmptGetUserData(gpos);
+
 	// Remove support for ReportGlovalPose Service Connections
 	ojCmptRemoveSupportedSc(gpos, JAUS_REPORT_GLOBAL_POSE);	
 	ojCmptDestroy(gpos);
 
-	reportGlobalPoseMessageDestroy(gposMessage);
+	reportGlobalPoseMessageDestroy(gposData->message);	
+	free(gposData);
 }
 
 // The series of functions below allow public access to essential component information
 // Access:		Public (All)
-JausState gposGetState(void)
+JausState gposGetState(OjCmpt gpos)
 {
-	return gpos->state;
+	return ojCmptGetState(gpos);
 }
 
-JausAddress gposGetAddress(void)
+JausAddress gposGetAddress(OjCmpt gpos)
 {
-	return gpos->address;
+	return ojCmptGetAddress(gpos);
 }
 
-double gposGetUpdateRate(void)
+double gposGetUpdateRate(OjCmpt gpos)
 {
-	return gposThreadHz; 
+	return ojCmptGetRateHz(gpos); 
 }
 
-double gposGetLatitude(void)
+double gposGetLatitude(OjCmpt gpos)
 {
-	return gposMessage->latitudeDegrees;
+	GposData gposData;
+
+	gposData = (GposData)ojCmptGetUserData(gpos);
+	
+	return gposData->message->latitudeDegrees;
 }
 
-double gposGetLongitude(void)
+double gposGetLongitude(OjCmpt gpos)
 {
-	return gposMessage->longitudeDegrees;
+	GposData gposData;
+
+	gposData = (GposData)ojCmptGetUserData(gpos);
+	return gposData->message->longitudeDegrees;
 }
 
-double gposGetYaw(void)
+double gposGetYaw(OjCmpt gpos)
 {
-	return gposMessage->yawRadians;
+	GposData gposData;
+
+	gposData = (GposData)ojCmptGetUserData(gpos);
+	return gposData->message->yawRadians;
 }
 
-int gposGetScActive(void)
+int gposGetScActive(OjCmpt gpos)
 {
-	return gposScActive;
+	return ojCmptIsOutgoingScActive(gpos, JAUS_REPORT_GLOBAL_POSE);
 }
 
-// Function: gposProcessMessage
-// Access:		Private
-// Description:	This function is responsible for handling incoming JAUS messages from the Node Manager.
-//				Incoming messages are processed according to message type.
-void gposProcessMessage(JausMessage message)
+void gposQueryGlobalPoseCallback(OjCmpt gpos, JausMessage query)
 {
-	QueryGlobalPoseMessage queryGlobalPose;
+	GposData gposData;
 	JausMessage txMessage;
+	QueryGlobalPoseMessage queryGlobalPose;
+	
+	gposData = (GposData)ojCmptGetUserData(gpos);
 
-	// This block of code is intended to reject commands from non-controlling components
-	if(gpos->controller.active && !jausAddressEqual(message->source, gpos->controller.address) && jausMessageIsRejectableCommand(message) )
+	queryGlobalPose = queryGlobalPoseMessageFromJausMessage(query);
+	if(queryGlobalPose)
 	{
-		////cError("gpos: Received command message %s from non-controlling component.\n", jausMessageCommandCodeString(message));
-		jausMessageDestroy(message); // Ignore this message
-		return;		
-	}	
-
-	switch(message->commandCode) // Switch the processing algorithm according to the JAUS message type
-	{
-		case JAUS_QUERY_GLOBAL_POSE:
-			queryGlobalPose = queryGlobalPoseMessageFromJausMessage(message);
-			if(queryGlobalPose)
-			{
-				jausAddressCopy(gposMessage->destination, queryGlobalPose->source);
-				gposMessage->presenceVector = queryGlobalPose->presenceVector;
-				gposMessage->sequenceNumber = 0;
-				gposMessage->properties.scFlag = 0;
-				
-				txMessage = reportGlobalPoseMessageToJausMessage(gposMessage);
-				nodeManagerSend(gposNmi, txMessage);		
-				jausMessageDestroy(txMessage);
-				
-				queryGlobalPoseMessageDestroy(queryGlobalPose);
-			}
-			else
-			{
-				////cError("gpos: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
-			}
-			jausMessageDestroy(message);
-			break;
+		jausAddressCopy(gposData->message->destination, queryGlobalPose->source);
+		gposData->message->presenceVector = queryGlobalPose->presenceVector;
+		gposData->message->sequenceNumber = 0;
+		gposData->message->properties.scFlag = 0;
 		
-		default:
-			defaultJausMessageProcessor(message, gposNmi, gpos);
-			break;
+		txMessage = reportGlobalPoseMessageToJausMessage(gposData->message);
+		ojCmptSendMessage(gpos, txMessage);		
+		jausMessageDestroy(txMessage);
+		
+		queryGlobalPoseMessageDestroy(queryGlobalPose);
 	}
+	else
+	{
+		////cError("gpos: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
+	}
+	
+	jausMessageDestroy(query);
 }
 
-void gposReadyState(void)
+void gposReadyState(OjCmpt gpos)
 {
 	JausMessage txMessage;
 	ServiceConnection scList;
 	ServiceConnection sc;
-	char buf[64] = {0};
-	char buf2[64] = {0};
-	
+	//char buf[64] = {0};
+	//char buf2[64] = {0};
 	PointLla vehiclePosLla;
+	GposData gposData;
+	
+	gposData = (GposData)ojCmptGetUserData(gpos);
 	
 	vehiclePosLla = vehicleSimGetPositionLla();
 	if(vehiclePosLla)
 	{		
-		gposMessage->latitudeDegrees = vehiclePosLla->latitudeRadians * DEG_PER_RAD;
-		gposMessage->longitudeDegrees = vehiclePosLla->longitudeRadians * DEG_PER_RAD;
+		gposData->message->latitudeDegrees = vehiclePosLla->latitudeRadians * DEG_PER_RAD;
+		gposData->message->longitudeDegrees = vehiclePosLla->longitudeRadians * DEG_PER_RAD;
 	}
 	
-	gposMessage->yawRadians = -(vehicleSimGetH() - M_PI/2.0);
+	gposData->message->yawRadians = -(vehicleSimGetH() - M_PI/2.0);
 
-	gposMessage->elevationMeters = 0;
-	gposMessage->positionRmsMeters = 1.0;
-	gposMessage->rollRadians = 0.0;
-	gposMessage->pitchRadians = 0.0;
-	gposMessage->attitudeRmsRadians = 0.05;
-	jausTimeSetCurrentTime(gposMessage->time);
+	gposData->message->elevationMeters = 0;
+	gposData->message->positionRmsMeters = 1.0;
+	gposData->message->rollRadians = 0.0;
+	gposData->message->pitchRadians = 0.0;
+	gposData->message->attitudeRmsRadians = 0.05;
+	jausTimeSetCurrentTime(gposData->message->time);
 
 	// Send message
-	if(scManagerQueryActiveMessage(gposNmi, JAUS_REPORT_GLOBAL_POSE))
+	if(ojCmptIsOutgoingScActive(gpos, JAUS_REPORT_GLOBAL_POSE))
 	{
-		gposScActive = JAUS_TRUE;
-			
-		scList = scManagerGetSendList(gposNmi, JAUS_REPORT_GLOBAL_POSE);
+		scList = ojCmptGetScSendList(gpos, JAUS_REPORT_GLOBAL_POSE);
 		sc = scList;
 		while(sc)
 		{
-			jausAddressCopy(gposMessage->destination, sc->address);
-			gposMessage->presenceVector = sc->presenceVector;
-			gposMessage->sequenceNumber = sc->sequenceNumber;
-			gposMessage->properties.scFlag = JAUS_SERVICE_CONNECTION_MESSAGE;
+			jausAddressCopy(gposData->message->destination, sc->address);
+			gposData->message->presenceVector = sc->presenceVector;
+			gposData->message->sequenceNumber = sc->sequenceNumber;
+			gposData->message->properties.scFlag = JAUS_SERVICE_CONNECTION_MESSAGE;
 			
-			txMessage = reportGlobalPoseMessageToJausMessage(gposMessage);
-			nodeManagerSend(gposNmi, txMessage);
+			txMessage = reportGlobalPoseMessageToJausMessage(gposData->message);
+			ojCmptSendMessage(gpos, txMessage);
 			jausMessageDestroy(txMessage);
 	
-			jausAddressToString(gposMessage->source, buf);
-			jausAddressToString(gposMessage->destination, buf2);
+			//jausAddressToString(gposData->message->source, buf);
+			//jausAddressToString(gposData->message->destination, buf2);
 			//cDebug(9, "Sent GPOS SC from %s to %s\n", buf, buf2);
 	
 			sc = sc->nextSc;
 		}
 		
-		scManagerDestroySendList(scList);
-	}
-	else
-	{
-		gposScActive = JAUS_FALSE;
+		ojCmptDestroySendList(scList);
 	}
 }

@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <openJaus.h>
 //#include "properties.h"
 #include "pd.h"
 #include "simulator.h"
@@ -26,14 +27,6 @@ int simulatorStartup(void)
 		return SIMULATOR_STARTUP_FAILED;	
 	}
 	
-	if(gposStartup())
-	{
-		//cError("node: gposStartup failed\n");
-		simulatorShutdown();
-		
-		return SIMULATOR_STARTUP_FAILED;	
-	}
-
 	if(vssStartup())
 	{
 		//cError("node: vssStartup failed\n");
@@ -57,7 +50,6 @@ int simulatorShutdown(void)
 {
 	wdShutdown();	
 	vssShutdown();
-	gposShutdown();
 	pdShutdown();
 	vehicleSimShutdown();
 	
