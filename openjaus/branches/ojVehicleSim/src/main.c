@@ -472,7 +472,7 @@ int main(int argCount, char **argString)
 {
 	char keyPressed = FALSE;
 	int keyboardLock = FALSE;
-	double keyboardLockTime = ojGetTimeSeconds() + KEYBOARD_LOCK_TIMEOUT_SEC;
+	double keyboardLockTime = ojGetTimeSec() + KEYBOARD_LOCK_TIMEOUT_SEC;
 	time_t timeStamp;
 	
 	//Get and Format Time String
@@ -537,9 +537,9 @@ int main(int argCount, char **argString)
 
 		if(keyPressed)
 		{
-			keyboardLockTime = ojGetTimeSeconds() + KEYBOARD_LOCK_TIMEOUT_SEC;		
+			keyboardLockTime = ojGetTimeSec() + KEYBOARD_LOCK_TIMEOUT_SEC;		
 		}
-		else if(ojGetTimeSeconds() > keyboardLockTime)
+		else if(ojGetTimeSec() > keyboardLockTime)
 		{
 				keyboardLock = TRUE;
 		}
