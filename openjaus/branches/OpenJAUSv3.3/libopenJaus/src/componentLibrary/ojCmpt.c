@@ -118,6 +118,8 @@ int ojCmptRun(OjCmpt ojCmpt)
 
 void ojCmptDestroy(OjCmpt ojCmpt)
 {
+	RejectComponentControlMessage rejectComponentControl;
+	JausMessage txMessage;
 	int i = 0;
 	
 	if(ojCmpt->run == TRUE)
@@ -126,7 +128,19 @@ void ojCmptDestroy(OjCmpt ojCmpt)
 		pthread_join(ojCmpt->thread, NULL);
 	}
 
-	// TODO: cleanup anything from defaultMsgProcessing i.e. rejectController
+	if(ojCmpt->jaus->controller.active)
+	{
+		// Terminate control of current component
+		rejectComponentControl = rejectComponentControlMessageCreate();
+		jausAddressCopy(rejectComponentControl->source, ojCmpt->jaus->address);
+		jausAddressCopy(rejectComponentControl->destination, ojCmpt->jaus->controller.address);
+
+		txMessage = rejectComponentControlMessageToJausMessage(rejectComponentControl);
+		nodeManagerSend(ojCmpt->nmi, txMessage);
+		jausMessageDestroy(txMessage);
+
+		rejectComponentControlMessageDestroy(rejectComponentControl);
+	}
 	
 	for(i=0; i<ojCmpt->inConnectionCount; i++)
 	{
