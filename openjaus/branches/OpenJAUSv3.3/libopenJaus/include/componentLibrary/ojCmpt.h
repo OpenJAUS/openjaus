@@ -53,6 +53,7 @@ JAUS_EXPORT JausBoolean ojCmptAddServiceOutputMessage(OjCmpt ojCmpt, JausUnsigne
 // Incomming Service Connections
 JAUS_EXPORT int ojCmptEstablishSc(OjCmpt ojCmpt, JausUnsignedShort cCode, JausUnsignedInteger pv, JausAddress address, double rateHz, double timeoutSec, int qSize);
 JAUS_EXPORT int ojCmptTerminateSc(OjCmpt ojCmpt, int scIndex);
+JAUS_EXPORT JausBoolean ojCmptIsIncomingScActive(OjCmpt ojCmpt, int scIndex);
 // OjCmpt add receive SC method
 
 // Outgoing Service Connections
