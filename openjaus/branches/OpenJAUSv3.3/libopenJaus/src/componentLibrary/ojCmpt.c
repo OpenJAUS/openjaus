@@ -536,3 +536,13 @@ int ojCmptTerminateSc(OjCmpt ojCmpt, int scIndex)
 
 	return TRUE;
 }
+
+JausBoolean ojCmptIsIncomingScActive(OjCmpt ojCmpt, int scIndex)
+{	
+	if(scIndex < 0 || scIndex >= ojCmpt->inConnectionCount)
+	{
+		return JAUS_FALSE;
+	}
+	
+	return ojCmpt->inConnection[scIndex]->isActive;
+}

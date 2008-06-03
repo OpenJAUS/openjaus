@@ -1,7 +1,7 @@
 // File:		gpos.c 
-// Version:		0.4 alpha
-// Written by:	Tom Galluzzo (galluzzt@ufl.edu) and Danny Kent (kentd@ufl.edu)
-// Date:		07/01/2005
+// Version:		3.3
+// Written by:	Tom Galluzzo (galluzzt@ufl.edu)
+// Date:		6/3/2008
 // Description:	This file contains the skeleton C code for implementing a JAUS component in a Linux environment
 //				This code is designed to work with the node manager and JAUS library software written by CIMAR
 
@@ -74,7 +74,7 @@ void gposDestroy(OjCmpt gpos)
 	
 	message = (ReportGlobalPoseMessage)ojCmptGetUserData(gpos);
 
-	// Remove support for ReportGlovalPose Service Connections
+	// Remove support for ReportGlobalPose Service Connections
 	ojCmptRemoveSupportedSc(gpos, JAUS_REPORT_GLOBAL_POSE);	
 	ojCmptDestroy(gpos);
 
