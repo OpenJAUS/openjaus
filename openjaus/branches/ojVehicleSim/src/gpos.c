@@ -163,8 +163,6 @@ void gposReadyState(OjCmpt gpos)
 	JausMessage txMessage;
 	ServiceConnection scList;
 	ServiceConnection sc;
-	//char buf[64] = {0};
-	//char buf2[64] = {0};
 	PointLla vehiclePosLla;
 	ReportGlobalPoseMessage message;
 	
@@ -201,10 +199,6 @@ void gposReadyState(OjCmpt gpos)
 			txMessage = reportGlobalPoseMessageToJausMessage(message);
 			ojCmptSendMessage(gpos, txMessage);
 			jausMessageDestroy(txMessage);
-	
-			//jausAddressToString(message->source, buf);
-			//jausAddressToString(message->destination, buf2);
-			//cDebug(9, "Sent GPOS SC from %s to %s\n", buf, buf2);
 	
 			sc = sc->nextSc;
 		}
