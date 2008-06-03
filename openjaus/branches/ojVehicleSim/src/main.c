@@ -55,7 +55,8 @@ static char timeString[DEFAULT_STRING_LENGTH] = "";
 #endif
 
 OjCmpt gpos;
-	
+OjCmpt vss;
+
 // Refresh screen in curses mode
 void updateScreen(int keyboardLock, int keyPress)
 {
@@ -165,11 +166,13 @@ void updateScreen(int keyboardLock, int keyPress)
 			
 			row++;
 			mvprintw(row++,col,"Velocity State Sensor");	
-			mvprintw(row++,col,"VSS Update Rate:  %7.2f", vssGetUpdateRate());	
-			jausAddressToString(vssGetAddress(), string );	
+			mvprintw(row++,col,"VSS Update Rate:  %7.2f", vssGetUpdateRate(vss));	
+			address = vssGetAddress(vss);
+			jausAddressToString(address, string );
+			jausAddressDestroy(address);
 			mvprintw(row++,col,"VSS Address:\t    %s", string);	
-			mvprintw(row++,col,"VSS State:\t    %s", jausStateGetString(vssGetState()));	
-			mvprintw(row++,col,"VSS SC State:\t    %s", vssGetScActive()? "Active" : "Inactive");	
+			mvprintw(row++,col,"VSS State:\t    %s", jausStateGetString(vssGetState(vss)));	
+			mvprintw(row++,col,"VSS SC State:\t    %s", vssGetScActive(vss)? "Active" : "Inactive");	
 			break;
 		
 		case '4':
@@ -522,7 +525,8 @@ int main(int argCount, char **argString)
 		return 0;
 	}
 	gpos = gposCreate();
-	
+	vss = vssCreate();
+
 	setupTerminal();
 
 	mainRunning = TRUE;
@@ -557,6 +561,7 @@ int main(int argCount, char **argString)
 	
 	//cDebug(1, "main: Shutting Down %s Node Software\n", simulatorGetName());
 	gposDestroy(gpos);
+	vssDestroy(vss);
 	simulatorShutdown();
 	
 	if(logFile != NULL)

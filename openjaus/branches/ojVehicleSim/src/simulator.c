@@ -4,8 +4,6 @@
 #include "pd.h"
 #include "simulator.h"
 #include "vehicleSim.h"
-#include "gpos.h"
-#include "vss.h"
 #include "wd.h"
 
 int simulatorStartup(void)
@@ -27,14 +25,6 @@ int simulatorStartup(void)
 		return SIMULATOR_STARTUP_FAILED;	
 	}
 	
-	if(vssStartup())
-	{
-		//cError("node: vssStartup failed\n");
-		simulatorShutdown();
-		
-		return SIMULATOR_STARTUP_FAILED;	
-	}
-
 	if(wdStartup())
 	{
 		//cError("node: wdStartup failed\n");
@@ -49,7 +39,6 @@ int simulatorStartup(void)
 int simulatorShutdown(void)
 {
 	wdShutdown();	
-	vssShutdown();
 	pdShutdown();
 	vehicleSimShutdown();
 	
