@@ -59,9 +59,6 @@ void defaultJausMessageProcessor(JausMessage message, NodeManagerInterface nmi, 
 	ActivateServiceConnectionMessage activateServiceConnection;
 	SuspendServiceConnectionMessage suspendServiceConnection;
 	TerminateServiceConnectionMessage terminateServiceConnection;
-	ConfirmEventRequestMessage confirmEventRequest;
-	CreateEventMessage createEvent;
-	CancelEventMessage cancelEvent;
 	QueryServicesMessage queryServices;
 	ReportServicesMessage reportServices;
 	
@@ -431,84 +428,6 @@ void defaultJausMessageProcessor(JausMessage message, NodeManagerInterface nmi, 
 			}
 			jausMessageDestroy(message);
 			break;
-
-		// *************************************************************************************************************************
-		// 		Experimental Use of Event Messages for OPC 2.75
-		//		Danny Kent (jaus AT dannykent DOT com)
-		//		11/07/05
-		// *************************************************************************************************************************
-		case JAUS_CREATE_EVENT:
-			createEvent = createEventMessageFromJausMessage(message);
-			if(createEvent)
-			{
-				if(createEvent->eventType == EVENT_PERIODIC_TYPE || createEvent->eventType == EVENT_PERIODIC_NO_REPEAT_TYPE)
-				{
-					// Create Service Connection
-					scManagerProccessCreateEvent(nmi, createEvent);
-				}
-				else
-				{
-					// Don't handle other Event Types Here
-					// Error and send a refusal back
-					//cError("DefaultMessageProcessor: Warning! Received Event Message not of Periodic Type\n");
-					confirmEventRequest = confirmEventRequestMessageCreate();
-					if(confirmEventRequest)
-					{
-						jausAddressCopy(confirmEventRequest->source, cmpt->address);
-						jausAddressCopy(confirmEventRequest->destination, message->source);
-						
-						confirmEventRequest->messageCode = createEvent->reportMessageCode;
-						confirmEventRequest->eventId = 0;
-						confirmEventRequest->responseCode = CONNECTION_REFUSED_RESPONSE;
-						
-						txMessage = confirmEventRequestMessageToJausMessage(confirmEventRequest);
-						confirmEventRequestMessageDestroy(confirmEventRequest);
-						
-						nodeManagerSend(nmi, txMessage);
-						jausMessageDestroy(txMessage);
-					}
-					else
-					{
-						//cError("DefaultMessageProcessor: Cannot create confirmEventRequest\n");
-					}
-				}
-				createEventMessageDestroy(createEvent);				
-			}
-			else
-			{
-				//cError("DefaultMessageProcessor: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
-			}
-			jausMessageDestroy(message);
-			break;
-
-		case JAUS_CONFIRM_EVENT_REQUEST:
-			confirmEventRequest = confirmEventRequestMessageFromJausMessage(message);
-			if(confirmEventRequest)
-			{
-				scManagerProcessConfirmEvent(nmi, confirmEventRequest);
-				confirmEventRequestMessageDestroy(confirmEventRequest);
-			}
-			else
-			{
-				//cError("DefaultMessageProcessor: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
-			}
-			jausMessageDestroy(message);
-			break;
-
-		case JAUS_CANCEL_EVENT:
-			cancelEvent = cancelEventMessageFromJausMessage(message);
-			if(cancelEvent)
-			{
-				scManagerProcessCancelEvent(nmi, cancelEvent);
-				cancelEventMessageDestroy(cancelEvent);
-			}
-			else
-			{
-				//cError("DefaultMessageProcessor: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
-			}
-			jausMessageDestroy(message);
-			break;
-
 
 		case JAUS_QUERY_SERVICES:
 			queryServices = queryServicesMessageFromJausMessage(message);

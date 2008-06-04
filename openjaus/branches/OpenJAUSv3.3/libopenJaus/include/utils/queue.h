@@ -72,5 +72,6 @@ JAUS_EXPORT Queue queueCreate(void);
 JAUS_EXPORT void queueDestroy(Queue, void (*)(void *));
 JAUS_EXPORT void *queuePop(Queue);
 JAUS_EXPORT void queuePush(Queue, void *);
+JAUS_EXPORT void queueEmpty(Queue queue, void (*objectDestroy)(void *));
 
 #endif // QUEUE_H

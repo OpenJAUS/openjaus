@@ -39,6 +39,7 @@
 // Description:	Provides the core service connection management routines
 
 #include <stdlib.h>
+#include <pthread.h>
 #include "nodeManagerInterface/nodeManagerInterface.h"
 
 SupportedScMessage scFindSupportedScMsgInList(SupportedScMessage, unsigned short);
@@ -53,9 +54,22 @@ ServiceConnection serviceConnectionCreate(void)
 	if(sc)
 	{
 		sc->address = jausAddressCreate();
-		sc->queryMessage = NULL;
+		if(!sc->address)
+		{
+			// Failed to init address
+			free(sc);
+			return NULL;
+		}
+		
 		sc->queue = queueCreate();
-		sc->serviceConnectionType = 0;
+		if(!sc->queue)
+		{
+			// Failed to init queue
+			jausAddressDestroy(sc->address);
+			free(sc);
+			return NULL;
+		}
+				
 		return sc;
 	}
 	else
@@ -67,10 +81,6 @@ ServiceConnection serviceConnectionCreate(void)
 void serviceConnectionDestroy(ServiceConnection sc)
 {
 	jausAddressDestroy(sc->address);
-	if(sc->serviceConnectionType == SC_EVENT_TYPE) 
-	{
-		jausMessageDestroy(sc->queryMessage);
-	}
 	queueDestroy(sc->queue, (void *)jausMessageDestroy);
 	free(sc);
 }
@@ -78,7 +88,8 @@ void serviceConnectionDestroy(ServiceConnection sc)
 ServiceConnectionManager scManagerCreate(void)
 {
 	ServiceConnectionManager scm = NULL;
-	
+	int retVal;
+
 	scm = (ServiceConnectionManager)malloc(sizeof(ServiceConnectionManagerStruct));
 	if(scm == NULL)
 	{
@@ -90,6 +101,14 @@ ServiceConnectionManager scManagerCreate(void)
 	scm->supportedScMsgCount = 0;
 	scm->outgoingScCount = 0;
 	scm->incommingScCount = 0;
+	
+	retVal = pthread_mutex_init(&scm->mutex, NULL);
+	if(retVal != 0)
+	{
+		// Failed to init mutex
+		free(scm);
+		return NULL;
+	}
 	
 	return scm;	
 }
@@ -122,15 +141,20 @@ void scManagerDestroy(ServiceConnectionManager scm)
 		free(supportedScMsg);
 	}
 	
+	pthread_mutex_destroy(&scm->mutex);
 	free(scm);	
 }
 
 void scManagerProcessConfirmScMessage(NodeManagerInterface nmi, ConfirmServiceConnectionMessage message)
 {
 	ServiceConnection prevSc = NULL;
-	ServiceConnection sc = nmi->scm->incommingSc;
+	ServiceConnection sc;
 	TerminateServiceConnectionMessage terminateSc;	
 	JausMessage txMessage;
+	
+	pthread_mutex_lock(&nmi->scm->mutex);
+	
+	sc = nmi->scm->incommingSc;
 	
 	while(sc)
 	{
@@ -162,6 +186,8 @@ void scManagerProcessConfirmScMessage(NodeManagerInterface nmi, ConfirmServiceCo
 				}
 				nmi->scm->incommingScCount--;
 			}
+			
+			pthread_mutex_unlock(&nmi->scm->mutex);
 			return;
 		}
 		prevSc = sc;
@@ -183,6 +209,8 @@ void scManagerProcessConfirmScMessage(NodeManagerInterface nmi, ConfirmServiceCo
 	
 		terminateServiceConnectionMessageDestroy(terminateSc);
 	}
+	
+	pthread_mutex_unlock(&nmi->scm->mutex);
 }
 
 void scManagerProcessCreateScMessage(NodeManagerInterface nmi, CreateServiceConnectionMessage message)
@@ -192,6 +220,8 @@ void scManagerProcessCreateScMessage(NodeManagerInterface nmi, CreateServiceConn
 	ServiceConnection newSc;
 	JausMessage txMessage;
 	ConfirmServiceConnectionMessage confScMsg;
+	
+	pthread_mutex_lock(&nmi->scm->mutex);
 	
 	supportedScMsg = scFindSupportedScMsgInList(nmi->scm->supportedScMsgList, message->serviceConnectionCommandCode);
 	if(supportedScMsg == NULL)
@@ -209,6 +239,8 @@ void scManagerProcessCreateScMessage(NodeManagerInterface nmi, CreateServiceConn
 		jausMessageDestroy(txMessage);	
 	
 		confirmServiceConnectionMessageDestroy(confScMsg);
+		
+		pthread_mutex_unlock(&nmi->scm->mutex);
 		return;
 	}
 	
@@ -229,10 +261,10 @@ void scManagerProcessCreateScMessage(NodeManagerInterface nmi, CreateServiceConn
 		jausMessageDestroy(txMessage);	
 	
 		confirmServiceConnectionMessageDestroy(confScMsg);
+		pthread_mutex_unlock(&nmi->scm->mutex);
 		return;
 	}
 	
-	newSc->serviceConnectionType = SC_REFERENCE_TYPE;
 	newSc->commandCode = message->serviceConnectionCommandCode;
 	newSc->presenceVector = message->presenceVector;
 	newSc->address = jausAddressCreate();
@@ -257,6 +289,7 @@ void scManagerProcessCreateScMessage(NodeManagerInterface nmi, CreateServiceConn
 
 		jausAddressDestroy(newSc->address);
 		free(newSc);
+		pthread_mutex_unlock(&nmi->scm->mutex);
 		return;
 	}
 	newSc->queue = NULL;
@@ -296,6 +329,8 @@ void scManagerProcessCreateScMessage(NodeManagerInterface nmi, CreateServiceConn
 	jausMessageDestroy(txMessage);	
 
 	confirmServiceConnectionMessageDestroy(confScMsg);
+	
+	pthread_mutex_unlock(&nmi->scm->mutex);
 }
 
 void scManagerProcessActivateScMessage(NodeManagerInterface nmi, ActivateServiceConnectionMessage message)
@@ -304,15 +339,19 @@ void scManagerProcessActivateScMessage(NodeManagerInterface nmi, ActivateService
 	ServiceConnection sc;
 	ServiceConnection messageSc;
 
+	pthread_mutex_lock(&nmi->scm->mutex);
+
 	supportedScMsg = scFindSupportedScMsgInList(nmi->scm->supportedScMsgList, message->serviceConnectionCommandCode);
 	if(supportedScMsg == NULL)
 	{
+		pthread_mutex_unlock(&nmi->scm->mutex);
 		return;
 	}
 
 	messageSc = (ServiceConnection)malloc( sizeof(ServiceConnectionStruct) );
 	if(messageSc == NULL) 
 	{
+		pthread_mutex_unlock(&nmi->scm->mutex);
 		return;
 	}
 
@@ -327,7 +366,8 @@ void scManagerProcessActivateScMessage(NodeManagerInterface nmi, ActivateService
 	}
 		
 	jausAddressDestroy(messageSc->address);
-	free(messageSc);	
+	free(messageSc);
+	pthread_mutex_unlock(&nmi->scm->mutex);
 }
 
 void scManagerProcessSuspendScMessage(NodeManagerInterface nmi, SuspendServiceConnectionMessage message)
@@ -336,15 +376,19 @@ void scManagerProcessSuspendScMessage(NodeManagerInterface nmi, SuspendServiceCo
 	ServiceConnection sc;
 	ServiceConnection messageSc;
 
+	pthread_mutex_lock(&nmi->scm->mutex);
+	
 	supportedScMsg = scFindSupportedScMsgInList(nmi->scm->supportedScMsgList, message->serviceConnectionCommandCode);
 	if(supportedScMsg == NULL)
 	{
+		pthread_mutex_unlock(&nmi->scm->mutex);
 		return;
 	}
 
 	messageSc = (ServiceConnection)malloc( sizeof(ServiceConnectionStruct) );
 	if(messageSc == NULL) 
 	{
+		pthread_mutex_unlock(&nmi->scm->mutex);
 		return;
 	}
 
@@ -359,7 +403,8 @@ void scManagerProcessSuspendScMessage(NodeManagerInterface nmi, SuspendServiceCo
 	}
 	
 	jausAddressDestroy(messageSc->address);
-	free(messageSc);		
+	free(messageSc);
+	pthread_mutex_unlock(&nmi->scm->mutex);
 }
 
 void scManagerProcessTerminateScMessage(NodeManagerInterface nmi, TerminateServiceConnectionMessage message)
@@ -368,14 +413,18 @@ void scManagerProcessTerminateScMessage(NodeManagerInterface nmi, TerminateServi
 	ServiceConnection sc;
 	ServiceConnection prevSc;
 	
+	pthread_mutex_lock(&nmi->scm->mutex);
+	
 	supportedScMsg = scFindSupportedScMsgInList(nmi->scm->supportedScMsgList, message->serviceConnectionCommandCode);
 	if(supportedScMsg == NULL)
 	{
+		pthread_mutex_unlock(&nmi->scm->mutex);
 		return;
 	}
 
 	if( supportedScMsg->scList == NULL )
 	{
+		pthread_mutex_unlock(&nmi->scm->mutex);
 		return;
 	}
 
@@ -389,6 +438,7 @@ void scManagerProcessTerminateScMessage(NodeManagerInterface nmi, TerminateServi
 		supportedScMsg->scList = sc->nextSc;
 		serviceConnectionDestroy(sc);
 		nmi->scm->outgoingScCount--;
+		pthread_mutex_unlock(&nmi->scm->mutex);
 		return;
 	}
 	
@@ -401,15 +451,17 @@ void scManagerProcessTerminateScMessage(NodeManagerInterface nmi, TerminateServi
 			sc->instanceId == message->instanceId )
 		{
 			// Remove sc from list
-			prevSc->nextSc = sc->nextSc;			
+			prevSc->nextSc = sc->nextSc;
 			serviceConnectionDestroy(sc);
 			nmi->scm->outgoingScCount--;
+			pthread_mutex_unlock(&nmi->scm->mutex);
 			return;
 		}	
-		prevSc = sc;	
+		prevSc = sc;
 		sc = sc->nextSc;
 	}
 	
+	pthread_mutex_unlock(&nmi->scm->mutex);
 }
 
 void scManagerProcessUpdatedSubystem(NodeManagerInterface nmi, JausSubsystem subsystem)
@@ -418,6 +470,8 @@ void scManagerProcessUpdatedSubystem(NodeManagerInterface nmi, JausSubsystem sub
 	ServiceConnection sc;
 	ServiceConnection prevSc;
 
+	pthread_mutex_lock(&nmi->scm->mutex);
+	
 	supportedScMsg = nmi->scm->supportedScMsgList;
 	while(supportedScMsg)
 	{
@@ -463,10 +517,11 @@ void scManagerProcessUpdatedSubystem(NodeManagerInterface nmi, JausSubsystem sub
 			sc->isActive = JAUS_FALSE;			
 
 			// Clear out Inbound Queue
-			while(sc->queue->size)
-			{
-				jausMessageDestroy(queuePop(sc->queue));
-			}
+//			while(sc->queue->size)
+//			{
+//				jausMessageDestroy(queuePop(sc->queue));
+//			}
+			queueEmpty(sc->queue, (void *)jausMessageDestroy);
 			
 			if(prevSc)
 			{
@@ -488,12 +543,16 @@ void scManagerProcessUpdatedSubystem(NodeManagerInterface nmi, JausSubsystem sub
 			sc = sc->nextSc;
 		}
 	}
+	
+	pthread_mutex_unlock(&nmi->scm->mutex);	
 }
 
 void scManagerAddSupportedMessage(NodeManagerInterface nmi, unsigned short commandCode)
 {
 	SupportedScMessage supportedScMsg;
 
+	pthread_mutex_lock(&nmi->scm->mutex);
+	
 	supportedScMsg = scFindSupportedScMsgInList(nmi->scm->supportedScMsgList, commandCode);
 	if(supportedScMsg == NULL)
 	{																					
@@ -501,6 +560,7 @@ void scManagerAddSupportedMessage(NodeManagerInterface nmi, unsigned short comma
 		if(supportedScMsg == NULL) 
 		{
 			// TODO: Throw error
+			pthread_mutex_unlock(&nmi->scm->mutex);
 			return;
 		}
 
@@ -511,16 +571,21 @@ void scManagerAddSupportedMessage(NodeManagerInterface nmi, unsigned short comma
 		nmi->scm->supportedScMsgList = supportedScMsg;
 		nmi->scm->supportedScMsgCount++;
 	}
+	
+	pthread_mutex_unlock(&nmi->scm->mutex);
 }
 
 void scManagerRemoveSupportedMessage(NodeManagerInterface nmi, unsigned short commandCode)
 {
 	SupportedScMessage prevSupportedScMsg = NULL;
-	SupportedScMessage supportedScMsg = nmi->scm->supportedScMsgList;
+	SupportedScMessage supportedScMsg;
 	ServiceConnection sc;
 	TerminateServiceConnectionMessage terminateSc;	
-	CancelEventMessage cancelEvent;
 	JausMessage txMessage;
+	
+	pthread_mutex_lock(&nmi->scm->mutex);
+	
+	supportedScMsg = nmi->scm->supportedScMsgList;
 	
 	while(supportedScMsg)
 	{
@@ -542,54 +607,42 @@ void scManagerRemoveSupportedMessage(NodeManagerInterface nmi, unsigned short co
 				sc = supportedScMsg->scList;
 				supportedScMsg->scList = sc->nextSc;
 				
-				// This test will indicate if it is the new style using event messages or not
-				if(sc->serviceConnectionType == SC_EVENT_TYPE)
-				{
-					cancelEvent = cancelEventMessageCreate();
-					jausAddressCopy(cancelEvent->source, nmi->cmpt->address);
-					jausAddressCopy(cancelEvent->destination, sc->address);
-					cancelEvent->messageCode = sc->commandCode;
-					cancelEvent->eventId = sc->instanceId;
-
-					txMessage = cancelEventMessageToJausMessage(cancelEvent);
-					nodeManagerSend(nmi, txMessage);
-					jausMessageDestroy(txMessage);
-					
-					cancelEventMessageDestroy(cancelEvent);
-					jausMessageDestroy(sc->queryMessage);
-				}
-				else
-				{
-					terminateSc = terminateServiceConnectionMessageCreate();
-					jausAddressCopy(terminateSc->source, nmi->cmpt->address);
-					jausAddressCopy(terminateSc->destination, sc->address);
-					terminateSc->serviceConnectionCommandCode = sc->commandCode;
-					terminateSc->instanceId = sc->instanceId;
-		
-					txMessage = terminateServiceConnectionMessageToJausMessage(terminateSc);
-					nodeManagerSend(nmi, txMessage);
-					jausMessageDestroy(txMessage);
+				terminateSc = terminateServiceConnectionMessageCreate();
+				jausAddressCopy(terminateSc->source, nmi->cmpt->address);
+				jausAddressCopy(terminateSc->destination, sc->address);
+				terminateSc->serviceConnectionCommandCode = sc->commandCode;
+				terminateSc->instanceId = sc->instanceId;
 	
-					terminateServiceConnectionMessageDestroy(terminateSc);
-				}
+				txMessage = terminateServiceConnectionMessageToJausMessage(terminateSc);
+				nodeManagerSend(nmi, txMessage);
+				jausMessageDestroy(txMessage);
+
+				terminateServiceConnectionMessageDestroy(terminateSc);
 
 				serviceConnectionDestroy(sc);
 			}
 			free(supportedScMsg);
 			nmi->scm->supportedScMsgCount--;
+			pthread_mutex_unlock(&nmi->scm->mutex);
 			return;
 		}
 		prevSupportedScMsg = supportedScMsg;
 		supportedScMsg = supportedScMsg->nextSupportedScMsg;
 	}
+	
+	pthread_mutex_unlock(&nmi->scm->mutex);
 }
 
 JausBoolean scManagerQueryActiveMessage(NodeManagerInterface nmi, unsigned short commandCode)
 {
 	SupportedScMessage supportedScMsg;
+
+	pthread_mutex_lock(&nmi->scm->mutex);	
 	
 	supportedScMsg = scFindSupportedScMsgInList(nmi->scm->supportedScMsgList, commandCode);
 
+	pthread_mutex_unlock(&nmi->scm->mutex);	
+	
 	if(supportedScMsg != NULL && supportedScMsg->scList != NULL)
 	{
 		return JAUS_TRUE;
@@ -607,6 +660,8 @@ ServiceConnection scManagerGetSendList(NodeManagerInterface nmi, unsigned short 
 	ServiceConnection newSc = NULL;
 	ServiceConnection firstSc = NULL;
 	double currentTime = getTimeSeconds();
+
+	pthread_mutex_lock(&nmi->scm->mutex);	
 	
 	// find the SC object associated with this command code
 	supportedScMsg = scFindSupportedScMsgInList(nmi->scm->supportedScMsgList, commandCode);
@@ -616,6 +671,7 @@ ServiceConnection scManagerGetSendList(NodeManagerInterface nmi, unsigned short 
 	}
 	else
 	{
+		pthread_mutex_unlock(&nmi->scm->mutex);
 		return NULL;
 	}
 	
@@ -644,6 +700,7 @@ ServiceConnection scManagerGetSendList(NodeManagerInterface nmi, unsigned short 
 		sc = sc->nextSc;
 	}
 	
+	pthread_mutex_unlock(&nmi->scm->mutex);
 	return firstSc;
 }
 
@@ -660,7 +717,7 @@ void scManagerDestroySendList(ServiceConnection sc)
 }
 
 SupportedScMessage scFindSupportedScMsgInList(SupportedScMessage supportedScMsg, unsigned short commandCode)
-{
+{	
 	while(supportedScMsg)
 	{
 		if(supportedScMsg->commandCode == commandCode)
@@ -687,7 +744,7 @@ ServiceConnection scFindScInList(ServiceConnection sc, ServiceConnection newSc)
 		sc = sc->nextSc;
 	}
 	
-	return NULL;	
+	return NULL;
 }
 
 int scGetAvailableInstanceId(ServiceConnection sc, ServiceConnection newSc)
@@ -731,10 +788,15 @@ JausBoolean scManagerCreateServiceConnection(NodeManagerInterface nmi, ServiceCo
 	JausAddress localAddress;
 	
 	ServiceConnection prevSc = NULL;
-	ServiceConnection testSc = nmi->scm->incommingSc;
+	ServiceConnection testSc = NULL;
+	
+	pthread_mutex_lock(&nmi->scm->mutex);
+	
+	testSc = nmi->scm->incommingSc;
 	
 	if(!sc)
 	{
+		pthread_mutex_unlock(&nmi->scm->mutex);
 		return JAUS_FALSE;
 	}
 	
@@ -785,6 +847,8 @@ JausBoolean scManagerCreateServiceConnection(NodeManagerInterface nmi, ServiceCo
 		sc->nextSc = nmi->scm->incommingSc;
 		nmi->scm->incommingSc = sc;		
 		nmi->scm->incommingScCount++;
+		
+		pthread_mutex_unlock(&nmi->scm->mutex);
 		return JAUS_TRUE;
 	}
 	// otherwise the subsystem is unknown so we assume it is the same subsystem?
@@ -814,15 +878,21 @@ JausBoolean scManagerCreateServiceConnection(NodeManagerInterface nmi, ServiceCo
 			sc->nextSc = nmi->scm->incommingSc;
 			nmi->scm->incommingSc = sc;		
 			nmi->scm->incommingScCount++;
+		
+			pthread_mutex_unlock(&nmi->scm->mutex);
 			return JAUS_TRUE;
 		}
 		else
 		{
 			jausAddressDestroy(localAddress);
 			createServiceConnectionMessageDestroy(createSc);
+			
+			pthread_mutex_unlock(&nmi->scm->mutex);
 			return JAUS_FALSE;
 		}
 	}
+	
+	pthread_mutex_unlock(&nmi->scm->mutex);	
 }
 
 JausBoolean scManagerTerminateServiceConnection(NodeManagerInterface nmi, ServiceConnection deadSc)
@@ -830,8 +900,12 @@ JausBoolean scManagerTerminateServiceConnection(NodeManagerInterface nmi, Servic
 	TerminateServiceConnectionMessage terminateSc;
 	JausMessage txMessage;
 	ServiceConnection prevSc = NULL;
-	ServiceConnection sc = nmi->scm->incommingSc;
+	ServiceConnection sc = NULL;
 
+	pthread_mutex_lock(&nmi->scm->mutex);
+	
+	sc = nmi->scm->incommingSc;
+	
 	while(sc)
 	{
 		if(sc->commandCode == deadSc->commandCode && jausAddressEqual(sc->address, deadSc->address) )
@@ -873,6 +947,7 @@ JausBoolean scManagerTerminateServiceConnection(NodeManagerInterface nmi, Servic
 			}
 			
 			nmi->scm->incommingScCount--;
+			pthread_mutex_unlock(&nmi->scm->mutex);
 			return JAUS_TRUE;
 		}
 		else
@@ -881,14 +956,18 @@ JausBoolean scManagerTerminateServiceConnection(NodeManagerInterface nmi, Servic
 			sc = sc->nextSc;
 		}
 	}
+	pthread_mutex_unlock(&nmi->scm->mutex);
 	return JAUS_FALSE;
 }
 
 JausBoolean scManagerReceiveServiceConnection(NodeManagerInterface nmi, ServiceConnection requestSc, JausMessage *message)
 {
 	ServiceConnection prevSc;
-	ServiceConnection sc = nmi->scm->incommingSc;
+	ServiceConnection sc;
 
+	pthread_mutex_unlock(&nmi->scm->mutex);	
+	
+	sc = nmi->scm->incommingSc;
 	prevSc = NULL;
 	while(sc)
 	{
@@ -915,18 +994,21 @@ JausBoolean scManagerReceiveServiceConnection(NodeManagerInterface nmi, ServiceC
 					sc->nextSc = NULL;
 				}
 				nmi->scm->incommingScCount--;
+				pthread_mutex_unlock(&nmi->scm->mutex);
 				return JAUS_FALSE;
 			}
 
 			if(sc->queue->size)
 			{
 				*message = (JausMessage)queuePop(sc->queue);
+				pthread_mutex_unlock(&nmi->scm->mutex);
 				return JAUS_TRUE;
 			}
 			else
 			{
+				pthread_mutex_unlock(&nmi->scm->mutex);
 				return JAUS_FALSE;
-			}			
+			}
 		}
 		else
 		{
@@ -935,15 +1017,18 @@ JausBoolean scManagerReceiveServiceConnection(NodeManagerInterface nmi, ServiceC
 		}
 	}
 
-	////cError(	"libnodeManager: scManagerServiceConnectionReceive: Requested SC does not exist\n" );
+	pthread_mutex_unlock(&nmi->scm->mutex);
 	return JAUS_FALSE;
 }
 
 void scManagerReceiveMessage(NodeManagerInterface nmi, JausMessage message)
 {
-	ServiceConnection sc = nmi->scm->incommingSc;
+	ServiceConnection sc;
 	char string[32] = {0};
 	
+	pthread_mutex_lock(&nmi->scm->mutex);
+	
+	sc = nmi->scm->incommingSc;
 	while(sc)
 	{
 		if(sc->commandCode == message->commandCode && jausAddressEqual(sc->address, message->source) )
@@ -961,21 +1046,21 @@ void scManagerReceiveMessage(NodeManagerInterface nmi, JausMessage message)
 				{
 					queuePush(sc->queue, (void *)message);
 				} 
-				//cDebug(3, "Queue Size: %d\n", sc->queue->size);
 			}			
 			else
 			{
 				// TODO: Error? received a message for inactive SC
 				jausMessageDestroy(message);
 			}
+			pthread_mutex_unlock(&nmi->scm->mutex);
 			return;		
 		}
 		sc = sc->nextSc;
 	}
 
 	jausAddressToString(message->source, string);
-	////cError("libnodeManager: scManangerReceiveMessage: No SC for: %s, from: %s\n", jausMessageCommandCodeString(message), string);
 	jausMessageDestroy(message);
+	pthread_mutex_unlock(&nmi->scm->mutex);
 }
 
 int scManagerUpdateServiceConnection(ServiceConnection sc, unsigned short sequenceNumber)
@@ -1004,424 +1089,4 @@ int scManagerUpdateServiceConnection(ServiceConnection sc, unsigned short sequen
 	sc->sequenceNumber = sequenceNumber;
 	
 	return returnValue;
-}
-
-// ***********************************************************
-// 		Experimental Use of Event Messages for OPC 2.75
-//		Danny Kent (jaus AT dannykent DOT com)
-//		11/07/05
-// ***********************************************************
-void scManagerProccessCreateEvent(NodeManagerInterface nmi, CreateEventMessage message)
-{
-	SupportedScMessage supportedScMsg;
-	ServiceConnection sc;
-	ServiceConnection newSc;
-	JausMessage txMessage;
-	ConfirmEventRequestMessage confirmEvent;
-	
-	// Look to see if the requested commandcode exists
-	supportedScMsg = scFindSupportedScMsgInList(nmi->scm->supportedScMsgList, jausMessageGetComplimentaryCommandCode(message->reportMessageCode));
-	if(supportedScMsg == NULL)
-	{
-		// Command Code Not Supported
-		confirmEvent = confirmEventRequestMessageCreate();
-		if(confirmEvent)
-		{
-			jausAddressCopy(confirmEvent->source, nmi->cmpt->address);
-			jausAddressCopy(confirmEvent->destination, message->source);
-			
-			confirmEvent->messageCode = message->reportMessageCode;
-			confirmEvent->eventId = 0;
-			confirmEvent->responseCode = MESSAGE_UNSUPPORTED_RESPONSE;
-			
-			txMessage = confirmEventRequestMessageToJausMessage(confirmEvent);
-			confirmEventRequestMessageDestroy(confirmEvent);
-			
-			nodeManagerSend(nmi, txMessage);
-			jausMessageDestroy(txMessage);
-		}
-		else
-		{
-			////cError("scManagerProccessCreateEvent: Cannot create confirmEvent\n");
-		}
-		return;
-	}
-	
-	// Attempt to create a new ServiceConnection
-	newSc = (ServiceConnection)malloc( sizeof(ServiceConnectionStruct) );
-	if(newSc == NULL) 
-	{
-		// Send negative conf (could not create sc)
-		confirmEvent = confirmEventRequestMessageCreate();
-		if(confirmEvent)
-		{
-			jausAddressCopy(confirmEvent->source, nmi->cmpt->address);
-			jausAddressCopy(confirmEvent->destination, message->source);
-			
-			confirmEvent->messageCode = message->reportMessageCode;
-			confirmEvent->eventId = 0;
-			confirmEvent->responseCode = CONNECTION_REFUSED_RESPONSE;
-			
-			txMessage = confirmEventRequestMessageToJausMessage(confirmEvent);
-			confirmEventRequestMessageDestroy(confirmEvent);
-			
-			nodeManagerSend(nmi, txMessage);
-			jausMessageDestroy(txMessage);
-		}
-		else
-		{
-			//cError("scManagerProccessCreateEvent: Cannot create confirmEvent\n");
-		}
-		return;
-	}
-	
-	// Create a copy of the QueryMessage
-	newSc->queryMessage = jausMessageClone(message->queryMessage);
-	if(!newSc->queryMessage)
-	{
-		// error creating message
-		free(newSc);
-		return;		
-	}
-	newSc->serviceConnectionType = SC_EVENT_TYPE;
-	newSc->commandCode = jausMessageGetComplimentaryCommandCode(message->reportMessageCode);
-	newSc->presenceVector = 0;	
-	newSc->address = jausAddressCreate();
-	jausAddressCopy(newSc->address, message->source);
-
-	// Get Instance / Event Id value
-	newSc->instanceId = scGetAvailableInstanceId(supportedScMsg->scList, newSc);
-	if(newSc->instanceId == -1)
-	{
-		// Send negative conf (could not create sc)
-		confirmEvent = confirmEventRequestMessageCreate();
-		if(confirmEvent)
-		{
-			jausAddressCopy(confirmEvent->source, nmi->cmpt->address);
-			jausAddressCopy(confirmEvent->destination, message->source);
-			
-			confirmEvent->messageCode = message->reportMessageCode;
-			confirmEvent->eventId = 0;
-			confirmEvent->responseCode = CONNECTION_REFUSED_RESPONSE;
-			
-			txMessage = confirmEventRequestMessageToJausMessage(confirmEvent);
-			confirmEventRequestMessageDestroy(confirmEvent);
-			
-			nodeManagerSend(nmi, txMessage);
-			jausMessageDestroy(txMessage);
-		}
-		else
-		{
-			//cError("scManagerProccessCreateEvent: Cannot create confirmEvent\n");
-		}
-		jausMessageDestroy(newSc->queryMessage);
-		jausAddressDestroy(newSc->address);
-		free(newSc);
-		return;
-	}
-	newSc->queue = NULL;
-	newSc->queueSize = 0;
-
-	sc = scFindScInList(supportedScMsg->scList, newSc);
-	if(sc == NULL) // Test to see if the sc does not already exist	
-	{
-		// The sc doesent exist, so we insert the new one into the list
-		sc = newSc;
-		sc->nextSc = supportedScMsg->scList;
-		supportedScMsg->scList = sc;
-		nmi->scm->outgoingScCount++;
-	}
-	else
-	{
-		jausMessageDestroy(newSc->queryMessage);	
-		jausAddressDestroy(newSc->address);
-		free(newSc);
-	}
-
-	// Setup the SC control parameters
-	sc->requestedUpdateRateHz = message->requestedUpdateRate;
-	sc->confirmedUpdateRateHz = message->requestedUpdateRate;
-	sc->lastSentTime = 0.0;
-	sc->sequenceNumber = 0;
-	sc->isActive = JAUS_TRUE;
-
-	// Send confirmation
-	confirmEvent = confirmEventRequestMessageCreate();
-	if(confirmEvent)
-	{
-		jausAddressCopy(confirmEvent->source, nmi->cmpt->address);
-		jausAddressCopy(confirmEvent->destination, message->source);
-		
-		confirmEvent->messageCode = message->reportMessageCode;
-		confirmEvent->eventId = sc->instanceId;
-		confirmEvent->responseCode = SUCCESSFUL_RESPONSE;
-		
-		txMessage = confirmEventRequestMessageToJausMessage(confirmEvent);
-		confirmEventRequestMessageDestroy(confirmEvent);
-		
-		nodeManagerSend(nmi, txMessage);
-		jausMessageDestroy(txMessage);
-	}
-	else
-	{
-		//cError("scManagerProccessCreateEvent: Cannot create confirmEvent\n");
-	}
-}
-
-void scManagerProcessConfirmEvent(NodeManagerInterface nmi, ConfirmEventRequestMessage message)
-{
-	ServiceConnection prevSc = NULL;
-	ServiceConnection sc = nmi->scm->incommingSc;
-	CancelEventMessage cancelEvent;	
-	JausMessage txMessage;
-
-	// Loop through all incomming SC's
-	while(sc)
-	{
-		// Test if this incoming SC matches the one replied to
-		if(	sc->commandCode == jausMessageGetComplimentaryCommandCode(message->messageCode) 
-			&& jausAddressEqual(sc->address, message->source) )
-		{
-			// Success
-			if( message->responseCode == SUCCESSFUL_RESPONSE )
-			{
-				sc->confirmedUpdateRateHz = message->confirmedUpdateRate;
-				sc->instanceId = message->eventId;
-				sc->isActive = JAUS_TRUE;
-				sc->sequenceNumber = 65535;
-				sc->lastSentTime = getTimeSeconds();
-			}
-			else // Failure
-			{
-				// Set SC Inactive
-				sc->isActive = JAUS_FALSE;
-
-				// Remove Service Connection
-				if(prevSc)
-				{
-					prevSc->nextSc = sc->nextSc;
-					sc->nextSc = NULL;
-				}
-				else
-				{
-					nmi->scm->incommingSc = sc->nextSc;
-					sc->nextSc = NULL;
-				}
-				nmi->scm->incommingScCount--;
-			}
-			return;
-		}
-		prevSc = sc;
-		sc = sc->nextSc;
-	}
-
-	// The SC was not found, so send a terminate to prevent streaming
-	if( message->responseCode == SUCCESSFUL_RESPONSE )
-	{
-		cancelEvent = cancelEventMessageCreate();
-		jausAddressCopy(cancelEvent->source, nmi->cmpt->address);
-		jausAddressCopy(cancelEvent->destination, message->source);
-		cancelEvent->messageCode = message->messageCode;
-		cancelEvent->eventId = message->eventId;
-		
-		txMessage = cancelEventMessageToJausMessage(cancelEvent);
-		nodeManagerSend(nmi, txMessage);
-		jausMessageDestroy(txMessage);
-	
-		cancelEventMessageDestroy(cancelEvent);
-	}	
-}
-
-void scManagerProcessCancelEvent(NodeManagerInterface nmi, CancelEventMessage message)
-{
-	SupportedScMessage supportedScMsg;
-	ServiceConnection sc;
-	ServiceConnection prevSc;
-	
-	// Find the outbound SC that matches the cancel event
-	supportedScMsg = scFindSupportedScMsgInList(nmi->scm->supportedScMsgList, message->messageCode);
-	if(supportedScMsg == NULL)
-	{
-		// Cancel Event message for SC type not found
-		return;
-	}
-
-	if( supportedScMsg->scList == NULL )
-	{
-		// Cancel Event message for SC not found
-		return;
-	}
-	sc = supportedScMsg->scList;
-	
-	if(	jausAddressEqual(sc->address, message->source) &&
-		sc->commandCode == message->messageCode &&
-		sc->instanceId == message->eventId )
-	{
-		// Remove sc from list
-		supportedScMsg->scList = sc->nextSc;
-		serviceConnectionDestroy(sc);
-		nmi->scm->outgoingScCount--;
-		return;
-	}
-	
-	prevSc = sc;
-	sc = prevSc->nextSc;
-	while(sc)
-	{
-		if(	jausAddressEqual(sc->address, message->source) &&
-			sc->commandCode == message->messageCode &&
-			sc->instanceId == message->eventId )
-		{
-			// Remove sc from list
-			prevSc->nextSc = sc->nextSc;			
-			serviceConnectionDestroy(sc);
-			nmi->scm->outgoingScCount--;
-			return;
-		}	
-		prevSc = sc;	
-		sc = sc->nextSc;
-	}	
-}
-
-JausBoolean scManagerCreatePeriodicEvent(NodeManagerInterface nmi, ServiceConnection sc)
-{
-	CreateEventMessage createEvent;
-	JausMessage txMessage;
-	JausAddress localAddress;
-	
-	ServiceConnection prevSc = NULL;
-	ServiceConnection testSc = nmi->scm->incommingSc;
-	
-	// Test to see if the SC requested is already on the incomming list
-	// The sc sent to this function exists in the developer space, therefore
-	// do not destroy it. This happens if a component attempts to create the same
-	// service connection twice without removing it from the list first.
-	while(testSc)
-	{                      
-		if(sc == testSc)
-		{               
-			if(prevSc)
-			{
-				prevSc->nextSc = testSc->nextSc;
-			}
-			else
-			{
-		        nmi->scm->incommingSc = testSc->nextSc;
-			}
-			nmi->scm->incommingScCount--;
-		}
-		prevSc = testSc;
-		testSc = testSc->nextSc;
-	}
-
-	// Setup SC Control Parameters
-	sc->confirmedUpdateRateHz = 0;
-	sc->lastSentTime = 0;
-	sc->sequenceNumber = 65535;
-	sc->instanceId = -1;
-	sc->isActive = JAUS_FALSE;
-	sc->nextSc = NULL;
-
-	// Setup the Create Event Message
-	createEvent = createEventMessageCreate();
-	jausAddressCopy(createEvent->source, nmi->cmpt->address);
-	jausByteSetBit(&createEvent->presenceVector, CREATE_EVENT_PV_REQUESTED_RATE_BIT); // Set for Periodic Event, Specify the Requested Rate
-	jausByteSetBit(&createEvent->presenceVector, CREATE_EVENT_PV_MINIMUM_RATE_BIT); // Set for Periodic Event, Specify the Requested Rate
-	createEvent->reportMessageCode = jausMessageGetComplimentaryCommandCode(sc->commandCode);
-	createEvent->eventType = EVENT_PERIODIC_TYPE;
-	createEvent->requestedMinimumRate = sc->requestedUpdateRateHz;
-	createEvent->requestedUpdateRate = sc->requestedUpdateRateHz;
-	jausMessageDestroy(createEvent->queryMessage);
-	createEvent->queryMessage = jausMessageClone(sc->queryMessage);
-
-	localAddress = jausAddressCreate();
-	localAddress->subsystem = nmi->cmpt->address->subsystem;
-	localAddress->node = 0;
-	localAddress->component = sc->address->component;
-	localAddress->instance = 0;
-	
-	// Retrieve AddressList from nodeManager
-	// Tests if the target component exists or not
-	if(localAddress)
-	{
-		jausAddressCopy(createEvent->destination, localAddress);
-		jausAddressCopy(sc->address, localAddress);
-	
-		txMessage = createEventMessageToJausMessage(createEvent);
-		nodeManagerSend(nmi, txMessage);
-		jausMessageDestroy(txMessage);
-		
-		jausAddressDestroy(localAddress);
-		createEventMessageDestroy(createEvent);
-
-		sc->nextSc = nmi->scm->incommingSc;
-		nmi->scm->incommingSc = sc;		
-		nmi->scm->incommingScCount++;
-		return JAUS_TRUE;
-	}
-	else
-	{
-		jausAddressDestroy(localAddress);
-		createEventMessageDestroy(createEvent);
-		return JAUS_FALSE;
-	}	
-}
-
-JausBoolean scManagerCancelPeriodicEvent(NodeManagerInterface nmi, ServiceConnection deadSc)
-{
-	CancelEventMessage cancelEvent;
-	JausMessage txMessage;
-	ServiceConnection prevSc = NULL;
-	ServiceConnection sc = nmi->scm->incommingSc;
-		
-	while(sc)
-	{
-		if(sc->commandCode == deadSc->commandCode && jausAddressEqual(sc->address, deadSc->address) )
-		{
-			if(sc->instanceId > -1)
-			{
-				cancelEvent = cancelEventMessageCreate();
-				jausAddressCopy(cancelEvent->source, nmi->cmpt->address);
-				jausAddressCopy(cancelEvent->destination, deadSc->address);
-				cancelEvent->messageCode = deadSc->commandCode;
-				cancelEvent->eventId = deadSc->instanceId;
-	
-				txMessage = cancelEventMessageToJausMessage(cancelEvent);
-				nodeManagerSend(nmi, txMessage);
-				jausMessageDestroy(txMessage);
-
-				cancelEventMessageDestroy(cancelEvent);
-			}
-
-			// Set SC to inactive
-			sc->isActive = JAUS_FALSE;
-			
-			// Empty any Remaining Queue
-			while(sc->queue->size)
-			{
-				jausMessageDestroy(queuePop(sc->queue));
-			}			
-
-			// Remove Service Connection
-			if(prevSc)
-			{
-				prevSc->nextSc = sc->nextSc;
-				sc->nextSc = NULL;
-			}
-			else
-			{
-				nmi->scm->incommingSc = sc->nextSc;
-				sc->nextSc = NULL;
-			}
-			
-			nmi->scm->incommingScCount--;
-			return JAUS_TRUE;
-		}
-		else
-		{
-			prevSc = sc;
-			sc = sc->nextSc;
-		}
-	}
-	return JAUS_FALSE;	
 }
