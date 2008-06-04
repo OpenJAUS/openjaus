@@ -65,34 +65,46 @@ Queue queueCreate(void)
 
 void queueDestroy(Queue queue, void (*objectDestroy)(void *))
 {
-	QueueObject *queueObject;
-	QueueObject *deadQueueObject;
-
 	if(queue == NULL)
 	{
 		return;
 	}
 
-	queueObject = queue->firstObject;
-	while(queueObject)
-	{
-		deadQueueObject = queueObject;
-		queueObject = queueObject->nextObject;
-
-		if(deadQueueObject->object)
-		{
-			if(objectDestroy)
-			{
-				objectDestroy(deadQueueObject->object);
-			}
-		}
-		free(deadQueueObject);
-	}
-
+	queueEmpty(queue, objectDestroy);
 	pthread_mutex_destroy(&queue->mutex);
 	
 	free(queue);
 }
+
+void queueEmpty(Queue queue, void (*objectDestroy)(void *))
+{
+	QueueObject *queueObject;
+	QueueObject *deadQueueObject;
+
+	if(queue)
+	{
+		pthread_mutex_lock(&queue->mutex);
+
+		queueObject = queue->firstObject;
+		while(queueObject)
+		{
+			deadQueueObject = queueObject;
+			queueObject = queueObject->nextObject;
+	
+			if(deadQueueObject->object)
+			{
+				if(objectDestroy)
+				{
+					objectDestroy(deadQueueObject->object);
+				}
+			}
+			free(deadQueueObject);
+		}
+	
+		pthread_mutex_unlock(&queue->mutex);
+	}
+}
+
 
 void *queuePop(Queue queue)
 {

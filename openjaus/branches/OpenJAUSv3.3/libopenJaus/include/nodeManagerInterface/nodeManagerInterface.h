@@ -65,10 +65,6 @@ extern "C"
 #define SC_ERROR_SERVICE_CONNECTION_QUEUE_EMPTY		-1
 #define SC_ERROR_SERVICE_CONNECTION_DOES_NOT_EXIST	-2
 
-#define SC_REFERENCE_TYPE		0
-#define SC_EVENT_TYPE			1
-
-
 typedef struct ServiceConnectionStruct
 {
 	double requestedUpdateRateHz;
@@ -81,15 +77,13 @@ typedef struct ServiceConnectionStruct
 	JausUnsignedInteger presenceVector;
 	JausUnsignedShort commandCode;
 	JausUnsignedShort sequenceNumber;
-	JausMessage queryMessage;
-	JausByte serviceConnectionType;
 
 	int instanceId;
 	JausBoolean isActive;
 	
 	Queue queue;
 	unsigned int queueSize;
-
+	
 	struct ServiceConnectionStruct *nextSc;
 }ServiceConnectionStruct;
 
@@ -111,6 +105,7 @@ typedef struct
 	int supportedScMsgCount;
 	int outgoingScCount;
 	int incommingScCount;
+	pthread_mutex_t mutex;
 }ServiceConnectionManagerStruct;
 
 typedef ServiceConnectionManagerStruct *ServiceConnectionManager;
@@ -194,11 +189,6 @@ JAUS_EXPORT void scManagerProcessActivateScMessage(NodeManagerInterface, Activat
 JAUS_EXPORT void scManagerProcessSuspendScMessage(NodeManagerInterface, SuspendServiceConnectionMessage);
 JAUS_EXPORT void scManagerProcessTerminateScMessage(NodeManagerInterface, TerminateServiceConnectionMessage);
 JAUS_EXPORT void scManagerProcessUpdatedSubystem(NodeManagerInterface, JausSubsystem);
-JAUS_EXPORT void scManagerProccessCreateEvent(NodeManagerInterface, CreateEventMessage);
-JAUS_EXPORT void scManagerProcessConfirmEvent(NodeManagerInterface, ConfirmEventRequestMessage);
-JAUS_EXPORT void scManagerProcessCancelEvent(NodeManagerInterface, CancelEventMessage);
-JAUS_EXPORT JausBoolean scManagerCreatePeriodicEvent(NodeManagerInterface, ServiceConnection);
-JAUS_EXPORT JausBoolean scManagerCancelPeriodicEvent(NodeManagerInterface, ServiceConnection);
 
 JAUS_EXPORT void scManagerAddSupportedMessage(NodeManagerInterface, unsigned short);
 JAUS_EXPORT void scManagerRemoveSupportedMessage(NodeManagerInterface, unsigned short);
