@@ -517,10 +517,6 @@ void scManagerProcessUpdatedSubystem(NodeManagerInterface nmi, JausSubsystem sub
 			sc->isActive = JAUS_FALSE;			
 
 			// Clear out Inbound Queue
-//			while(sc->queue->size)
-//			{
-//				jausMessageDestroy(queuePop(sc->queue));
-//			}
 			queueEmpty(sc->queue, (void *)jausMessageDestroy);
 			
 			if(prevSc)
@@ -929,10 +925,7 @@ JausBoolean scManagerTerminateServiceConnection(NodeManagerInterface nmi, Servic
 			sc->isActive = JAUS_FALSE;
 			
 			// Empty any Remaining Queue
-			while(sc->queue->size)
-			{
-				jausMessageDestroy(queuePop(sc->queue));
-			}			
+			queueEmpty(sc->queue, (void *)jausMessageDestroy);
 
 			// Remove Service Connection
 			if(prevSc)
@@ -977,11 +970,8 @@ JausBoolean scManagerReceiveServiceConnection(NodeManagerInterface nmi, ServiceC
 			{
 				// Connection has Timed Out
 				sc->isActive = JAUS_FALSE;
-				while(sc->queue->size)
-				{
-					jausMessageDestroy(queuePop(sc->queue));
-				}
-				
+				queueEmpty(sc->queue, (void *)jausMessageDestroy);				
+
 				// Remove Service Connection
 				if(prevSc)
 				{
