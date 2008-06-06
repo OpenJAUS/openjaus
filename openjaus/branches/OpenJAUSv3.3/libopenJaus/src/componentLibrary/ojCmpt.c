@@ -204,6 +204,16 @@ void ojCmptSetState(OjCmpt ojCmpt, int state)
 	}
 }
 
+void ojCmptSetAuthority(OjCmpt ojCmpt, JausByte authority)
+{
+	ojCmpt->jaus->authority = authority;
+}
+
+JausByte ojCmptGetAuthority(OjCmpt ojCmpt)
+{
+	return ojCmpt->jaus->authority;
+}
+
 int ojCmptSetStateCallback(OjCmpt ojCmpt, int state, void (*stateCallbackFunction)(OjCmpt))			// Calls method from stateHandler
 {
 	if(state < 0 || state > OJ_CMPT_MAX_STATE_COUNT)
@@ -386,7 +396,14 @@ JausAddress ojCmptGetAddress(OjCmpt ojCmpt)
 
 JausAddress ojCmptGetControllerAddress(OjCmpt ojCmpt)
 {
-	return jausAddressClone(ojCmpt->jaus->controller.address);	
+	if(ojCmptHasController(ojCmpt))
+	{
+		return jausAddressClone(ojCmpt->jaus->controller.address);			
+	}
+	else
+	{
+		return jausAddressCreate();
+	}
 }
 
 JausBoolean ojCmptHasController(OjCmpt ojCmpt)

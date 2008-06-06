@@ -34,18 +34,20 @@ JAUS_EXPORT int ojCmptSetMainCallback(OjCmpt ojCmpt, void (*mainCallbackFunction
 JAUS_EXPORT void ojCmptSetMessageCallback(OjCmpt ojCmpt, unsigned short commandCode, void (*messageFunction)(OjCmpt, JausMessage));	// Calls method from messageHandler
 JAUS_EXPORT void ojCmptSetMessageProcessorCallback(OjCmpt ojCmpt, void (*processMessageFunction)(OjCmpt, JausMessage));	// Calls method from messageHandler
 JAUS_EXPORT void ojCmptSetUserData(OjCmpt ojCmpt, void *data);
+JAUS_EXPORT void ojCmptSetAuthority(OjCmpt ojCmpt, JausByte authority);
 
 JAUS_EXPORT int ojCmptSendMessage(OjCmpt ojCmpt, JausMessage message);
 
 // Accessors
-JAUS_EXPORT char* ojCmptGetName(OjCmpt ojCmpt);
+JAUS_EXPORT JausByte ojCmptGetAuthority(OjCmpt ojCmpt);
 JAUS_EXPORT JausAddress ojCmptGetAddress(OjCmpt ojCmpt);
 JAUS_EXPORT JausAddress ojCmptGetControllerAddress(OjCmpt ojCmpt);
-JAUS_EXPORT int ojCmptGetState(OjCmpt ojCmpt);
-JAUS_EXPORT double ojCmptGetRateHz(OjCmpt ojCmpt);
-JAUS_EXPORT void *ojCmptGetUserData(OjCmpt ojCmpt);
 JAUS_EXPORT JausBoolean ojCmptHasController(OjCmpt ojCmpt);
+JAUS_EXPORT int ojCmptGetState(OjCmpt ojCmpt);
 JAUS_EXPORT void ojCmptDefaultMessageProcessor(OjCmpt ojCmpt, JausMessage message);
+JAUS_EXPORT char* ojCmptGetName(OjCmpt ojCmpt);
+JAUS_EXPORT void *ojCmptGetUserData(OjCmpt ojCmpt);
+JAUS_EXPORT double ojCmptGetRateHz(OjCmpt ojCmpt);
 
 // Services
 JAUS_EXPORT JausBoolean ojCmptAddService(OjCmpt ojCmpt, JausUnsignedShort serviceType);
