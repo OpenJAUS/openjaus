@@ -40,9 +40,11 @@ JAUS_EXPORT int ojCmptSendMessage(OjCmpt ojCmpt, JausMessage message);
 // Accessors
 JAUS_EXPORT char* ojCmptGetName(OjCmpt ojCmpt);
 JAUS_EXPORT JausAddress ojCmptGetAddress(OjCmpt ojCmpt);
+JAUS_EXPORT JausAddress ojCmptGetControllerAddress(OjCmpt ojCmpt);
 JAUS_EXPORT int ojCmptGetState(OjCmpt ojCmpt);
 JAUS_EXPORT double ojCmptGetRateHz(OjCmpt ojCmpt);
 JAUS_EXPORT void *ojCmptGetUserData(OjCmpt ojCmpt);
+JAUS_EXPORT JausBoolean ojCmptHasController(OjCmpt ojCmpt);
 JAUS_EXPORT void ojCmptDefaultMessageProcessor(OjCmpt ojCmpt, JausMessage message);
 
 // Services
