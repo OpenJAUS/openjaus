@@ -384,6 +384,17 @@ JausAddress ojCmptGetAddress(OjCmpt ojCmpt)
 	return jausAddressClone(ojCmpt->jaus->address);
 }
 
+JausAddress ojCmptGetControllerAddress(OjCmpt ojCmpt)
+{
+	return jausAddressClone(ojCmpt->jaus->controller.address);	
+}
+
+JausBoolean ojCmptHasController(OjCmpt ojCmpt)
+{
+	return ojCmpt->jaus->controller.active;
+}
+
+
 void ojCmptDefaultMessageProcessor(OjCmpt ojCmpt, JausMessage message)
 {
 	defaultJausMessageProcessor(message, ojCmpt->nmi, ojCmpt->jaus);
