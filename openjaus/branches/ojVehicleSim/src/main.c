@@ -56,6 +56,7 @@ static char timeString[DEFAULT_STRING_LENGTH] = "";
 
 OjCmpt gpos;
 OjCmpt vss;
+OjCmpt pd;
 
 // Refresh screen in curses mode
 void updateScreen(int keyboardLock, int keyPress)
@@ -130,28 +131,32 @@ void updateScreen(int keyboardLock, int keyPress)
 	
 		case '2':		
 			mvprintw(row++,col,"Primitive Driver");	
-			mvprintw(row++,col,"PD Update Rate:	%5.2f", pdGetUpdateRate());	
-			jausAddressToString(pdGetAddress(), string );	
+			mvprintw(row++,col,"PD Update Rate:	%5.2f", pdGetUpdateRate(pd));	
+			address = pdGetAddress(pd);
+			jausAddressToString(address, string);
+			jausAddressDestroy(address);
 			mvprintw(row++,col,"PD Address:\t%s", string);	
-			mvprintw(row++,col,"PD State:\t%s", jausStateGetString(pdGetState()));	
+			mvprintw(row++,col,"PD State:\t%s", jausStateGetString(pdGetState(pd)));	
 			
 			row++;
-			if(pdGetControllerStatus())
+			if(pdGetControllerStatus(pd))
 			{
-				jausAddressToString(pdGetControllerAddress(), string);	
+				address = pdGetControllerAddress(pd);
+				jausAddressToString(address, string);	
+				jausAddressDestroy(address);
 				mvprintw(row++,col,"PD Controller:	%s", string);	
 			}
 			else
 			{
 				mvprintw(row++,col,"PD Controller:	None");	
 			}
-			mvprintw(row++,col,"PD Controller SC:	%s", pdGetControllerScStatus()?"Active":"Inactive");	
-			mvprintw(row++,col,"PD Controller State:	%s", jausStateGetString(pdGetControllerState()));	
+			mvprintw(row++,col,"PD Controller SC:	%s", pdGetControllerScStatus(pd)?"Active":"Inactive");	
+			mvprintw(row++,col,"PD Controller State:	%s", jausStateGetString(pdGetControllerState(pd)));	
 			
 			row++;
-			mvprintw(row++,col,"PD Prop Effort X: %0.0lf", pdGetWrenchEffort()? pdGetWrenchEffort()->propulsiveLinearEffortXPercent:-1.0);	
-			mvprintw(row++,col,"PD Rstv Effort X: %0.0lf", pdGetWrenchEffort()? pdGetWrenchEffort()->resistiveLinearEffortXPercent:-1.0);	
-			mvprintw(row++,col,"PD Rtat Effort Z: %0.0lf", pdGetWrenchEffort()? pdGetWrenchEffort()->propulsiveRotationalEffortZPercent:-1.0);	
+			mvprintw(row++,col,"PD Prop Effort X: %0.0lf", pdGetWrenchEffort(pd)? pdGetWrenchEffort(pd)->propulsiveLinearEffortXPercent:-1.0);	
+			mvprintw(row++,col,"PD Rstv Effort X: %0.0lf", pdGetWrenchEffort(pd)? pdGetWrenchEffort(pd)->resistiveLinearEffortXPercent:-1.0);	
+			mvprintw(row++,col,"PD Rtat Effort Z: %0.0lf", pdGetWrenchEffort(pd)? pdGetWrenchEffort(pd)->propulsiveRotationalEffortZPercent:-1.0);	
 			break;
 		
 		case '3':
@@ -524,6 +529,7 @@ int main(int argCount, char **argString)
 #endif
 		return 0;
 	}
+	pd = pdCreate();
 	gpos = gposCreate();
 	vss = vssCreate();
 
@@ -560,6 +566,7 @@ int main(int argCount, char **argString)
 	cleanupConsole();
 	
 	//cDebug(1, "main: Shutting Down %s Node Software\n", simulatorGetName());
+	pdDestroy(pd);
 	gposDestroy(gpos);
 	vssDestroy(vss);
 	simulatorShutdown();
