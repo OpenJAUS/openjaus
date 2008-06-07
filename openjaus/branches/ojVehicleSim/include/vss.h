@@ -23,9 +23,6 @@
 OjCmpt vssCreate(void);
 void vssDestroy(OjCmpt vss);
 
-JausState vssGetState(OjCmpt vss);
-JausAddress vssGetAddress(OjCmpt vss);
-double vssGetUpdateRate(OjCmpt vss);
 // USER: Insert prototypes for added public function here
 double vssGetVelocityX(OjCmpt vss);
 int vssGetScActive(OjCmpt vss);

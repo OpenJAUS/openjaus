@@ -21,9 +21,6 @@
 OjCmpt gposCreate(void);
 void gposDestroy(OjCmpt gpos);
 
-JausState gposGetState(OjCmpt gpos);
-JausAddress gposGetAddress(OjCmpt gpos);
-double gposGetUpdateRate(OjCmpt gpos);
 // USER: Insert prototypes for added public function here
 double gposGetLatitude(OjCmpt gpos);
 double gposGetLongitude(OjCmpt gpos);

@@ -64,21 +64,6 @@ void vssDestroy(OjCmpt vss)
 
 // The series of functions below allow public access to essential component information
 // Access:		Public (All)
-JausState vssGetState(OjCmpt vss)
-{
-	return ojCmptGetState(vss);
-}
-
-JausAddress vssGetAddress(OjCmpt vss)
-{
-	return ojCmptGetAddress(vss);
-}
-
-double vssGetUpdateRate(OjCmpt vss)
-{
-	return ojCmptGetRateHz(vss); 
-}
-
 double vssGetVelocityX(OjCmpt vss)
 {
 	ReportVelocityStateMessage message;

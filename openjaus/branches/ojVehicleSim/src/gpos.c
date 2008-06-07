@@ -83,21 +83,6 @@ void gposDestroy(OjCmpt gpos)
 
 // The series of functions below allow public access to essential component information
 // Access:		Public (All)
-JausState gposGetState(OjCmpt gpos)
-{
-	return ojCmptGetState(gpos);
-}
-
-JausAddress gposGetAddress(OjCmpt gpos)
-{
-	return ojCmptGetAddress(gpos);
-}
-
-double gposGetUpdateRate(OjCmpt gpos)
-{
-	return ojCmptGetRateHz(gpos); 
-}
-
 double gposGetLatitude(OjCmpt gpos)
 {
 	ReportGlobalPoseMessage message;
