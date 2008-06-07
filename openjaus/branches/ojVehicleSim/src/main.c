@@ -23,7 +23,6 @@
 	#define CLEAR "clear"
 #endif
 
-#include "simulator.h"
 #include "pd.h"
 #include "gpos.h"
 #include "vss.h"
@@ -57,6 +56,7 @@ static char timeString[DEFAULT_STRING_LENGTH] = "";
 OjCmpt gpos;
 OjCmpt vss;
 OjCmpt pd;
+OjCmpt wd;
 
 // Refresh screen in curses mode
 void updateScreen(int keyboardLock, int keyPress)
@@ -73,15 +73,15 @@ void updateScreen(int keyboardLock, int keyPress)
 		switch(keyPress)
 		{
 			case ' ':
-				wdToggleRequestControl();
+				wdToggleRequestControl(wd);
 				break;
 			
 			case 'S':
-				wdSetSpeed();
+				wdSetSpeed(wd);
 				break;
 			
 			case 'W':
-				wdCreateWaypoint();
+				wdCreateWaypoint(wd);
 				break;
 			
 			default:
@@ -131,17 +131,17 @@ void updateScreen(int keyboardLock, int keyPress)
 	
 		case '2':		
 			mvprintw(row++,col,"Primitive Driver");	
-			mvprintw(row++,col,"PD Update Rate:	%5.2f", pdGetUpdateRate(pd));	
-			address = pdGetAddress(pd);
+			mvprintw(row++,col,"PD Update Rate:	%5.2f", ojCmptGetRateHz(pd));	
+			address = ojCmptGetAddress(pd);
 			jausAddressToString(address, string);
 			jausAddressDestroy(address);
 			mvprintw(row++,col,"PD Address:\t%s", string);	
-			mvprintw(row++,col,"PD State:\t%s", jausStateGetString(pdGetState(pd)));	
+			mvprintw(row++,col,"PD State:\t%s", jausStateGetString(ojCmptGetState(pd)));	
 			
 			row++;
-			if(pdGetControllerStatus(pd))
+			if(ojCmptHasController(pd))
 			{
-				address = pdGetControllerAddress(pd);
+				address = ojCmptGetControllerAddress(pd);
 				jausAddressToString(address, string);	
 				jausAddressDestroy(address);
 				mvprintw(row++,col,"PD Controller:	%s", string);	
@@ -161,37 +161,41 @@ void updateScreen(int keyboardLock, int keyPress)
 		
 		case '3':
 			mvprintw(row++,col,"Global Pose Sensor");	
-			mvprintw(row++,col,"GPOS Update Rate: %7.2f", gposGetUpdateRate(gpos));	
-			address = gposGetAddress(gpos);
+			mvprintw(row++,col,"GPOS Update Rate: %7.2f", ojCmptGetRateHz(gpos));	
+			address = ojCmptGetAddress(gpos);
 			jausAddressToString(address, string );
 			jausAddressDestroy(address);
 			mvprintw(row++,col,"GPOS Address:\t    %s", string);	
-			mvprintw(row++,col,"GPOS State:\t    %s", jausStateGetString(gposGetState(gpos)));	
+			mvprintw(row++,col,"GPOS State:\t    %s", jausStateGetString(ojCmptGetState(gpos)));	
 			mvprintw(row++,col,"GPOS SC State:\t    %s", gposGetScActive(gpos)? "Active" : "Inactive");	
 			
 			row++;
 			mvprintw(row++,col,"Velocity State Sensor");	
-			mvprintw(row++,col,"VSS Update Rate:  %7.2f", vssGetUpdateRate(vss));	
-			address = vssGetAddress(vss);
+			mvprintw(row++,col,"VSS Update Rate:  %7.2f", ojCmptGetRateHz(vss));	
+			address = ojCmptGetAddress(vss);
 			jausAddressToString(address, string );
 			jausAddressDestroy(address);
 			mvprintw(row++,col,"VSS Address:\t    %s", string);	
-			mvprintw(row++,col,"VSS State:\t    %s", jausStateGetString(vssGetState(vss)));	
+			mvprintw(row++,col,"VSS State:\t    %s", jausStateGetString(ojCmptGetState(vss)));	
 			mvprintw(row++,col,"VSS SC State:\t    %s", vssGetScActive(vss)? "Active" : "Inactive");	
 			break;
 		
 		case '4':
 			mvprintw(row++,col,"Waypoint Driver");	
-			mvprintw(row++,col,"WD Update Rate: %7.2f", wdGetUpdateRate());	
+			mvprintw(row++,col,"WD Update Rate: %7.2f", ojCmptGetRateHz(wd));	
 
-			jausAddressToString(wdGetAddress(), string);	
+			address = ojCmptGetAddress(wd);
+			jausAddressToString(address, string );
+			jausAddressDestroy(address);
 			mvprintw(row++,col,"WD Address:\t  %s", string);	
-			mvprintw(row++,col,"WD State:\t  %s", jausStateGetString(wdGetState()));
+			mvprintw(row++,col,"WD State:\t  %s", jausStateGetString(ojCmptGetState(wd)));
 			
-			if(wdGetControllerAddress())
+			address = ojCmptGetControllerAddress(wd);
+			if(address)
 			{
-				jausAddressToString(wdGetControllerAddress(), string);	
+				jausAddressToString(address, string);	
 				mvprintw(row++,col,"WD Controller:\t  %s", string);	
+				jausAddressDestroy(address);
 			}
 			else
 			{
@@ -200,38 +204,38 @@ void updateScreen(int keyboardLock, int keyPress)
 
 			row = 11;
 			col = 2;
-			mvprintw(row++,col,"GPOS SC:\t    %s", wdGetGposScStatus()? "Active" : "Inactive");
-			mvprintw(row++,col,"VSS SC:\t    %s", wdGetVssScStatus()? "Active" : "Inactive");
-			mvprintw(row++,col,"PD Wrench SC:\t    %s", wdGetPdWrenchScStatus()? "Active" : "Inactive");
-			mvprintw(row++,col,"PD State SC:\t    %s", wdGetPdStatusScStatus()? "Active" : "Inactive");
+			mvprintw(row++,col,"GPOS SC:\t    %s", wdGetGposScStatus(wd)? "Active" : "Inactive");
+			mvprintw(row++,col,"VSS SC:\t    %s", wdGetVssScStatus(wd)? "Active" : "Inactive");
+			mvprintw(row++,col,"PD Wrench SC:\t    %s", wdGetPdWrenchScStatus(wd)? "Active" : "Inactive");
+			mvprintw(row++,col,"PD State SC:\t    %s", wdGetPdStatusScStatus(wd)? "Active" : "Inactive");
 			row++;
-			mvprintw(row++,col,"WD Request Control:\t%s", wdGetRequestControl()? "True" : "False");
+			mvprintw(row++,col,"WD Request Control:\t%s", wdGetRequestControl(wd)? "True" : "False");
 			mvprintw(row++,col,"(Space to Toggle)");
-			mvprintw(row++,col,"WD Control:\t\t%s", wdGetInControlStatus()? "True" : "False");
-			mvprintw(row++,col,"PD State:\t\t%s", jausStateGetString(wdGetPdState()));
+			mvprintw(row++,col,"WD Control:\t\t%s", wdGetInControlStatus(wd)? "True" : "False");
+			mvprintw(row++,col,"PD State:\t\t%s", jausStateGetString(wdGetPdState(wd)));
 			
 			row = 11;
 			col = 40;
-			if(wdGetGlobalWaypoint())
+			if(wdGetGlobalWaypoint(wd))
 			{
-				mvprintw(row++,col,"Global Waypoint: (%9.7lf,%9.7lf)", wdGetGlobalWaypoint()->latitudeDegrees, wdGetGlobalWaypoint()->longitudeDegrees);
+				mvprintw(row++,col,"Global Waypoint: (%9.7lf,%9.7lf)", wdGetGlobalWaypoint(wd)->latitudeDegrees, wdGetGlobalWaypoint(wd)->longitudeDegrees);
 			}
 			else
 			{
 				mvprintw(row++,col,"Global Waypoint: None");
 			}
 					
-			if(wdGetTravelSpeed())
+			if(wdGetTravelSpeed(wd))
 			{
-				mvprintw(row++,col,"Travel Speed: %7.2f", wdGetTravelSpeed()->speedMps);
+				mvprintw(row++,col,"Travel Speed: %7.2f", wdGetTravelSpeed(wd)->speedMps);
 			}
 			else
 			{
 				mvprintw(row++,col,"Travel Speed: None");				
 			}
 
-			mvprintw(row++,col,"dSpeedMps: %7.2f", wdGetDesiredVehicleState()? wdGetDesiredVehicleState()->desiredSpeedMps : 0.0);
-			mvprintw(row++,col,"dPhi:      %7.2f", wdGetDesiredVehicleState()? wdGetDesiredVehicleState()->desiredPhiEffort : 0.0);
+			mvprintw(row++,col,"dSpeedMps: %7.2f", wdGetDesiredVehicleState(wd)? wdGetDesiredVehicleState(wd)->desiredSpeedMps : 0.0);
+			mvprintw(row++,col,"dPhi:      %7.2f", wdGetDesiredVehicleState(wd)? wdGetDesiredVehicleState(wd)->desiredPhiEffort : 0.0);
 			
 			break;
 
@@ -486,52 +490,24 @@ int main(int argCount, char **argString)
 
 	system(CLEAR);
 
-	printf("main: CIMAR Core Executable: %s\n", timeString);
-
-//	// Make directory and set permisions on CIMAR Directory to fully read, write, execute
-//	if(mkdir("/var/log/CIMAR/", 0777) < 0) 
-//	{
-//		if(errno != EEXIST)
-//		{
-//			perror("main: Error");
-//			return -1;
-//		}
-//	}
-
-
-//	if(logFile == NULL)
-//	{
-//		i = strlen(argString[0]) - 1;
-//		while(i>0 && argString[0][i-1] != '/') i--;
-//				
-//		sprintf(logFileStr, "/var/log/CIMAR/%s.log", &argString[0][i]);
-//		printf("main: Creating log: %s\n", logFileStr);
-//		logFile = fopen(logFileStr, "w");
-//		if(logFile != NULL)
-//		{
-//			fprintf(logFile, "CIMAR %s Log -- %s\n", argString[0], timeString);
-//			//setLogFile(logFile);
-//		}
-//		else printf("main: ERROR: Could not create log file\n");
-//		// BUG: Else pError here
-//	}
-			
 	//cDebug(1, "main: Starting Up %s Node Software\n", simulatorGetName());
-	if(simulatorStartup())
-	{
-		printf("main: %s Node Startup failed\n", simulatorGetName());
-		//cDebug(1, "main: Exiting %s Node Software\n", simulatorGetName());
-#if defined(WIN32)
-		system("pause");
-#else
-		printf("Press ENTER to exit\n");
-		getch();
-#endif
-		return 0;
-	}
+//	if(simulatorStartup())
+//	{
+//		printf("main: %s Node Startup failed\n", simulatorGetName());
+//		//cDebug(1, "main: Exiting %s Node Software\n", simulatorGetName());
+//#if defined(WIN32)
+//		system("pause");
+//#else
+//		printf("Press ENTER to exit\n");
+//		getch();
+//#endif
+//		return 0;
+//	}
+	vehicleSimStartup();
 	pd = pdCreate();
 	gpos = gposCreate();
 	vss = vssCreate();
+	wd = wdCreate();
 
 	setupTerminal();
 
@@ -566,10 +542,11 @@ int main(int argCount, char **argString)
 	cleanupConsole();
 	
 	//cDebug(1, "main: Shutting Down %s Node Software\n", simulatorGetName());
+	wdDestroy(wd);
 	pdDestroy(pd);
 	gposDestroy(gpos);
 	vssDestroy(vss);
-	simulatorShutdown();
+	vehicleSimShutdown();
 	
 	if(logFile != NULL)
 	{

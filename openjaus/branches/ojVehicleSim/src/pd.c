@@ -98,21 +98,6 @@ void pdDestroy(OjCmpt pd)
 
 // The series of functions below allow public access to essential component information
 // Access:		Public (All)
-JausState pdGetState(OjCmpt pd)
-{
-	return ojCmptGetState(pd);
-}
-
-JausAddress pdGetAddress(OjCmpt pd)
-{
-	return ojCmptGetAddress(pd);
-}
-
-double pdGetUpdateRate(OjCmpt pd)
-{
-	return ojCmptGetRateHz(pd); 
-}
-
 JausBoolean pdGetControllerScStatus(OjCmpt pd)
 {
 	PdData *data;
@@ -122,11 +107,6 @@ JausBoolean pdGetControllerScStatus(OjCmpt pd)
 	return ojCmptIsIncomingScActive(pd, data->controllerSc);
 }
 
-JausBoolean pdGetControllerStatus(OjCmpt pd)
-{
-	return ojCmptHasController(pd);
-}
-
 JausState pdGetControllerState(OjCmpt pd)
 {
 	PdData *data;
@@ -134,11 +114,6 @@ JausState pdGetControllerState(OjCmpt pd)
 	data = (PdData*)ojCmptGetUserData(pd);
 
 	return data->controllerStatus->primaryStatusCode;
-}
-
-JausAddress pdGetControllerAddress(OjCmpt pd)
-{
-	return ojCmptGetControllerAddress(pd);
 }
 
 SetWrenchEffortMessage pdGetWrenchEffort(OjCmpt pd)

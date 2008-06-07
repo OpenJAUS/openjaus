@@ -31,15 +31,10 @@
 
 OjCmpt pdCreate(void);
 void pdDestroy(OjCmpt pd);
-JausState pdGetState(OjCmpt pd);
-JausAddress pdGetAddress(OjCmpt pd);
-double pdGetUpdateRate(OjCmpt pd);
 
 // USER: Insert prototypes for added public function here
 JausBoolean pdGetControllerScStatus(OjCmpt pd);
-JausBoolean pdGetControllerStatus(OjCmpt pd);
 JausState pdGetControllerState(OjCmpt pd);
-JausAddress pdGetControllerAddress(OjCmpt pd);
 SetWrenchEffortMessage pdGetWrenchEffort(OjCmpt pd);
 
 #endif // PD_H
