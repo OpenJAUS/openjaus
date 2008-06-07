@@ -115,7 +115,6 @@ int ojCmptRun(OjCmpt ojCmpt)
 	return 0;
 }
 
-
 void ojCmptDestroy(OjCmpt ojCmpt)
 {
 	RejectComponentControlMessage rejectComponentControl;
@@ -411,7 +410,6 @@ JausBoolean ojCmptHasController(OjCmpt ojCmpt)
 	return ojCmpt->jaus->controller.active;
 }
 
-
 void ojCmptDefaultMessageProcessor(OjCmpt ojCmpt, JausMessage message)
 {
 	defaultJausMessageProcessor(message, ojCmpt->nmi, ojCmpt->jaus);
@@ -573,4 +571,9 @@ JausBoolean ojCmptIsIncomingScActive(OjCmpt ojCmpt, int scIndex)
 	}
 	
 	return ojCmpt->inConnection[scIndex]->isActive;
+}
+
+int ojCmptLookupAddress(OjCmpt ojCmpt, JausAddress address)
+{
+	return nodeManagerLookupAddress(ojCmpt->nmi, address);
 }
