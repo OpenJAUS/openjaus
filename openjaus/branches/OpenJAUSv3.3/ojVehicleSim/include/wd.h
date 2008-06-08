@@ -54,45 +54,31 @@
 #define TRUE 1
 #endif
 
-#define WD_LOAD_CONFIGURATION_ERROR		-1
-#define WD_NODE_MANAGER_OPEN_ERROR		-2
-#define WD_STARTUP_BEFORE_SHUTDOWN_ERROR	-3
-#define WD_THREAD_CREATE_ERROR			-4
-
-#define WD_THREAD_TIMEOUT_SEC				1.0
 #define WD_THREAD_DESIRED_RATE_HZ			50.0	// USER: Modify this rate as needed
-// USER: Insert defines here
 
-// USER: All defines should start with "WD_", where your component acronym replaces "WD"
-
-int wdStartup(void);
-int wdShutdown(void);
-JausState wdGetState(void);
-JausAddress wdGetAddress(void);
-JausAddress wdGetControllerAddress(void);
-
-double wdGetUpdateRate(void);
+OjCmpt wdCreate(void);
+void wdDestroy(OjCmpt wd);
 // USER: Insert prototypes for added public function here
-ReportWrenchEffortMessage wdGetReportedWrench(void);
-SetWrenchEffortMessage wdGetCommandedWrench(void);
-ReportVelocityStateMessage wdGetVss(void);
-ReportGlobalPoseMessage wdGetGpos(void);
-SetTravelSpeedMessage wdGetTravelSpeed(void);
-SetGlobalWaypointMessage wdGetGlobalWaypoint(void);
+ReportWrenchEffortMessage wdGetReportedWrench(OjCmpt wd);
+SetWrenchEffortMessage wdGetCommandedWrench(OjCmpt wd);
+ReportVelocityStateMessage wdGetVss(OjCmpt wd);
+ReportGlobalPoseMessage wdGetGpos(OjCmpt wd);
+SetTravelSpeedMessage wdGetTravelSpeed(OjCmpt wd);
+SetGlobalWaypointMessage wdGetGlobalWaypoint(OjCmpt wd);
 
-JausState wdGetPdState(void);
-JausBoolean wdGetPdWrenchScStatus(void);
-JausBoolean wdGetPdStatusScStatus(void);
-JausBoolean wdGetVssScStatus(void);
-JausBoolean wdGetGposScStatus(void);
-JausBoolean wdGetInControlStatus(void);
-VehicleState wdGetDesiredVehicleState(void);
-double wdGetWaypointDistanceM(void);
-int wdGetActiveWaypoint(void);
-int wdGetWaypointCount(void);
-void wdToggleRequestControl(void);
-JausBoolean wdGetRequestControl(void);
-void wdCreateWaypoint(void);
-void wdSetSpeed(void);
+JausState wdGetPdState(OjCmpt wd);
+JausBoolean wdGetPdWrenchScStatus(OjCmpt wd);
+JausBoolean wdGetPdStatusScStatus(OjCmpt wd);
+JausBoolean wdGetVssScStatus(OjCmpt wd);
+JausBoolean wdGetGposScStatus(OjCmpt wd);
+JausBoolean wdGetInControlStatus(OjCmpt wd);
+VehicleState wdGetDesiredVehicleState(OjCmpt wd);
+double wdGetWaypointDistanceM(OjCmpt wd);
+int wdGetActiveWaypoint(OjCmpt wd);
+int wdGetWaypointCount(OjCmpt wd);
+void wdToggleRequestControl(OjCmpt wd);
+JausBoolean wdGetRequestControl(OjCmpt wd);
+void wdCreateWaypoint(OjCmpt wd);
+void wdSetSpeed(OjCmpt wd);
 
 #endif // WD_H

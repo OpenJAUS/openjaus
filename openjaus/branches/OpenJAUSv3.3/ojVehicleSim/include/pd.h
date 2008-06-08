@@ -16,6 +16,7 @@
 #define PD_H
 
 #include <jaus.h>
+#include <openJaus.h>
 
 #ifndef FALSE
 #define FALSE 0
@@ -24,28 +25,16 @@
 #define TRUE 1
 #endif
 
-#define PD_LOAD_CONFIGURATION_ERROR			-1
-#define PD_NODE_MANAGER_OPEN_ERROR			-2
-#define PD_STARTUP_BEFORE_SHUTDOWN_ERROR	-3
-#define PD_THREAD_CREATE_ERROR				-4
-
-#define PD_THREAD_TIMEOUT_SEC				1.0
 #define PD_THREAD_DESIRED_RATE_HZ			50.0	// USER: Modify this rate as needed
-// USER: Insert defines here
 
 // USER: All defines should start with "PD_", where your component acronym replaces "PD"
 
-int pdStartup(void);
-int pdShutdown(void);
-JausState pdGetState(void);
-JausAddress pdGetAddress(void);
-double pdGetUpdateRate(void);
+OjCmpt pdCreate(void);
+void pdDestroy(OjCmpt pd);
 
 // USER: Insert prototypes for added public function here
-JausBoolean pdGetControllerScStatus(void);
-JausBoolean pdGetControllerStatus(void);
-JausState pdGetControllerState(void);
-JausAddress pdGetControllerAddress(void);
-SetWrenchEffortMessage pdGetWrenchEffort(void);
+JausBoolean pdGetControllerScStatus(OjCmpt pd);
+JausState pdGetControllerState(OjCmpt pd);
+SetWrenchEffortMessage pdGetWrenchEffort(OjCmpt pd);
 
 #endif // PD_H

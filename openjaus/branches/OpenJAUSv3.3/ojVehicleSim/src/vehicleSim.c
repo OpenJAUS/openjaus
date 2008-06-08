@@ -151,11 +151,11 @@ int vehicleSimShutdown(void)
 
 	vehicleSimRun = FALSE;
 
-	timeOutSec = getTimeSeconds() + VEHICLE_SIM_THREAD_TIMEOUT_SEC;
+	timeOutSec = ojGetTimeSec() + VEHICLE_SIM_THREAD_TIMEOUT_SEC;
 	while(vehicleSimThreadRunning)
 	{
 		ojSleepMsec(100);
-		if(getTimeSeconds() >= timeOutSec)
+		if(ojGetTimeSec() >= timeOutSec)
 		{
 			pthread_cancel(vehicleSimThreadId);
 			vehicleSimThreadRunning = FALSE;
@@ -274,12 +274,12 @@ void *vehicleSimThread(void *threadData)
 	utmConversionInit(vehiclePosLla);
 	vehiclePosUtm = pointLlaToPointUtm(vehiclePosLla);
 
-	time = getTimeSeconds();
+	time = ojGetTimeSec();
 		
 	while(vehicleSimRun) // Execute state machine code while not in the SHUTDOWN state
 	{
 		prevTime = time;
-		time = getTimeSeconds();
+		time = ojGetTimeSec();
 		dt = time - prevTime;
 		vehicleSimThreadHz = 1.0/dt; // Compute the update rate of this thread
 
