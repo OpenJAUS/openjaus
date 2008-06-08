@@ -16,24 +16,15 @@
 #define TRUE 1
 #endif
 
-#define VSS_LOAD_CONFIGURATION_ERROR		-1
-#define VSS_NODE_MANAGER_OPEN_ERROR			-2
-#define VSS_STARTUP_BEFORE_SHUTDOWN_ERROR	-3
-#define VSS_THREAD_CREATE_ERROR				-4
-
-#define VSS_THREAD_TIMEOUT_SEC				1.0
 #define VSS_THREAD_DESIRED_RATE_HZ			50.0
 
 // USER: All defines should start with "VSS_", where your component acronym replaces "VSS"
 
-int vssStartup(void);
-int vssShutdown(void);
-JausState vssGetState(void);
-JausAddress vssGetAddress(void);
-double vssGetUpdateRate(void);
+OjCmpt vssCreate(void);
+void vssDestroy(OjCmpt vss);
+
 // USER: Insert prototypes for added public function here
-JausComponent vssGetComponent(void);
-double vssGetVelocityX(void);
-int vssGetScActive(void);
+double vssGetVelocityX(OjCmpt vss);
+int vssGetScActive(OjCmpt vss);
 
 #endif // VSS_H
