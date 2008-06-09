@@ -143,6 +143,7 @@ typedef struct
 	int receiveThreadRunning;
 	
 	pthread_cond_t recvCondition;
+	pthread_cond_t hbWakeCondition;
 	       
 	InetAddress ipAddress;
 	

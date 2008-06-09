@@ -87,7 +87,6 @@ void *receiveThread(void *);
 
 NodeManagerInterface nodeManagerOpen(JausComponent cmpt)
 {
-	pthread_attr_t threadAttributes;	// Thread attributes for the component threads spawned in this function
 	NodeManagerInterface nmi = NULL;
 
 	if(cmpt == NULL)
@@ -102,8 +101,9 @@ NodeManagerInterface nodeManagerOpen(JausComponent cmpt)
 	}
 	
 	nmi->cmpt = cmpt;
-	nmi->timestamp = getTimeSeconds();
+	nmi->timestamp = ojGetTimeSec();
 	pthread_cond_init(&nmi->recvCondition, NULL);
+	pthread_cond_init(&nmi->hbWakeCondition, NULL);
 	
 	nmi->ipAddress = inetAddressGetLocalHost();
 	if(nmi->ipAddress == NULL)
@@ -170,8 +170,7 @@ NodeManagerInterface nodeManagerOpen(JausComponent cmpt)
 
 	nmi->isOpen = JAUS_TRUE;
 
-	memset(&threadAttributes, 0, sizeof(threadAttributes));
-	if(pthread_attr_init(&threadAttributes))
+	if(pthread_create(&nmi->heartbeatThreadId, NULL, heartbeatThread, (void *)nmi))
 	{
 		lmHandlerDestroy(nmi->lmh);
 		scManagerDestroy(nmi->scm);
@@ -184,33 +183,7 @@ NodeManagerInterface nodeManagerOpen(JausComponent cmpt)
 		return NULL;
 	}
 
-	if(pthread_attr_setdetachstate(&threadAttributes, PTHREAD_CREATE_DETACHED))
-	{
-		lmHandlerDestroy(nmi->lmh);
-		scManagerDestroy(nmi->scm);
-		queueDestroy(nmi->receiveQueue, NULL);
-		checkOutOfNodeManager(nmi);
-		datagramSocketDestroy(nmi->messageSocket);
-		datagramSocketDestroy(nmi->interfaceSocket);
-		inetAddressDestroy(nmi->ipAddress);
-		free(nmi);
-		return NULL;
-	}
-
-	if(pthread_create(&nmi->heartbeatThreadId, &threadAttributes, heartbeatThread, (void *)nmi))
-	{
-		lmHandlerDestroy(nmi->lmh);
-		scManagerDestroy(nmi->scm);
-		queueDestroy(nmi->receiveQueue, NULL);
-		checkOutOfNodeManager(nmi);
-		datagramSocketDestroy(nmi->messageSocket);
-		datagramSocketDestroy(nmi->interfaceSocket);
-		inetAddressDestroy(nmi->ipAddress);
-		free(nmi);
-		return NULL;
-	}
-
-	if(pthread_create(&nmi->receiveThreadId, &threadAttributes, receiveThread, (void *)nmi))
+	if(pthread_create(&nmi->receiveThreadId, NULL, receiveThread, (void *)nmi))
 	{
 		pthread_cancel(nmi->heartbeatThreadId);
 		lmHandlerDestroy(nmi->lmh);
@@ -224,8 +197,6 @@ NodeManagerInterface nodeManagerOpen(JausComponent cmpt)
 		return NULL;
 	}
 	
-	pthread_attr_destroy(&threadAttributes);
-
 	scManagerAddSupportedMessage(nmi, JAUS_REPORT_COMPONENT_STATUS);
 	scManagerAddSupportedMessage(nmi, JAUS_REPORT_COMPONENT_AUTHORITY);
 
@@ -235,7 +206,6 @@ NodeManagerInterface nodeManagerOpen(JausComponent cmpt)
 int nodeManagerClose(NodeManagerInterface nmi)
 {
 	int result = 0;
-	double timeOutSec;
 	
 	if(nmi == NULL)
 	{
@@ -249,31 +219,11 @@ int nodeManagerClose(NodeManagerInterface nmi)
 
 		nmi->isOpen = 0;
 
-		timeOutSec = getTimeSeconds() + INTERFACE_THREAD_TIMEOUT_SEC;
-		while(nmi->heartbeatThreadRunning)
-		{
-			ojSleepMsec(10);
-			if(getTimeSeconds() >= timeOutSec)
-			{
-				pthread_cancel(nmi->heartbeatThreadId);
-				nmi->heartbeatThreadRunning = 0;
-				result = -4;			
-				break;
-			}
-		}
+		pthread_cond_signal(&nmi->hbWakeCondition);
+		pthread_join(nmi->heartbeatThreadId, NULL);
 
-		timeOutSec = getTimeSeconds() + INTERFACE_THREAD_TIMEOUT_SEC;
-		while(nmi->receiveThreadRunning)
-		{
-			ojSleepMsec(10);
-			if(getTimeSeconds() >= timeOutSec)
-			{
-				pthread_cancel(nmi->receiveThreadId);
-				nmi->receiveThreadRunning = 0;
-				result -= 3;
-				break;
-			}
-		}
+		CLOSE_SOCKET(nmi->messageSocket->descriptor);
+		pthread_join(nmi->receiveThreadId, NULL);
 
 		lmHandlerDestroy(nmi->lmh);
 		scManagerDestroy(nmi->scm);
@@ -283,6 +233,7 @@ int nodeManagerClose(NodeManagerInterface nmi)
 		datagramSocketDestroy(nmi->interfaceSocket);
 		inetAddressDestroy(nmi->ipAddress);
 		pthread_cond_destroy(&nmi->recvCondition);
+		pthread_cond_destroy(&nmi->hbWakeCondition);
 		free(nmi);
 	}
 	else
@@ -360,6 +311,10 @@ static int checkOutOfNodeManager(NodeManagerInterface nmi)
 
 void *heartbeatThread(void *threadArgument)
 {
+	pthread_mutex_t hbMutex = PTHREAD_MUTEX_INITIALIZER;
+	int condition = -1;
+	struct timespec timeLimitSpec;
+	double timeLimitSec = 0;
 	NodeManagerInterface nmi = (NodeManagerInterface)threadArgument;
 	JausMessage txMessage;
 	ReportHeartbeatPulseMessage heartbeat = reportHeartbeatPulseMessageCreate();
@@ -379,14 +334,21 @@ void *heartbeatThread(void *threadArgument)
 	{
 		nodeManagerSend(nmi, txMessage);
 		nmi->heartbeatCount++;
-		if( (getTimeSeconds() - NODE_MANAGER_TIMEOUT_SEC) > nmi->timestamp)
+		if( (ojGetTimeSec() - NODE_MANAGER_TIMEOUT_SEC) > nmi->timestamp)
 		{
 			// TODO: Capture Error
 			printf("libNodeManager: Node Manager Has Timed Out\n");
 			//nmi->cmpt->state = JAUS_FAILURE_STATE;
 			break;
 		}
-		ojSleepMsec(1000); // sleep one second
+
+		timeLimitSec = ojGetTimeSec() + 1.0;
+		timeLimitSpec.tv_sec = (long)timeLimitSec;
+		timeLimitSpec.tv_nsec = (long)(1e9 * (timeLimitSec - (double)timeLimitSpec.tv_sec));
+
+		pthread_mutex_lock(&hbMutex);
+		condition = pthread_cond_timedwait(&nmi->hbWakeCondition, &hbMutex, &timeLimitSpec);
+		pthread_mutex_unlock(&hbMutex);
 	}
 
 	jausMessageDestroy(txMessage);	
