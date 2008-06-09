@@ -356,10 +356,10 @@ void NodeManagerComponent::allState()
 {
 	static double refreshTime = 0;
 	generateHeartbeats();
-	if(getTimeSeconds() >= refreshTime)
+	if(ojGetTimeSec() >= refreshTime)
 	{
 		systemTree->refresh();
-		refreshTime = getTimeSeconds() + REFRESH_TIME_SEC;
+		refreshTime = ojGetTimeSec() + REFRESH_TIME_SEC;
 	}
 
 	// TODO: Check for serviceConnections
@@ -1689,12 +1689,12 @@ void NodeManagerComponent::sendSubsystemChangedEvents()
 
 void NodeManagerComponent::generateHeartbeats()
 {
-	static double nextSendTime = getTimeSeconds();
+	static double nextSendTime = ojGetTimeSec();
 	ReportHeartbeatPulseMessage heartbeat;
 	JausMessage nodeHeartbeat;
 	JausMessage cmptHeartbeat;
 	
-	if(getTimeSeconds() >= nextSendTime)
+	if(ojGetTimeSec() >= nextSendTime)
 	{
 		heartbeat = reportHeartbeatPulseMessageCreate();
 		if(!heartbeat)
@@ -1738,7 +1738,7 @@ void NodeManagerComponent::generateHeartbeats()
 		cmptHeartbeat->destination->instance = JAUS_BROADCAST_INSTANCE_ID;
 		this->commMngr->receiveJausMessage(cmptHeartbeat, this);
 
-		nextSendTime = getTimeSeconds() + 1.0;
+		nextSendTime = ojGetTimeSec() + 1.0;
 		reportHeartbeatPulseMessageDestroy(heartbeat);
 	}
 }

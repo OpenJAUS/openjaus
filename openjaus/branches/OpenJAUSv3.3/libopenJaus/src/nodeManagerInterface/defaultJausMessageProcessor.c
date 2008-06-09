@@ -350,7 +350,7 @@ void defaultJausMessageProcessor(JausMessage message, NodeManagerInterface nmi, 
 				message->source->node == cmpt->address->node &&
 				message->source->component == JAUS_NODE_MANAGER)
 			{
-				nmi->timestamp = getTimeSeconds();
+				nmi->timestamp = ojGetTimeSec();
 			}
 			
 			jausMessageDestroy(message);

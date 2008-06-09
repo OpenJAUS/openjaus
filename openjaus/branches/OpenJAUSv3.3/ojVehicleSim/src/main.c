@@ -40,7 +40,7 @@
 #define KEYBOARD_LOCK_TIMEOUT_SEC	60.0
 
 static int mainRunning = FALSE;
-static int verbose = FALSE;
+static int verbose = TRUE;
 static int keyboardLock = FALSE;
 static FILE *logFile = NULL;
 static char timeString[DEFAULT_STRING_LENGTH] = "";
