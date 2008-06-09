@@ -30,10 +30,7 @@ struct OjCmptStruct
 	int state;
 	int run;
 
-	ServiceConnection *inConnection;
-	int inConnectionCount;
-	ServiceConnection *outConnection;
-	int outConnectionCount;
+	ServiceConnection inConnection[OJ_CMPT_MAX_INCOMING_SC_COUNT];
 
 	NodeManagerInterface nmi;	
 	
@@ -77,10 +74,10 @@ OjCmpt ojCmptCreate(char *name, JausByte id, double stateFrequencyHz)
 		return NULL;
 	}
 
-	ojCmpt->inConnection = NULL;
-	ojCmpt->inConnectionCount = 0;
-	ojCmpt->outConnection = NULL;
-	ojCmpt->outConnectionCount = 0;
+	for(i=0; i<OJ_CMPT_MAX_INCOMING_SC_COUNT; i++)
+	{
+		ojCmpt->inConnection[i] = NULL;
+	}
 	
 	ojCmpt->nmi = nodeManagerOpen(ojCmpt->jaus);
 	if(ojCmpt->nmi == NULL)
@@ -141,17 +138,16 @@ void ojCmptDestroy(OjCmpt ojCmpt)
 		rejectComponentControlMessageDestroy(rejectComponentControl);
 	}
 	
-	for(i=0; i<ojCmpt->inConnectionCount; i++)
+	for(i=0; i<OJ_CMPT_MAX_INCOMING_SC_COUNT; i++)
 	{
-		if(ojCmpt->inConnection[i]->isActive)
+		if(ojCmpt->inConnection[i])
 		{	
-			scManagerTerminateServiceConnection(ojCmpt->nmi, ojCmpt->inConnection[i]);
+			if(ojCmpt->inConnection[i]->isActive)
+			{
+				scManagerTerminateServiceConnection(ojCmpt->nmi, ojCmpt->inConnection[i]);
+			}
+			serviceConnectionDestroy(ojCmpt->inConnection[i]);		
 		}
-		serviceConnectionDestroy(ojCmpt->inConnection[i]);		
-	}
-	if(ojCmpt->inConnectionCount)
-	{
-		free(ojCmpt->inConnection);
 	}
 	
 	if(ojCmpt->messageCallback)
@@ -325,9 +321,9 @@ void* ojCmptThread(void *threadData)
 				}
 				
 				// Always check for messages on incomming SC queues
-				for(i=0; i<ojCmpt->inConnectionCount; i++)
+				for(i=0; i<OJ_CMPT_MAX_INCOMING_SC_COUNT; i++)
 				{
-					if(ojCmpt->inConnection[i]->isActive) // Attempt to process incomming message
+					if(ojCmpt->inConnection[i] && ojCmpt->inConnection[i]->isActive) // Attempt to process incomming message
 					{
 						if(scManagerReceiveServiceConnection(ojCmpt->nmi, ojCmpt->inConnection[i], &rxMessage))
 						{
@@ -489,10 +485,10 @@ void ojCmptManageServiceConnections(OjCmpt ojCmpt)
 	double time = ojGetTimeSec();
 	
 	// Manage Incomming Connections
-	for(i=0; i<ojCmpt->inConnectionCount; i++)
+	for(i=0; i<OJ_CMPT_MAX_INCOMING_SC_COUNT; i++)
 	{
 		// If not active then attempt to initiate SC
-		if(!ojCmpt->inConnection[i]->isActive && time > ojCmpt->inConnection[i]->nextRequestTimeSec)
+		if(ojCmpt->inConnection[i] && !ojCmpt->inConnection[i]->isActive && time > ojCmpt->inConnection[i]->nextRequestTimeSec)
 		{
 			// set up the service connection
 			scManagerCreateServiceConnection(ojCmpt->nmi, ojCmpt->inConnection[i]);
@@ -503,38 +499,37 @@ void ojCmptManageServiceConnections(OjCmpt ojCmpt)
 
 int ojCmptEstablishSc(OjCmpt ojCmpt, JausUnsignedShort cCode, JausUnsignedInteger pv, JausAddress address, double rateHz, double timeoutSec, int qSize)
 {
-	int scIndex = ojCmpt->inConnectionCount;
+	int i = 0;
 	
-	ojCmpt->inConnectionCount++;
-	
-	if(ojCmpt->inConnectionCount > 1)
+	for(i=0; i<OJ_CMPT_MAX_INCOMING_SC_COUNT; i++)
 	{
-		ojCmpt->inConnection = (ServiceConnection *)realloc(ojCmpt->inConnection, ojCmpt->inConnectionCount * sizeof(ServiceConnection));
+		if(ojCmpt->inConnection[i] == NULL)
+		{
+			break;
+		}
 	}
-	else
-	{
-		ojCmpt->inConnection = (ServiceConnection *)malloc(sizeof(ServiceConnection));
-	}
-	
-	ojCmpt->inConnection[scIndex] = serviceConnectionCreate();
-	ojCmpt->inConnection[scIndex]->requestedUpdateRateHz = rateHz;
-	// TODO: Locate Command Code service in system based on address
-	jausAddressCopy(ojCmpt->inConnection[scIndex]->address, address);
-	ojCmpt->inConnection[scIndex]->presenceVector = pv;
-	ojCmpt->inConnection[scIndex]->commandCode = cCode;
-	ojCmpt->inConnection[scIndex]->isActive = JAUS_FALSE;
-	ojCmpt->inConnection[scIndex]->queueSize = qSize;
-	ojCmpt->inConnection[scIndex]->timeoutSec = timeoutSec;
-	ojCmpt->inConnection[scIndex]->nextRequestTimeSec = 0;
 
-	return scIndex;	
+	if(i < OJ_CMPT_MAX_INCOMING_SC_COUNT)
+	{
+		ojCmpt->inConnection[i] = serviceConnectionCreate();
+		ojCmpt->inConnection[i]->requestedUpdateRateHz = rateHz;
+		// TODO: Locate Command Code service in system based on address
+		jausAddressCopy(ojCmpt->inConnection[i]->address, address);
+		ojCmpt->inConnection[i]->presenceVector = pv;
+		ojCmpt->inConnection[i]->commandCode = cCode;
+		ojCmpt->inConnection[i]->isActive = JAUS_FALSE;
+		ojCmpt->inConnection[i]->queueSize = qSize;
+		ojCmpt->inConnection[i]->timeoutSec = timeoutSec;
+		ojCmpt->inConnection[i]->nextRequestTimeSec = 0;
+		return i;
+	}
+
+	return -1;	
 }
 
 int ojCmptTerminateSc(OjCmpt ojCmpt, int scIndex)
 {	
-	int i;
-	
-	if(scIndex < 0 || scIndex >= ojCmpt->inConnectionCount)
+	if(scIndex < 0 || scIndex >= OJ_CMPT_MAX_INCOMING_SC_COUNT || ojCmpt->inConnection[scIndex] == NULL)
 	{
 		return FALSE;
 	}
@@ -544,28 +539,14 @@ int ojCmptTerminateSc(OjCmpt ojCmpt, int scIndex)
 		scManagerTerminateServiceConnection(ojCmpt->nmi, ojCmpt->inConnection[scIndex]);
 	}
 	serviceConnectionDestroy(ojCmpt->inConnection[scIndex]);
+	ojCmpt->inConnection[scIndex] = NULL;
 	
-	for(i=scIndex; i<ojCmpt->inConnectionCount - 1; i++)
-	{
-		ojCmpt->inConnection[i] = ojCmpt->inConnection[i+1];
-	}
-
-	ojCmpt->inConnectionCount--;
-	if(ojCmpt->inConnectionCount)
-	{
-		ojCmpt->inConnection = (ServiceConnection *)realloc(ojCmpt->inConnection, ojCmpt->inConnectionCount * sizeof(ServiceConnection));	
-	}
-	else
-	{
-		free(ojCmpt->inConnection);
-	}
-
 	return TRUE;
 }
 
 JausBoolean ojCmptIsIncomingScActive(OjCmpt ojCmpt, int scIndex)
 {	
-	if(scIndex < 0 || scIndex >= ojCmpt->inConnectionCount)
+	if(scIndex < 0 || scIndex >= OJ_CMPT_MAX_INCOMING_SC_COUNT || ojCmpt->inConnection[scIndex] == NULL)
 	{
 		return JAUS_FALSE;
 	}
