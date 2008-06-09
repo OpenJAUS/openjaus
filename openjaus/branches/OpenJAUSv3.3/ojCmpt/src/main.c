@@ -347,7 +347,7 @@ int main(int argCount, char **argString)
 	int i = 0;
 	char keyPressed = FALSE;
 	int keyboardLock = FALSE;
-	double keyboardLockTime = getTimeSeconds() + KEYBOARD_LOCK_TIMEOUT_SEC;
+	double keyboardLockTime = ojGetTimeSec() + KEYBOARD_LOCK_TIMEOUT_SEC;
 	time_t timeStamp;
 	char logFileStr[128] = {0};
 	
@@ -403,9 +403,9 @@ int main(int argCount, char **argString)
 
 		if(keyPressed)
 		{
-			keyboardLockTime = getTimeSeconds() + KEYBOARD_LOCK_TIMEOUT_SEC;		
+			keyboardLockTime = ojGetTimeSec() + KEYBOARD_LOCK_TIMEOUT_SEC;		
 		}
-		else if(getTimeSeconds() > keyboardLockTime)
+		else if(ojGetTimeSec() > keyboardLockTime)
 		{
 				keyboardLock = TRUE;
 		}

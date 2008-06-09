@@ -180,11 +180,11 @@ int cmptShutdown(void)
 	{
 		cmptRun = FALSE;
 
-		timeOutSec = getTimeSeconds() + CMPT_THREAD_TIMEOUT_SEC;
+		timeOutSec = ojGetTimeSec() + CMPT_THREAD_TIMEOUT_SEC;
 		while(cmptThreadRunning)
 		{
 			ojSleepMsec(100);
-			if(getTimeSeconds() >= timeOutSec)
+			if(ojGetTimeSec() >= timeOutSec)
 			{
 				pthread_cancel(cmptThreadId);
 				cmptThreadRunning = FALSE;
@@ -235,7 +235,7 @@ void *cmptThread(void *threadData)
 
 	cmptThreadRunning = TRUE;
 
-	time = getTimeSeconds();
+	time = ojGetTimeSec();
 	cmpt->state = JAUS_INITIALIZE_STATE; // Set JAUS state to INITIALIZE
 	
 	cmptStartupState();
@@ -250,7 +250,7 @@ void *cmptThread(void *threadData)
 			}
 			else 
 			{
-				if(getTimeSeconds() > nextExcecuteTime)
+				if(ojGetTimeSec() > nextExcecuteTime)
 				{
 					break;
 				}
@@ -259,10 +259,10 @@ void *cmptThread(void *threadData)
 					ojSleepMsec(1);
 				}
 			}
-		}while(getTimeSeconds() < nextExcecuteTime);
+		}while(ojGetTimeSec() < nextExcecuteTime);
 		
 		prevTime = time;
-		time = getTimeSeconds();
+		time = ojGetTimeSec();
 		cmptThreadHz = 1.0/(time-prevTime); // Compute the ucmptate rate of this thread
 		
 		switch(cmpt->state) // Switch component behavior based on which state the machine is in
@@ -299,7 +299,7 @@ void *cmptThread(void *threadData)
 		cmptAllState();
 		nodeManagerSendCoreServiceConnections(cmptNmi);
 
-		nextExcecuteTime = 2.0 * time + 1.0/CMPT_THREAD_DESIRED_RATE_HZ - getTimeSeconds();
+		nextExcecuteTime = 2.0 * time + 1.0/CMPT_THREAD_DESIRED_RATE_HZ - ojGetTimeSec();
 	}	
 	
 	cmptShutdownState();

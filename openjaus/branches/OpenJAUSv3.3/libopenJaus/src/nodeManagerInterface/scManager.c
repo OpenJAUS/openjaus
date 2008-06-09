@@ -166,7 +166,7 @@ void scManagerProcessConfirmScMessage(NodeManagerInterface nmi, ConfirmServiceCo
 				sc->instanceId = message->instanceId;
 				sc->isActive = JAUS_TRUE;
 				sc->sequenceNumber = 65535;
-				sc->lastSentTime = getTimeSeconds();
+				sc->lastSentTime = ojGetTimeSec();
 			}
 			else
 			{
@@ -655,7 +655,7 @@ ServiceConnection scManagerGetSendList(NodeManagerInterface nmi, unsigned short 
 	ServiceConnection sc;
 	ServiceConnection newSc = NULL;
 	ServiceConnection firstSc = NULL;
-	double currentTime = getTimeSeconds();
+	double currentTime = ojGetTimeSec();
 
 	pthread_mutex_lock(&nmi->scm->mutex);	
 	
@@ -966,7 +966,7 @@ JausBoolean scManagerReceiveServiceConnection(NodeManagerInterface nmi, ServiceC
 	{
 		if(sc->commandCode == requestSc->commandCode && jausAddressEqual(sc->address, requestSc->address) )
 		{
-			if(getTimeSeconds() > (sc->lastSentTime + sc->timeoutSec))
+			if(ojGetTimeSec() > (sc->lastSentTime + sc->timeoutSec))
 			{
 				// Connection has Timed Out
 				sc->isActive = JAUS_FALSE;
@@ -1025,7 +1025,7 @@ void scManagerReceiveMessage(NodeManagerInterface nmi, JausMessage message)
 		{
 			if(sc->isActive)
 			{
-				sc->lastSentTime = getTimeSeconds();
+				sc->lastSentTime = ojGetTimeSec();
 				
 				if(sc->queueSize && sc->queueSize == sc->queue->size)
 				{
@@ -1057,7 +1057,7 @@ int scManagerUpdateServiceConnection(ServiceConnection sc, unsigned short sequen
 {
 	int returnValue = JAUS_FALSE;
 
-	sc->lastSentTime = getTimeSeconds();
+	sc->lastSentTime = ojGetTimeSec();
 
 	if(sequenceNumber == sc->sequenceNumber)
 	{

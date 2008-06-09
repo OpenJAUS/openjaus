@@ -330,7 +330,7 @@ void CommunicatorComponent::readyState()
 	JausMessage txMessage = NULL;
 	static double nextSendTime = 0;
 
-	if(!nodeManagerSubsystemEventConfirmed && getTimeSeconds() > nextSendTime)
+	if(!nodeManagerSubsystemEventConfirmed && ojGetTimeSec() > nextSendTime)
 	{
 		// Create query message
 		query = queryConfigurationMessageCreate();
@@ -383,7 +383,7 @@ void CommunicatorComponent::readyState()
 		createEventMessageDestroy(createEventMsg);
 		queryConfigurationMessageDestroy(query);
 		
-		nextSendTime = getTimeSeconds() + 1.0;
+		nextSendTime = ojGetTimeSec() + 1.0;
 	}
 }
 
@@ -963,11 +963,11 @@ void CommunicatorComponent::sendSubsystemChangedEvents()
 
 void CommunicatorComponent::generateHeartbeats()
 {
-	static double nextSendTime = getTimeSeconds();
+	static double nextSendTime = ojGetTimeSec();
 	ReportHeartbeatPulseMessage heartbeat;
 	JausMessage subsHeartbeat;
 	
-	if(getTimeSeconds() >= nextSendTime)
+	if(ojGetTimeSec() >= nextSendTime)
 	{
 		heartbeat = reportHeartbeatPulseMessageCreate();
 		if(!heartbeat)
@@ -998,7 +998,7 @@ void CommunicatorComponent::generateHeartbeats()
 		subsHeartbeat->destination->instance = 1;
 		this->commMngr->receiveJausMessage(subsHeartbeat, this);
 
-		nextSendTime = getTimeSeconds() + 1.0;
+		nextSendTime = ojGetTimeSec() + 1.0;
 		reportHeartbeatPulseMessageDestroy(heartbeat);
 	}
 }
