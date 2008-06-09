@@ -136,7 +136,8 @@ int datagramSocketReceive(DatagramSocket datagramSocket, DatagramPacket packet)
 	struct sockaddr_in fromAddress;
 	socklen_t fromAddressLength;
 	int bytesReceived = 0;
-	
+	int selcetReturnVal = -2;
+
 	memset(&fromAddress, 0, sizeof(fromAddress));
 	
 	if(!datagramSocket->blocking)
@@ -148,31 +149,30 @@ int datagramSocketReceive(DatagramSocket datagramSocket, DatagramPacket packet)
 	FD_ZERO(&readSet);
 	FD_SET(datagramSocket->descriptor, &readSet);
 
-	if(select(datagramSocket->descriptor + 1, &readSet, NULL, NULL, timeoutPtr) > 0)
+	selcetReturnVal = select(datagramSocket->descriptor + 1, &readSet, NULL, NULL, timeoutPtr);
+	if(selcetReturnVal > 0)
 	{
 		if(FD_ISSET(datagramSocket->descriptor, &readSet))
 		{
 			fromAddressLength = sizeof(fromAddress);
 			bytesReceived = recvfrom(datagramSocket->descriptor, packet->buffer, packet->bufferSizeBytes, 0, (struct sockaddr*)&fromAddress, &fromAddressLength);
+			
+			if(bytesReceived != -1)
+			{
+				packet->port = ntohs(fromAddress.sin_port);
+				packet->address->value = fromAddress.sin_addr.s_addr;
+			}
+			return bytesReceived;	
 		}
 		else
 		{
-			return -1;
+			return -2;
 		}
-		
 	}
 	else
 	{
-		return -1;
+		return selcetReturnVal;
 	}
-	
-	if(bytesReceived != -1)
-	{
-		packet->port = ntohs(fromAddress.sin_port);
-		packet->address->value = fromAddress.sin_addr.s_addr;
-	}
-	
-	return bytesReceived;
 }
 
 void datagramSocketSetTimeout(DatagramSocket datagramSocket, double timeoutSec)
