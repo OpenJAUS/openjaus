@@ -124,7 +124,7 @@ int vehicleSimStartup(void)
 	}
 
 	pthread_attr_init(&attr);
-	pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
+	pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
 
 	vehicleSimRun = TRUE;
 
@@ -147,22 +147,21 @@ int vehicleSimStartup(void)
 //				This function will also close the Jms connection to the Node Manager and check out the component from the Node Manager
 int vehicleSimShutdown(void)
 {
-	double timeOutSec;
+	//double timeOutSec;
 
 	vehicleSimRun = FALSE;
-
-	timeOutSec = ojGetTimeSec() + VEHICLE_SIM_THREAD_TIMEOUT_SEC;
-	while(vehicleSimThreadRunning)
-	{
-		ojSleepMsec(100);
-		if(ojGetTimeSec() >= timeOutSec)
-		{
-			pthread_cancel(vehicleSimThreadId);
-			vehicleSimThreadRunning = FALSE;
-			//cError("vehicleSim: vehicleSimThread Shutdown Improperly\n");
-			break;
-		}
-	}
+	pthread_join(vehicleSimThreadId, NULL);
+//	timeOutSec = ojGetTimeSec() + VEHICLE_SIM_THREAD_TIMEOUT_SEC;
+//	while(vehicleSimThreadRunning)
+//	{
+//		ojSleepMsec(100);
+//		if(ojGetTimeSec() >= timeOutSec)
+//		{
+//			vehicleSimThreadRunning = FALSE;
+//			//cError("vehicleSim: vehicleSimThread Shutdown Improperly\n");
+//			break;
+//		}
+//	}
 
 	propertiesDestroy(vehicleSimProperties);
 
@@ -275,6 +274,8 @@ void *vehicleSimThread(void *threadData)
 	vehiclePosUtm = pointLlaToPointUtm(vehiclePosLla);
 
 	time = ojGetTimeSec();
+	
+	ojSleepMsec(25);	
 		
 	while(vehicleSimRun) // Execute state machine code while not in the SHUTDOWN state
 	{
@@ -338,9 +339,7 @@ void *vehicleSimThread(void *threadData)
 
 		ojSleepMsec(25);
 	}	
-	
-	ojSleepMsec(50);	// Sleep for 50 milliseconds and then exit
-	
+		
 	vehicleSimThreadRunning = FALSE;
 	
 	return NULL;
