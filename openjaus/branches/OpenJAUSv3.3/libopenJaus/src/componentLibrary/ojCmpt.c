@@ -121,6 +121,7 @@ void ojCmptDestroy(OjCmpt ojCmpt)
 	if(ojCmpt->run == TRUE)
 	{
 		ojCmpt->run = FALSE;
+		pthread_cond_signal(&ojCmpt->nmi->recvCondition);
 		pthread_join(ojCmpt->thread, NULL);
 	}
 
