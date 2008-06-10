@@ -196,12 +196,12 @@ PointLla vehicleSimGetPositionLla(void)
 
 double vehicleSimGetX(void)
 {
-	return vehiclePosUtm->xMeters;
+	return vehiclePosUtm? vehiclePosUtm->xMeters : 0;
 }
 
 double vehicleSimGetY(void)
 {
-	return vehiclePosUtm->yMeters;
+	return vehiclePosUtm? vehiclePosUtm->yMeters : 0;
 }
 
 double vehicleSimGetH(void)
