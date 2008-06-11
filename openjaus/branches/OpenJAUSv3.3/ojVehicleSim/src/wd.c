@@ -138,6 +138,10 @@ OjCmpt wdCreate(void)
 	JausAddress addr;
 	
 	cmpt = ojCmptCreate("Waypoint Driver", JAUS_GLOBAL_WAYPOINT_DRIVER, WD_THREAD_DESIRED_RATE_HZ);
+	if(cmpt == NULL)
+	{
+		return NULL;
+	}
 
 	ojCmptAddService(cmpt, JAUS_GLOBAL_WAYPOINT_DRIVER);
 
