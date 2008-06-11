@@ -69,6 +69,7 @@ OjCmpt ojCmptCreate(char *name, JausByte id, double stateFrequencyHz)
 	if (!jausServiceAddCoreServices(ojCmpt->jaus->services))	// Add core services
 	{
 		free(ojCmpt->jaus->identification);
+		ojCmpt->jaus->identification = NULL;
 		jausComponentDestroy(ojCmpt->jaus);
 		free(ojCmpt);
 		return NULL;
@@ -83,6 +84,7 @@ OjCmpt ojCmptCreate(char *name, JausByte id, double stateFrequencyHz)
 	if(ojCmpt->nmi == NULL)
 	{
 		free(ojCmpt->jaus->identification);
+		ojCmpt->jaus->identification = NULL;
 		jausComponentDestroy(ojCmpt->jaus);
 		free(ojCmpt);
 		return NULL; 
@@ -102,6 +104,7 @@ int ojCmptRun(OjCmpt ojCmpt)
 	{
 		nodeManagerClose(ojCmpt->nmi); // Close Node Manager Connection
 		free(ojCmpt->jaus->identification);
+		ojCmpt->jaus->identification = NULL;
 		jausComponentDestroy(ojCmpt->jaus);
 		free(ojCmpt);
 		pthread_attr_destroy(&attr);

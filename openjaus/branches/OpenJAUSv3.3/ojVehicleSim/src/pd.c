@@ -37,6 +37,10 @@ OjCmpt pdCreate(void)
 	JausAddress pdAddr;
 	
 	cmpt = ojCmptCreate("pd", JAUS_PRIMITIVE_DRIVER, PD_THREAD_DESIRED_RATE_HZ);
+	if(cmpt == NULL)
+	{
+		return NULL;
+	}
 
 	ojCmptAddService(cmpt, JAUS_PRIMITIVE_DRIVER);
 	ojCmptAddServiceInputMessage(cmpt, JAUS_PRIMITIVE_DRIVER, JAUS_SET_WRENCH_EFFORT, 0xFF);

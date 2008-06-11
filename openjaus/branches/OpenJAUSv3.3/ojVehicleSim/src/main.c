@@ -53,10 +53,10 @@ static char timeString[DEFAULT_STRING_LENGTH] = "";
 	static struct termios storedTermio;
 #endif
 
-OjCmpt gpos;
-OjCmpt vss;
-OjCmpt pd;
-OjCmpt wd;
+static OjCmpt gpos = NULL;
+static OjCmpt vss = NULL;
+static OjCmpt pd = NULL;
+static OjCmpt wd = NULL;
 
 // Refresh screen in curses mode
 void updateScreen(int keyboardLock, int keyPress)
@@ -490,29 +490,26 @@ int main(int argCount, char **argString)
 
 	system(CLEAR);
 
-	//cDebug(1, "main: Starting Up %s Node Software\n", simulatorGetName());
-//	if(simulatorStartup())
-//	{
-//		printf("main: %s Node Startup failed\n", simulatorGetName());
-//		//cDebug(1, "main: Exiting %s Node Software\n", simulatorGetName());
-//#if defined(WIN32)
-//		system("pause");
-//#else
-//		printf("Press ENTER to exit\n");
-//		getch();
-//#endif
-//		return 0;
-//	}
+	setupTerminal();
+
 	vehicleSimStartup();
 	pd = pdCreate();
 	gpos = gposCreate();
 	vss = vssCreate();
 	wd = wdCreate();
 
-	setupTerminal();
+	if(pd && gpos && vss && wd)
+	{
+		mainRunning = TRUE;
+	}
+	else
+	{
+		printf("Could not create one or more components\n");
+#if defined(WIN32)
+		system("pause");
+#endif
+	}
 
-	mainRunning = TRUE;
-	
 	while(mainRunning)
 	{
 		keyPressed = getUserInput();
@@ -542,16 +539,28 @@ int main(int argCount, char **argString)
 	cleanupConsole();
 	
 	//cDebug(1, "main: Shutting Down %s Node Software\n", simulatorGetName());
-	wdDestroy(wd);
-	pdDestroy(pd);
-	gposDestroy(gpos);
-	vssDestroy(vss);
+	if(wd)
+	{
+		wdDestroy(wd);
+	}
+	if(pd)
+	{
+		pdDestroy(pd);
+	}
+	if(gpos)
+	{
+		gposDestroy(gpos);
+	}
+	if(vss)
+	{
+		vssDestroy(vss);
+	}
 	vehicleSimShutdown();
 	
 	if(logFile != NULL)
 	{
 		fclose(logFile);
 	}
-	
+
 	return 0;
 }

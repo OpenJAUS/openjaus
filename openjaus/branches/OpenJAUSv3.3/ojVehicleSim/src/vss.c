@@ -23,6 +23,10 @@ OjCmpt vssCreate(void)
 	JausAddress vssAddr;
 	
 	cmpt = ojCmptCreate("vss", JAUS_VELOCITY_STATE_SENSOR, VSS_THREAD_DESIRED_RATE_HZ);
+	if(cmpt == NULL)
+	{
+		return NULL;
+	}
 
 	ojCmptAddService(cmpt, JAUS_VELOCITY_STATE_SENSOR);
 	ojCmptAddServiceInputMessage(cmpt, JAUS_VELOCITY_STATE_SENSOR, JAUS_QUERY_VELOCITY_STATE, 0xFF);

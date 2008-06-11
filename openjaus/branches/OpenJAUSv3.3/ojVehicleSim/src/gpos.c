@@ -36,6 +36,10 @@ OjCmpt gposCreate(void)
 	JausAddress gposAddr;
 	
 	cmpt = ojCmptCreate("gpos", JAUS_GLOBAL_POSE_SENSOR, GPOS_THREAD_DESIRED_RATE_HZ);
+	if(cmpt == NULL)
+	{
+		return NULL;
+	}
 
 	ojCmptAddService(cmpt, JAUS_GLOBAL_POSE_SENSOR);
 	ojCmptAddServiceInputMessage(cmpt, JAUS_GLOBAL_POSE_SENSOR, JAUS_QUERY_GLOBAL_POSE, 0xFF);
