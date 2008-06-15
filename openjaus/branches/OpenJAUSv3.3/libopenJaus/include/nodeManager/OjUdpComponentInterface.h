@@ -62,8 +62,9 @@
 
 #define OJ_UDP_INTERFACE_MESSAGE_SIZE_BYTES	8
 #define OJ_UDP_DEFAULT_PORT					24627 // Per OJ Nodemanager Interface Document
-#define OJ_UDP_DEFAULT_COMPONENT_IP			"127.0.0.1" // Per OJ Nodemanager Interface Document
 #define OJ_UDP_DEFAULT_TIMEOUT				1.0f
+
+static const std::string OJ_UDP_DEFAULT_COMPONENT_IP = "127.0.0.1"; // Per OJ Nodemanager Interface Document
 
 class OjUdpComponentInterface : public JausTransportInterface
 {

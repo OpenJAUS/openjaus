@@ -78,7 +78,6 @@
 // Default Configuration Values
 // Component UDP Interface Default Values
 #define JUDP_DEFAULT_COMPONENT_UDP_PORT				24629 // Per OpenJAUS Node Manager Interface document
-#define JUDP_DEFAULT_COMPONENT_IP					"127.0.0.1" // Per OpenJAUS Node Manager Interface document
 #define JUDP_DEFAULT_COMPONENT_TTL					1
 #define JUDP_DEFAULT_COMPONENT_UDP_TIMEOUT_SEC		1.0f
 #define JUDP_DEFAULT_COMPONENT_MULTICAST			false
@@ -88,15 +87,17 @@
 #define JUDP_DEFAULT_NODE_TTL						16 // per AS5669
 #define JUDP_DEFAULT_NODE_UDP_TIMEOUT_SEC			1.0f
 #define JUDP_DEFAULT_NODE_MULTICAST					true
-#define JUDP_DEFAULT_NODE_MULTICAST_GROUP			"239.255.0.2" // per AS5669 with slight modification
 #define JUDP_DEFAULT_NODE_HEADER_COMPRESSION		false
 
 // Subsystem UDP Interface Default Values
 #define JUDP_DEFAULT_SUBSYSTEM_TTL					16 // per AS5669
 #define JUDP_DEFAULT_SUBSYSTEM_UDP_TIMEOUT_SEC		1.0f
 #define JUDP_DEFAULT_SUBSYSTEM_MULTICAST			true
-#define JUDP_DEFAULT_SUBSYSTEM_MULTICAST_GROUP		"239.255.0.1" // per AS5669
 #define JUDP_DEFAULT_SUBSYSTEM_HEADER_COMPRESSION	false
+
+static const std::string JUDP_DEFAULT_COMPONENT_IP = "127.0.0.1"; // Per OpenJAUS Node Manager Interface document
+static const std::string JUDP_DEFAULT_SUBSYSTEM_MULTICAST_GROUP = "239.255.0.1"; // per AS5669
+static const std::string JUDP_DEFAULT_NODE_MULTICAST_GROUP = "239.255.0.2"; // per AS5669 with slight modification
 
 extern "C" void *JudpRecvThread(void *);
 
