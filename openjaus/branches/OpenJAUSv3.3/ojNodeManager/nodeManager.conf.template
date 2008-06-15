@@ -12,21 +12,16 @@ OpenJAUS_UDP_Interface: true
 
 # This subsection defines the interfaces and their options for node communication
 [Node_Communications]
-Enabled: true
+Enabled: false
 #JUDP_Interface: true
 #JUDP_IP_Address: 
-JAUS_OPC_UDP_Interface: true
-JAUS_OPC_UDP_IP_Address: 
+#JAUS_OPC_UDP_Interface: true
+#JAUS_OPC_UDP_IP_Address: 
 
 # This subsection defines the interfaces and their options for subsystem communication
 [Subsystem_Communications]
 Enabled: true
-#JUDP_Interface: true
-#JUDP_IP_Address: 
-JAUS_OPC_UDP_Interface: true
-JAUS_OPC_UDP_IP_Address:
-
-# Special Note:
-# You may leave the IP_Address value blank and the system will bind to the special address
-# INADDR_ANY. However, only one interface can bind to this port, so it will not work
-# if using more than one interface (i.e. Node & Subsystem subnets)
+JUDP_Interface: true
+JUDP_IP_Address: 
+#JAUS_OPC_UDP_Interface: true
+#JAUS_OPC_UDP_IP_Address:
