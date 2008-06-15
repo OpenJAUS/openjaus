@@ -105,6 +105,9 @@ private:
 	void generateHeartbeats();
 	bool setupJausServices();
 
+	void sendNodeShutdownEvents();
+	void sendSubsystemShutdownEvents();
+
 	bool sendQueryNodeIdentification(JausAddress address);
 	bool sendQuerySubsystemIdentification(JausAddress address);
 	bool sendQueryComponentIdentification(JausAddress address);

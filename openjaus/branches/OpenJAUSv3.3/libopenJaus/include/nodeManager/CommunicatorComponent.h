@@ -94,6 +94,7 @@ private:
 	bool processEvent(JausMessage message);
 
 	void sendSubsystemChangedEvents();
+	void sendSubsystemShutdownEvents();
 	void generateHeartbeats();
 	
 	bool sendQueryNodeIdentification(JausAddress address);

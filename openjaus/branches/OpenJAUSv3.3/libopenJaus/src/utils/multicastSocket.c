@@ -60,7 +60,6 @@ MulticastSocket multicastSocketCreate(short port, InetAddress ipAddress)
 	err = WSAStartup(MAKEWORD(2, 2), &wsaData);
 	if(err != 0)
 	{
-		printf("WSA Startup Error\n");
 		return NULL;
 	}
 #endif

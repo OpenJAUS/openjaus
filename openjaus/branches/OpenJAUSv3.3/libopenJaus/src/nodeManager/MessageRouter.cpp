@@ -106,9 +106,9 @@ MessageRouter::MessageRouter(FileLoader *configData, SystemTree *sysTree, EventH
 
 MessageRouter::~MessageRouter(void)
 {
-	this->subsComms->stopInterfaces();
-	this->nodeComms->stopInterfaces();
 	this->cmptComms->stopInterfaces();
+	this->nodeComms->stopInterfaces();
+	this->subsComms->stopInterfaces();
 
 	delete subsComms;
 	delete nodeComms;

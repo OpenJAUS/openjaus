@@ -61,6 +61,9 @@
 #include "utils/datagramSocket.h"
 
 #define OJ_UDP_INTERFACE_MESSAGE_SIZE_BYTES	8
+#define OJ_UDP_DEFAULT_PORT					24627 // Per OJ Nodemanager Interface Document
+#define OJ_UDP_DEFAULT_COMPONENT_IP			"127.0.0.1" // Per OJ Nodemanager Interface Document
+#define OJ_UDP_DEFAULT_TIMEOUT				1.0f
 
 class OjUdpComponentInterface : public JausTransportInterface
 {
@@ -83,7 +86,7 @@ private:
 	HASH_MAP<int, unsigned short> portMap;
 
 	bool sendDatagramPacket(DatagramPacket dgPacket);
-	void openSocket(void);
+	bool openSocket(void);
 	void closeSocket(void);
 	void run();
 

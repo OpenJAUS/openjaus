@@ -134,6 +134,9 @@ CommunicatorComponent::~CommunicatorComponent(void)
 
 bool CommunicatorComponent::startInterface()
 {
+	// Send our shutdown events
+	sendSubsystemShutdownEvents();
+
 	// Set our thread control flag to true
 	this->running = true;
 
@@ -536,6 +539,16 @@ bool CommunicatorComponent::processReportConfiguration(JausMessage message)
 		reportConfigurationMessageDestroy(reportConf);
 		jausMessageDestroy(message);
 		return false;
+	}
+
+	// Test for special case
+	if(reportConf->subsystem->nodes->elementCount == 0)
+	{
+		// Special Case: This is an empty subsystem report, this means that the source subsystem is going offline
+		systemTree->removeSubsystem(reportConf->source);
+		reportConfigurationMessageDestroy(reportConf);
+		jausMessageDestroy(message);
+		return true;
 	}
 
 	// Replace Subsystem
@@ -952,6 +965,69 @@ void CommunicatorComponent::sendSubsystemChangedEvents()
 
 		char buf[256];
 		sprintf(buf, "Send Subs Changed event to %d.%d.%d.%d.", txMessage->destination->subsystem, txMessage->destination->node, txMessage->destination->component, txMessage->destination->instance);
+		DebugEvent *e = new DebugEvent("Event", __FUNCTION__, __LINE__, buf);
+		this->eventHandler->handleEvent(e);
+	}
+
+	eventMessageDestroy(eventMessage);
+	jausMessageDestroy(txMessage);
+	reportConfigurationMessageDestroy(reportConf);
+}
+
+void CommunicatorComponent::sendSubsystemShutdownEvents()
+{
+	ReportConfigurationMessage reportConf = NULL;
+	JausMessage txMessage = NULL;
+	EventMessage eventMessage = NULL;
+	HASH_MAP <int, JausAddress>::iterator iterator;
+
+	reportConf = reportConfigurationMessageCreate();
+	if(!reportConf)
+	{
+		// TODO: Record an error. Throw Exception
+		return;
+	}
+	
+	// Empty Subsystem for message
+	JausSubsystem emptySubs = jausSubsystemCreate();
+	if(!emptySubs)
+	{
+		// TODO: Record an error. Throw Exception
+		reportConfigurationMessageDestroy(reportConf);
+		return;
+	}
+	emptySubs->id = this->cmpt->address->subsystem;
+
+	jausSubsystemDestroy(reportConf->subsystem);
+	reportConf->subsystem = emptySubs;
+	eventMessage = eventMessageCreate();
+	if(!eventMessage)
+	{
+		// TODO: Record an error. Throw Exception
+		reportConfigurationMessageDestroy(reportConf);
+		return;
+	}
+
+	eventMessage->reportMessage = reportConfigurationMessageToJausMessage(reportConf);
+	if(!eventMessage->reportMessage)
+	{
+		// TODO: Record an error. Throw Exception
+		reportConfigurationMessageDestroy(reportConf);
+		eventMessageDestroy(eventMessage);
+		return;
+	}
+	jausAddressCopy(eventMessage->source, cmpt->address);
+
+	// TODO: check subsystemChangeList for dead addresses
+	for(iterator = subsystemChangeList.begin(); iterator != subsystemChangeList.end(); iterator++)
+	{
+		eventMessage->eventId = iterator->first;
+		jausAddressCopy(eventMessage->destination, iterator->second);
+		txMessage = eventMessageToJausMessage(eventMessage);
+		this->commMngr->receiveJausMessage(jausMessageClone(txMessage), this);
+
+		char buf[256];
+		sprintf(buf, "Send Subs Shutdown event to %d.%d.%d.%d.", txMessage->destination->subsystem, txMessage->destination->node, txMessage->destination->component, txMessage->destination->instance);
 		DebugEvent *e = new DebugEvent("Event", __FUNCTION__, __LINE__, buf);
 		this->eventHandler->handleEvent(e);
 	}

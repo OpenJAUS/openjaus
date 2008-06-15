@@ -148,7 +148,7 @@ int main(int argc, char *args)
 	}
 	catch(char *exceptionString)
 	{
-		printf("%s", exceptionString);
+		printf("%s\n", exceptionString);
 		printf("Terminating Program...\n");
 		running = false;
 	}
