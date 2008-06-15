@@ -129,12 +129,12 @@ bool OjUdpComponentInterface::openSocket(void)
 	// IP Address
 	if(this->configData->GetConfigDataString("Component_Communications", "OpenJAUS_UDP_IP_Address") == "")
 	{
-		this->ipAddress = inetAddressGetByString(OJ_UDP_DEFAULT_COMPONENT_IP);
+		this->ipAddress = inetAddressGetByString((char *)OJ_UDP_DEFAULT_COMPONENT_IP.c_str());
 		if(this->ipAddress == NULL)
 		{
 			// Cannot open specified IP Address
 			char errorString[128] = {0};
-			sprintf(errorString, "Could not open default IP Address: %s", OJ_UDP_DEFAULT_COMPONENT_IP);
+			sprintf(errorString, "Could not open default IP Address: %s", OJ_UDP_DEFAULT_COMPONENT_IP.c_str());
 			
 			ErrorEvent *e = new ErrorEvent(ErrorEvent::Configuration, __FUNCTION__, __LINE__, errorString);
 			this->eventHandler->handleEvent(e);

@@ -514,12 +514,12 @@ bool JudpInterface::openSocket(void)
 			// IP Address
 			if(this->configData->GetConfigDataString("Component_Communications", "JUDP_IP_Address") == "")
 			{
-				this->ipAddress = inetAddressGetByString(JUDP_DEFAULT_COMPONENT_IP);
+				this->ipAddress = inetAddressGetByString((char *)JUDP_DEFAULT_COMPONENT_IP.c_str());
 				if(this->ipAddress == NULL)
 				{
 					// Cannot open specified IP Address
 					char errorString[128] = {0};
-					sprintf(errorString, "Could not open default IP Address: %s", JUDP_DEFAULT_COMPONENT_IP);
+					sprintf(errorString, "Could not open default IP Address: %s", JUDP_DEFAULT_COMPONENT_IP.c_str());
 					
 					ErrorEvent *e = new ErrorEvent(ErrorEvent::Configuration, __FUNCTION__, __LINE__, errorString);
 					this->eventHandler->handleEvent(e);

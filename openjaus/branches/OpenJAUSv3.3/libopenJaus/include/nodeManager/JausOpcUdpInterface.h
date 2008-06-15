@@ -67,7 +67,6 @@
 // Default Configuration Values
 // Component UDP Interface Default Values
 #define OPC_UDP_DEFAULT_COMPONENT_UDP_PORT				24629 // per OpenJAUS Nodemanager Interface document
-#define OPC_UDP_DEFAULT_COMPONENT_IP					"127.0.0.1" // per OpenJAUS Nodemanager Interface document
 #define OPC_UDP_DEFAULT_COMPONENT_TTL					1
 #define OPC_UDP_DEFAULT_COMPONENT_UDP_TIMEOUT_SEC		1.0f
 #define OPC_UDP_DEFAULT_COMPONENT_MULTICAST				false
@@ -76,13 +75,15 @@
 #define OPC_UDP_DEFAULT_NODE_TTL						8
 #define OPC_UDP_DEFAULT_NODE_UDP_TIMEOUT_SEC			1.0f
 #define OPC_UDP_DEFAULT_NODE_MULTICAST					true
-#define OPC_UDP_DEFAULT_NODE_MULTICAST_GROUP			"224.1.0.2" // per OPC Convention
 
 // Subsystem UDP Interface Default Values
 #define OPC_UDP_DEFAULT_SUBSYSTEM_TTL					32
 #define OPC_UDP_DEFAULT_SUBSYSTEM_UDP_TIMEOUT_SEC		1.0f
 #define OPC_UDP_DEFAULT_SUBSYSTEM_MULTICAST				true
-#define OPC_UDP_DEFAULT_SUBSYSTEM_MULTICAST_GROUP		"224.1.0.1" // per OPC Convention
+
+static const std::string OPC_UDP_DEFAULT_COMPONENT_IP = "127.0.0.1"; // per OpenJAUS Nodemanager Interface document
+static const std::string OPC_UDP_DEFAULT_SUBSYSTEM_MULTICAST_GROUP = "224.1.0.1"; // per OPC Convention
+static const std::string OPC_UDP_DEFAULT_NODE_MULTICAST_GROUP = "224.1.0.2"; // per OPC Convention
 
 extern "C" void *OpcUdpRecvThread(void *);
 
