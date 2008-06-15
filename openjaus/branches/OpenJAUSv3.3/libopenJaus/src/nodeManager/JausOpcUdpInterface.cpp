@@ -31,7 +31,7 @@
  *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
  *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ****************************************************************************/
-// File Name: JausUdpInterface.cpp
+// File Name: JausOpcUdpInterface.cpp
 //
 // Written By: Danny Kent (jaus AT dannykent DOT com) 
 //
@@ -40,20 +40,20 @@
 // Date: 04/15/08
 //
 // Description: Defines the standard JAUS UDP interface on port 3792. Is compliant with the 
-// 				ETG/OPC style of UDP header
+// 				OPC/OPC style of UDP header
 
-#include "nodeManager/JausUdpInterface.h"
+#include "nodeManager/JausOpcUdpInterface.h"
 #include "nodeManager/JausSubsystemCommunicationManager.h"
 #include "nodeManager/JausNodeCommunicationManager.h"
 #include "nodeManager/JausComponentCommunicationManager.h"
 #include "nodeManager/events/ErrorEvent.h"
 #include "nodeManager/events/JausMessageEvent.h"
 
-JausUdpInterface::JausUdpInterface(FileLoader *configData, EventHandler *handler, JausCommunicationManager *commMngr)
+JausOpcUdpInterface::JausOpcUdpInterface(FileLoader *configData, EventHandler *handler, JausCommunicationManager *commMngr)
 {
 	this->commMngr = commMngr;
 	this->eventHandler = handler;
-	this->name = JAUS_UDP_NAME;
+	this->name = JAUS_OPC_UDP_NAME;
 	this->configData = configData;
 	this->multicast = false;
 	this->subsystemGatewayDiscovered = false;
@@ -91,11 +91,11 @@ JausUdpInterface::JausUdpInterface(FileLoader *configData, EventHandler *handler
 	// Setup our UDP Socket
 	if(!this->openSocket())
 	{
-		throw "JausUdpInterface: Could not open socket\n";
+		throw "JausOpcUdpInterface: Could not open socket\n";
 	}
 }
 
-bool JausUdpInterface::startInterface(void)
+bool JausOpcUdpInterface::startInterface(void)
 {
 	// Set our thread running flag
 	this->running = true;
@@ -109,7 +109,7 @@ bool JausUdpInterface::startInterface(void)
 	return true;
 }
 
-bool JausUdpInterface::stopInterface(void)
+bool JausOpcUdpInterface::stopInterface(void)
 {
 	this->running = false;
 	
@@ -122,7 +122,7 @@ bool JausUdpInterface::stopInterface(void)
 	return true;
 }
 
-JausUdpInterface::~JausUdpInterface(void)
+JausOpcUdpInterface::~JausOpcUdpInterface(void)
 {
 	if(running)
 	{
@@ -133,12 +133,12 @@ JausUdpInterface::~JausUdpInterface(void)
 	// TODO: Check our threadIds to see if they terminated properly
 }
 
-InetAddress JausUdpInterface::getInetAddress(void)
+InetAddress JausOpcUdpInterface::getInetAddress(void)
 {
 	return this->socket->address;
 }
 
-bool JausUdpInterface::processMessage(JausMessage message)
+bool JausOpcUdpInterface::processMessage(JausMessage message)
 {
 	switch(this->type)
 	{
@@ -156,7 +156,7 @@ bool JausUdpInterface::processMessage(JausMessage message)
 				else
 				{
 					// Unicast to all known subsystems
-					HASH_MAP<int, UdpTransportData>::iterator iter;
+					HASH_MAP<int, OpcUdpTransportData>::iterator iter;
 					for(iter = addressMap.begin(); iter != addressMap.end(); iter++)
 					{
 						sendJausMessage(iter->second, message);
@@ -200,7 +200,7 @@ bool JausUdpInterface::processMessage(JausMessage message)
 					else
 					{
 						// Unicast to all known nodes
-						HASH_MAP<int, UdpTransportData>::iterator iter;
+						HASH_MAP<int, OpcUdpTransportData>::iterator iter;
 						for(iter = addressMap.begin(); iter != addressMap.end(); iter++)
 						{
 							sendJausMessage(iter->second, message);
@@ -259,7 +259,7 @@ bool JausUdpInterface::processMessage(JausMessage message)
 				else
 				{
 					// Unicast to all known subsystems
-					HASH_MAP<int, UdpTransportData>::iterator iter;
+					HASH_MAP<int, OpcUdpTransportData>::iterator iter;
 					for(iter = addressMap.begin(); iter != addressMap.end(); iter++)
 					{
 						sendJausMessage(iter->second, message);
@@ -294,7 +294,7 @@ bool JausUdpInterface::processMessage(JausMessage message)
 	}
 }
 
-void JausUdpInterface::run()
+void JausOpcUdpInterface::run()
 {
 	// Lock our mutex
 	pthread_mutex_lock(&threadMutex);
@@ -312,58 +312,272 @@ void JausUdpInterface::run()
 	pthread_mutex_unlock(&threadMutex);
 }
 
-std::string JausUdpInterface::toString()
+std::string JausOpcUdpInterface::toString()
 {
 	char ret[256] = {0};
 	char buf[80] = {0};
 	if(this->socket)
 	{
 		inetAddressToBuffer(this->socket->address, buf, 80);
-		sprintf(ret, "%s %s:%d", JAUS_UDP_NAME, buf, this->socket->port);
+		sprintf(ret, "%s %s:%d", JAUS_OPC_UDP_NAME, buf, this->socket->port);
 		return ret;
 	}
 	else
 	{
-		sprintf(ret, "%s Invalid.", JAUS_UDP_NAME);
+		sprintf(ret, "%s Invalid.", JAUS_OPC_UDP_NAME);
 		return ret;
 	}
 }
 
-bool JausUdpInterface::openSocket(void)
+bool JausOpcUdpInterface::openSocket(void)
 {
-	char categoryString[128] = {0};
+	double socketTimeoutSec = 0;
+	unsigned char socketTTL = 0;
+	std::string multicastGroupString;
+
 	switch(this->type)
 	{
 		case SUBSYSTEM_INTERFACE:
 			// Read Subsystem UDP Parameters
-			sprintf(categoryString, "%s", "Subsystem_Communications");
+			// Port is constant per JAUS Standard
+			this->portNumber = JAUS_OPC_UDP_DATA_PORT;
+
+			// IP Address
+			if(this->configData->GetConfigDataString("Subsystem_Communications", "JAUS_OPC_UDP_IP_Address") == "")
+			{
+				// Use default IP Address
+				this->ipAddress = inetAddressCreate();
+				this->ipAddress->value = INADDR_ANY;
+			}
+			else
+			{
+				this->ipAddress = inetAddressGetByString((char *)this->configData->GetConfigDataString("Subsystem_Communications", "JAUS_OPC_UDP_IP_Address").c_str());
+				if(this->ipAddress == NULL)
+				{
+					// Cannot open specified IP Address
+					char errorString[128] = {0};
+					sprintf(errorString, "Could not open specified IP Address: %s", this->configData->GetConfigDataString("Subsystem_Communications", "JAUS_OPC_UDP_IP_Address").c_str());
+					
+					ErrorEvent *e = new ErrorEvent(ErrorEvent::Configuration, __FUNCTION__, __LINE__, errorString);
+					this->eventHandler->handleEvent(e);
+					return false;
+				}
+			}
+
+			// Timeout
+			if(this->configData->GetConfigDataString("Subsystem_Communications", "JAUS_OPC_UDP_Timeout_Sec") == "")
+			{
+				socketTimeoutSec = OPC_UDP_DEFAULT_SUBSYSTEM_UDP_TIMEOUT_SEC;
+			}
+			else
+			{
+				socketTimeoutSec = this->configData->GetConfigDataDouble("Subsystem_Communications", "JAUS_OPC_UDP_Timeout_Sec");
+			}
+
+			// TTL
+			if(this->configData->GetConfigDataString("Subsystem_Communications", "JAUS_OPC_UDP_TTL") == "")
+			{
+				socketTTL = OPC_UDP_DEFAULT_SUBSYSTEM_TTL;
+			}
+			else
+			{
+				socketTTL = this->configData->GetConfigDataInt("Subsystem_Communications", "JAUS_OPC_UDP_TTL");
+			}
+
+			// Multicast
+			if(this->configData->GetConfigDataString("Subsystem_Communications", "JAUS_OPC_UDP_Multicast") == "")
+			{
+				this->multicast = OPC_UDP_DEFAULT_SUBSYSTEM_MULTICAST;
+			}
+			else
+			{
+				this->multicast = this->configData->GetConfigDataBool("Subsystem_Communications", "JAUS_OPC_UDP_Multicast");
+			}
+
+			if(this->multicast)
+			{
+				// Multicast Group
+				if(this->configData->GetConfigDataString("Subsystem_Communications", "JAUS_OPC_UDP_Multicast_Group") == "")
+				{
+					multicastGroupString = OPC_UDP_DEFAULT_SUBSYSTEM_MULTICAST_GROUP;
+				}
+				else
+				{
+					multicastGroupString = this->configData->GetConfigDataString("Subsystem_Communications", "JAUS_OPC_UDP_Multicast_Group");
+				}
+			}
 			break;
 
 		case NODE_INTERFACE:
 			// Setup Node Configuration
-			sprintf(categoryString, "%s", "Node_Communications");
+			// Port is constant per JAUS Standard
+			this->portNumber = JAUS_OPC_UDP_DATA_PORT;
+
+			// IP Address
+			if(this->configData->GetConfigDataString("Node_Communications", "JAUS_OPC_UDP_IP_Address") == "")
+			{
+				// Use default IP Address
+				this->ipAddress = inetAddressCreate();
+				this->ipAddress->value = INADDR_ANY;
+			}
+			else
+			{
+				this->ipAddress = inetAddressGetByString((char *)this->configData->GetConfigDataString("Node_Communications", "JAUS_OPC_UDP_IP_Address").c_str());
+				if(this->ipAddress == NULL)
+				{
+					// Cannot open specified IP Address
+					char errorString[128] = {0};
+					sprintf(errorString, "Could not open specified IP Address: %s", this->configData->GetConfigDataString("Node_Communications", "JAUS_OPC_UDP_IP_Address").c_str());
+					
+					ErrorEvent *e = new ErrorEvent(ErrorEvent::Configuration, __FUNCTION__, __LINE__, errorString);
+					this->eventHandler->handleEvent(e);
+					return false;
+				}
+			}
+
+			// Timeout
+			if(this->configData->GetConfigDataString("Node_Communications", "JAUS_OPC_UDP_Timeout_Sec") == "")
+			{
+				socketTimeoutSec = OPC_UDP_DEFAULT_NODE_UDP_TIMEOUT_SEC;
+			}
+			else
+			{
+				socketTimeoutSec = this->configData->GetConfigDataDouble("Node_Communications", "JAUS_OPC_UDP_Timeout_Sec");
+			}
+
+			// TTL
+			if(this->configData->GetConfigDataString("Node_Communications", "JAUS_OPC_UDP_TTL") == "")
+			{
+				socketTTL = OPC_UDP_DEFAULT_NODE_TTL;
+			}
+			else
+			{
+				socketTTL = this->configData->GetConfigDataInt("Node_Communications", "JAUS_OPC_UDP_TTL");
+			}
+
+			// Multicast
+			if(this->configData->GetConfigDataString("Node_Communications", "JAUS_OPC_UDP_Multicast") == "")
+			{
+				this->multicast = OPC_UDP_DEFAULT_NODE_MULTICAST;
+			}
+			else
+			{
+				this->multicast = this->configData->GetConfigDataBool("Node_Communications", "JAUS_OPC_UDP_Multicast");
+			}
+
+			if(this->multicast)
+			{
+				// Multicast Group
+				if(this->configData->GetConfigDataString("Node_Communications", "JAUS_OPC_UDP_Multicast_Group") == "")
+				{
+					multicastGroupString = OPC_UDP_DEFAULT_NODE_MULTICAST_GROUP;
+				}
+				else
+				{
+					multicastGroupString = this->configData->GetConfigDataString("Node_Communications", "JAUS_OPC_UDP_Multicast_Group");
+				}
+			}
 			break;
 
 		case COMPONENT_INTERFACE:
 			// Read Component Configuration
-			sprintf(categoryString, "%s", "Component_Communications");
+			// Port Number
+			if(this->configData->GetConfigDataString("Component_Communications", "JAUS_OPC_UDP_Port") == "")
+			{
+				this->portNumber = OPC_UDP_DEFAULT_COMPONENT_UDP_PORT;
+			}
+			else
+			{
+				this->portNumber = this->configData->GetConfigDataInt("Component_Communications", "JAUS_OPC_UDP_Port");
+			}
+
+			// IP Address
+			if(this->configData->GetConfigDataString("Component_Communications", "JAUS_OPC_UDP_IP_Address") == "")
+			{
+				this->ipAddress = inetAddressGetByString(OPC_UDP_DEFAULT_COMPONENT_IP);
+				if(this->ipAddress == NULL)
+				{
+					// Cannot open specified IP Address
+					char errorString[128] = {0};
+					sprintf(errorString, "Could not open default IP Address: %s", OPC_UDP_DEFAULT_COMPONENT_IP);
+					
+					ErrorEvent *e = new ErrorEvent(ErrorEvent::Configuration, __FUNCTION__, __LINE__, errorString);
+					this->eventHandler->handleEvent(e);
+					return false;
+				}
+			}
+			else
+			{
+				this->ipAddress = inetAddressGetByString((char *)this->configData->GetConfigDataString("Component_Communications", "JAUS_OPC_UDP_IP_Address").c_str());
+				if(this->ipAddress == NULL)
+				{
+					// Cannot open specified IP Address
+					char errorString[128] = {0};
+					sprintf(errorString, "Could not open specified IP Address: %s", this->configData->GetConfigDataString("Component_Communications", "JAUS_OPC_UDP_IP_Address").c_str());
+					
+					ErrorEvent *e = new ErrorEvent(ErrorEvent::Configuration, __FUNCTION__, __LINE__, errorString);
+					this->eventHandler->handleEvent(e);
+					return false;
+				}
+			}
+
+			// Timeout
+			if(this->configData->GetConfigDataString("Component_Communications", "JAUS_OPC_UDP_Timeout_Sec") == "")
+			{
+				socketTimeoutSec = OPC_UDP_DEFAULT_COMPONENT_UDP_TIMEOUT_SEC;
+			}
+			else
+			{
+				socketTimeoutSec = this->configData->GetConfigDataDouble("Component_Communications", "JAUS_OPC_UDP_Timeout_Sec");
+			}
+
+			// TTL
+			if(this->configData->GetConfigDataString("Component_Communications", "JAUS_OPC_UDP_TTL") == "")
+			{
+				socketTTL = OPC_UDP_DEFAULT_COMPONENT_TTL;
+			}
+			else
+			{
+				socketTTL = this->configData->GetConfigDataInt("Component_Communications", "JAUS_OPC_UDP_TTL");
+			}
+
+			// Multicast
+			if(this->configData->GetConfigDataString("Component_Communications", "JAUS_OPC_UDP_Multicast") == "")
+			{
+				this->multicast = OPC_UDP_DEFAULT_COMPONENT_MULTICAST;
+			}
+			else
+			{
+				this->multicast = this->configData->GetConfigDataBool("Component_Communications", "JAUS_OPC_UDP_Multicast");
+			}
+
+			if(this->multicast)
+			{
+				// Multicast Group
+				if(this->configData->GetConfigDataString("Component_Communications", "JAUS_OPC_UDP_Multicast_Group") == "")
+				{
+					// Error. Component has no default Multicast group.
+					ErrorEvent *e = new ErrorEvent(ErrorEvent::Configuration, __FUNCTION__, __LINE__, "No default Component Multicast Group and none defined.");
+					this->eventHandler->handleEvent(e);
+					
+					inetAddressDestroy(this->ipAddress);
+					return false;
+				}
+				else
+				{
+					multicastGroupString = this->configData->GetConfigDataString("Component_Communications", "JAUS_OPC_UDP_Multicast_Group");
+				}
+			}
 			break;
 
 		default:
 			// Unknown type
-			// TODO: Log Error
+			ErrorEvent *e = new ErrorEvent(ErrorEvent::Configuration, __FUNCTION__, __LINE__, "Unknown JudpInterface type. Cannot open socket.");
+			this->eventHandler->handleEvent(e);
 			return false;
 	}
 
-	this->portNumber = this->configData->GetConfigDataInt(categoryString, "JAUS_UDP_Port");
-	this->ipAddress = inetAddressGetByString((char *)this->configData->GetConfigDataString(categoryString, "JAUS_UDP_IP").c_str());
-	if(this->ipAddress == NULL)
-	{
-		this->ipAddress = inetAddressCreate();
-		this->ipAddress->value = INADDR_ANY;
-	}
-
-	// Create Component Socket
+	// Create Socket
 	this->socket = multicastSocketCreate(this->portNumber, ipAddress);
 	if(!this->socket)
 	{
@@ -387,16 +601,15 @@ bool JausUdpInterface::openSocket(void)
 	inetAddressDestroy(this->ipAddress);
 
 	// Setup Timeout
-	multicastSocketSetTimeout(this->socket, this->configData->GetConfigDataInt(categoryString, "JAUS_UDP_Timeout_Sec"));
+	multicastSocketSetTimeout(this->socket, socketTimeoutSec);
 
 	// Setup TTL
-	multicastSocketSetTTL(this->socket, this->configData->GetConfigDataInt(categoryString, "JAUS_UDP_TTL"));
+	multicastSocketSetTTL(this->socket, socketTTL);
 
 	// Setup Multicast
-	if(this->configData->GetConfigDataBool(categoryString, "JAUS_UDP_Multicast"))
+	if(this->multicast)
 	{
-		this->multicast = true;
-		this->multicastGroup  = inetAddressGetByString((char *)this->configData->GetConfigDataString(categoryString, "JAUS_UDP_Multicast_Group").c_str());
+		this->multicastGroup  = inetAddressGetByString((char *)multicastGroupString.c_str());
 		if(multicastSocketJoinGroup(this->socket, this->multicastGroup) != 0)
 		{
 			// Error joining our group
@@ -419,10 +632,11 @@ bool JausUdpInterface::openSocket(void)
 		
 		inetAddressDestroy(this->multicastGroup);
 	}
+
 	return true;
 }
 
-void JausUdpInterface::sendJausMessage(UdpTransportData data, JausMessage message)
+void JausOpcUdpInterface::sendJausMessage(OpcUdpTransportData data, JausMessage message)
 {
 	DatagramPacket packet = NULL;
 	int result;
@@ -440,7 +654,6 @@ void JausUdpInterface::sendJausMessage(UdpTransportData data, JausMessage messag
 			packet->buffer = (unsigned char *) calloc(packet->bufferSizeBytes, 1);
 			packet->port = data.port;
 			packet->address->value = data.addressValue;
-			memset(packet->buffer, 0, packet->bufferSizeBytes);
 			
 			memcpy(packet->buffer, JAUS_OPC_UDP_HEADER, JAUS_OPC_UDP_HEADER_SIZE_BYTES);
 			if(jausMessageToBuffer(message, packet->buffer + JAUS_OPC_UDP_HEADER_SIZE_BYTES, packet->bufferSizeBytes - JAUS_OPC_UDP_HEADER_SIZE_BYTES))
@@ -458,7 +671,6 @@ void JausUdpInterface::sendJausMessage(UdpTransportData data, JausMessage messag
 			packet->buffer = (unsigned char *) calloc(packet->bufferSizeBytes, 1);
 			packet->port = data.port;
 			packet->address->value = data.addressValue;
-			memset(packet->buffer, 0, packet->bufferSizeBytes);
 
 			if(jausMessageToBuffer(message, packet->buffer, packet->bufferSizeBytes))
 			{
@@ -478,29 +690,29 @@ void JausUdpInterface::sendJausMessage(UdpTransportData data, JausMessage messag
 	}
 }
 
-void JausUdpInterface::closeSocket(void)
+void JausOpcUdpInterface::closeSocket(void)
 {
 	multicastSocketDestroy(this->socket);
 }
 
-void JausUdpInterface::startRecvThread()
+void JausOpcUdpInterface::startRecvThread()
 {
 	pthread_attr_init(&this->recvThreadAttr);
 	pthread_attr_setdetachstate(&this->recvThreadAttr, PTHREAD_CREATE_JOINABLE);
-	this->recvThreadId = pthread_create(&this->recvThread, &this->recvThreadAttr, UdpRecvThread, this);
+	this->recvThreadId = pthread_create(&this->recvThread, &this->recvThreadAttr, OpcUdpRecvThread, this);
 	pthread_attr_destroy(&this->recvThreadAttr);
 }
 
-void JausUdpInterface::stopRecvThread()
+void JausOpcUdpInterface::stopRecvThread()
 {
 	pthread_join(this->recvThread, NULL);
 }
 
-void JausUdpInterface::recvThreadRun()
+void JausOpcUdpInterface::recvThreadRun()
 {
 	DatagramPacket packet;
 	JausMessage rxMessage;
-	UdpTransportData data;
+	OpcUdpTransportData data;
 	int index = 0;
 	long bytesRecv = 0;
 
@@ -532,13 +744,13 @@ void JausUdpInterface::recvThreadRun()
 				{
 					case SUBSYSTEM_INTERFACE:
 						data.addressValue = packet->address->value;
-						data.port = JAUS_UDP_DATA_PORT;
+						data.port = JAUS_OPC_UDP_DATA_PORT;
 						this->addressMap[rxMessage->source->subsystem] = data;
 						break;
 
 					case NODE_INTERFACE:
 						data.addressValue = packet->address->value;
-						data.port = JAUS_UDP_DATA_PORT;
+						data.port = JAUS_OPC_UDP_DATA_PORT;
 						if(rxMessage->source->subsystem == mySubsystemId)
 						{
 							this->addressMap[rxMessage->source->node] = data;
@@ -574,9 +786,9 @@ void JausUdpInterface::recvThreadRun()
 	datagramPacketDestroy(packet);
 }
 
-void *UdpRecvThread(void *obj)
+void *OpcUdpRecvThread(void *obj)
 {
-	JausUdpInterface *udpInterface = (JausUdpInterface *)obj;
-	udpInterface->recvThreadRun();
+	JausOpcUdpInterface *etgUdpInterface = (JausOpcUdpInterface *)obj;
+	etgUdpInterface->recvThreadRun();
 	return NULL;
 }

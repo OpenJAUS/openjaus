@@ -46,7 +46,8 @@
 #include "nodeManager/JausComponentCommunicationManager.h"
 #include "nodeManager/NodeManagerComponent.h"
 #include "nodeManager/CommunicatorComponent.h"
-#include "nodeManager/JausUdpInterface.h"
+#include "nodeManager/JausOpcUdpInterface.h"
+#include "nodeManager/JudpInterface.h"
 #include "nodeManager/OjUdpComponentInterface.h"
 #include "nodeManager/events/ErrorEvent.h"
 #include "nodeManager/events/ConfigurationEvent.h"
@@ -81,6 +82,9 @@ JausComponentCommunicationManager::JausComponentCommunicationManager(FileLoader 
 		return;
 	}
 
+	ConfigurationEvent *e = new ConfigurationEvent(__FUNCTION__, __LINE__, "Starting Component Interfaces");
+	this->eventHandler->handleEvent(e);
+
 	// Start Local Components
 	this->nodeManagerCmpt = new NodeManagerComponent(this->configData, this->eventHandler, this);
 	this->interfaces.push_back(nodeManagerCmpt);
@@ -97,18 +101,29 @@ JausComponentCommunicationManager::JausComponentCommunicationManager(FileLoader 
 	}
 
 	// Start component interface(s)
-	if(configData->GetConfigDataBool("Component_Communications", "JAUS_UDP"))
+	if(configData->GetConfigDataBool("Component_Communications", "JAUS_OPC_UDP_Interface"))
 	{
-		JausUdpInterface *udpInterface = new JausUdpInterface(configData, this->eventHandler, this);
-		this->interfaces.push_back(udpInterface);
+		JausOpcUdpInterface *etgUdpInterface = new JausOpcUdpInterface(configData, this->eventHandler, this);
+		this->interfaces.push_back(etgUdpInterface);
 
 		char buf[128] = {0};
-		sprintf(buf, "Opened Component Interface:\t%s", udpInterface->toString().c_str());
+		sprintf(buf, "Opened Component Interface:\t%s", etgUdpInterface->toString().c_str());
 		ConfigurationEvent *e = new ConfigurationEvent(__FUNCTION__, __LINE__, buf);
 		this->eventHandler->handleEvent(e);
 	}
-	
-	if(configData->GetConfigDataBool("Component_Communications", "OpenJAUS_UDP"))
+
+	if(configData->GetConfigDataBool("Component_Communications", "JUDP_Interface"))
+	{
+		JudpInterface *judpInterface = new JudpInterface(configData, this->eventHandler, this);
+		this->interfaces.push_back(judpInterface);
+
+		char buf[128] = {0};
+		sprintf(buf, "Opened Component Interface:\t%s", judpInterface->toString().c_str());
+		ConfigurationEvent *e = new ConfigurationEvent(__FUNCTION__, __LINE__, buf);
+		this->eventHandler->handleEvent(e);
+	}
+
+	if(configData->GetConfigDataBool("Component_Communications", "OpenJAUS_UDP_Interface"))
 	{
 		this->udpCmptInf = new OjUdpComponentInterface(configData, this->eventHandler, this);
 
@@ -116,6 +131,17 @@ JausComponentCommunicationManager::JausComponentCommunicationManager(FileLoader 
 		sprintf(buf, "Opened Component Interface:\t%s", udpCmptInf->toString().c_str());
 		ConfigurationEvent *e = new ConfigurationEvent(__FUNCTION__, __LINE__, buf);
 		this->eventHandler->handleEvent(e);
+	}
+	else
+	{
+		this->udpCmptInf = NULL;
+	}
+
+
+	if(!this->udpCmptInf)
+	{
+		// Error, must have some CmptInterface
+		throw "JausComponentCommunicationManager: No Component Interface defined";
 	}
 }
 
@@ -127,7 +153,7 @@ JausComponentCommunicationManager::~JausComponentCommunicationManager(void)
 		delete *iterator;
 	}
 	
-	delete udpCmptInf;
+	if(udpCmptInf) delete udpCmptInf;
 }
 
 bool JausComponentCommunicationManager::startInterfaces(void)
@@ -139,7 +165,7 @@ bool JausComponentCommunicationManager::startInterfaces(void)
 		retVal = retVal && (*iter)->startInterface();
 	}
 
-	this->udpCmptInf->startInterface();
+	if(udpCmptInf) this->udpCmptInf->startInterface();
 
 	return retVal;
 }
@@ -153,7 +179,7 @@ bool JausComponentCommunicationManager::stopInterfaces(void)
 		retVal = retVal && (*iter)->stopInterface();
 	}
 
-	this->udpCmptInf->stopInterface();
+	if(udpCmptInf) this->udpCmptInf->stopInterface();
 
 	return retVal;
 }

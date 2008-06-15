@@ -59,7 +59,10 @@ OjUdpComponentInterface::OjUdpComponentInterface(FileLoader *configData, EventHa
 	this->portMap.empty();
 
 	// Open our socket
-	this->openSocket();
+	if(!this->openSocket())
+	{
+		throw "OjUdpComponentInterface: Could not open socket\n";
+	}
 }
 
 OjUdpComponentInterface::~OjUdpComponentInterface(void)
@@ -111,29 +114,69 @@ bool OjUdpComponentInterface::sendDatagramPacket(DatagramPacket dgPacket)
 	return true;
 }
 
-void OjUdpComponentInterface::openSocket(void)
+bool OjUdpComponentInterface::openSocket(void)
 {
 	// Read Configuration
-	this->portNumber = this->configData->GetConfigDataInt("Component_Communications", "OpenJAUS_UDP_Port");
-	this->ipAddress = inetAddressGetByString((char *)this->configData->GetConfigDataString("Component_Communications", "OpenJAUS_UDP_IP").c_str());
-	if(this->ipAddress == NULL)
+	if(this->configData->GetConfigDataString("Component_Communications", "OpenJAUS_UDP_Port") == "")
 	{
-		this->ipAddress = inetAddressCreate();
-		this->ipAddress->value = INADDR_ANY;
+		this->portNumber = OJ_UDP_DEFAULT_PORT;
+	}
+	else
+	{
+		this->portNumber = this->configData->GetConfigDataInt("Component_Communications", "OpenJAUS_UDP_Port");
 	}
 
+	// IP Address
+	if(this->configData->GetConfigDataString("Component_Communications", "OpenJAUS_UDP_IP_Address") == "")
+	{
+		this->ipAddress = inetAddressGetByString(OJ_UDP_DEFAULT_COMPONENT_IP);
+		if(this->ipAddress == NULL)
+		{
+			// Cannot open specified IP Address
+			char errorString[128] = {0};
+			sprintf(errorString, "Could not open default IP Address: %s", OJ_UDP_DEFAULT_COMPONENT_IP);
+			
+			ErrorEvent *e = new ErrorEvent(ErrorEvent::Configuration, __FUNCTION__, __LINE__, errorString);
+			this->eventHandler->handleEvent(e);
+			return false;
+		}
+	}
+	else
+	{
+		this->ipAddress = inetAddressGetByString((char *)this->configData->GetConfigDataString("Component_Communications", "OpenJAUS_UDP_IP_Address").c_str());
+		if(this->ipAddress == NULL)
+		{
+			// Cannot open specified IP Address
+			char errorString[128] = {0};
+			sprintf(errorString, "Could not open specified IP Address: %s", this->configData->GetConfigDataString("Component_Communications", "OpenJAUS_UDP_IP_Address").c_str());
+			
+			ErrorEvent *e = new ErrorEvent(ErrorEvent::Configuration, __FUNCTION__, __LINE__, errorString);
+			this->eventHandler->handleEvent(e);
+			return false;
+		}
+	}
+	
 	// Create Component Socket
 	this->socket = datagramSocketCreate(this->portNumber, ipAddress);
 	if(!this->socket)
 	{
 		// Error creating our socket
-		return;
+		return false;
 	}
 	
 	inetAddressDestroy(this->ipAddress);
 
 	// Setup Timeout
-	datagramSocketSetTimeout(this->socket, this->configData->GetConfigDataInt("Component_Communications", "OpenJAUS_UDP_Timeout_Sec"));
+	if(this->configData->GetConfigDataString("Component_Communications", "OpenJAUS_UDP_Timeout_Sec") == "")
+	{
+		datagramSocketSetTimeout(this->socket, OJ_UDP_DEFAULT_TIMEOUT);
+	}
+	else
+	{
+		datagramSocketSetTimeout(this->socket, this->configData->GetConfigDataDouble("Component_Communications", "OpenJAUS_UDP_Timeout_Sec"));
+	}
+
+	return true;
 }
 
 void OjUdpComponentInterface::closeSocket(void)

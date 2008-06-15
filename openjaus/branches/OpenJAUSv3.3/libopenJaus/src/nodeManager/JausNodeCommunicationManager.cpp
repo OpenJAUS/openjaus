@@ -44,7 +44,8 @@
 //				different node interfaces.
 
 #include "nodeManager/JausNodeCommunicationManager.h"
-#include "nodeManager/JausUdpInterface.h"
+#include "nodeManager/JausOpcUdpInterface.h"
+#include "nodeManager/JudpInterface.h"
 #include "nodeManager/events/ErrorEvent.h"
 #include "nodeManager/events/ConfigurationEvent.h"
 
@@ -76,26 +77,46 @@ JausNodeCommunicationManager::JausNodeCommunicationManager(FileLoader *configDat
 		return;
 	}
 
-	// Start subsystem interface(s)
-	if(configData->GetConfigDataBool("Node_Communications", "JAUS_UDP"))
+	if( configData->GetConfigDataBool("Node_Communications", "Enabled"))
 	{
-		JausUdpInterface *udpInterface = new JausUdpInterface(configData, handler, this);
-		this->interfaces.push_back(udpInterface);
-
-		char buf[128] = {0};
-		sprintf(buf, "Opened Node Interface:\t\t%s", udpInterface->toString().c_str());
-		ConfigurationEvent *e = new ConfigurationEvent(__FUNCTION__, __LINE__, buf);
+		ConfigurationEvent *e = new ConfigurationEvent(__FUNCTION__, __LINE__, "Starting Node Interfaces");
 		this->eventHandler->handleEvent(e);
-	}
 
-	if( configData->GetConfigDataBool("Node_Communications", "Enabled") &&
-		this->interfaces.size() > 0)
-	{
-		this->enabled = true;
+		// Start subsystem interface(s)
+		if(configData->GetConfigDataBool("Node_Communications", "JAUS_OPC_UDP_Interface"))
+		{
+			JausOpcUdpInterface *etgUdpInterface = new JausOpcUdpInterface(configData, this->eventHandler, this);
+			this->interfaces.push_back(etgUdpInterface);
+
+			char buf[128] = {0};
+			sprintf(buf, "Opened Node Interface:\t\t%s", etgUdpInterface->toString().c_str());
+			ConfigurationEvent *e = new ConfigurationEvent(__FUNCTION__, __LINE__, buf);
+			this->eventHandler->handleEvent(e);
+		}
+
+		if(configData->GetConfigDataBool("Node_Communications", "JUDP_Interface"))
+		{
+			JudpInterface *judpInterface = new JudpInterface(configData, this->eventHandler, this);
+			this->interfaces.push_back(judpInterface);
+
+			char buf[128] = {0};
+			sprintf(buf, "Opened Node Interface:\t\t%s", judpInterface->toString().c_str());
+			ConfigurationEvent *e = new ConfigurationEvent(__FUNCTION__, __LINE__, buf);
+			this->eventHandler->handleEvent(e);
+		}
+
+		if( this->interfaces.size() > 0)
+		{
+			this->enabled = true;
+		}
+		else
+		{
+			this->enabled = false;
+		}
 	}
 	else
 	{
-		this->enabled = false;		
+		this->enabled = false;
 	}
 }
 

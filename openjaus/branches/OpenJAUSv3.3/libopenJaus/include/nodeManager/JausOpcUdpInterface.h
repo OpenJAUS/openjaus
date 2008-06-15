@@ -31,7 +31,7 @@
  *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
  *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ****************************************************************************/
-// File Name: JausUdpInterface.h
+// File Name: JausOpcUdpInterface.h
 //
 // Written By: Danny Kent (jaus AT dannykent DOT com)
 //
@@ -41,8 +41,8 @@
 //
 // Description: 
 
-#ifndef JAUS_UDP_INTERFACE_H
-#define JAUS_UDP_INTERFACE_H
+#ifndef JAUS_OPC_UDP_INTERFACE_H
+#define JAUS_OPC_UDP_INTERFACE_H
 
 #ifdef WIN32
 	#include <errno.h>
@@ -59,26 +59,45 @@
 #include "utils/datagramPacket.h"
 #include "utils/FileLoader.h"
 
-#define JAUS_UDP_NAME					"JAUS UDP Interface"
-#define SOCKET_TIMEOUT_SEC				0.5
-#define JAUS_UDP_DATA_PORT				3794
-#define JAUS_OPC_UDP_HEADER				"JAUS01.0"
-#define JAUS_OPC_UDP_HEADER_SIZE_BYTES	8 
+#define JAUS_OPC_UDP_NAME				"JAUS ETG/OPC UDP Interface"
+#define JAUS_OPC_UDP_DATA_PORT			3794 // per AS5669 v1.0 and IANA assignment
+#define JAUS_OPC_UDP_HEADER				"JAUS01.0" // per OPC documents
+#define JAUS_OPC_UDP_HEADER_SIZE_BYTES	8 // per OPC Documents
 
-extern "C" void *UdpRecvThread(void *);
+// Default Configuration Values
+// Component UDP Interface Default Values
+#define OPC_UDP_DEFAULT_COMPONENT_UDP_PORT				24629 // per OpenJAUS Nodemanager Interface document
+#define OPC_UDP_DEFAULT_COMPONENT_IP					"127.0.0.1" // per OpenJAUS Nodemanager Interface document
+#define OPC_UDP_DEFAULT_COMPONENT_TTL					1
+#define OPC_UDP_DEFAULT_COMPONENT_UDP_TIMEOUT_SEC		1.0f
+#define OPC_UDP_DEFAULT_COMPONENT_MULTICAST				false
+
+// Node UDP Interface Default Values
+#define OPC_UDP_DEFAULT_NODE_TTL						8
+#define OPC_UDP_DEFAULT_NODE_UDP_TIMEOUT_SEC			1.0f
+#define OPC_UDP_DEFAULT_NODE_MULTICAST					true
+#define OPC_UDP_DEFAULT_NODE_MULTICAST_GROUP			"224.1.0.2" // per OPC Convention
+
+// Subsystem UDP Interface Default Values
+#define OPC_UDP_DEFAULT_SUBSYSTEM_TTL					32
+#define OPC_UDP_DEFAULT_SUBSYSTEM_UDP_TIMEOUT_SEC		1.0f
+#define OPC_UDP_DEFAULT_SUBSYSTEM_MULTICAST				true
+#define OPC_UDP_DEFAULT_SUBSYSTEM_MULTICAST_GROUP		"224.1.0.1" // per OPC Convention
+
+extern "C" void *OpcUdpRecvThread(void *);
 
 // Transport Data Structure
 typedef struct
 {
 	unsigned int addressValue;
 	unsigned short port;
-}UdpTransportData;
+}OpcUdpTransportData;
 
-class JausUdpInterface : public JausTransportInterface
+class JausOpcUdpInterface : public JausTransportInterface
 {
 public:
-	JausUdpInterface(FileLoader *configData, EventHandler *handler, JausCommunicationManager *commMngr);
-	~JausUdpInterface(void);
+	JausOpcUdpInterface(FileLoader *configData, EventHandler *handler, JausCommunicationManager *commMngr);
+	~JausOpcUdpInterface(void);
 
 	InetAddress getInetAddress(void);
 
@@ -104,14 +123,14 @@ private:
 	pthread_t recvThread;
 	pthread_attr_t recvThreadAttr;
 
-	void sendJausMessage(UdpTransportData data, JausMessage message);
+	void sendJausMessage(OpcUdpTransportData data, JausMessage message);
 	void startRecvThread();
 	void stopRecvThread();
 
-	HASH_MAP <int, UdpTransportData> addressMap;
+	HASH_MAP <int, OpcUdpTransportData> addressMap;
 	bool subsystemGatewayDiscovered;
-	UdpTransportData subsystemGatewayData;
-	UdpTransportData multicastData;
+	OpcUdpTransportData subsystemGatewayData;
+	OpcUdpTransportData multicastData;
 };
 
 #endif

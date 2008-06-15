@@ -129,7 +129,7 @@ NodeManagerComponent::~NodeManagerComponent(void)
 	{
 		this->stopInterface();
 	}
-	
+
 	jausComponentDestroy(this->cmpt);
 	
 	for(iterator = subsystemChangeList.begin(); iterator != subsystemChangeList.end(); iterator++)
@@ -163,10 +163,14 @@ bool NodeManagerComponent::startInterface()
 
 bool NodeManagerComponent::stopInterface()
 {
+	// Send our shutdown events
+	sendNodeShutdownEvents();
+	sendSubsystemShutdownEvents();
+
 	// Set out thread control flag to false
 	this->running = false;
 
-	// Setup our pThread
+	// Stop our pThread
 	this->stopThread();
 
 	return true;
@@ -393,6 +397,16 @@ bool NodeManagerComponent::processReportConfiguration(JausMessage message)
 	// My Subs?
 	if(reportConf->source->subsystem != this->cmpt->address->subsystem)
 	{
+		// Test for special case
+		if(reportConf->subsystem->nodes->elementCount == 0)
+		{
+			// Special Case: This is an empty subsystem report, this means that the source subsystem is going offline
+			systemTree->removeSubsystem(reportConf->source);
+			reportConfigurationMessageDestroy(reportConf);
+			jausMessageDestroy(message);
+			return true;
+		}
+
 		systemTree->replaceSubsystem(reportConf->source, reportConf->subsystem);
 
 		JausSubsystem subs = systemTree->getSubsystem(reportConf->source);
@@ -463,7 +477,17 @@ bool NodeManagerComponent::processReportConfiguration(JausMessage message)
 	}
 
 	JausNode node = (JausNode) reportConf->subsystem->nodes->elementData[0];
-	
+
+	// Test for special case
+	if(node->components->elementCount == 0)
+	{
+		// Special Case: This is an empty node report, this means that the source node is going offline
+		systemTree->removeNode(reportConf->source);
+		reportConfigurationMessageDestroy(reportConf);
+		jausMessageDestroy(message);
+		return true;
+	}
+
 	// Replace Node
 	systemTree->replaceNode(reportConf->source, node);
 
@@ -1678,6 +1702,130 @@ void NodeManagerComponent::sendSubsystemChangedEvents()
 
 		char buf[256];
 		sprintf(buf, "Send Subs Changed event to %d.%d.%d.%d.", txMessage->destination->subsystem, txMessage->destination->node, txMessage->destination->component, txMessage->destination->instance);
+		DebugEvent *e = new DebugEvent("Event", __FUNCTION__, __LINE__, buf);
+		this->eventHandler->handleEvent(e);
+	}
+
+	eventMessageDestroy(eventMessage);
+	jausMessageDestroy(txMessage);
+	reportConfigurationMessageDestroy(reportConf);
+}
+
+void NodeManagerComponent::sendNodeShutdownEvents()
+{
+	ReportConfigurationMessage reportConf = NULL;
+	JausMessage txMessage = NULL;
+	EventMessage eventMessage = NULL;
+	HASH_MAP <int, JausAddress>::iterator iterator;
+	
+	reportConf = reportConfigurationMessageCreate();
+	if(!reportConf)
+	{
+		// TODO: Record an error. Throw Exception
+		return;
+	}
+
+	JausNode emptyNode = jausNodeCreate();
+	if(!emptyNode)
+	{
+		// TODO: Record an error. Throw Exception
+		reportConfigurationMessageDestroy(reportConf);
+		return;
+	}
+	emptyNode->id = this->cmpt->address->node;
+	jausArrayAdd(reportConf->subsystem->nodes, (void *)emptyNode);
+
+	eventMessage = eventMessageCreate();
+	if(!eventMessage)
+	{
+		// TODO: Record an error. Throw Exception
+		reportConfigurationMessageDestroy(reportConf);
+		return;
+	}
+
+	eventMessage->reportMessage = reportConfigurationMessageToJausMessage(reportConf);
+	if(!eventMessage->reportMessage)
+	{
+		// TODO: Record an error. Throw Exception
+		reportConfigurationMessageDestroy(reportConf);
+		eventMessageDestroy(eventMessage);
+		return;
+	}
+	jausAddressCopy(eventMessage->source, cmpt->address);
+
+	// TODO: Go through nodeChangeList looking for dead addresses
+	for(iterator = nodeChangeList.begin(); iterator != nodeChangeList.end(); iterator++)
+	{
+		eventMessage->eventId = iterator->first;
+		jausAddressCopy(eventMessage->destination, iterator->second);
+		txMessage = eventMessageToJausMessage(eventMessage);
+		this->commMngr->receiveJausMessage(jausMessageClone(txMessage), this);
+
+		char buf[256];
+		sprintf(buf, "Send Node Shutdown event to %d.%d.%d.%d.", txMessage->destination->subsystem, txMessage->destination->node, txMessage->destination->component, txMessage->destination->instance);
+		DebugEvent *e = new DebugEvent("Event", __FUNCTION__, __LINE__, buf);
+		this->eventHandler->handleEvent(e);
+	}
+	
+	eventMessageDestroy(eventMessage);
+	jausMessageDestroy(txMessage);
+	reportConfigurationMessageDestroy(reportConf);
+}
+
+void NodeManagerComponent::sendSubsystemShutdownEvents()
+{
+	ReportConfigurationMessage reportConf = NULL;
+	JausMessage txMessage = NULL;
+	EventMessage eventMessage = NULL;
+	HASH_MAP <int, JausAddress>::iterator iterator;
+
+	reportConf = reportConfigurationMessageCreate();
+	if(!reportConf)
+	{
+		// TODO: Record an error. Throw Exception
+		return;
+	}
+	
+	// Empty Subsystem for message
+	JausSubsystem emptySubs = jausSubsystemCreate();
+	if(!emptySubs)
+	{
+		// TODO: Record an error. Throw Exception
+		reportConfigurationMessageDestroy(reportConf);
+		return;
+	}
+	emptySubs->id = this->cmpt->address->subsystem;
+
+	jausSubsystemDestroy(reportConf->subsystem);
+	reportConf->subsystem = emptySubs;
+	eventMessage = eventMessageCreate();
+	if(!eventMessage)
+	{
+		// TODO: Record an error. Throw Exception
+		reportConfigurationMessageDestroy(reportConf);
+		return;
+	}
+
+	eventMessage->reportMessage = reportConfigurationMessageToJausMessage(reportConf);
+	if(!eventMessage->reportMessage)
+	{
+		// TODO: Record an error. Throw Exception
+		reportConfigurationMessageDestroy(reportConf);
+		eventMessageDestroy(eventMessage);
+		return;
+	}
+	jausAddressCopy(eventMessage->source, cmpt->address);
+
+	// TODO: check subsystemChangeList for dead addresses
+	for(iterator = subsystemChangeList.begin(); iterator != subsystemChangeList.end(); iterator++)
+	{
+		eventMessage->eventId = iterator->first;
+		jausAddressCopy(eventMessage->destination, iterator->second);
+		txMessage = eventMessageToJausMessage(eventMessage);
+		this->commMngr->receiveJausMessage(jausMessageClone(txMessage), this);
+
+		char buf[256];
+		sprintf(buf, "Send Subs Shutdown event to %d.%d.%d.%d.", txMessage->destination->subsystem, txMessage->destination->node, txMessage->destination->component, txMessage->destination->instance);
 		DebugEvent *e = new DebugEvent("Event", __FUNCTION__, __LINE__, buf);
 		this->eventHandler->handleEvent(e);
 	}

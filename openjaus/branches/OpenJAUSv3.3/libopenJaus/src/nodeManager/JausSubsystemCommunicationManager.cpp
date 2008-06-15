@@ -44,7 +44,8 @@
 //				different subsystem interfaces.
 
 #include "nodeManager/JausSubsystemCommunicationManager.h"
-#include "nodeManager/JausUdpInterface.h"
+#include "nodeManager/JausOpcUdpInterface.h"
+#include "nodeManager/JudpInterface.h"
 #include "nodeManager/events/ErrorEvent.h"
 #include "nodeManager/events/ConfigurationEvent.h"
 
@@ -75,26 +76,46 @@ JausSubsystemCommunicationManager::JausSubsystemCommunicationManager(FileLoader 
 		return;
 	}
 
-	// Start subsystem interface(s)
-	if(configData->GetConfigDataBool("Subsystem_Communications", "JAUS_UDP"))
+	if( configData->GetConfigDataBool("Subsystem_Communications", "Enabled"))
 	{
-		JausUdpInterface *udpInterface = new JausUdpInterface(configData, handler, this);
-		this->interfaces.push_back(udpInterface);
-
-		char buf[128] = {0};
-		sprintf(buf, "Opened Subsystem Interface:\t%s", udpInterface->toString().c_str());
-		ConfigurationEvent *e = new ConfigurationEvent(__FUNCTION__, __LINE__, buf);
+		ConfigurationEvent *e = new ConfigurationEvent(__FUNCTION__, __LINE__, "Starting Subsystem Interfaces");
 		this->eventHandler->handleEvent(e);
-	}
 
-	if( configData->GetConfigDataBool("Subsystem_Communications", "Enabled") &&
-		this->interfaces.size() > 0)
-	{
-		this->enabled = true;
+		// Start subsystem interface(s)
+		if(configData->GetConfigDataBool("Subsystem_Communications", "JAUS_OPC_UDP_Interface"))
+		{
+			JausOpcUdpInterface *etgUdpInterface = new JausOpcUdpInterface(configData, handler, this);
+			this->interfaces.push_back(etgUdpInterface);
+
+			char buf[128] = {0};
+			sprintf(buf, "Opened Subsystem Interface:\t%s", etgUdpInterface->toString().c_str());
+			ConfigurationEvent *e = new ConfigurationEvent(__FUNCTION__, __LINE__, buf);
+			this->eventHandler->handleEvent(e);
+		}
+
+		if(configData->GetConfigDataBool("Subsystem_Communications", "JUDP_Interface"))
+		{
+			JudpInterface *judpInterface = new JudpInterface(configData, this->eventHandler, this);
+			this->interfaces.push_back(judpInterface);
+
+			char buf[128] = {0};
+			sprintf(buf, "Opened Subsystem Interface:\t%s", judpInterface->toString().c_str());
+			ConfigurationEvent *e = new ConfigurationEvent(__FUNCTION__, __LINE__, buf);
+			this->eventHandler->handleEvent(e);
+		}
+
+		if( this->interfaces.size() > 0)
+		{
+			this->enabled = true;
+		}
+		else
+		{
+			this->enabled = false;
+		}
 	}
 	else
 	{
-		this->enabled = false;		
+		this->enabled = false;
 	}
 
 }
