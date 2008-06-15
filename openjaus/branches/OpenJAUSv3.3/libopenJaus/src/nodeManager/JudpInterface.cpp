@@ -345,9 +345,10 @@ bool JudpInterface::openSocket(void)
 			// IP Address
 			if(this->configData->GetConfigDataString("Subsystem_Communications", "JUDP_IP_Address") == "")
 			{
-				// Use default IP Address
-				this->ipAddress = inetAddressCreate();
-				this->ipAddress->value = INADDR_ANY;
+				// Cannot open specified IP Address				
+				ErrorEvent *e = new ErrorEvent(ErrorEvent::Configuration, __FUNCTION__, __LINE__, "No IP Address specified!");
+				this->eventHandler->handleEvent(e);
+				return false;
 			}
 			else
 			{
@@ -426,9 +427,10 @@ bool JudpInterface::openSocket(void)
 			// IP Address
 			if(this->configData->GetConfigDataString("Node_Communications", "JUDP_IP_Address") == "")
 			{
-				// Use default IP Address
-				this->ipAddress = inetAddressCreate();
-				this->ipAddress->value = INADDR_ANY;
+				// Cannot open specified IP Address				
+				ErrorEvent *e = new ErrorEvent(ErrorEvent::Configuration, __FUNCTION__, __LINE__, "No IP Address specified!");
+				this->eventHandler->handleEvent(e);
+				return false;
 			}
 			else
 			{

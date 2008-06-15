@@ -1523,7 +1523,7 @@ bool SystemTree::setComponentServices(JausAddress address, JausArray inputServic
 	if(cmpt)
 	{
 		// Remove current service set
-		jausServicesDestroy(cmpt->services);
+		if(cmpt->services) jausServicesDestroy(cmpt->services);
 		cmpt->services = jausServicesClone(inputServices);
 		return true;
 	}
