@@ -115,6 +115,7 @@ private:
 	void allState();
 
 	int getNextEventId();
+	bool setupJausServices();
 
 	HASH_MAP <int, JausAddress> nodeChangeList;
 	HASH_MAP <int, JausAddress> subsystemChangeList;
