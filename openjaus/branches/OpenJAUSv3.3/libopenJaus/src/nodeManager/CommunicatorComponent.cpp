@@ -1908,7 +1908,7 @@ bool CommunicatorComponent::setupJausServices()
 	jausServiceAddService(cmpt->services, service);
 
 	service = jausServiceCreate(JAUS_COMMUNICATOR);
-	if(!service) false;
+	if(!service) return false;
 	jausServiceAddInputCommand(service, JAUS_QUERY_CONFIGURATION, NO_PRESENCE_VECTOR);
 	jausServiceAddInputCommand(service, JAUS_QUERY_IDENTIFICATION, NO_PRESENCE_VECTOR);
 	jausServiceAddInputCommand(service, JAUS_QUERY_SERVICES, NO_PRESENCE_VECTOR);
