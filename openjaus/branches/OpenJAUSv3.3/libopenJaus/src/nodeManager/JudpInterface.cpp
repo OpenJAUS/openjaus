@@ -734,7 +734,7 @@ void JudpInterface::recvThreadRun()
 	long bytesRecv = 0;
 	int bytesUnpacked = 0;
 	unsigned int bufferIndex = 0;
-	JudpHeaderCompressionData *hcData = NULL;
+	JudpHeaderCompressionData hcData;
 
 	packet = datagramPacketCreate();
 	packet->bufferSizeBytes = JUDP_MAX_PACKET_SIZE;
@@ -747,7 +747,7 @@ void JudpInterface::recvThreadRun()
 		
 		if(bytesRecv > 0)
 		{
-			bufferIndex = 0;
+			bufferIndex = 0; 
 			if(packet->buffer[0] != JUDP_VERSION_NUMBER)
 			{
 				// Error, wrong JUDP version inbound
@@ -757,7 +757,7 @@ void JudpInterface::recvThreadRun()
 			}
 			bufferIndex += 1;
 			
-			bytesUnpacked = this->headerCompressionDataFromBuffer(hcData, packet->buffer + bufferIndex, packet->bufferSizeBytes - bufferIndex);
+			bytesUnpacked = this->headerCompressionDataFromBuffer(&hcData, packet->buffer + bufferIndex, packet->bufferSizeBytes - bufferIndex);
 			if(bytesUnpacked == 0)
 			{
 				// Error unpacking headerCompressionData (it creates an error event, doing so here would be redundant)
@@ -766,7 +766,7 @@ void JudpInterface::recvThreadRun()
 			bufferIndex += bytesUnpacked;
 
 			rxMessage = jausMessageCreate();
-			if(hcData->flags == JUDP_HC_NO_COMPRESSION)
+			if(hcData.flags == JUDP_HC_NO_COMPRESSION)
 			{
 				if(!receiveUncompressedMessage(rxMessage, packet->buffer + bufferIndex, packet->bufferSizeBytes - bufferIndex))
 				{
@@ -777,7 +777,7 @@ void JudpInterface::recvThreadRun()
 			}
 			else
 			{
-				if(!receiveCompressedMessage(rxMessage, hcData, packet->buffer + bufferIndex, packet->bufferSizeBytes - bufferIndex))
+				if(!receiveCompressedMessage(rxMessage, &hcData, packet->buffer + bufferIndex, packet->bufferSizeBytes - bufferIndex))
 				{
 					// Error receiving message
 					jausMessageDestroy(rxMessage);
@@ -826,7 +826,6 @@ void JudpInterface::recvThreadRun()
 
 			// Send to Communications manager
 			this->commMngr->receiveJausMessage(rxMessage, this);
-			jausMessageDestroy(rxMessage);
 		}
 	}
 
@@ -860,7 +859,7 @@ void JudpInterface::sendUncompressedMessage(JudpTransportData data, JausMessage 
 	int result;
 	int bufferIndex = 0;
 	unsigned int bytesPacked = 0;
-	JudpHeaderCompressionData hcData;
+	JudpHeaderCompressionData hcData = {0};
 
 	packet = datagramPacketCreate();
 	packet->bufferSizeBytes = (int) jausMessageSize(message) + JUDP_PER_PACKET_HEADER_SIZE_BYTES + JUDP_PER_MESSAGE_HEADER_SIZE_BYTES;
@@ -876,7 +875,7 @@ void JudpInterface::sendUncompressedMessage(JudpTransportData data, JausMessage 
 	hcData.headerNumber = 0;
 	hcData.length = 0;
 	hcData.messageLength = message->dataSize + JAUS_HEADER_SIZE_BYTES;
-	bytesPacked += headerCompressionDataToBuffer(&hcData, packet->buffer + bufferIndex, packet->bufferSizeBytes - bufferIndex);
+	bytesPacked += headerCompressionDataToBuffer(&hcData, packet->buffer+bufferIndex, packet->bufferSizeBytes - bufferIndex);
 	if(bytesPacked == 0)
 	{
 		free(packet->buffer);
