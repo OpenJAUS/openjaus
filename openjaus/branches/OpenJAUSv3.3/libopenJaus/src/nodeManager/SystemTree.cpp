@@ -1414,7 +1414,7 @@ bool SystemTree::replaceSubsystem(int subsystemId, JausSubsystem newSubs)
 			}
 		}
 	}
-	removeSubsystem(subsystemId);
+	jausSubsystemDestroy(system[subsystemId]);
 
 	system[subsystemId] = cloneSubs;
 	subsystemCount++;
@@ -1471,7 +1471,18 @@ bool SystemTree::replaceNode(int subsystemId, int nodeId, JausNode newNode)
 		addCmpt->node = cloneNode;
 		jausArrayAdd(cloneNode->components, addCmpt);
 	}
-	removeNode(subsystemId, nodeId);
+
+	for(int i = 0; i < system[subsystemId]->nodes->elementCount; i++)
+	{
+		JausNode node = (JausNode)system[subsystemId]->nodes->elementData[i];
+		if(currentNode->id == node->id)
+		{
+			jausArrayRemoveAt(system[subsystemId]->nodes, i);
+			jausNodeDestroy(node);
+			break;
+		}
+	}
+	
 	cloneNode->subsystem = system[subsystemId];
 	jausArrayAdd(system[subsystemId]->nodes, cloneNode);
 	return true;
