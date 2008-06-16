@@ -324,10 +324,10 @@ void* ojCmptThread(void *threadData)
 					ojCmptProcessMessage(ojCmpt, rxMessage);
 				}
 				
-				// Always check for messages on incomming SC queues
+				// Always check for messages on incoming SC queues
 				for(i=0; i<OJ_CMPT_MAX_INCOMING_SC_COUNT; i++)
 				{
-					if(ojCmpt->inConnection[i] && ojCmpt->inConnection[i]->isActive) // Attempt to process incomming message
+					if(ojCmpt->inConnection[i] && ojCmpt->inConnection[i]->isActive) // Attempt to process incoming message
 					{
 						if(scManagerReceiveServiceConnection(ojCmpt->nmi, ojCmpt->inConnection[i], &rxMessage))
 						{
@@ -482,13 +482,13 @@ JausBoolean ojCmptIsOutgoingScActive(OjCmpt ojCmpt, unsigned short commandCode)
 	return scManagerQueryActiveMessage(ojCmpt->nmi, commandCode);
 }
 
-// Incomming Service Connections
+// Incoming Service Connections
 void ojCmptManageServiceConnections(OjCmpt ojCmpt)
 {
 	int i = 0;
 	double time = ojGetTimeSec();
 	
-	// Manage Incomming Connections
+	// Manage Incoming Connections
 	for(i=0; i<OJ_CMPT_MAX_INCOMING_SC_COUNT; i++)
 	{
 		// If not active then attempt to initiate SC

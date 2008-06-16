@@ -97,10 +97,10 @@ ServiceConnectionManager scManagerCreate(void)
 	}
 	
 	scm->supportedScMsgList = NULL;
-	scm->incommingSc = NULL;
+	scm->incomingSc = NULL;
 	scm->supportedScMsgCount = 0;
 	scm->outgoingScCount = 0;
-	scm->incommingScCount = 0;
+	scm->incomingScCount = 0;
 	
 	retVal = pthread_mutex_init(&scm->mutex, NULL);
 	if(retVal != 0)
@@ -154,7 +154,7 @@ void scManagerProcessConfirmScMessage(NodeManagerInterface nmi, ConfirmServiceCo
 	
 	pthread_mutex_lock(&nmi->scm->mutex);
 	
-	sc = nmi->scm->incommingSc;
+	sc = nmi->scm->incomingSc;
 	
 	while(sc)
 	{
@@ -181,10 +181,10 @@ void scManagerProcessConfirmScMessage(NodeManagerInterface nmi, ConfirmServiceCo
 				}
 				else
 				{
-					nmi->scm->incommingSc = sc->nextSc;
+					nmi->scm->incomingSc = sc->nextSc;
 					sc->nextSc = NULL;
 				}
-				nmi->scm->incommingScCount--;
+				nmi->scm->incomingScCount--;
 			}
 			
 			pthread_mutex_unlock(&nmi->scm->mutex);
@@ -507,7 +507,7 @@ void scManagerProcessUpdatedSubystem(NodeManagerInterface nmi, JausSubsystem sub
 	}
 
 	prevSc = NULL;
-	sc = nmi->scm->incommingSc;
+	sc = nmi->scm->incomingSc;
 	while(sc)
 	{
 		//if(!ssManagerCheckAddress(subsystem, sc->address) )
@@ -527,11 +527,11 @@ void scManagerProcessUpdatedSubystem(NodeManagerInterface nmi, JausSubsystem sub
 			}
 			else
 			{
-				nmi->scm->incommingSc = sc->nextSc;
+				nmi->scm->incomingSc = sc->nextSc;
 				sc->nextSc = NULL;
-				sc = nmi->scm->incommingSc;
+				sc = nmi->scm->incomingSc;
 			}
-			nmi->scm->incommingScCount--;
+			nmi->scm->incomingScCount--;
 		}
 		else
 		{
@@ -788,7 +788,7 @@ JausBoolean scManagerCreateServiceConnection(NodeManagerInterface nmi, ServiceCo
 	
 	pthread_mutex_lock(&nmi->scm->mutex);
 	
-	testSc = nmi->scm->incommingSc;
+	testSc = nmi->scm->incomingSc;
 	
 	if(!sc)
 	{
@@ -807,9 +807,9 @@ JausBoolean scManagerCreateServiceConnection(NodeManagerInterface nmi, ServiceCo
 			}
 			else
 			{
-		        nmi->scm->incommingSc = testSc->nextSc;
+		        nmi->scm->incomingSc = testSc->nextSc;
 			}
-			nmi->scm->incommingScCount--;
+			nmi->scm->incomingScCount--;
 		}
 		
 		prevSc = testSc;
@@ -840,9 +840,9 @@ JausBoolean scManagerCreateServiceConnection(NodeManagerInterface nmi, ServiceCo
 		createServiceConnectionMessageDestroy(createSc);
 
 		// Add the service connection to the front of the incoming service connection list
-		sc->nextSc = nmi->scm->incommingSc;
-		nmi->scm->incommingSc = sc;		
-		nmi->scm->incommingScCount++;
+		sc->nextSc = nmi->scm->incomingSc;
+		nmi->scm->incomingSc = sc;		
+		nmi->scm->incomingScCount++;
 		
 		pthread_mutex_unlock(&nmi->scm->mutex);
 		return JAUS_TRUE;
@@ -871,9 +871,9 @@ JausBoolean scManagerCreateServiceConnection(NodeManagerInterface nmi, ServiceCo
 			createServiceConnectionMessageDestroy(createSc);
 	
 			// Add the service connection to the front of the incoming service connection list
-			sc->nextSc = nmi->scm->incommingSc;
-			nmi->scm->incommingSc = sc;		
-			nmi->scm->incommingScCount++;
+			sc->nextSc = nmi->scm->incomingSc;
+			nmi->scm->incomingSc = sc;		
+			nmi->scm->incomingScCount++;
 		
 			pthread_mutex_unlock(&nmi->scm->mutex);
 			return JAUS_TRUE;
@@ -900,7 +900,7 @@ JausBoolean scManagerTerminateServiceConnection(NodeManagerInterface nmi, Servic
 
 	pthread_mutex_lock(&nmi->scm->mutex);
 	
-	sc = nmi->scm->incommingSc;
+	sc = nmi->scm->incomingSc;
 	
 	while(sc)
 	{
@@ -935,11 +935,11 @@ JausBoolean scManagerTerminateServiceConnection(NodeManagerInterface nmi, Servic
 			}
 			else
 			{
-				nmi->scm->incommingSc = sc->nextSc;
+				nmi->scm->incomingSc = sc->nextSc;
 				sc->nextSc = NULL;
 			}
 			
-			nmi->scm->incommingScCount--;
+			nmi->scm->incomingScCount--;
 			pthread_mutex_unlock(&nmi->scm->mutex);
 			return JAUS_TRUE;
 		}
@@ -960,7 +960,7 @@ JausBoolean scManagerReceiveServiceConnection(NodeManagerInterface nmi, ServiceC
 
 	pthread_mutex_unlock(&nmi->scm->mutex);	
 	
-	sc = nmi->scm->incommingSc;
+	sc = nmi->scm->incomingSc;
 	prevSc = NULL;
 	while(sc)
 	{
@@ -980,10 +980,10 @@ JausBoolean scManagerReceiveServiceConnection(NodeManagerInterface nmi, ServiceC
 				}
 				else
 				{
-					nmi->scm->incommingSc = sc->nextSc;
+					nmi->scm->incomingSc = sc->nextSc;
 					sc->nextSc = NULL;
 				}
-				nmi->scm->incommingScCount--;
+				nmi->scm->incomingScCount--;
 				pthread_mutex_unlock(&nmi->scm->mutex);
 				return JAUS_FALSE;
 			}
@@ -1018,7 +1018,7 @@ void scManagerReceiveMessage(NodeManagerInterface nmi, JausMessage message)
 	
 	pthread_mutex_lock(&nmi->scm->mutex);
 	
-	sc = nmi->scm->incommingSc;
+	sc = nmi->scm->incomingSc;
 	while(sc)
 	{
 		if(sc->commandCode == message->commandCode && jausAddressEqual(sc->address, message->source) )
