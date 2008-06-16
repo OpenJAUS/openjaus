@@ -55,7 +55,7 @@ JAUS_EXPORT JausBoolean ojCmptAddService(OjCmpt ojCmpt, JausUnsignedShort servic
 JAUS_EXPORT JausBoolean ojCmptAddServiceInputMessage(OjCmpt ojCmpt, JausUnsignedShort serviceType, JausUnsignedShort commandCode, JausUnsignedInteger presenceVector);
 JAUS_EXPORT JausBoolean ojCmptAddServiceOutputMessage(OjCmpt ojCmpt, JausUnsignedShort serviceType, JausUnsignedShort commandCode, JausUnsignedInteger presenceVector);
 
-// Incomming Service Connections
+// Incoming Service Connections
 JAUS_EXPORT int ojCmptEstablishSc(OjCmpt ojCmpt, JausUnsignedShort cCode, JausUnsignedInteger pv, JausAddress address, double rateHz, double timeoutSec, int qSize);
 JAUS_EXPORT int ojCmptTerminateSc(OjCmpt ojCmpt, int scIndex);
 JAUS_EXPORT JausBoolean ojCmptIsIncomingScActive(OjCmpt ojCmpt, int scIndex);

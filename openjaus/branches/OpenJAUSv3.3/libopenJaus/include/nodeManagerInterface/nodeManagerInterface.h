@@ -101,10 +101,10 @@ typedef SupportedScMessageStruct *SupportedScMessage;
 typedef struct
 {
 	SupportedScMessage supportedScMsgList;
-	ServiceConnection incommingSc;
+	ServiceConnection incomingSc;
 	int supportedScMsgCount;
 	int outgoingScCount;
-	int incommingScCount;
+	int incomingScCount;
 	pthread_mutex_t mutex;
 }ServiceConnectionManagerStruct;
 
