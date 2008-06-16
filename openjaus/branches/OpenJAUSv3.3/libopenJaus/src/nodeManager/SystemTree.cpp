@@ -1289,6 +1289,10 @@ bool SystemTree::removeNode(int subsystemId, int nodeId)
 			if(nodeId == node->id)
 			{
 				jausArrayRemoveAt(subs->nodes, i);
+
+				SystemTreeEvent *e = new SystemTreeEvent(SystemTreeEvent::NodeRemoved, node);
+				this->handleEvent(e);
+
 				jausNodeDestroy(node);
 				return true;
 			}
@@ -1313,6 +1317,10 @@ bool SystemTree::removeSubsystem(int subsystemId)
 	if(subs)
 	{
 		system[subsystemId] = NULL;
+
+		SystemTreeEvent *e = new SystemTreeEvent(SystemTreeEvent::SubsystemRemoved, subs);
+		this->handleEvent(e);
+
 		jausSubsystemDestroy(subs);
 		subsystemCount--;
 		return true;
