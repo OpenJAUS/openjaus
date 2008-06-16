@@ -79,6 +79,11 @@
 #include "command/platform/setVelocityStateMessage.h"
 #include "command/platform/setGlobalPathSegmentMessage.h"
 #include "command/platform/setLocalPathSegmentMessage.h"
+#include "command/planning/abortMissionMessage.h"
+#include "command/planning/pauseMissionMessage.h"
+#include "command/planning/removeMessagesMessage.h"
+#include "command/planning/resumeMissionMessage.h"
+#include "command/planning/runMissionMessage.h"
 #include "command/worldModel/createVksObjectsMessage.h"
 #include "command/worldModel/deleteVksObjectsMessage.h"
 #include "command/worldModel/setVksFeatureClassMetadataMessage.h"
@@ -89,6 +94,7 @@
 #include "command/event/createEventMessage.h"
 #include "command/event/updateEventMessage.h"
 #include "command/event/rejectEventRequestMessage.h"
+
 
 // Inform Class
 #include "inform/core/reportComponentAuthorityMessage.h"
@@ -127,6 +133,8 @@
 #include "inform/platform/reportPathSegmentCountMessage.h"
 #include "inform/platform/reportGlobalPathSegmentMessage.h"
 #include "inform/platform/reportLocalPathSegmentMessage.h"
+#include "inform/planning/reportMissionStatusMessage.h"
+#include "inform/planning/reportSpoolingPreferenceMessage.h"
 #include "inform/dynamicConfiguration/reportIdentificationMessage.h"
 #include "inform/dynamicConfiguration/reportConfigurationMessage.h"
 #include "inform/dynamicConfiguration/reportServicesMessage.h"
@@ -177,6 +185,8 @@
 #include "query/platform/queryPathSegmentCountMessage.h"
 #include "query/platform/queryGlobalPathSegmentMessage.h"
 #include "query/platform/queryLocalPathSegmentMessage.h"
+#include "query/planning/queryMissionStatusMessage.h"
+#include "query/planning/querySpoolingPreferenceMessage.h"
 #include "query/communications/queryHeartbeatPulseMessage.h"
 #include "query/dynamicConfiguration/queryIdentificationMessage.h"
 #include "query/dynamicConfiguration/queryConfigurationMessage.h"
