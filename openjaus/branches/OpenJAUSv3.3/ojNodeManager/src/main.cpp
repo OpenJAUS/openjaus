@@ -252,7 +252,6 @@ int main(int argc, char *args)
 	{
 		bzero(choice, 8);
 		count = read(0, &choice, 8);
-		//printf("%d %d %d %d %d %d %d %d %d\n", count, choice[0], choice[1], choice[2], choice[3], choice[4], choice[5], choice[6], choice[7]);
 		if(count == 1 && choice[0] == 27) // ESC
 		{
 			running = false;

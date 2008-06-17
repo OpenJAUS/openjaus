@@ -337,7 +337,7 @@ void *heartbeatThread(void *threadArgument)
 		if( (ojGetTimeSec() - NODE_MANAGER_TIMEOUT_SEC) > nmi->timestamp)
 		{
 			// TODO: Capture Error
-			printf("libNodeManager: Node Manager Has Timed Out\n");
+			//printf("libNodeManager: Node Manager Has Timed Out\n");
 			//nmi->cmpt->state = JAUS_FAILURE_STATE;
 			break;
 		}
@@ -422,7 +422,6 @@ void *receiveThread(void *threadArgument)
 				}
 				pthread_cond_signal(&nmi->recvCondition);
 				nmi->receiveCount++;
-				//printf("NMI: Receive Count: %d\n", nmi->receiveCount);
 			}
 			else
 			{
