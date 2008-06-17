@@ -84,6 +84,8 @@
 #include "command/planning/removeMessagesMessage.h"
 #include "command/planning/resumeMissionMessage.h"
 #include "command/planning/runMissionMessage.h"
+#include "command/planning/spoolMissionMessage.h"
+#include "command/planning/replaceMessagesMessage.h"
 #include "command/worldModel/createVksObjectsMessage.h"
 #include "command/worldModel/deleteVksObjectsMessage.h"
 #include "command/worldModel/setVksFeatureClassMetadataMessage.h"
