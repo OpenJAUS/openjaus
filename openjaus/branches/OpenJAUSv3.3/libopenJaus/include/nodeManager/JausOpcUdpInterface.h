@@ -83,7 +83,7 @@
 
 static const std::string OPC_UDP_DEFAULT_COMPONENT_IP = "127.0.0.1"; // per OpenJAUS Nodemanager Interface document
 static const std::string OPC_UDP_DEFAULT_SUBSYSTEM_MULTICAST_GROUP = "224.1.0.1"; // per OPC Convention
-static const std::string OPC_UDP_DEFAULT_NODE_MULTICAST_GROUP = "224.1.0.2"; // per OPC Convention
+static const std::string OPC_UDP_DEFAULT_NODE_MULTICAST_GROUP = "225.1.0.1"; // per OPC Convention
 
 extern "C" void *OpcUdpRecvThread(void *);
 

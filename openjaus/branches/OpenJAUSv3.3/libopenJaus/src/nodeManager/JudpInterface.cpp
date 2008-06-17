@@ -904,10 +904,25 @@ bool JudpInterface::receiveUncompressedMessage(JausMessage rxMessage, unsigned c
 
 bool JudpInterface::receiveCompressedMessage(JausMessage rxMessage, JudpHeaderCompressionData *hcData, unsigned char *buffer, unsigned int bufferSizeBytes)
 {
-	ErrorEvent *e = new ErrorEvent(ErrorEvent::Message, __FUNCTION__, __LINE__, "Header Compression not yet supported!");
-	this->eventHandler->handleEvent(e);
+	ErrorEvent *e;
 
-	return false;
+	switch(hcData->flags)
+	{
+		case JUDP_HC_ENGAGE_COMPRESSION:
+			// No support for Header Compression, but we can still receive these messages
+			return jausMessageFromBuffer(rxMessage, buffer, bufferSizeBytes)? true : false;
+
+		case JUDP_HC_COMPRESSION_ACKNOWLEDGE:
+		case JUDP_HC_COMPRESSED_MESSAGE:
+			e = new ErrorEvent(ErrorEvent::Message, __FUNCTION__, __LINE__, "Header Compression not yet supported!");
+			this->eventHandler->handleEvent(e);
+			return false;
+		
+		default:
+			e = new ErrorEvent(ErrorEvent::Message, __FUNCTION__, __LINE__, "Unknown Header Compression Flag!");
+			this->eventHandler->handleEvent(e);
+			return false;
+	}
 }
 
 
