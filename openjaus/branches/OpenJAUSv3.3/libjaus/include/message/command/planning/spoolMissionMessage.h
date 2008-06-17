@@ -45,7 +45,7 @@
 #define SPOOL_MISSION_MESSAGE_H
 
 #include "jaus.h"
-
+#include "type/jausMissionTask.h"
 typedef struct
 {
 	// Include all parameters from a JausMessage structure:
@@ -84,8 +84,34 @@ typedef struct
 	
 	JausUnsignedShort sequenceNumber;
 
-	// MESSAGE DATA MEMBERS GO HERE
-	
+
+  //MESSAGE DATA MEMBERS
+  JausUnsignedShort missionId; //Field 1: identifies the unique 
+                               //Mission to be spooled or manipulated.                       
+  JausByte appendFlag;         //Field 2: 0 = replace current mission with
+                               //new mission. 1= Append new mission to
+                               //current mission.
+  JausMissionTask naryTree;    //Fields [3 to 8+n+3n] are dynamcially allocated
+                               //as required to form the tree levels where level
+                               //zero consists of only one task.  Tree levels
+                               //grow down from a task as children. 
+                               //Each task ends up having a unique taskId and:
+                               //  * 1 to N messages each with a uid and
+                               //    blocking flag.
+                               //  * 1 to M Children (tasks) each with unique
+                               //    taskId and messages of their own.
+                               //NOTE: Field 4 (number of Children) is stored
+                               //in the JausArray for JausMissionTaskStruct 
+                               //element children.
+                               //NOTE: Field 4+n (child indexs) are not stored
+                               //in a structure.  For offsets to task
+                               //children data in the spool mission message
+                               //see the jausMissionTask.cpp functions.
+                               //NOTE: Field 5+n (number of messages in task)
+                               //is stored in the JausArray for
+                               //JausMissionTaskStruct element commands.  Also
+                               //see JausMissionCommand.
+
 }SpoolMissionMessageStruct;
 
 typedef SpoolMissionMessageStruct* SpoolMissionMessage;

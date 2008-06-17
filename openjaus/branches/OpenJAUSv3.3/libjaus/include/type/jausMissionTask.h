@@ -31,74 +31,51 @@
  *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
  *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ****************************************************************************/
-// File Name: jaus.h
+// File Name: JausMissionTask.h
 //
-// Written By: Danny Kent (jaus AT dannykent DOT com), Tom Galluzzo (galluzzo AT gmail DOT com)
+// Written By: Danny Kent (jaus AT dannykent DOT com)
 //
 // Version: 3.3 BETA
 //
 // Date: 04/15/08
 //
-// Description: This file is a wrapper for all other headers in jaus and will provide the user with access 
-// to the complete jaus library
+// Description: This file describes all the functionality associated with a JausMissionTask. 
+//                JausMissionTasks are used to support the storage and transfer of mission through the planning message set.
+// Modified by: Luke Roseberry (MountainTop Technology, Inc) to add Planner
+//              messages to OpenJAUS.
+#ifndef JAUS_MISSION_TASK_H
+#define JAUS_MISSION_TASK_H
 
-#ifndef JAUS_H
-#define JAUS_H
-
-#ifdef __cplusplus
-extern "C" 
-{
-#endif
-
-#ifdef WIN32
-	#define JAUS_EXPORT	__declspec(dllexport)
-#else
-	#define JAUS_EXPORT
-#endif
-
-#define JAUS_LIBRARY_VERSION	"3.3.0"
-
-typedef enum
-{
-	JAUS_FALSE	= 0,
-	JAUS_TRUE	= 1
-}JausBoolean;
-
-#define JAUS_IDENTIFICATION_LENGTH_BYTES	80
-				
-#define JAUS_PI				3.14159265358979323846
-#define JAUS_HALF_PI		1.570796326794897
-#define JAUS_DEG_PER_RAD    57.2957795131
-#define JAUS_RAD_PER_DEG	1.745329251994328e-2
-
-// Define Target System Endianess Here
-// x386
-#if defined(__i386__) || defined(i386) || defined(_M_IX86) || defined(_X86_) || defined(__arm__)
-	#define JAUS_LITTLE_ENDIAN 1
-#elif defined(__ppc__) || defined(__powerpc) || defined(__powerpc__) || defined(__POWERPC__) || defined(_M_PPC)
-	#define JAUS_BIG_ENDIAN 1
-#else
-	#error "Please define system endianess in jaus.h. #define either JAUS_LITTLE_ENDIAN or JAUS_BIG_ENDIAN"
-#endif
-
-#include "jausArray.h"
-#include "type/jausType.h"
-
-#include "jausAddress.h"
-#include "jausState.h"
-#include "jausSubsystem.h"
-#include "jausNode.h"
-#include "jausComponent.h"
-#include "jausService.h"
-#include "jausPayloadInterface.h"
-
-#include "message/jausMessageHeaders.h"
+#include "jaus.h"
+#include "string.h"
 
 #include "type/jausMissionCommand.h"
-#include "type/jausMissionTask.h"
 
-#ifdef __cplusplus
-}
-#endif
+// ************************************************************************************************************************************
+//			JausMissionTask
+// ************************************************************************************************************************************
+typedef struct
+{
+	JausUnsignedShort taskId;		// Unique Id for this task
+  JausArray commands; //List of JausMissionCommand structures for messages
+  JausArray children; //List of JausMissionTask structures signifying the children tasks of this task
+  
+}JausMissionTaskStruct;
+typedef JausMissionTaskStruct *JausMissionTask;
 
-#endif // JAUS_H
+// JausMissionTask Constructor
+JAUS_EXPORT JausMissionTask missionTaskCreate(void);
+
+// JausMissionTask Constructor (from Buffer)
+JAUS_EXPORT JausBoolean missionTaskFromBuffer(JausMissionTask *messagePointer, unsigned char *buffer, unsigned int bufferSizeBytes);
+
+// JausMissionTask To Buffer
+JAUS_EXPORT JausBoolean missionTaskToBuffer(JausMissionTask task, unsigned char *buffer, unsigned int bufferSizeBytes, unsigned int messageOffset);
+
+// JausMissionTask Destructor
+JAUS_EXPORT void missionTaskDestroy(JausMissionTask object);
+
+// JausMissionTask Buffer Size
+JAUS_EXPORT unsigned int missionTaskSize(JausMissionTask object);
+
+#endif // JAUSMISSIONTASK_H
