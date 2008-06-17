@@ -368,30 +368,6 @@ void defaultJausMessageProcessor(JausMessage message, NodeManagerInterface nmi, 
 
 			reportIdentificationMessageDestroy(reportIdentification);
 			
-			//TODO: Change the way the interface between the Cmpt and NM works for subsystem tables
-		    switch(message->source->component)
-		    {
-		        case JAUS_NODE_MANAGER:
-		        	if(message->source->subsystem == cmpt->address->subsystem && message->source->node == cmpt->address->node)
-		        	{
-						// TODO: Add event setup for ReportConfiguration of system tree
-						//txMessage = queryConfigurationMessageToJausMessage(queryConfMsg);
-						//nodeManagerSend(nmi, txMessage);
-						//jausMessageDestroy(txMessage);
-						//queryConfigurationMessageDestroy(queryConfMsg);
-						//jausMessageDestroy(message);
-//						return;		// NMJ
-		        	}
-		        	else
-		        	{
-//						return;		// NMJ
-		        	}
-		            break;
-		            
-		        default:
-		        	break;
-//		        	return; // Do not bother to query any other component for its config	// NMJ
-		    }
 		    jausMessageDestroy(message);	// NMJ
 			break;
 			

@@ -192,8 +192,6 @@ void OjUdpComponentInterface::run()
 	int bytesRecv = 0;
 	char buf[256] = {0};
 	int componentId = 0;
-	//int componentMessagePort = 0;
-	//int instanceId = 0;
 	int commandCode = 0;
 	int serviceType = 0;
 
@@ -212,7 +210,6 @@ void OjUdpComponentInterface::run()
 			switch(packet->buffer[0])
 			{
 				case CHECK_IN:
-					// System.out.println("ComponentInterface: Received Query JAUS address command from: " + JausComponent.getName(componentId));
 					componentId = (packet->buffer[1] & 0xFF);
 					if(componentId < JAUS_MINIMUM_COMPONENT_ID || componentId > JAUS_MAXIMUM_COMPONENT_ID)
 					{
@@ -232,8 +229,6 @@ void OjUdpComponentInterface::run()
 						// TODO: Send back checkin error reply (no available instance)							
 						break;
 					}
-				
-					//componentMessagePort = (packet->buffer[2] & 0xFF) + ((packet->buffer[3] & 0xFF) << 8);
 
 					memset(packet->buffer, 0, OJ_UDP_INTERFACE_MESSAGE_SIZE_BYTES);
 					packet->buffer[0] = REPORT_ADDRESS;
@@ -274,7 +269,6 @@ void OjUdpComponentInterface::run()
 					
 				case GET_COMPONENT_ADDRESS_LIST:
 					componentId  = packet->buffer[1] & 0xFF;
-					//	
 					
 					address = systemTree->lookUpAddress(JAUS_ADDRESS_WILDCARD_OCTET, JAUS_ADDRESS_WILDCARD_OCTET, componentId, JAUS_ADDRESS_WILDCARD_OCTET);
 					memset(packet->buffer, 0, OJ_UDP_INTERFACE_MESSAGE_SIZE_BYTES);
@@ -286,11 +280,6 @@ void OjUdpComponentInterface::run()
 						packet->buffer[2] = (unsigned char)(JAUS_INVALID_COMPONENT_ID & 0xFF);
 						packet->buffer[3] = (unsigned char)(JAUS_INVALID_NODE_ID & 0xFF);
 						packet->buffer[4] = (unsigned char)(JAUS_INVALID_SUBSYSTEM_ID & 0xFF);
-//						packet->buffer[1] = (unsigned char)(JAUS_INVALID_SUBSYSTEM_ID & 0xFF);
-//						packet->buffer[2] = (unsigned char)(JAUS_INVALID_NODE_ID & 0xFF);
-//						packet->buffer[3] = (unsigned char)(JAUS_INVALID_COMPONENT_ID & 0xFF);
-//						packet->buffer[4] = (unsigned char)(JAUS_INVALID_INSTANCE_ID & 0xFF);
-						//if(log.isDebugEnabled())log.debug("Get address for component ID: " + componentId + " returning: 0.0.0.0");
 					}
 					else
 					{
@@ -298,25 +287,17 @@ void OjUdpComponentInterface::run()
 						packet->buffer[2] = (unsigned char)(address->component & 0xFF);
 						packet->buffer[3] = (unsigned char)(address->node & 0xFF);
 						packet->buffer[4] = (unsigned char)(address->subsystem & 0xFF);
-//						packet->buffer[1] = (unsigned char)(address->subsystem & 0xFF);
-//						packet->buffer[2] = (unsigned char)(address->node & 0xFF);
-//						packet->buffer[3] = (unsigned char)(address->component & 0xFF);
-//						packet->buffer[4] = (unsigned char)(address->instance & 0xFF);
-						//if(log.isDebugEnabled())log.debug("Get address for component ID: " + componentId + " returning: " + address);
 					}
 					datagramSocketSend(this->socket, packet);
 					jausAddressDestroy(address);
-				break;
-					
-					
-
+					break;
+	
 				case LOOKUP_ADDRESS:
 					lookupAddress = jausAddressCreate();
 					lookupAddress->instance = (packet->buffer[1] & 0xFF);
 					lookupAddress->component = (packet->buffer[2] & 0xFF);
 					lookupAddress->node = (packet->buffer[3] & 0xFF);
 					lookupAddress->subsystem = (packet->buffer[4] & 0xFF);						
-					//if(log.isDebugEnabled())log.debug("Looking Up Address: " + address);
 
 					memset(packet->buffer, 0, OJ_UDP_INTERFACE_MESSAGE_SIZE_BYTES);
 					packet->buffer[0] = LOOKUP_ADDRESS_RESPONSE;
@@ -325,12 +306,10 @@ void OjUdpComponentInterface::run()
 					if(address && jausAddressIsValid(address))
 					{
 						packet->buffer[5] = (unsigned char) JAUS_TRUE;
-						//if(log.isDebugEnabled())log.debug("Lookup Address Found: " + address);
 					}
 					else
 					{
 						packet->buffer[5] = (unsigned char) JAUS_FALSE;					
-						//if(log.isDebugEnabled())log.debug("Lookup Address NOT Found: " + address);
 					}
 					
 					packet->buffer[1] = (unsigned char) (address->instance & 0xFF);
@@ -339,52 +318,33 @@ void OjUdpComponentInterface::run()
 					packet->buffer[4] = (unsigned char) (address->subsystem & 0xFF);
 					datagramSocketSend(this->socket, packet);
 					
-					while (address)								// NMJ
+					while(address)								// NMJ
 					{											// NMJ
 						currentAddress = address;				// NMJ
 						address = address->next;				// NMJ
 						jausAddressDestroy(currentAddress);		// NMJ
-//						jausAddressDestroy(address);			// NMJ
 					}											// NMJ
 					
 					jausAddressDestroy(lookupAddress);
 					break;
 
 				case LOOKUP_SERVICE_ADDRESS:
-// 					if(true)
-// 					{
-// 						sprintf(buf, "Accepted LSA");
-// 						sprintf(buf, "LSA value. CC: 0x%02X\n", LOOKUP_SERVICE_ADDRESS);
-// 						ErrorEvent *e = new ErrorEvent(ErrorEvent::Warning, __FUNCTION__, __LINE__, buf);
-// 						this->eventHandler->handleEvent(e);
-// 					}
 					lookupAddress = jausAddressCreate();
 					lookupAddress->instance = (packet->buffer[1] & 0xFF);
 					lookupAddress->component = (packet->buffer[2] & 0xFF);
 					lookupAddress->node = (packet->buffer[3] & 0xFF);
 					lookupAddress->subsystem = (packet->buffer[4] & 0xFF);
-// 				//	lookupAddress->instance(packet->buffer[1] & 0xFF);
-// 				//	lookupAddress->component(packet->buffer[2] & 0xFF);
-// 				//	lookupAddress->node(packet->buffer[3] & 0xFF);
-// 				//	lookupAddress->subsystem(packet->buffer[4] & 0xFF);						
-// 				//	
+
 					commandCode = (packet->buffer[5] & 0xFF) + ((packet->buffer[6] & 0xFF) << 8);
 					serviceType = (packet->buffer[7] & 0xFF);
-// 					//if(log.isDebugEnabled())log.debug("Looking Up Address: " + address);
-// 
+
 					memset(packet->buffer, 0, OJ_UDP_INTERFACE_MESSAGE_SIZE_BYTES);
 					packet->buffer[0] = LOOKUP_SERVICE_ADDRESS_RESPONSE;
 					
 					address = systemTree->lookUpServiceInSystem(commandCode, serviceType);
 					if(address && jausAddressIsValid(address)) 
-					//if(subsystemTable.lookUpServiceAddressInSystem(address, commandCode, serviceCommandType))
 					{
-// 						sprintf(buf, "Got a good address.");
-// 						ErrorEvent *e = new ErrorEvent(ErrorEvent::Warning, __FUNCTION__, __LINE__, buf);
-// 						this->eventHandler->handleEvent(e);
-
 						packet->buffer[5] = (unsigned char) JAUS_TRUE;
-						//if(log.isDebugEnabled())log.debug("Lookup Address Found: " + address);
 						packet->buffer[1] = (unsigned char) (address->instance & 0xFF);
 						packet->buffer[2] = (unsigned char) (address->component & 0xFF);
 						packet->buffer[3] = (unsigned char) (address->node & 0xFF);
@@ -392,10 +352,6 @@ void OjUdpComponentInterface::run()
 					}
 					else
 					{
-// 						sprintf(buf, "Invalid address.");
-// 						ErrorEvent *e = new ErrorEvent(ErrorEvent::Warning, __FUNCTION__, __LINE__, buf);
-// 						this->eventHandler->handleEvent(e);
-
 						packet->buffer[5] = (unsigned char) JAUS_FALSE;
 					}
 
@@ -407,13 +363,6 @@ void OjUdpComponentInterface::run()
 						jausAddressDestroy(lookupAddress);
 					}
 					
-// 					packet->buffer[1] = (unsigned char) (address->instance & 0xFF);
-// 					packet->buffer[2] = (unsigned char) (address->component & 0xFF);
-// 					packet->buffer[3] = (unsigned char) (address->node & 0xFF);
-// 					packet->buffer[4] = (unsigned char) (address->subsystem & 0xFF);
-// 					datagramSocketSend(this->socket, packet);
-// 					jausAddressDestroy(address);
-// 					jausAddressDestroy(lookupAddress);
 					break;
 
 				//case InterfaceMessage.NODE_MANAGER_LOOKUP_SERVICE_ADDRESS_LIST:
@@ -453,7 +402,7 @@ void OjUdpComponentInterface::run()
 				//		//System.out.println("CmptInterface: Get address for component ID: " + componentId + " returning: " + address);
 				//	}
 				//	
-		  //  		replyBuffer = new byte[8];
+				//  replyBuffer = new byte[8];
 				//	replyMessage.pack(replyBuffer);
 				//	outPacket = new DatagramPacket(replyBuffer, replyBuffer.length, packet.getAddress(), packet.getPort());
 				//	socket.send(outPacket);
@@ -461,7 +410,6 @@ void OjUdpComponentInterface::run()
 				    
 				default:
 					sprintf(buf, "Unknown Interface Message Received. CC: 0x%02X\n", packet->buffer[0]);
-					//sprintf(buf, "LSA value. CC: 0x%02X\n", LOOKUP_SERVICE_ADDRESS);
 					ErrorEvent *e = new ErrorEvent(ErrorEvent::Warning, __FUNCTION__, __LINE__, buf);
 					this->eventHandler->handleEvent(e);
 					break;

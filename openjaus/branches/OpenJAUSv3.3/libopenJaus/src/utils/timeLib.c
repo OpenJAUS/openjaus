@@ -64,27 +64,6 @@
 
 	double ojGetTimeSec(void)
 	{
-		//static LARGE_INTEGER freq = {0};
-		//static LARGE_INTEGER perfStart = {0};
-		//static double tStart = 0;
-		//LARGE_INTEGER perfTime;
-		//SYSTEMTIME st;
-
-		//if(tStart)
-		//{
-		//	QueryPerformanceCounter(&perfTime);
-		//}
-		//else
-		//{
-		//	GetSystemTime(&st);
-		//	tStart = time(NULL) + st.wMilliseconds / 1000.0;
-		//	QueryPerformanceCounter(&perfStart);
-		//	QueryPerformanceCounter(&perfTime);
-		//	QueryPerformanceFrequency(&freq); 			
-		//}
-		//
-		//return tStart + ((double)perfTime.QuadPart - (double)perfStart.QuadPart) / (double)freq.QuadPart;
-		
 		// TODO: the following code could have a 1 second inaccuracy if a second transition occurs after the GetSystemTime call
 		SYSTEMTIME st;
 		GetSystemTime(&st);

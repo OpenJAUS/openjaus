@@ -479,7 +479,6 @@ void scManagerProcessUpdatedSubystem(NodeManagerInterface nmi, JausSubsystem sub
 		sc = supportedScMsg->scList;
 		while(sc)
 		{
-			//if(!ssManagerCheckAddress(subsystem, sc->address) )
 			if(	!nodeManagerVerifyAddress(nmi, sc->address) )
 			{
 				// Remove sc from list
@@ -510,7 +509,6 @@ void scManagerProcessUpdatedSubystem(NodeManagerInterface nmi, JausSubsystem sub
 	sc = nmi->scm->incomingSc;
 	while(sc)
 	{
-		//if(!ssManagerCheckAddress(subsystem, sc->address) )
 		if( !nodeManagerVerifyAddress(nmi, sc->address) )
 		{
 			// Remove sc from list
