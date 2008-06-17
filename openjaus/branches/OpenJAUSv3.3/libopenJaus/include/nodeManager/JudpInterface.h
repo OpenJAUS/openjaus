@@ -96,8 +96,8 @@
 #define JUDP_DEFAULT_SUBSYSTEM_HEADER_COMPRESSION	false
 
 static const std::string JUDP_DEFAULT_COMPONENT_IP = "127.0.0.1"; // Per OpenJAUS Node Manager Interface document
-static const std::string JUDP_DEFAULT_SUBSYSTEM_MULTICAST_GROUP = "239.255.0.1"; // per AS5669
-static const std::string JUDP_DEFAULT_NODE_MULTICAST_GROUP = "239.255.0.2"; // per AS5669 with slight modification
+static const std::string JUDP_DEFAULT_SUBSYSTEM_MULTICAST_GROUP = "224.1.0.1"; // per AS5669
+static const std::string JUDP_DEFAULT_NODE_MULTICAST_GROUP = "225.1.0.1"; // per AS5669 with slight modification
 
 extern "C" void *JudpRecvThread(void *);
 
