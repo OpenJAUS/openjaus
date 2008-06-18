@@ -73,12 +73,12 @@ static void dataInitialize(SetCameraPoseMessage message)
 	message->xAngularMode = POSITION_MODE;
 	message->yAngularMode = POSITION_MODE;
 	message->zAngularMode = POSITION_MODE;
-	message->xLinearPositionOrRatePercent = newJausDouble(0); // Scaled Short (0, 100)
-	message->yLinearPositionOrRatePercent = newJausDouble(0); // Scaled Short (0, 100)
-	message->zLinearPositionOrRatePercent = newJausDouble(0); // Scaled Short (0, 100)
-	message->xAngularPositionOrRatePercent = newJausDouble(0); // Scaled Short (0, 100)
-	message->yAngularPositionOrRatePercent = newJausDouble(0); // Scaled Short (0, 100)
-	message->zAngularPositionOrRatePercent = newJausDouble(0); // Scaled Short (0, 100)
+	message->xLinearPositionOrRatePercent = newJausDouble(0); // Scaled Short (-100, 100)
+	message->yLinearPositionOrRatePercent = newJausDouble(0); // Scaled Short (-100, 100)
+	message->zLinearPositionOrRatePercent = newJausDouble(0); // Scaled Short (-100, 100)
+	message->xAngularPositionOrRatePercent = newJausDouble(0); // Scaled Short (-100, 100)
+	message->yAngularPositionOrRatePercent = newJausDouble(0); // Scaled Short (-100, 100)
+	message->zAngularPositionOrRatePercent = newJausDouble(0); // Scaled Short (-100, 100)
 }
 
 // Destructs the message-specific fields
@@ -124,8 +124,8 @@ static JausBoolean dataFromBuffer(SetCameraPoseMessage message, unsigned char *b
 			if(!jausShortFromBuffer(&tempShort, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 			index += JAUS_SHORT_SIZE_BYTES;
 			
-			// Scaled Short (0, 100)
-			message->xLinearPositionOrRatePercent = jausShortToDouble(tempShort, 0, 100);
+			// Scaled Short (-100, 100)
+			message->xLinearPositionOrRatePercent = jausShortToDouble(tempShort, -100, 100);
 		}
 
 		//yLinearPositionOrRatePercent
@@ -135,8 +135,8 @@ static JausBoolean dataFromBuffer(SetCameraPoseMessage message, unsigned char *b
 			if(!jausShortFromBuffer(&tempShort, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 			index += JAUS_SHORT_SIZE_BYTES;
 			
-			// Scaled Short (0, 100)
-			message->yLinearPositionOrRatePercent = jausShortToDouble(tempShort, 0, 100);
+			// Scaled Short (-100, 100)
+			message->yLinearPositionOrRatePercent = jausShortToDouble(tempShort, -100, 100);
 		}
 
 		//zLinearPositionOrRatePercent
@@ -146,8 +146,8 @@ static JausBoolean dataFromBuffer(SetCameraPoseMessage message, unsigned char *b
 			if(!jausShortFromBuffer(&tempShort, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 			index += JAUS_SHORT_SIZE_BYTES;
 			
-			// Scaled Short (0, 100)
-			message->zLinearPositionOrRatePercent = jausShortToDouble(tempShort, 0, 100);
+			// Scaled Short (-100, 100)
+			message->zLinearPositionOrRatePercent = jausShortToDouble(tempShort, -100, 100);
 		}
 		
 		//xAngularPositionOrRatePercent
@@ -157,8 +157,8 @@ static JausBoolean dataFromBuffer(SetCameraPoseMessage message, unsigned char *b
 			if(!jausShortFromBuffer(&tempShort, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 			index += JAUS_SHORT_SIZE_BYTES;
 			
-			// Scaled Short (0, 100)
-			message->xAngularPositionOrRatePercent = jausShortToDouble(tempShort, 0, 100);
+			// Scaled Short (-100, 100)
+			message->xAngularPositionOrRatePercent = jausShortToDouble(tempShort, -100, 100);
 		}
 
 		//yAngularPositionOrRatePercent
@@ -168,8 +168,8 @@ static JausBoolean dataFromBuffer(SetCameraPoseMessage message, unsigned char *b
 			if(!jausShortFromBuffer(&tempShort, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 			index += JAUS_SHORT_SIZE_BYTES;
 			
-			// Scaled Short (0, 100)
-			message->yAngularPositionOrRatePercent = jausShortToDouble(tempShort, 0, 100);
+			// Scaled Short (-100, 100)
+			message->yAngularPositionOrRatePercent = jausShortToDouble(tempShort, -100, 100);
 		}
 
 		//zAngularPositionOrRatePercent
@@ -179,8 +179,8 @@ static JausBoolean dataFromBuffer(SetCameraPoseMessage message, unsigned char *b
 			if(!jausShortFromBuffer(&tempShort, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 			index += JAUS_SHORT_SIZE_BYTES;
 			
-			// Scaled Short (0, 100)
-			message->zAngularPositionOrRatePercent = jausShortToDouble(tempShort, 0, 100);
+			// Scaled Short (-100, 100)
+			message->zAngularPositionOrRatePercent = jausShortToDouble(tempShort, -100, 100);
 		}
 		
 		return JAUS_TRUE;
@@ -225,8 +225,8 @@ static int dataToBuffer(SetCameraPoseMessage message, unsigned char *buffer, uns
 		//xLinearPositionOrRatePercent
 		if(jausByteIsBitSet(message->presenceVector, JAUS_CAMERA_POSE_PV_X_LINEAR_BIT))
 		{
-			// Scaled Short (0, 100)
-			tempShort = jausShortFromDouble(message->xLinearPositionOrRatePercent, 0, 100);
+			// Scaled Short (-100, 100)
+			tempShort = jausShortFromDouble(message->xLinearPositionOrRatePercent, -100, 100);
 
 			//Pack
 			if(!jausShortToBuffer(tempShort, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -236,8 +236,8 @@ static int dataToBuffer(SetCameraPoseMessage message, unsigned char *buffer, uns
 		//yLinearPositionOrRatePercent
 		if(jausByteIsBitSet(message->presenceVector, JAUS_CAMERA_POSE_PV_Y_LINEAR_BIT))
 		{
-			// Scaled Short (0, 100)
-			tempShort = jausShortFromDouble(message->yLinearPositionOrRatePercent, 0, 100);
+			// Scaled Short (-100, 100)
+			tempShort = jausShortFromDouble(message->yLinearPositionOrRatePercent, -100, 100);
 
 			//pack
 			if(!jausShortToBuffer(tempShort, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -247,8 +247,8 @@ static int dataToBuffer(SetCameraPoseMessage message, unsigned char *buffer, uns
 		//zLinearPositionOrRatePercent
 		if(jausByteIsBitSet(message->presenceVector, JAUS_CAMERA_POSE_PV_Z_LINEAR_BIT))
 		{
-			// Scaled Short (0, 100)
-			tempShort = jausShortFromDouble(message->zLinearPositionOrRatePercent, 0, 100);
+			// Scaled Short (-100, 100)
+			tempShort = jausShortFromDouble(message->zLinearPositionOrRatePercent, -100, 100);
 
 			//pack
 			if(!jausShortToBuffer(tempShort, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -258,8 +258,8 @@ static int dataToBuffer(SetCameraPoseMessage message, unsigned char *buffer, uns
 		//xAngularPositionOrRatePercent
 		if(jausByteIsBitSet(message->presenceVector, JAUS_CAMERA_POSE_PV_X_ANGULAR_BIT))
 		{
-			// Scaled Short (0, 100)
-			tempShort = jausShortFromDouble(message->xAngularPositionOrRatePercent, 0, 100);
+			// Scaled Short (-100, 100)
+			tempShort = jausShortFromDouble(message->xAngularPositionOrRatePercent, -100, 100);
 
 			//pack
 			if(!jausShortToBuffer(tempShort, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -269,8 +269,8 @@ static int dataToBuffer(SetCameraPoseMessage message, unsigned char *buffer, uns
 		//yAngularPositionOrRatePercent
 		if(jausByteIsBitSet(message->presenceVector, JAUS_CAMERA_POSE_PV_Y_ANGULAR_BIT))
 		{
-			// Scaled Short (0, 100)
-			tempShort = jausShortFromDouble(message->yAngularPositionOrRatePercent, 0, 100);
+			// Scaled Short (-100, 100)
+			tempShort = jausShortFromDouble(message->yAngularPositionOrRatePercent, -100, 100);
 
 			//pack
 			if(!jausShortToBuffer(tempShort, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
@@ -280,8 +280,8 @@ static int dataToBuffer(SetCameraPoseMessage message, unsigned char *buffer, uns
 		//zAngularPositionOrRatePercent
 		if(jausByteIsBitSet(message->presenceVector, JAUS_CAMERA_POSE_PV_Z_ANGULAR_BIT))
 		{
-			// Scaled Short (0, 100)
-			tempShort = jausShortFromDouble(message->zAngularPositionOrRatePercent, 0, 100);
+			// Scaled Short (-100, 100)
+			tempShort = jausShortFromDouble(message->zAngularPositionOrRatePercent, -100, 100);
 
 			//pack
 			if(!jausShortToBuffer(tempShort, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
