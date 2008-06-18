@@ -122,12 +122,12 @@ typedef struct
 	JausCameraPoseModeEnum xAngularMode;
 	JausCameraPoseModeEnum yAngularMode;
 	JausCameraPoseModeEnum zAngularMode;
-	JausDouble xLinearPositionOrRatePercent; // Scaled Short (0, 100)
-	JausDouble yLinearPositionOrRatePercent; // Scaled Short (0, 100)
-	JausDouble zLinearPositionOrRatePercent; // Scaled Short (0, 100)
-	JausDouble xAngularPositionOrRatePercent; // Scaled Short (0, 100)
-	JausDouble yAngularPositionOrRatePercent; // Scaled Short (0, 100)
-	JausDouble zAngularPositionOrRatePercent; // Scaled Short (0, 100)
+	JausDouble xLinearPositionOrRatePercent; // Scaled Short (-100, 100)
+	JausDouble yLinearPositionOrRatePercent; // Scaled Short (-100, 100)
+	JausDouble zLinearPositionOrRatePercent; // Scaled Short (-100, 100)
+	JausDouble xAngularPositionOrRatePercent; // Scaled Short (-100, 100)
+	JausDouble yAngularPositionOrRatePercent; // Scaled Short (-100, 100)
+	JausDouble zAngularPositionOrRatePercent; // Scaled Short (-100, 100)
 
 }SetCameraPoseMessageStruct;
 
