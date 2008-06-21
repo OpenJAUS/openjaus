@@ -51,6 +51,7 @@
 #include <string.h>
 #include "jaus.h"
 
+
 static const int commandCode = JAUS_REMOVE_MESSAGES;
 static const int maxDataSizeBytes = 0;
 

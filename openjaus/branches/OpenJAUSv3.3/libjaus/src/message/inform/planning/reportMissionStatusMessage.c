@@ -86,9 +86,9 @@ static unsigned int dataSize(ReportMissionStatusMessage message);
 // Initializes the message-specific fields
 static void dataInitialize(ReportMissionStatusMessage message)
 {
-  message->type = newJausByte(MISSION);
-  message->status = newJausByte(FINISHED);
-  message->secondaryStatus = newJausByte(NON_ERROR_COND);
+  message->type = newJausByte(JAUS_MISSION);
+  message->status = newJausByte(JAUS_FINISHED);
+  message->secondaryStatus = newJausByte(JAUS_NON_ERROR_COND);
   message->missionId = newJausUnsignedShort(DEFAULT_TO_FIRST_MISSION);
   message->taskId = newJausUnsignedShort(DEFAULT_TO_MISSION_SPECIFIED);
   message->taskMsgId = newJausUnsignedShort(DEFAULT_TO_FIRST_MESSAGE_IN_TASK);

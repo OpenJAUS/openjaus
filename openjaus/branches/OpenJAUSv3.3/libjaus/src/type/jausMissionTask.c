@@ -61,7 +61,8 @@ JausMissionTask missionTaskCreate(void)
 		object->taskId = newJausUnsignedShort(0); //Message unique ID
 		object->commands = jausArrayCreate(); //List of JausMissionCommand structures for messages
     object->children = jausArrayCreate(); //List of JausMissionTask structures signifying the children tasks of this task
-		return object;
+		object->bufferOffset = newJausInteger(0); //Internal variable used for ToBuffer processing
+    return object;
 	}
 	else
 	{
@@ -75,10 +76,10 @@ JausBoolean missionTaskFromBuffer(JausMissionTask *taskPointer, unsigned char *b
 	unsigned int index = 0;
 	JausUnsignedShort numChildren = 0;
 	JausUnsignedShort numMessages = 0;
-	JausMissionTask task = NULL;
 	JausUnsignedInteger *childIndex = NULL;
-	JausMissionCommand tempCmd = NULL;
-	JausMissionTask tempTask = NULL;
+	JausMissionTask task;
+    JausMissionTask tempTask;
+    JausMissionCommand tempCmd = NULL;
 	int i = 0;
 
 	task = missionTaskCreate();//(JausMissionTask) malloc(sizeof(JausMissionTaskStruct));
@@ -93,74 +94,74 @@ JausBoolean missionTaskFromBuffer(JausMissionTask *taskPointer, unsigned char *b
 		}
 		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
 
-		// Read the number of child tasks  
-		if(!jausUnsignedShortFromBuffer(&numChildren, buffer+index, bufferSizeBytes-index))
-		{
-			free(task);
-			return JAUS_FALSE;
-		}
-		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+    // Read the number of child tasks  
+    if(!jausUnsignedShortFromBuffer(&numChildren, buffer+index, bufferSizeBytes-index))
+    {
+      free(task);
+      return JAUS_FALSE;
+    }
+    index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
     
-		childIndex = (JausUnsignedInteger *) malloc(JAUS_UNSIGNED_INTEGER_SIZE_BYTES * numChildren);
-
-		for( i = 0; i<numChildren; i++)
-		{
-			// Read a child index 
-			if(!jausUnsignedIntegerFromBuffer(&childIndex[i], buffer+index, bufferSizeBytes-index))
-			{
-				free(task);
-				free(childIndex);
-				return JAUS_FALSE;
-			}
-			index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
-		}
+    childIndex = (JausUnsignedInteger*) malloc(JAUS_UNSIGNED_INTEGER_SIZE_BYTES * numChildren);
     
-		// Read the number of messages 
-		if(!jausUnsignedShortFromBuffer(&numMessages, buffer+index, bufferSizeBytes-index))
-		{
-			free(task);
-			free(childIndex);
-			return JAUS_FALSE;
-		}
-		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+    for( i = 0; i<numChildren; i++)
+    {
+      // Read a child index 
+      if(!jausUnsignedIntegerFromBuffer(&childIndex[i], buffer+index, bufferSizeBytes-index))
+      {
+        free(task);
+        free(childIndex);
+        return JAUS_FALSE;
+      }
+      index += JAUS_UNSIGNED_INTEGER_SIZE_BYTES;
+    }
     
-		// Read the messages
-		for( i = 0; i<numMessages; i++)
-		{
-			// Read a command structure 
-			if(!missionCommandFromBuffer(&tempCmd, buffer+index, bufferSizeBytes-index))
-			{
-				free(task);
-				free(childIndex);
-				return JAUS_FALSE;
-			}
-			index += missionCommandSize(tempCmd);
+    // Read the number of messages 
+    if(!jausUnsignedShortFromBuffer(&numMessages, buffer+index, bufferSizeBytes-index))
+    {
+      free(task);
+      free(childIndex);
+      return JAUS_FALSE;
+    }
+    index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+    
+    // Read the messages
+    for( i = 0; i<numMessages; i++)
+    {
+      // Read a command structure 
+      if(!missionCommandFromBuffer(&tempCmd, buffer+index, bufferSizeBytes-index))
+      {
+        free(task);
+        free(childIndex);
+        return JAUS_FALSE;
+      }
+      index += missionCommandSize(tempCmd);
       
-			//Add command to array
-			jausArrayAdd(task->commands, tempCmd);
+      //Add command to array
+      jausArrayAdd(task->commands, tempCmd);
       
-			tempCmd = NULL;
-		}
+      tempCmd = NULL;
+    }
     
-		// Read the child tasks
-		for( i = 0; i<numChildren; i++)
-		{
-			// Read a task structure 
-			if(!missionTaskFromBuffer(&tempTask, buffer+index, bufferSizeBytes-index))
-			{
-				free(task);
-				free(childIndex);
-				return JAUS_FALSE;
-			}
-			index += missionTaskSize(tempTask);
-	      
-			//Add command to array
-			jausArrayAdd(task->children, tempTask);
+    // Read the child tasks
+    for( i = 0; i<numChildren; i++)
+    {
+      // Read a task structure 
+      if(!missionTaskFromBuffer(&tempTask, buffer+index, bufferSizeBytes-index))
+      {
+        free(task);
+        free(childIndex);
+        return JAUS_FALSE;
+      }
+      index += missionTaskSize(tempTask);
       
-			tempTask = NULL;
-		}
+      //Add command to array
+      jausArrayAdd(task->children, tempTask);
+      
+      tempTask = NULL;
+    }
     
-		*taskPointer = task;
+    *taskPointer = task;
 		return JAUS_TRUE;
 	}
 	else
@@ -170,12 +171,12 @@ JausBoolean missionTaskFromBuffer(JausMissionTask *taskPointer, unsigned char *b
 }
 
 // JausMissionTask To Buffer
-JausBoolean missionTaskToBuffer(JausMissionTask task, unsigned char *buffer, unsigned int bufferSizeBytes, unsigned int messageOffset)
+JausBoolean missionTaskToBuffer(JausMissionTask task, unsigned char *buffer, unsigned int bufferSizeBytes)
 {
-	int i = 0;
-	unsigned int index = 0;
-	JausUnsignedShort tempCount = 0;
-	JausUnsignedInteger childIndex = 0;
+  int i = 0;
+  unsigned int index = 0;
+  JausUnsignedShort tempCount = 0;
+  JausUnsignedInteger childIndex;
 
   if(task)
   { 
@@ -195,13 +196,12 @@ JausBoolean missionTaskToBuffer(JausMissionTask task, unsigned char *buffer, uns
     if(!jausUnsignedShortToBuffer(tempCount, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
     index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
     
-    childIndex = messageOffset; //Offset into message where this task started
+    childIndex = task->bufferOffset; //Offset into message where this task started
     childIndex += JAUS_UNSIGNED_SHORT_SIZE_BYTES; //task Id
     childIndex += JAUS_UNSIGNED_SHORT_SIZE_BYTES; //Number of children
     childIndex += JAUS_UNSIGNED_INTEGER_SIZE_BYTES * task->children->elementCount; //Children Indexes
     childIndex += JAUS_UNSIGNED_SHORT_SIZE_BYTES; //Number of messages
-
-	//Size of all messages
+    //Size of all messages
     for( i = 0; i<task->commands->elementCount; i++)
     {
       childIndex += missionCommandSize(task->commands->elementData[i]);
@@ -244,11 +244,10 @@ JausBoolean missionTaskToBuffer(JausMissionTask task, unsigned char *buffer, uns
     for( i = 0; i<task->children->elementCount; i++)
     {
       // Write a task structure 
-      if(!missionTaskToBuffer(task->children->elementData[i], buffer+index, bufferSizeBytes-index, index)) return JAUS_FALSE;
+      ((JausMissionTask)task->children->elementData[i])->bufferOffset = index;
+      if(!missionTaskToBuffer(task->children->elementData[i], buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
       index += missionTaskSize(task->children->elementData[i]);
-      
     }
-  
 		return JAUS_TRUE;
 	}
 	
@@ -260,8 +259,8 @@ void missionTaskDestroy(JausMissionTask object)
 {
 	if(object)
 	{
-    jausArrayDestroy(object->commands, (void*)missionCommandDestroy);
-    jausArrayDestroy(object->children, (void*)missionTaskDestroy);
+		jausArrayDestroy(object->commands, (void*)missionCommandDestroy);
+		jausArrayDestroy(object->children, (void*)missionTaskDestroy);
     
 		free(object);
 		object = NULL;

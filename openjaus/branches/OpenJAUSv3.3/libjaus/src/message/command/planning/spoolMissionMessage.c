@@ -74,25 +74,13 @@ static unsigned int dataSize(SpoolMissionMessage message);
 // ************************************************************************* //
 //                        USER CONFIGURED FUNCTIONS
 // ************************************************************************* //
-// Mission Proc Types: non-redundant declaration
-#ifndef MISSION_BLOCKING_TYPES
-#define MISSION_BLOCKING_TYPES
-#define NON_BLOCKING         0
-#define BLOCKING             1
-#endif
-// Mission Proc Types: non-redundant declaration
-#ifndef MISSION_SPOOLING_AND_MANIP_TYPES
-#define MISSION_SPOOLING_AND_MANIP_TYPES
-#define REPLACE_CURRENT_MISSION_WITH_NEW_MISSION  0 
-#define APPEND_NEW_MISSION_TO_CURRENT_MISSION     1
-#endif
 
 // Initializes the message-specific fields
 static void dataInitialize(SpoolMissionMessage message)
 {
   // Set initial values of static message fields 1 and 2
   message->missionId = newJausUnsignedShort(0); 
-  message->appendFlag = newJausByte(REPLACE_CURRENT_MISSION_WITH_NEW_MISSION);    
+  message->appendFlag = newJausByte(JAUS_REPLACE_CURRENT_MISSION_WITH_NEW_MISSION);    
   // Setup dynamic data fields [3 to 8+n+3m.] for task messages and children.
   if ((message->naryTree = missionTaskCreate()) == NULL) {
     //DMPDO: Log error?  Cannot do anything else because no returnval.
@@ -173,9 +161,10 @@ static int dataToBuffer(SpoolMissionMessage message,
     // Pack data fields [3 to 8+n+3m] to Buffer.  NOTE: handles all task 
     // messages and children where tree traversal is depth first with left
     // to right processing. 
+    message->naryTree->bufferOffset = index;
     if(!missionTaskToBuffer(message->naryTree, 
                             buffer+index, 
-                            bufferSizeBytes-index, index)) return JAUS_FALSE;
+                            bufferSizeBytes-index)) return JAUS_FALSE;
     index += (int)missionTaskSize(message->naryTree);
   }
 

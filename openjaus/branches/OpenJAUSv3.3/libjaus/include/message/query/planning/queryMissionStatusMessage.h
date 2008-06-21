@@ -50,11 +50,11 @@
 #include "jaus.h"
 
 // PV as defined in v3.3
-#ifndef QUERY_MISSION_STATUS_PV
-#define QUERY_MISSION_STATUS_PV
-#define QUERY_MISSION_STATUS_PV_MISSIN_ID_BIT    0 // Field 3
-#define QUERY_MISSION_STATUS_PV_TASK_ID_BIT    1 // Field 4
-#define QUERY_MISSION_STATUS_PV_UID_BIT   2 // Field 5
+#ifndef JAUS_QUERY_MISSION_STATUS_PV
+#define JAUS_QUERY_MISSION_STATUS_PV
+#define JAUS_QUERY_MISSION_STATUS_PV_MISSIN_ID_BIT  0 // Field 3
+#define JAUS_QUERY_MISSION_STATUS_PV_TASK_ID_BIT    1 // Field 4
+#define JAUS_QUERY_MISSION_STATUS_PV_UID_BIT        2 // Field 5
 #endif
 
 typedef struct

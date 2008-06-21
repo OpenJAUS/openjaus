@@ -72,7 +72,6 @@ typedef enum
 #define JAUS_RAD_PER_DEG	1.745329251994328e-2
 
 // Define Target System Endianess Here
-// x386
 #if defined(__i386__) || defined(i386) || defined(_M_IX86) || defined(_X86_) || defined(__arm__)
 	#define JAUS_LITTLE_ENDIAN 1
 #elif defined(__ppc__) || defined(__powerpc) || defined(__powerpc__) || defined(__POWERPC__) || defined(_M_PPC)
@@ -93,9 +92,6 @@ typedef enum
 #include "jausPayloadInterface.h"
 
 #include "message/jausMessageHeaders.h"
-
-#include "type/jausMissionCommand.h"
-#include "type/jausMissionTask.h"
 
 #ifdef __cplusplus
 }

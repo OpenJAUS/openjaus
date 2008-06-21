@@ -46,6 +46,22 @@
 
 #include "jaus.h"
 #include "type/jausMissionTask.h"
+
+
+// Mission Proc Types: non-redundant declaration
+#ifndef JAUS_MISSION_BLOCKING_TYPES
+#define JAUS_MISSION_BLOCKING_TYPES
+#define JAUS_NON_BLOCKING         0
+#define JAUS_BLOCKING             1
+#endif
+// Mission Proc Types: non-redundant declaration
+#ifndef JAUS_MISSION_SPOOLING_AND_MANIP_TYPES
+#define JAUS_MISSION_SPOOLING_AND_MANIP_TYPES
+#define JAUS_REPLACE_CURRENT_MISSION_WITH_NEW_MISSION  0 
+#define JAUS_APPEND_NEW_MISSION_TO_CURRENT_MISSION     1
+#endif
+
+
 typedef struct
 {
 	// Include all parameters from a JausMessage structure:

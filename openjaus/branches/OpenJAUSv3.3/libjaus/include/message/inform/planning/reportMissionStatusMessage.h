@@ -56,27 +56,27 @@
  * These defines identify mission message types and status per RA 3.3.
  */
 // Mission Types: non-redundant declaration
-#ifndef MISSION_TYPES
-#define MISSION_TYPES
-#define MISSION             0
-#define TASK                1
-#define MESSAGE             2
+#ifndef JAUS_MISSION_TYPES
+#define JAUS_MISSION_TYPES
+#define JAUS_MISSION             0
+#define JAUS_TASK                1
+#define JAUS_MESSAGE             2
 #endif
 //Mission primary status types: non-redundant declaration
-#ifndef MISSION_PRIMARY_STATUS_TYPES
-#define MISSION_PRIMARY_STATUS_TYPES
-#define SPOOLING            0
-#define PENDING             1
-#define PAUSED              2
-#define ABORTED             3
-#define FINISHED            4
+#ifndef JAUS_MISSION_PRIMARY_STATUS_TYPES
+#define JAUS_MISSION_PRIMARY_STATUS_TYPES
+#define JAUS_SPOOLING            0
+#define JAUS_PENDING             1
+#define JAUS_PAUSED              2
+#define JAUS_ABORTED             3
+#define JAUS_FINISHED            4
 #endif
 //Mission secondary status types: non-redundant declaration
-#ifndef MISSION_SECONDARY_STATUS_TYPES
-#define MISSION_SECONDARY_STATUS_TYPES
-#define NON_ERROR_COND      0
-#define LOST_CMPT_CONTROL   1
-#define TOLERANCE_NOT_MET   2
+#ifndef JAUS_MISSION_SECONDARY_STATUS_TYPES
+#define JAUS_MISSION_SECONDARY_STATUS_TYPES
+#define JAUS_NON_ERROR_COND      0
+#define JAUS_LOST_CMPT_CONTROL   1
+#define JAUS_TOLERANCE_NOT_MET   2
 #endif
 
 

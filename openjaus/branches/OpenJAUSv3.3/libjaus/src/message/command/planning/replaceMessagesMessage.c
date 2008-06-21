@@ -48,13 +48,14 @@
 
 
 #include <stdlib.h>
+
 #include "jaus.h"
 
 static const int commandCode = JAUS_REPLACE_MESSAGES;
 static const int maxDataSizeBytes = 0;
 
-static JausBoolean headerFromBuffer(ReplaceMessagesMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-static JausBoolean headerToBuffer(ReplaceMessagesMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+static JausBoolean headerFromBuffer(ReplaceMessagesMessage message,unsigned char *buffer,unsigned int bufferSizeBytes);
+static JausBoolean headerToBuffer(ReplaceMessagesMessage message,unsigned char *buffer,unsigned int bufferSizeBytes);
 
 static JausBoolean dataFromBuffer(ReplaceMessagesMessage message,unsigned char *buffer,unsigned int bufferSizeBytes);
 static int dataToBuffer(ReplaceMessagesMessage message,unsigned char *buffer,unsigned int bufferSizeBytes);
@@ -70,6 +71,7 @@ static unsigned int dataSize(ReplaceMessagesMessage message);
 // Initializes the message-specific fields
 static void dataInitialize(ReplaceMessagesMessage message)
 {
+
   // Set initial values of static message fields 1, 2, and 3
   message->missionId = newJausUnsignedShort(0); 
   message->taskId = newJausUnsignedShort(0);    
@@ -80,11 +82,16 @@ static void dataInitialize(ReplaceMessagesMessage message)
 
   // Setup dynamic data fields [1+n+3m to 3+n+3m] for task messages.
   message->command = jausArrayCreate();
+
 }
+
+
+
 
 // Destructs the message-specific fields
 static void dataDestroy(ReplaceMessagesMessage message)
 {
+
   // Free dynamically allocated data field 3+n
   if(message->uid != NULL) 
   {
@@ -97,139 +104,147 @@ static void dataDestroy(ReplaceMessagesMessage message)
     
 }
 
+
+
+
 //UNPACK the external component's buffered data into a JAUS message data area to
 //complete receive and then return boolean of success.
 static JausBoolean dataFromBuffer(ReplaceMessagesMessage message,unsigned char *buffer,unsigned int bufferSizeBytes)
 {
-	int index = 0;
-	int i;
-	JausMissionCommand tempObject;          //used to unpack fields [1+n+3m to 3+n+3m]
-	JausUnsignedShort tempNumMsgsInsert = 0;//used to unpack field 4+n
+
+ 	int index = 0;
+  int i;
+  JausMissionCommand tempObject;          //used to unpack fields [1+n+3m to 3+n+3m]
+  JausUnsignedShort tempNumMsgsInsert = 0;//used to unpack field 4+n
 	
 	if(bufferSizeBytes == message->dataSize)
 	{
 
-		// Unpack data fields 1, 2, and 3 from Buffer
-		if(!jausUnsignedShortFromBuffer(&message->missionId, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+    // Unpack data fields 1, 2, and 3 from Buffer
+    if(!jausUnsignedShortFromBuffer(&message->missionId, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+    index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
 
-		if(!jausUnsignedShortFromBuffer(&message->taskId, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+    if(!jausUnsignedShortFromBuffer(&message->taskId, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+    index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
 
-		if(!jausUnsignedShortFromBuffer(&message->numMsgsToRemove, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+    if(!jausUnsignedShortFromBuffer(&message->numMsgsToRemove, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+    index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
 
-		//Dynamically allocate memory for array of unique message
-		//IDs in Task and then unpack data field 3+n from Buffer.
-		message->uid = (JausUnsignedShort *)malloc(message->numMsgsToRemove * JAUS_UNSIGNED_SHORT_SIZE_BYTES);
-		for(i = 0; i < message->numMsgsToRemove; i++) 
-		{
-			if(!jausUnsignedShortFromBuffer(&message->uid[i],buffer+index,bufferSizeBytes-index)) return JAUS_FALSE;
-			index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
-		}
+    //Dynamically allocate memory for array of unique message
+    //IDs in Task and then unpack data field 3+n from Buffer.
+    message->uid = (JausUnsignedShort *)malloc
+                   (message->numMsgsToRemove * JAUS_UNSIGNED_SHORT_SIZE_BYTES);
+    for(i = 0; i < message->numMsgsToRemove; i++) 
+    {
+      if(!jausUnsignedShortFromBuffer(&message->uid[i],buffer+index,bufferSizeBytes-index)) return JAUS_FALSE;
+      index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+    }
 
-		// Unpack data field 4+n from Buffer
-		if(!jausUnsignedShortFromBuffer(&tempNumMsgsInsert, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+    // Unpack data field 4+n from Buffer
+    if(!jausUnsignedShortFromBuffer(&tempNumMsgsInsert, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+    index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
     
-		//Setup to unpack data fields [1+n+3m to 3+n+3m] based on field 4+n
-		//into the JausArray.  For each mission message specified to be inserted
-		//dynamically allocate a JausMissionCommand struct (initialized), unpack
-		//fields [1+n+3m to 3+n+3m] from Buffer to the struct, and then update the
-		//JausArray book keeping.
-		for(i = 0; i < tempNumMsgsInsert; i++) 
-		{
-			tempObject = NULL;//jausMissionCommandCreate();
-			if(!missionCommandFromBuffer(&tempObject,buffer+index,bufferSizeBytes-index)) return JAUS_FALSE;
-			index += missionCommandSize(tempObject);
-
-			//update JausArray mechanizm.
-			jausArrayAdd(message->command, tempObject);
-		}
+    //Setup to unpack data fields [1+n+3m to 3+n+3m] based on field 4+n
+    //into the JausArray.  For each mission message specified to be inserted
+    //dynamically allocate a JausMissionCommand struct (initialized), unpack
+    //fields [1+n+3m to 3+n+3m] from Buffer to the struct, and then update the
+    //JausArray book keeping.
+    for(i = 0; i < tempNumMsgsInsert; i++) 
+    {
+      tempObject = NULL;//jausMissionCommandCreate();
+      if(!missionCommandFromBuffer(&tempObject,buffer+index,bufferSizeBytes-index)) return JAUS_FALSE;
+       index += missionCommandSize(tempObject);
+       //update JausArray mechanizm.
+       jausArrayAdd(message->command, tempObject);
+    }
 
 		return JAUS_TRUE;
 	}
 	else
 	{
+
 		return JAUS_FALSE;
 	}
+
 }
+
+
+
 
 //PACK the component's JAUS message data fields into a buffer to setup for 
 //transmit to an external component and then return number of bytes put into
 //the buffer.
 static int dataToBuffer(ReplaceMessagesMessage message,unsigned char *buffer,unsigned int bufferSizeBytes)
 {
-	int index = 0;
-	int i;
-	JausMissionCommand tempObject;    //used to pack data fields 1+n+3m to 3+n+3m
-	JausUnsignedShort tempShort;
+  int index = 0;
+  int i;
+  JausMissionCommand tempObject;    //used to pack data fields 1+n+3m to 3+n+3m
+  JausUnsignedShort tempShort;
 
-	if(bufferSizeBytes >= dataSize(message))
-	{
-		// Pack data fields 1, 2, and 3 to Buffer
-		if(!jausUnsignedShortToBuffer(message->missionId, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+  if(bufferSizeBytes >= dataSize(message))
+  {
+    // Pack data fields 1, 2, and 3 to Buffer
+    if(!jausUnsignedShortToBuffer(message->missionId, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+    index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
 
-		if(!jausUnsignedShortToBuffer(message->taskId, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+    if(!jausUnsignedShortToBuffer(message->taskId, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+    index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
 
-		if(!jausUnsignedShortToBuffer(message->numMsgsToRemove, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+    if(!jausUnsignedShortToBuffer(message->numMsgsToRemove, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+    index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
 
-		// Pack data field(s) 3+n based on field 3 to Buffer from dynamic array.
-		for(i = 0; i < message->numMsgsToRemove; i++)
-		{
-			if(!jausUnsignedShortToBuffer(message->uid[i], buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-			index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
-		}
+    // Pack data field(s) 3+n based on field 3 to Buffer from dynamic array.
+    for(i = 0; i < message->numMsgsToRemove; i++)
+    {
+      if(!jausUnsignedShortToBuffer(message->uid[i], buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+      index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+    }
 
-		if ( message->command->elementCount > JAUS_UNSIGNED_SHORT_MAX_VALUE) 
-		{
-			//DMP DO: LOG Error.
-			return JAUS_FALSE;
-		}
-		tempShort = message->command->elementCount;
+    if ( message->command->elementCount > JAUS_UNSIGNED_SHORT_MAX_VALUE) {
+      //DMP DO: LOG Error.
+      return JAUS_FALSE;
+    }
 
-		// Pack data field 4+n to Buffer
-		if(!jausUnsignedShortToBuffer(tempShort,buffer+index,bufferSizeBytes-index)) return JAUS_FALSE;
-		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+	tempShort = message->command->elementCount;
+    // Pack data field 4+n to Buffer
+    if(!jausUnsignedShortToBuffer(tempShort,buffer+index,bufferSizeBytes-index)) return JAUS_FALSE;
+    index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
 
-		// Pack data fields [1+n+3m to 3+n+3m] based on field 4+n
-		// to Buffer from dyanamic array.
-		for(i = 0; i < message->command->elementCount; i++) 
-		{
-			tempObject = (JausMissionCommand)(message->command->elementData[i]);
-			if(!missionCommandToBuffer(tempObject, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-			index += missionCommandSize(tempObject);
-		}
-	}
+    // Pack data fields [1+n+3m to 3+n+3m] based on field 4+n
+    // to Buffer from dyanamic array.
+    for(i = 0; i < message->command->elementCount; i++) 
+    {
+       tempObject = (JausMissionCommand)(message->command->elementData[i]);
+       if(!missionCommandToBuffer(tempObject, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
+       index += missionCommandSize(tempObject);
+    }
+  }
 
-	return index;
+  return index;
 }
+
+
 
 // Returns number of bytes put into the buffer
 static unsigned int dataSize(ReplaceMessagesMessage message)
 {
-	unsigned int index = 0;
-	int i;
+  unsigned int index = 0;
+  int i;
 
-	//static data fields 1, 2, and 3
-	index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
-	index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
-	index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
-	
-	//dynamic data field 3+n
-	index += message->numMsgsToRemove * JAUS_UNSIGNED_SHORT_SIZE_BYTES;
-	index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
-	
-	//dynamic data fields [1+n+3m to 3+n+3m]
-	for ( i = 0; i < message->command->elementCount; i++) 
-	{
-		index += missionCommandSize(message->command->elementData[i]);
-	}
+  //static data fields 1, 2, and 3
+  index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+  index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+  index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+  //dynamic data field 3+n
+  index += message->numMsgsToRemove * JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+  index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
+  //dynamic data fields [1+n+3m to 3+n+3m]
+  for ( i = 0; i < message->command->elementCount; i++) 
+  {
+    index += missionCommandSize(message->command->elementData[i]);
+  }
 
-	return index;
+  return index;
 }
 
 

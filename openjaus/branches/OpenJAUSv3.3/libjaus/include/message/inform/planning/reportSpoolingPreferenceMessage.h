@@ -47,11 +47,11 @@
 #include "jaus.h"
 
 // Spool Types
-#ifndef SPOOL_TYPES
-#define SPOOL_TYPES
-#define SPOOL_COUNT_TYPE           0
-#define SPOOL_DISTANCE_TYPE         1
-#define SPOOL_TIME_TYPE         2
+#ifndef JAUS_SPOOL_TYPES
+#define JAUS_SPOOL_TYPES
+#define JAUS_SPOOL_COUNT_TYPE           0
+#define JAUS_SPOOL_DISTANCE_TYPE         1
+#define JAUS_SPOOL_TIME_TYPE         2
 #endif
 
 typedef struct

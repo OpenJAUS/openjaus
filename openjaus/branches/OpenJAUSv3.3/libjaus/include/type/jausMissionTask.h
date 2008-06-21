@@ -60,6 +60,7 @@ typedef struct
   JausArray commands; //List of JausMissionCommand structures for messages
   JausArray children; //List of JausMissionTask structures signifying the children tasks of this task
   
+  JausInteger bufferOffset; //Internal variable used for ToBuffer processing
 }JausMissionTaskStruct;
 typedef JausMissionTaskStruct *JausMissionTask;
 
@@ -70,7 +71,7 @@ JAUS_EXPORT JausMissionTask missionTaskCreate(void);
 JAUS_EXPORT JausBoolean missionTaskFromBuffer(JausMissionTask *messagePointer, unsigned char *buffer, unsigned int bufferSizeBytes);
 
 // JausMissionTask To Buffer
-JAUS_EXPORT JausBoolean missionTaskToBuffer(JausMissionTask task, unsigned char *buffer, unsigned int bufferSizeBytes, unsigned int messageOffset);
+JAUS_EXPORT JausBoolean missionTaskToBuffer(JausMissionTask task, unsigned char *buffer, unsigned int bufferSizeBytes);
 
 // JausMissionTask Destructor
 JAUS_EXPORT void missionTaskDestroy(JausMissionTask object);
