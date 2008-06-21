@@ -1,4 +1,4 @@
-RELEASE NOTES: OpenJAUSv3.3 beta (04/15/08)
+RELEASE NOTES: OpenJAUSv3.3 (07/10/08)
 ==========================================
 
 OpenJAUSv3.3 beta is an open source implementation of the JAUS Reference
@@ -12,7 +12,6 @@ libjaus:		A C99 compliant library that contains JAUS constructs, data
 libopenJaus:	A C/C++ library containing a runtime JAUS node manager library,
 				node manager communication interface, and component framework 
 				library.
-ojCmpt:		An example text user interface JAUS component 
 ojNodeManager:	The OpenJAUS node manager executable with text interface
 ojVehicleSim:	A collection of JAUS components that work together to simulate
 				a JAUS ground vehicle subsystem. These components provide a set
@@ -23,32 +22,27 @@ If you experience problems in compiling or developing with this code, please
 read the tutorials and online FAQ before contacting the OpenJAUS development
 group. Please attempt to locate where the problem exists and determine how the
 problem can be replicated before seeking additional support. Code patches can be
-uploaded to:
+uploaded at the OpenJAUS web site: http://www.openjaus.com.
 
-*********TBD********************
-
-Please report bugs to the bug tracker:
-
-********TBD********************
 
 Target Operating Environment:
 -----------------------------
 
 	This software is designed to be cross platform compatible. The code base has
 been tested on a variety of operating systems and development environments
-including: Linux (Ubuntu & Fedora Core) w/gnu toolchain, Windows w/MS Visual 
-Studio 2005, and Windows w/ MinGW. All test machines have been little endian
-byte order based. The libjaus library is C99 compliant and should be compatible
-with any standard C compiler for any processing platform. The libopenJaus
-library has some operating system dependent abstractions, which may require
-different implementations for systems not using Linux or Windows. The library
+including: Linux (Ubuntu & Fedora Core) w/gnu toolchain, Mac OS X w/gnu toolchain, 
+Windows w/MS Visual Studio 2005, and Windows w/ MinGW & Eclipse. All test machines 
+have been little endian byte order based. The libjaus library is C99 compliant and 
+should be compatible with any standard C compiler for any processing platform. The 
+libopenJaus library has some operating system dependent abstractions, which may 
+require different implementations for systems not using Linux or Windows. The library
 was implemented with POSIX standard programming interfaces where applicable, to
 provide a more standardized approach to multi-threading and mutex
 implementation.
 
 
-Installation (GNU Toolchain / Linux):
--------------------------------------
+Installation (GNU Toolchain / Linux & Macintosh OS X):
+------------------------------------------------------
 
 Requirements:
 	make
@@ -178,10 +172,9 @@ necessary.
 
 Further Information:
 --------------------
-Tutorials
-FAQ
-Forums
-Support contracting
+Tutorials: http://www.openjaus.com/tutorials.html
+Forums: http://www.openjaus.com/trac/openjaus/discussion
+Support contracting: 
 
 Known Issues:
 -------------
@@ -192,9 +185,6 @@ Known Issues:
    organized by function breakdown and allow for easy access to data structure
    definitions and function prototypes. Often the functions you seek can be
    found quickly by browsing the include/ directories.
-
-*  This implementation of the standard JAUS message set library does not contain 
-   any of the Planning Subgroup messages.
 
 *  A "ToString" method for each JAUS message and data structure is lacking from 
    this implementation and thus makes displaying critical information to the
