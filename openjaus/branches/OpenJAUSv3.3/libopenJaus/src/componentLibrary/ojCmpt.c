@@ -422,6 +422,7 @@ int ojCmptGetState(OjCmpt ojCmpt)
 
 int ojCmptSendMessage(OjCmpt ojCmpt, JausMessage message)
 {
+	jausAddressCopy(message->source, ojCmpt->jaus->address);
 	return nodeManagerSend(ojCmpt->nmi, message);
 }
 
