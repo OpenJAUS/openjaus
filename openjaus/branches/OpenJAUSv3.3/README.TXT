@@ -28,16 +28,15 @@ uploaded at the OpenJAUS web site: http://www.openjaus.com.
 Target Operating Environment:
 -----------------------------
 
-	This software is designed to be cross platform compatible. The code base has
-been tested on a variety of operating systems and development environments
-including: Linux (Ubuntu & Fedora Core) w/gnu toolchain, Mac OS X w/gnu toolchain, 
-Windows w/MS Visual Studio 2005, and Windows w/ MinGW & Eclipse. All test machines 
-have been little endian byte order based. The libjaus library is C99 compliant and 
-should be compatible with any standard C compiler for any processing platform. The 
-libopenJaus library has some operating system dependent abstractions, which may 
-require different implementations for systems not using Linux or Windows. The library
-was implemented with POSIX standard programming interfaces where applicable, to
-provide a more standardized approach to multi-threading and mutex
+	This software is designed to be cross platform compatible. The code base has 
+been tested on a variety of operating systems and development environments including: 
+Linux (Ubuntu & Fedora Core) w/gnu toolchain, Mac OS X w/gnu toolchain, and Windows w/MS 
+Visual Studio. All test machines have been little endian byte order based. The libjaus 
+library is C99 compliant and should be compatible with any standard C compiler for any 
+processing platform. The libopenJaus library has some operating system dependent 
+abstractions, which may require different implementations for systems not using Linux 
+or Windows. The library was implemented with POSIX standard programming interfaces where 
+applicable, to provide a more standardized approach to multi-threading and mutex 
 implementation.
 
 
@@ -50,7 +49,7 @@ Requirements:
 	g++
 
 To build the library and executable code:
-	Execute the command: "make" in the root OpenJAUSv3.3 directory. The make
+	Execute the command: "make" in the root OpenJAUSv3.3.0 directory. The make
 command will use the Makefile found in that directory to recursively make each
 of the subprojects. Individual Makefiles are located in each subproject
 directory to allow for building one project at a time if desired.
@@ -78,21 +77,21 @@ installed  libraries, the information can be removed by using the "strip"
 command. 
 
 
-Installation (Microsoft Visual Studio 2005 / Windows):
+Installation (Microsoft Visual Studio / Windows):
 ------------------------------------------------------
 
 Requirements:
-	Microsoft Visual Studio 2005
+	Microsoft Visual Studio
 	Pthreads-win32 (included in distribution)
 	pdcurses (included in distribution)
 
 To build the library and executable code:
 
 In the top level directory, open the Microsoft Visual Studio solution 
-file "OpenJAUS v3.3.sln." This solution contains 4 individual projects: 
-libjaus, libopenJaus, ojNodeManager and ojVehicleSim. These projects coorespond 
+file "OpenJAUSv3.3.0.sln." This solution contains 4 individual projects: 
+libjaus, libopenJaus, ojNodeManager and ojVehicleSim. These projects correspond 
 to the descriptions above. Once open, the solution should be able to be 
-built. Each project has the appropriate dependancies setup using relative paths, 
+built. Each project has the appropriate dependencies setup using relative paths, 
 therefore it should compile for the developer in any configuration. Also, project 
 references have been setup, so a referenced code base will be compiled prior to 
 the compilation of any child project.

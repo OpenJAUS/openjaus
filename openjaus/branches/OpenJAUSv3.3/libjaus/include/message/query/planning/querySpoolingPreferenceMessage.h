@@ -1,5 +1,5 @@
 /*****************************************************************************
- *  Copyright (c) 2008, OpenJAUS.com
+ *  Copyright (c) 2008, University of Florida
  *  All rights reserved.
  *  
  *  This file is part of OpenJAUS.  OpenJAUS is distributed under the BSD 
@@ -36,7 +36,7 @@
 // Written By: Danny Kent (jaus AT dannykent DOT com), Tom Galluzzo, 
 //              Luke Roseberry MountainTop Technologies www.mntntp.com 
 //
-// Version: 3.3 BETA
+// Version: 3.3.0
 //
 // Date: 06/3/08
 //
