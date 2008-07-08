@@ -1,5 +1,5 @@
 /*****************************************************************************
- *  Copyright (c) 2008, OpenJAUS.com
+ *  Copyright (c) 2008, University of Florida
  *  All rights reserved.
  *  
  *  This file is part of OpenJAUS.  OpenJAUS is distributed under the BSD 
@@ -35,9 +35,9 @@
 //
 // Written By: Danny Kent (jaus AT dannykent DOT com)
 //
-// Version: 3.3 BETA
+// Version: 3.3.0
 //
-// Date: 04/15/08
+// Date: 07/09/08
 //
 // Description: This file defines all the basic JausLong funtionality, this should be primarily used 
 // through the JausType file and its methods

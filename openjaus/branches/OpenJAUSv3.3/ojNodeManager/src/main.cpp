@@ -89,8 +89,7 @@ public:
 
 			case NodeManagerEvent::JausMessageEvent:
 				messageEvent = (JausMessageEvent *)e;
-				// TODO: Make this useful somehow
-				// If you turn this on, the system gets spam-y this is just a test of the message event
+				// If you turn this on, the system gets spam-y this is very useful for debug purposes
 				if(messageEvent->getJausMessage()->commandCode != JAUS_REPORT_HEARTBEAT_PULSE)
 				{
 					//printf("%s\n", messageEvent->toString().c_str());
@@ -133,7 +132,7 @@ int main(int argc, char *args)
 	bool running = true;
 	int i = 0;
 
-	printf("\nOpenJAUS Node Manager Version %s (%s)\n\n", OJ_NODE_MANAGER_VERSION, __DATE__); 
+	printf("\nOpenJAUS Node Manager Version %s (JULY 9, 2008)\n\n", OJ_NODE_MANAGER_VERSION); 
 
 	// Setup the console window's input handle
 	handleStdin = GetStdHandle(STD_INPUT_HANDLE); 
@@ -226,7 +225,7 @@ int main(int argc, char *args)
 	newTermio.c_cc[VMIN] = 1;
 	tcsetattr(0,TCSANOW,&newTermio);
 
-	printf("\nOpenJAUS Node Manager Version %s (%s)\n\n", OJ_NODE_MANAGER_VERSION, __DATE__); 
+	printf("\nOpenJAUS Node Manager Version %s (JULY 9, 2008)\n\n", OJ_NODE_MANAGER_VERSION); 
 
 	FileLoader *configData = new FileLoader("nodeManager.conf");
 	MyHandler *handler = new MyHandler();
