@@ -60,6 +60,7 @@
 #define JAUS_MISSION_SPOOLER								36
 #define JAUS_VISUAL_SENSOR 									37
 #define JAUS_GLOBAL_POSE_SENSOR 							38
+#define JAUS_MISSION_PLANNER								39
 #define JAUS_SYSTEM_COMMANDER 								40
 #define JAUS_LOCAL_POSE_SENSOR 								41
 #define JAUS_VELOCITY_STATE_SENSOR 							42
