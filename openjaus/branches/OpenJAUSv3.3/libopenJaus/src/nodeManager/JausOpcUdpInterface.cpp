@@ -733,6 +733,14 @@ void JausOpcUdpInterface::recvThreadRun()
 			{
 				index += JAUS_OPC_UDP_HEADER_SIZE_BYTES;
 			}
+			else if(this->type == SUBSYSTEM_INTERFACE || this->type == NODE_INTERFACE)
+			{
+				char errorString[128] = {0};
+				sprintf(errorString, "Received packet on %s with invalid header. First byte is: %d (%c)", this->toString().c_str(), (char) packet->buffer[0], (char) packet->buffer[0]);
+				ErrorEvent *e = new ErrorEvent(ErrorEvent::Configuration, __FUNCTION__, __LINE__, errorString);
+				this->eventHandler->handleEvent(e);
+				continue;
+			}
 
 			rxMessage = jausMessageCreate();
 			if(jausMessageFromBuffer(rxMessage, packet->buffer + index, packet->bufferSizeBytes - index))
