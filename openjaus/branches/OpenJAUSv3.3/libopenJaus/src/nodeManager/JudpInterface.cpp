@@ -925,7 +925,6 @@ bool JudpInterface::receiveCompressedMessage(JausMessage rxMessage, JudpHeaderCo
 	}
 }
 
-
 unsigned int JudpInterface::headerCompressionDataToBuffer(JudpHeaderCompressionData *hcData, unsigned char *buffer, unsigned int bufferSizeBytes)
 {
 	if(bufferSizeBytes < JUDP_PER_MESSAGE_HEADER_SIZE_BYTES)
@@ -937,8 +936,10 @@ unsigned int JudpInterface::headerCompressionDataToBuffer(JudpHeaderCompressionD
 
 	buffer[0] = (unsigned char) (hcData->headerNumber);
 	buffer[1] = (unsigned char) (((hcData->length & 0x3F) << 6) | (hcData->flags & 0x03));
-	buffer[2] = (unsigned char) (hcData->messageLength & 0xFF);
-	buffer[3] = (unsigned char) ((hcData->messageLength & 0xFF00) >> 8);
+	
+	// NOTE: The messageLength member is BIG ENDIAN, this is different for other JAUS messages
+	buffer[2] = (unsigned char) ((hcData->messageLength & 0xFF00) >> 8);
+	buffer[3] = (unsigned char) (hcData->messageLength & 0xFF);
 
 	return JUDP_PER_MESSAGE_HEADER_SIZE_BYTES;
 }
@@ -955,7 +956,7 @@ unsigned int JudpInterface::headerCompressionDataFromBuffer(JudpHeaderCompressio
 	hcData->headerNumber = buffer[0];
 	hcData->length = (buffer[1] >> 2) & 0x3F;
 	hcData->flags = (buffer[1] & 0x03);
-	hcData->messageLength = buffer[2] + (buffer[3] << 8);
+	hcData->messageLength = buffer[3] + (buffer[2] << 8);
 
 	return JUDP_PER_MESSAGE_HEADER_SIZE_BYTES;
 }
