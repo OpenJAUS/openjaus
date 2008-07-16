@@ -71,50 +71,21 @@ void queueDestroy(Queue queue, void (*objectDestroy)(void *))
 	}
 
 	queueEmpty(queue, objectDestroy);
+
 	pthread_mutex_destroy(&queue->mutex);
 	
 	free(queue);
 }
 
-void queueEmpty(Queue queue, void (*objectDestroy)(void *))
+void *queuePopNoLock(Queue queue)
 {
 	QueueObject *queueObject;
-	QueueObject *deadQueueObject;
-
-	if(queue)
-	{
-		pthread_mutex_lock(&queue->mutex);
-
-		queueObject = queue->firstObject;
-		while(queueObject)
-		{
-			deadQueueObject = queueObject;
-			queueObject = queueObject->nextObject;
-	
-			if(deadQueueObject->object)
-			{
-				if(objectDestroy)
-				{
-					objectDestroy(deadQueueObject->object);
-				}
-			}
-			free(deadQueueObject);
-		}
-	
-		pthread_mutex_unlock(&queue->mutex);
-	}
-}
-
-
-void *queuePop(Queue queue)
-{
-	QueueObject *queueObject = queue->firstObject;
 	void *object;
+
+	queueObject = queue->firstObject;
 
 	if(queueObject)
 	{
-		pthread_mutex_lock(&queue->mutex);
-		
 		queue->firstObject = queueObject->nextObject;
 		if(queue->firstObject == NULL)
 		{
@@ -125,15 +96,48 @@ void *queuePop(Queue queue)
 		object = queueObject->object;
 		
 		free(queueObject);
-
-		pthread_mutex_unlock(&queue->mutex);
-		
-		return object;	
 	}
 	else
 	{
-		return NULL;
+		object = NULL;
 	}
+
+	return object;	
+}
+
+void queueEmpty(Queue queue, void (*objectDestroy)(void *))
+{
+	void *object;
+
+	if(queue)
+	{
+		pthread_mutex_lock(&queue->mutex);
+
+		while(queue->size)
+		{
+			object = queuePopNoLock(queue);
+
+			if(objectDestroy)
+			{
+				objectDestroy(object);
+			}
+		}
+
+		pthread_mutex_unlock(&queue->mutex);
+	}
+}
+
+void *queuePop(Queue queue)
+{
+	void *object;
+
+	pthread_mutex_lock(&queue->mutex);
+
+	object = queuePopNoLock(queue);
+
+	pthread_mutex_unlock(&queue->mutex);
+
+	return object;	
 }
 
 void queuePush(Queue queue, void *object)
@@ -161,5 +165,4 @@ void queuePush(Queue queue, void *object)
 	queue->size++;
 
 	pthread_mutex_unlock(&queue->mutex);
-
 }
