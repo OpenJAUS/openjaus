@@ -1,0 +1,27 @@
+#!/bin/sh
+
+set -x
+
+DIR=`pwd`
+
+cp -a ./libjaus/genmake $1/libjaus/
+cd $1/libjaus/
+./genmake
+cd $DIR
+
+cp -a ./libopenJaus/genmake $1/libopenJaus/
+cd $1/libopenJaus/
+./genmake
+cd $DIR
+
+cp -a ./ojCmpt/genmake $1/ojCmpt/
+cd $1/ojCmpt/
+./genmake
+cd $DIR
+
+cp -a ./ojNodeManager/Makefile $1/ojNodeManager/
+
+cp -a ./ojVehicleSim/genmake $1/ojVehicleSim/
+cd $1/ojVehicleSim/
+./genmake
+cd $DIR

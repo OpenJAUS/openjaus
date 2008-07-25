@@ -1,0 +1,25 @@
+#!/bin/sh
+
+if [ -e ../OjTargetTemp ]
+then
+	echo "Old Target Folder Removed"
+	rm -rf ../OjTargetTemp
+fi
+ 
+echo "Copying new files..."
+mkdir ../OjTargetTemp
+cp -a * ../OjTargetTemp
+
+cd ../OjTargetTemp
+
+echo "Removing unwanted files..."
+rm gentarget
+find ./ -name genmake -exec rm {} \;
+find ./ -name .svn -exec rm -rf {} \;
+
+make clean
+
+tar -czvf ../OpenJAUSv3.3beta-Linux.tar.gz *
+
+cd ..
+rm -rf ./OjTargetTemp
