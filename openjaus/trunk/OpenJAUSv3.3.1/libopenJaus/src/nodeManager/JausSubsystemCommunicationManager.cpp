@@ -46,6 +46,7 @@
 #include "nodeManager/JausSubsystemCommunicationManager.h"
 #include "nodeManager/JausOpcUdpInterface.h"
 #include "nodeManager/JudpInterface.h"
+#include "nodeManager/Judp2Interface.h"
 #include "nodeManager/events/ErrorEvent.h"
 #include "nodeManager/events/ConfigurationEvent.h"
 
@@ -100,6 +101,17 @@ JausSubsystemCommunicationManager::JausSubsystemCommunicationManager(FileLoader 
 
 			char buf[128] = {0};
 			sprintf(buf, "Opened Subsystem Interface:\t%s", judpInterface->toString().c_str());
+			ConfigurationEvent *e = new ConfigurationEvent(__FUNCTION__, __LINE__, buf);
+			this->eventHandler->handleEvent(e);
+		}
+
+		if(configData->GetConfigDataBool("Subsystem_Communications", "JUDP2_Interface"))
+		{
+			Judp2Interface *judp2Interface = new Judp2Interface(configData, this->eventHandler, this);
+			this->interfaces.push_back(judp2Interface);
+
+			char buf[128] = {0};
+			sprintf(buf, "Opened Subsystem Interface:\t%s", judp2Interface->toString().c_str());
 			ConfigurationEvent *e = new ConfigurationEvent(__FUNCTION__, __LINE__, buf);
 			this->eventHandler->handleEvent(e);
 		}
