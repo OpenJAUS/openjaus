@@ -60,7 +60,7 @@
 #define JAUS_DATE_STAMP_YEAR_SHIFT 		9
 
 // Bit Mask Defines
-#define JAUS_TIME_STAMP_MILLISEC_MASK 	0x1FF 	// 9 bits
+#define JAUS_TIME_STAMP_MILLISEC_MASK	0x3FF   // 10 bits
 #define JAUS_TIME_STAMP_SECOND_MASK 	0x3F	// 6 bits
 #define JAUS_TIME_STAMP_MINUTE_MASK 	0x3F	// 6 bits
 #define JAUS_TIME_STAMP_HOUR_MASK 		0x1F	// 5 bits
