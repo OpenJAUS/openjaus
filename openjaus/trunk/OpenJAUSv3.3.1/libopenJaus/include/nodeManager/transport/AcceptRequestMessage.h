@@ -1,13 +1,13 @@
-#ifndef OFFER_ADDRESS_MESSAGE
-#define OFFER_ADDRESS_MESSAGE
+#ifndef ACCEPT_REQUEST_MESSAGE
+#define ACCEPT_REQUEST_MESSAGE
 
 #include <jaus.h>
 
-class OfferAddressMessage : JudpTransportMessage
+class AcceptRequestMessage : JudpTransportMessage
 {
 public:
-	OfferAddressMessage(JausByte offeredId, JausUnsignedShort leaseTimeMin);	
-	~OfferAddressMessage(void);
+	AcceptRequestMessage(JausByte offeredId, JausUnsignedShort leaseTimeMin);	
+	~AcceptRequestMessage(void);
 	
 	unsigned char* toBuffer(void);
 	bool fromBuffer(unsigned char *);

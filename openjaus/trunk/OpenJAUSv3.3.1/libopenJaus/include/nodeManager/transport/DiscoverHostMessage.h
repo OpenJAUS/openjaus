@@ -6,7 +6,7 @@
 class DiscoverHostMessage : JudpTransportMessage
 {
 public:
-	~DiscoverHostMessage(JausByte requestedId);	
+	DiscoverHostMessage(JausByte requestedId);	
 	~DiscoverHostMessage(void);
 	
 	unsigned char* toBuffer(void);
