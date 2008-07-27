@@ -100,7 +100,7 @@ static const std::string JUDP2_DEFAULT_COMPONENT_IP = "127.0.0.1"; // Per OpenJA
 static const std::string JUDP2_DEFAULT_SUBSYSTEM_MULTICAST_GROUP = "224.1.0.1"; // per AS5669
 static const std::string JUDP2_DEFAULT_NODE_MULTICAST_GROUP = "225.1.0.1"; // per AS5669 with slight modification
 
-extern "C" void *JudpRecvThread(void *);
+extern "C" void *Judp2RecvThread(void *);
 
 // Transport Data Structure
 typedef struct

@@ -80,7 +80,7 @@ JudpInterface::JudpInterface(FileLoader *configData, EventHandler *handler, Jaus
 	// NOTE: This value should exist in the properties file and should be checked 
 	// in the NodeManager class prior to constructing this object
 	mySubsystemId = configData->GetConfigDataInt("JAUS", "SubsystemId");
-	if(mySubsystemId < JAUS_MINIMUM_SUBSYSTEM_ID || mySubsystemId > JAUS_MAXIMUM_SUBSYSTEM_ID)
+	if(mySubsystemId > JAUS_MAXIMUM_SUBSYSTEM_ID)
 	{
 		// Invalid ID
 		// TODO: Throw an exception? Log an error.

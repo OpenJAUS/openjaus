@@ -49,7 +49,7 @@ NodeManager::NodeManager(FileLoader *configData, EventHandler *handler)
 	
 	// Read subsystem id config
 	int	subsystemId = configData->GetConfigDataInt("JAUS", "SubsystemId");
-	if(subsystemId < JAUS_MINIMUM_SUBSYSTEM_ID || subsystemId > JAUS_MAXIMUM_SUBSYSTEM_ID)
+	if(subsystemId > JAUS_MAXIMUM_SUBSYSTEM_ID)
 	{
 		throw "NodeManager: Config file [JAUS] SubsystemId is invalid\n";
 	}

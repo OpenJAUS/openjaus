@@ -2,20 +2,23 @@
 #define DISCOVER_HOST_MESSAGE
 
 #include <jaus.h>
+#include "JudpTransportMessage.h"
 
-class DiscoverHostMessage : JudpTransportMessage
+class DiscoverHostMessage : public JudpTransportMessage
 {
 public:
-	DiscoverHostMessage(JausAddress requestedAddress);	
+	DiscoverHostMessage(unsigned char *buffer, unsigned int bufferSizeBytes);	
 	~DiscoverHostMessage(void);
 	
-	unsigned char* toBuffer(void);
-	bool fromBuffer(unsigned char *);
+	unsigned int toBuffer(void);
 	
-	JausAddress getRequestedAddress(void);
+	unsigned int getSizeBytes(void);
+	
+	void setProposedAddress(JausAddress proposedAddress);
+	JausAddress getProposedAddress(void);
 	
 private:
-	JausAddress requestedAddress;
+	JausAddress proposedAddress;
 	
 };
 

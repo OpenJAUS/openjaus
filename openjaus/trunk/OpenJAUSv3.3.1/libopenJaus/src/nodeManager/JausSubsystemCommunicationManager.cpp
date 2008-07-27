@@ -60,7 +60,7 @@ JausSubsystemCommunicationManager::JausSubsystemCommunicationManager(FileLoader 
 	// NOTE: These two values should exist in the properties file and should be checked 
 	// in the NodeManager class prior to constructing this object
 	mySubsystemId = configData->GetConfigDataInt("JAUS", "SubsystemId");
-	if(mySubsystemId < JAUS_MINIMUM_SUBSYSTEM_ID || mySubsystemId > JAUS_MAXIMUM_SUBSYSTEM_ID)
+	if(mySubsystemId > JAUS_MAXIMUM_SUBSYSTEM_ID)
 	{
 		// Invalid ID
 		throw "JausSubsystemCommunicationManager: Config file [JAUS] SubsystemId is invalid\n";
