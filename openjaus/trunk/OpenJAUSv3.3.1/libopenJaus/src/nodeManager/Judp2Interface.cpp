@@ -587,7 +587,14 @@ void Judp2Interface::recvThreadRun()
 			case SUBSYSTEM_INTERFACE:
 				if(!mySubsystemId) // TODO: Add "or lease time is almost up"
 				{
-					judpMessage = new Judp2Message();// send transport host discover message 
+					//judpMessage = new Judp2Message();// send transport host discover message
+					//DiscoverHostMessage dhMsg = new DiscoverHostMessage(0.0.0.0)
+					//judpMessage->setPayload(dhMsg->toBuffer, dhMsg->getSize());
+					//judpMessage->setDestination(255.255.255.255);
+					//judpMessage->setSource(myCurrentAddress);
+					//judpMessage->setPayload(dhMsg->toBuffer, dhMsg->getSize());
+					//judpMessage->toBuffer(packet->buffer, packet->bufferSizeBytes)
+					//multicastSocketSend(this->socket, packet);
 				}
 				break;
 				
@@ -781,7 +788,6 @@ void Judp2Interface::sendUncompressedMessage(Judp2TransportData data, JausMessag
 	free(packet->buffer);
 	datagramPacketDestroy(packet);
 }
-
 
 bool Judp2Interface::receiveUncompressedMessage(JausMessage rxMessage, unsigned char *buffer, unsigned int bufferSizeBytes)
 {
