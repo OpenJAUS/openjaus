@@ -6,16 +6,16 @@
 class DiscoverHostMessage : JudpTransportMessage
 {
 public:
-	DiscoverHostMessage(JausByte requestedId);	
+	DiscoverHostMessage(JausAddress requestedAddress);	
 	~DiscoverHostMessage(void);
 	
 	unsigned char* toBuffer(void);
 	bool fromBuffer(unsigned char *);
 	
-	JausByte getRequestedId(void);
+	JausAddress getRequestedAddress(void);
 	
 private:
-	JausByte requestedId;
+	JausAddress requestedAddress;
 	
 };
 
