@@ -139,6 +139,7 @@ private:
 	void closeSocket(void);
 
 	bool multicast;
+	InetAddress hostIpAddress;
 	InetAddress ipAddress;
 	InetAddress multicastGroup;
 	unsigned short portNumber;
