@@ -69,6 +69,8 @@ public:
 	virtual JausAddress getDestinationAddress(void);
 	
 	virtual int getMessageType(void);
+	
+	//virtual bool setPayload(JudpMessage payload);
 	//virtual int getMessageSize(void);
 	
 	virtual char *getPayloadBuffer(void);
