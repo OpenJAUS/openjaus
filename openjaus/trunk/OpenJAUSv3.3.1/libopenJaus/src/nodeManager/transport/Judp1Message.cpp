@@ -1,10 +1,11 @@
 #include "nodeManager/transport/JudpMessage.h"
 #include "nodeManager/transport/Judp1Message.h"
 
-Judp1Message::Judp1Message(unsigned char *buffer)
+Judp1Message::Judp1Message(unsigned char *buffer, unsigned int bufferSizeBytes)
 {
 	this->buffer = buffer;
 	this->index = 0;
+	this->bufferSizeBytes = bufferSizeBytes;
 }
 
 Judp1Message::~Judp1Message(void)

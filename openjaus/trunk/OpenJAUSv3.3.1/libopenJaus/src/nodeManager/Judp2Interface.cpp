@@ -45,6 +45,7 @@
 #include "nodeManager/transport/JudpMessage.h"
 #include "nodeManager/transport/Judp1Message.h"
 #include "nodeManager/transport/Judp2Message.h"
+#include "nodeManager/transport/DiscoverHostMessage.h"
 #include "nodeManager/JudpInterface.h"
 #include "nodeManager/Judp2Interface.h"
 #include "nodeManager/JausSubsystemCommunicationManager.h"
@@ -100,7 +101,7 @@ Judp2Interface::Judp2Interface(FileLoader *configData, EventHandler *handler, Ja
 }
 
 bool Judp2Interface::startInterface(void)
-{
+{	
 	// Set our thread running flag
 	this->running = true;
 
@@ -553,7 +554,7 @@ void Judp2Interface::startRecvThread()
 {
 	pthread_attr_init(&this->recvThreadAttr);
 	pthread_attr_setdetachstate(&this->recvThreadAttr, PTHREAD_CREATE_JOINABLE);
-	this->recvThreadId = pthread_create(&this->recvThread, &this->recvThreadAttr, JudpRecvThread, this);
+	this->recvThreadId = pthread_create(&this->recvThread, &this->recvThreadAttr, Judp2RecvThread, this);
 	pthread_attr_destroy(&this->recvThreadAttr);
 }
 
@@ -574,7 +575,8 @@ void Judp2Interface::recvThreadRun()
 	JudpMessage *judpMessage;
 	JausMessage tempMessage = NULL;
 	JausMessageEvent *e = NULL;
-
+	unsigned char payloadBuffer[1024] = {0};
+	
 	
 	packet = datagramPacketCreate();
 	packet->bufferSizeBytes = JUDP2_MAX_PACKET_SIZE;
@@ -587,14 +589,18 @@ void Judp2Interface::recvThreadRun()
 			case SUBSYSTEM_INTERFACE:
 				if(!mySubsystemId) // TODO: Add "or lease time is almost up"
 				{
-					//judpMessage = new Judp2Message();// send transport host discover message
-					//DiscoverHostMessage dhMsg = new DiscoverHostMessage(0.0.0.0)
-					//judpMessage->setPayload(dhMsg->toBuffer, dhMsg->getSize());
+					judpMessage = new Judp2Message(packet->buffer, packet->bufferSizeBytes);// send transport host discover message
+					DiscoverHostMessage *dhMsg = new DiscoverHostMessage(payloadBuffer, 1024);
+					printf("Discover Pack Bytes = %d\n", dhMsg->toBuffer());
+
+					//judpMessage->setPayload(dhMsg);
 					//judpMessage->setDestination(255.255.255.255);
 					//judpMessage->setSource(myCurrentAddress);
-					//judpMessage->setPayload(dhMsg->toBuffer, dhMsg->getSize());
-					//judpMessage->toBuffer(packet->buffer, packet->bufferSizeBytes)
+					//judpMessage->toBuffer(packet->buffer, packet->bufferSizeBytes);
 					//multicastSocketSend(this->socket, packet);
+					
+					delete judpMessage;
+					delete dhMsg;					
 				}
 				break;
 				
@@ -623,11 +629,11 @@ void Judp2Interface::recvThreadRun()
 			switch(judpVersion)
 			{
 				case JUDP_VERSION_1_0:
-					judpMessage = new Judp1Message(packet->buffer + bufferIndex);
+					judpMessage = new Judp1Message(packet->buffer + bufferIndex, packet->bufferSizeBytes - bufferIndex);
 					break;
 					
 				case JUDP_VERSION_2_0:
-					judpMessage = new Judp2Message(packet->buffer + bufferIndex);
+					judpMessage = new Judp2Message(packet->buffer + bufferIndex, packet->bufferSizeBytes - bufferIndex);
 					break;
 					
 				default:

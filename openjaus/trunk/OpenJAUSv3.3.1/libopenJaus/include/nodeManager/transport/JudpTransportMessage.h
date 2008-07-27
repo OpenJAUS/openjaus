@@ -3,22 +3,28 @@
 
 #include <jaus.h>
 
-class JudpTransportMessage : JudpTransportMessage
+class JudpTransportMessage
 {
 public:
-	JudpTransportMessage(JausByte version, JausUnsignedShort commandCode);	
+	JudpTransportMessage(void);
+	JudpTransportMessage(unsigned char *buffer, unsigned int bufferSizeBytes);
+	
 	~JudpTransportMessage(void);
 	
-	unsigned char* toBuffer(void);
-	bool fromBuffer(unsigned char *);
+	unsigned int toBuffer(void);
+	
+	unsigned int getSizeBytes(void);
 	
 	JausByte getVersion(void);
+	
 	JausUnsignedShort getCommandCode(void);
 	
-private:
+protected:
 	JausByte version;
 	JausUnsignedShort commandCode;
-	
+	unsigned char *buffer;
+	int index;
+	unsigned int bufferSizeBytes;
 };
 
 #endif

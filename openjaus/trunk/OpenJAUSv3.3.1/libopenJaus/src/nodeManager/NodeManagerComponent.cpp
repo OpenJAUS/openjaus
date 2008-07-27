@@ -89,7 +89,7 @@ NodeManagerComponent::NodeManagerComponent(FileLoader *configData, EventHandler 
 	// NOTE: These two values should exist in the properties file and should be checked 
 	// in the NodeManager class prior to constructing this object
 	subsystemId = configData->GetConfigDataInt("JAUS", "SubsystemId");
-	if(subsystemId < JAUS_MINIMUM_SUBSYSTEM_ID || subsystemId > JAUS_MAXIMUM_SUBSYSTEM_ID)
+	if(subsystemId > JAUS_MAXIMUM_SUBSYSTEM_ID)
 	{
 		// Invalid ID
 		throw "NodeManagerComponent: Invalid SubsystemId";

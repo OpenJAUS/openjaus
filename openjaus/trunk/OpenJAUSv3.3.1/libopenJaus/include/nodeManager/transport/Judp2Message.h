@@ -53,7 +53,7 @@
 class Judp2Message : public JudpMessage 
 {
 public:
-	Judp2Message(unsigned char *buffer);
+	Judp2Message(unsigned char *buffer, unsigned int bufferSizeBytes);
 	~Judp2Message(void);
 
 	JausAddress getSourceAddress(void);
@@ -69,6 +69,7 @@ public:
 private:
 	unsigned char *buffer;
 	int index;
+	unsigned int bufferSizeBytes;
 };
 
 #endif
