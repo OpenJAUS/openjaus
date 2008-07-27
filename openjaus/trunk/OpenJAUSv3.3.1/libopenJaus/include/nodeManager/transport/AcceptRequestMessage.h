@@ -6,17 +6,17 @@
 class AcceptRequestMessage : JudpTransportMessage
 {
 public:
-	AcceptRequestMessage(JausByte offeredId, JausUnsignedShort leaseTimeMin);	
+	AcceptRequestMessage(JausAddress offeredAddress, JausUnsignedShort leaseTimeMin);	
 	~AcceptRequestMessage(void);
 	
 	unsigned char* toBuffer(void);
 	bool fromBuffer(unsigned char *);
 	
-	JausByte getOfferedId(void);
+	JausAddress getOfferedAddress(void);
 	JausUnsignedShort getLeaseTime(void);
 	
 private:
-	JausByte offeredId;
+	JausAddress offeredAddress;
 	JausUnsignedShort leaseTimeMin;	
 };
 

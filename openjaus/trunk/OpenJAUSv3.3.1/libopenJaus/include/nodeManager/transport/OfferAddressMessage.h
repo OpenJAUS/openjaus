@@ -6,17 +6,17 @@
 class OfferAddressMessage : JudpTransportMessage
 {
 public:
-	OfferAddressMessage(JausByte offeredId, JausUnsignedShort leaseTimeMin);	
+	OfferAddressMessage(JausAddress offerAddress, JausUnsignedShort leaseTimeMin);	
 	~OfferAddressMessage(void);
 	
 	unsigned char* toBuffer(void);
 	bool fromBuffer(unsigned char *);
 	
-	JausByte getOfferedId(void);
+	JausAddress getOfferAddress(void);
 	JausUnsignedShort getLeaseTime(void);
 	
 private:
-	JausByte offeredId;
+	JausAddress offerAddress;
 	JausUnsignedShort leaseTimeMin;	
 };
 

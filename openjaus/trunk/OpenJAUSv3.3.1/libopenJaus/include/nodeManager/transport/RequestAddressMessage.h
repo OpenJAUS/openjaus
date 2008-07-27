@@ -3,19 +3,19 @@
 
 #include <jaus.h>
 
-class RequestedAddressMessage : JudpTransportMessage
+class RequestAddressMessage : JudpTransportMessage
 {
 public:
-	RequestedAddressMessage(JausByte requestedId);	
-	~RequestedAddressMessage(void);
+	RequestAddressMessage(JausAddress requestAddress);	
+	~RequestAddressMessage(void);
 	
 	unsigned char* toBuffer(void);
 	bool fromBuffer(unsigned char *);
 	
-	JausByte getRequestedId(void);
+	JausAddress getRequestAddress(void);
 	
 private:
-	JausByte requestedId;
+	JausAddress requestAddress;
 	
 };
 
