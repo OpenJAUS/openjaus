@@ -243,7 +243,7 @@ bool JausSubsystemCommunicationManager::receiveJausMessage(JausMessage message, 
 	if(message->source->subsystem == mySubsystemId)
 	{
 		// Error: Cannot receive messages for myself through a subsInterface!
-		ErrorEvent *e = new ErrorEvent(ErrorEvent::Routing, __FUNCTION__, __LINE__, "Message received from MsgRouter that is not from this subs is for this node");
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::Routing, __FUNCTION__, __LINE__, "Message received on Subsystem Interface that is from this subsystem.");
 		this->eventHandler->handleEvent(e);
 		jausMessageDestroy(message);
 		return false;

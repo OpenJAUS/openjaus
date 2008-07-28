@@ -77,7 +77,6 @@ Judp2Interface::Judp2Interface(FileLoader *configData, EventHandler *handler, Ja
 		else
 		{
 			this->hostIpAddress = inetAddressGetByString((char *)this->configData->GetConfigDataString("Subsystem_Communications", "System_Host").c_str());
-			
 		}
 	}
 	else if(dynamic_cast<JausNodeCommunicationManager *>(this->commMngr))
@@ -177,7 +176,10 @@ bool Judp2Interface::processMessage(JausMessage message)
 					HASH_MAP<int, Judp2TransportData>::iterator iter;
 					for(iter = addressMap.begin(); iter != addressMap.end(); iter++)
 					{
-						sendJausMessage(iter->second, message);
+						if(iter->first != mySubsystemId)
+						{
+							sendJausMessage(iter->second, message);
+						}
 					}
 					jausMessageDestroy(message);
 					return true;
@@ -591,12 +593,17 @@ void Judp2Interface::recvThreadRun()
 	unsigned char payloadBuffer[1024] = {0};
 	
 	
+	// Create Datagram Packet for sending messages
 	packet = datagramPacketCreate();
 	packet->bufferSizeBytes = JUDP2_MAX_PACKET_SIZE;
 	packet->buffer = (unsigned char *) calloc(packet->bufferSizeBytes, 1);
 
 	if(this->type == SUBSYSTEM_INTERFACE && this->hostIpAddress)
 	{
+		data.addressValue = this->socket->address->value;
+		data.port = this->socket->port;
+		this->addressMap[mySubsystemId] = data;
+		
 		QueryTransportAddressesMessage query = queryTransportAddressesMessageCreate();
 		JausMessage txMsg = queryTransportAddressesMessageToJausMessage(query);
 		txMsg->destination->subsystem = 255;
@@ -614,7 +621,6 @@ void Judp2Interface::recvThreadRun()
 		jausMessageDestroy(txMsg);
 
 		inetAddressToBuffer(this->hostIpAddress, (char *)payloadBuffer, 1024);
-		printf("%s Attempting to query host for Addreses: %s\n", JUDP2_NAME, payloadBuffer);
 	}
 	
 	
@@ -716,7 +722,7 @@ void Judp2Interface::recvThreadRun()
 					{
 						case SUBSYSTEM_INTERFACE:
 							data.addressValue = packet->address->value;
-							data.port = JUDP_DATA_PORT;
+							data.port = packet->port;
 							this->addressMap[rxMessage->source->subsystem] = data;
 							break;
 
@@ -745,12 +751,10 @@ void Judp2Interface::recvThreadRun()
 							break;
 					}
 					
-					printf("Received command: %0X\n", rxMessage->commandCode);
 					switch(rxMessage->commandCode)
 					{
 						case JAUS_QUERY_TRANSPORT_ADDRESSES:
 							{
-								printf("%s Received query host for Addreses\n", JUDP2_NAME);
 								ReportTransportAddressesMessage report = reportTransportAddressesMessageCreate();
 								report->addressCount = this->addressMap.size();
 								report->subsystemId = (JausByte *)malloc(sizeof(JausByte) * report->addressCount);
@@ -767,7 +771,6 @@ void Judp2Interface::recvThreadRun()
 									report->port[i] = iterator->second.port;
 									i++;
 								}
-								printf("Number of addresses = %d\n", report->addressCount);
 								
 								jausAddressCopy(report->destination, rxMessage->source);
 								JausMessage txMsg = reportTransportAddressesMessageToJausMessage(report);
@@ -777,21 +780,17 @@ void Judp2Interface::recvThreadRun()
 								txMsg->source->instance = 1;	
 								data.addressValue = packet->address->value;
 								data.port = packet->port;
-								printf("Sending %0X\n", txMsg->commandCode);
 								this->sendJausMessage(data, txMsg);
 								reportTransportAddressesMessageDestroy(report);
 								jausMessageDestroy(txMsg);
 								jausMessageDestroy(rxMessage);
 								
-								inetAddressToBuffer(packet->address, (char *)payloadBuffer, 1024);
-								printf("%s Sent Report to: %s:%d\n", JUDP2_NAME, payloadBuffer, packet->port);
-								
+								inetAddressToBuffer(packet->address, (char *)payloadBuffer, 1024);								
 							}
 							break;
 							
 						case JAUS_REPORT_TRANSPORT_ADDRESSES:
 							{
-								printf("%s Received report Transport Addreses\n", JUDP2_NAME);
 								ReportTransportAddressesMessage report = reportTransportAddressesMessageFromJausMessage(rxMessage);
 								InetAddress newAddress = inetAddressCreate();
 								
@@ -803,7 +802,6 @@ void Judp2Interface::recvThreadRun()
 
 									newAddress->value = data.addressValue;
 									inetAddressToBuffer(newAddress, (char *)payloadBuffer, 1024);
-									printf("%s Adding: <%d : %s>\n", JUDP2_NAME, report->subsystemId[i], payloadBuffer);
 								}
 								inetAddressDestroy(newAddress);
 								reportTransportAddressesMessageDestroy(report);
