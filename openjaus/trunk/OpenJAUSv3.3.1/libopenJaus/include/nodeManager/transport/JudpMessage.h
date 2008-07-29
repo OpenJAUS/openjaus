@@ -55,27 +55,24 @@
 #define JUDP_JAUS_MESSAGE_TYPE					1 // per OpenJAUS
 #define JUDP_TRANSPORT_TYPE						2 // per OpenJAUS
 
-class JudpMessage
+class JudpMessage : public Transportable
 {
 public:
-	virtual ~JudpMessage(void);
+	JudpMessage();
 	
-	//virtual JausAddress getHcFlags(void);
-	//virtual JausAddress getHcLength(void);
-	//virtual JausAddress getHcNumber(void);
+	JudpMessage(int version);
+	
+	~JudpMessage(void);
+	
+	int getVersion(void);
+	
+	JudpJausMessage popJausMessage(void);
+	
+	bool pushJausMessage(JudpJausMessage jMessage);
+	
+private:
+	int version;
 
-	virtual JausAddress getSourceAddress(void);
-	
-	virtual JausAddress getDestinationAddress(void);
-	
-	virtual int getMessageType(void);
-	
-	//virtual bool setPayload(JudpMessage payload);
-	//virtual int getMessageSize(void);
-	
-	virtual char *getPayloadBuffer(void);
-	
-	virtual JausMessage toJausMessage(void);
 };
 
 #endif
