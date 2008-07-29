@@ -585,7 +585,7 @@ void Judp2Interface::recvThreadRun()
 	Judp2TransportData data;
 	long bytesRecv = 0;
 	int bytesUnpacked = 0;
-	unsigned int bufferIndex = 0;
+	int bufferIndex = 0;
 	Judp2HeaderCompressionData hcData;
 	JudpMessage *judpMessage;
 	JausMessage tempMessage = NULL;
@@ -756,7 +756,7 @@ void Judp2Interface::recvThreadRun()
 						case JAUS_QUERY_TRANSPORT_ADDRESSES:
 							{
 								ReportTransportAddressesMessage report = reportTransportAddressesMessageCreate();
-								report->addressCount = this->addressMap.size();
+								report->addressCount = (JausUnsignedShort)this->addressMap.size();
 								report->subsystemId = (JausByte *)malloc(sizeof(JausByte) * report->addressCount);
 								report->ipAddress = (JausUnsignedInteger *)malloc(sizeof(JausUnsignedInteger) * report->addressCount);
 								report->port = (JausUnsignedShort *)malloc(sizeof(JausUnsignedShort) * report->addressCount);
