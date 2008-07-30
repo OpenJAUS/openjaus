@@ -229,12 +229,26 @@ PointLla vehicleSimGetPositionLla(void)
 
 double vehicleSimGetX(void)
 {
-	return vehiclePosUtm->xMeters;
+	if(vehiclePosUtm)
+	{
+		return vehiclePosUtm->xMeters;
+	}
+	else
+	{
+		return 0;		
+	}
 }
 
 double vehicleSimGetY(void)
 {
-	return vehiclePosUtm->yMeters;
+	if(vehiclePosUtm)
+	{
+		return vehiclePosUtm->yMeters;
+	}
+	else
+	{
+		return 0;
+	}
 }
 
 double vehicleSimGetH(void)
