@@ -48,27 +48,66 @@
 #define JUDP2_MESSAGE
 
 #include <jaus.h>
-#include "nodeManager/transport/JudpMessage.h"
+#include "nodeManager/transport/Transportable.h"
 
-class Judp2Message : public JudpMessage 
+class Judp2Message : public Transportable 
 {
 public:
-	Judp2Message(unsigned char *buffer, unsigned int bufferSizeBytes);
+	Judp2Message();
 	~Judp2Message(void);
 
-	JausAddress getSourceAddress(void);
-	
-	JausAddress getDestinationAddress(void);
-	
 	int getMessageType(void);
+	bool setMessageType(int messageType);
+
+	int getHcFlags(void);
+	bool setHcFlags(int hcFlags);
+
+	int getDataSize(void);
+	bool setDataSize(int dataSize);
+
+	int getHcHeaderNumber(void);
+	bool setHcHeaderNumber(int hcHeaderNumber);
 	
-	char *getPayloadBuffer(void);
+	int getHcLength(void);
+	bool setHcLength(int hcLength);
+
+	int getPriority(void);
+	bool setPriority(int priority);
+
+	int getAckNak(void);
+	bool setAckNak(int ackNak);
+
+	int getDataFlags(void);
+	bool setDataFlags(int dataFlags);
+
+	int getDestinationId(void);
+	bool setDestinationId(int destinationId);
+
+	int getSourceId(void);
+	bool setSourceId(int sourceId);
+
+	Transporable getPayload(void);
+	bool setPayload(Transportable payload);
 	
-	JausMessage toJausMessage(void);
+	int getSequenceNumber(void);
+	bool setSequenceNumber(int sequenceNumber);
 
 private:
-	unsigned char *buffer;
+	int messageType;
+	int hcFlags;
+	int dataSize;
+	int hcNumber;
+	int hcLength;
+	int priority;
+	int ackNak;
+	int dataFlags;
+	int destinationId;
+	int sourceId;
+	Transportable payload;
+	int sequenceNumber;
+	
 	int index;
+	unsigned char *buffer;
 	unsigned int bufferSizeBytes;
 };
 
