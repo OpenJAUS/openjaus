@@ -48,27 +48,37 @@
 #define JUDP1_MESSAGE
 
 #include <jaus.h>
-#include "nodeManager/transport/JudpMessage.h"
+#include "nodeManager/transport/Transportable.h"
 
-class Judp1Message : public JudpMessage 
+class Judp1Message : public Transportable 
 {
 public:
-	Judp1Message(unsigned char *buffer, unsigned int bufferSizeBytes);
+	Judp1Message();
 	~Judp1Message(void);
 
-	JausAddress getSourceAddress(void);
+	int getHcHeaderNumber(void);
+	bool setHcHeaderNumber(int hcHeaderNumber);
 	
-	JausAddress getDestinationAddress(void);
+	int getHcLength(void);
+	bool setHcLength(int hcLength);
+
+	int getHcFlags(void);
+	bool setHcFlags(int hcFlags);
+
+	int getMessageLength(void);
+	bool setMessageLength(int messageLength);
 	
-	int getMessageType(void);
-	
-	char *getPayloadBuffer(void);
-	
-	JausMessage toJausMessage(void);
+	JausMessage getJausMessage(void);
+	bool setJausMessage(JausMessage message);
 
 private:
-	unsigned char *buffer;
+	int hcHeaderNumber;
+	int hcLength;
+	int hcFlags;
+	int messageLength;
+	JausMessage message;
 	int index;
+	unsigned char *buffer;
 	unsigned int bufferSizeBytes;
 };
 

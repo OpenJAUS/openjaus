@@ -47,7 +47,7 @@
 #ifndef JUDP_MESSAGE
 #define JUDP_MESSAGE
 
-#include <jaus.h>
+#include "nodeManager/transport/Transportable.h"
 
 #define JUDP_VERSION_1_0						1 // per AS5669 v1.0
 #define JUDP_VERSION_2_0						2 // per AS5669 v2.0
@@ -65,14 +65,17 @@ public:
 	~JudpMessage(void);
 	
 	int getVersion(void);
+
+	bool setVersion(int version);
 	
-	JudpJausMessage popJausMessage(void);
+	Transportable popMessage(void);
 	
-	bool pushJausMessage(JudpJausMessage jMessage);
+	bool pushMessage(Transportable message);
 	
 private:
 	int version;
-
+	char *buffer;
+	int bufferIndex;
 };
 
 #endif
