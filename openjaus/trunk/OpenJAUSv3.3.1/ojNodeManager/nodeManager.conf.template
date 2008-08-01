@@ -21,7 +21,9 @@ Enabled: false
 # This subsection defines the interfaces and their options for subsystem communication
 [Subsystem_Communications]
 Enabled: true
-JUDP_Interface: true
-JUDP_IP_Address: 
+JUDP2_Interface: true
+JUDP2_IP_Address: 192.168.84.128
+#JUDP_Interface: true
+#JUDP_IP_Address: 
 #JAUS_OPC_UDP_Interface: true
 #JAUS_OPC_UDP_IP_Address:
