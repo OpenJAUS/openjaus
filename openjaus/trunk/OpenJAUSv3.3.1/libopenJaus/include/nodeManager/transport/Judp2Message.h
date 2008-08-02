@@ -86,7 +86,7 @@ public:
 	int getSourceId(void);
 	bool setSourceId(int sourceId);
 
-	Transporable getPayload(void);
+	Transportable getPayload(void);
 	bool setPayload(Transportable payload);
 	
 	int getSequenceNumber(void);
