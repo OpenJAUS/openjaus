@@ -47,15 +47,16 @@
 #ifndef JUDP_MESSAGE
 #define JUDP_MESSAGE
 
+#include <vector>
 #include "nodeManager/transport/Transportable.h"
+#include "nodeManager/transport/Judp1Message.h"
+#include "nodeManager/transport/Judp2Message.h"
 
+#define JUDP_VERSION_UNDEFINED					0
 #define JUDP_VERSION_1_0						1 // per AS5669 v1.0
 #define JUDP_VERSION_2_0						2 // per AS5669 v2.0
 
-#define JUDP_JAUS_MESSAGE_TYPE					1 // per OpenJAUS
-#define JUDP_TRANSPORT_TYPE						2 // per OpenJAUS
-
-class JudpMessage : public Transportable
+class JudpMessage : public virtual Transportable
 {
 public:
 	JudpMessage();
@@ -68,14 +69,23 @@ public:
 
 	bool setVersion(int version);
 	
-	Transportable popMessage(void);
+	Transportable *popMessage(void);
 	
-	bool pushMessage(Transportable message);
+	Transportable *peekMessage(void);
+
+	bool pushMessage(Transportable *message);
+
+	bool resetMessageStack(void);
+
+	int toBuffer(unsigned char *buffer, int bufferSizeBytes);
+	int fromBuffer(unsigned char *buffer, int bufferSizeBytes);
+	int getSizeBytes(void); 	
 	
 private:
 	int version;
-	char *buffer;
-	int bufferIndex;
+	Judp1Message *judp1Message;
+	Judp2Message *judp2Message;
+	std::vector <Transportable *> messages;
 };
 
 #endif
