@@ -585,7 +585,7 @@ void Judp2Interface::recvThreadRun()
 	Judp2TransportData data;
 	long bytesRecv = 0;
 	int bytesUnpacked = 0;
-	int bufferIndex = 0;
+	unsigned int bufferIndex = 0;
 	Judp2HeaderCompressionData hcData;
 	JudpMessage *judpMessage;
 	JausMessage tempMessage = NULL;
@@ -778,9 +778,8 @@ void Judp2Interface::recvThreadRun()
 								txMsg->source->node = 1;
 								txMsg->source->component = 1;
 								txMsg->source->instance = 1;	
-								data.addressValue = packet->address->value;
-								data.port = packet->port;
-								this->sendJausMessage(data, txMsg);
+								txMsg->destination->subsystem = JAUS_BROADCAST_SUBSYSTEM_ID;
+								this->processMessage(txMsg);
 								reportTransportAddressesMessageDestroy(report);
 								jausMessageDestroy(txMsg);
 								jausMessageDestroy(rxMessage);
@@ -802,6 +801,7 @@ void Judp2Interface::recvThreadRun()
 
 									newAddress->value = data.addressValue;
 									inetAddressToBuffer(newAddress, (char *)payloadBuffer, 1024);
+									printf("Adding Subsystem: %d Adding address: %s:%d\n", report->subsystemId[i], payloadBuffer, report->port[i]);
 								}
 								inetAddressDestroy(newAddress);
 								reportTransportAddressesMessageDestroy(report);
