@@ -50,6 +50,10 @@
 #include <jaus.h>
 #include "nodeManager/transport/Transportable.h"
 
+#define JUDP2_JAUS_MESSAGE_TYPE		1
+#define JUDP2_TRANSPORT_TYPE		2
+
+
 class Judp2Message : public Transportable 
 {
 public:
@@ -86,12 +90,16 @@ public:
 	int getSourceId(void);
 	bool setSourceId(int sourceId);
 
-	Transportable getPayload(void);
-	bool setPayload(Transportable payload);
+	Transportable *getPayload(void);
+	bool setPayload(Transportable *payload);
 	
 	int getSequenceNumber(void);
 	bool setSequenceNumber(int sequenceNumber);
 
+//	int toBuffer(unsigned char *buffer, int bufferSizeBytes);
+//	int fromBuffer(unsigned char *buffer, int bufferSizeBytes);
+//	int getSizeBytes(void); 	
+	
 private:
 	int messageType;
 	int hcFlags;
@@ -103,7 +111,7 @@ private:
 	int dataFlags;
 	int destinationId;
 	int sourceId;
-	Transportable payload;
+	Transportable *payload;
 	int sequenceNumber;
 	
 	int index;
