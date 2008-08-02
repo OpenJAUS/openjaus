@@ -683,9 +683,9 @@ void Judp2Interface::recvThreadRun()
 					continue;
 			}
 */			
-			switch(JUDP_JAUS_MESSAGE_TYPE)
+			switch(JUDP2_JAUS_MESSAGE_TYPE)
 			{
-				case JUDP_JAUS_MESSAGE_TYPE:
+				case JUDP2_JAUS_MESSAGE_TYPE:
 					bytesUnpacked = this->headerCompressionDataFromBuffer(&hcData, packet->buffer + bufferIndex, packet->bufferSizeBytes - bufferIndex);
 					if(bytesUnpacked == 0)
 					{
@@ -822,7 +822,7 @@ void Judp2Interface::recvThreadRun()
 										
 					break;
 					
-				case JUDP_TRANSPORT_TYPE:
+				case JUDP2_TRANSPORT_TYPE:
 					break;
 			} // switch message type
 			
