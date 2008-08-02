@@ -631,9 +631,9 @@ void Judp2Interface::recvThreadRun()
 			case SUBSYSTEM_INTERFACE:
 				if(!mySubsystemId) // TODO: Add "or lease time is almost up"
 				{
-					judpMessage = new Judp2Message(packet->buffer, packet->bufferSizeBytes);// send transport host discover message
-					DiscoverHostMessage *dhMsg = new DiscoverHostMessage(payloadBuffer, 1024);
-					printf("Discover Pack Bytes = %d\n", dhMsg->toBuffer());
+//					judpMessage = new Judp2Message(packet->buffer, packet->bufferSizeBytes);// send transport host discover message
+//					DiscoverHostMessage *dhMsg = new DiscoverHostMessage(payloadBuffer, 1024);
+//					printf("Discover Pack Bytes = %d\n", dhMsg->toBuffer());
 
 					//judpMessage->setPayload(dhMsg);
 					//judpMessage->setDestination(255.255.255.255);
@@ -641,8 +641,8 @@ void Judp2Interface::recvThreadRun()
 					//judpMessage->toBuffer(packet->buffer, packet->bufferSizeBytes);
 					//multicastSocketSend(this->socket, packet);
 					
-					delete judpMessage;
-					delete dhMsg;					
+//					delete judpMessage;
+//					delete dhMsg;					
 				}
 				break;
 				
@@ -668,7 +668,7 @@ void Judp2Interface::recvThreadRun()
 		
 		while(bufferIndex < packet->bufferSizeBytes)
 		{
-			switch(judpVersion)
+/*			switch(judpVersion)
 			{
 				case JUDP_VERSION_1_0:
 					judpMessage = new Judp1Message(packet->buffer + bufferIndex, packet->bufferSizeBytes - bufferIndex);
@@ -682,8 +682,8 @@ void Judp2Interface::recvThreadRun()
 					bufferIndex = packet->bufferSizeBytes;
 					continue;
 			}
-			
-			switch(judpMessage->getMessageType())
+*/			
+			switch(JUDP_JAUS_MESSAGE_TYPE)
 			{
 				case JUDP_JAUS_MESSAGE_TYPE:
 					bytesUnpacked = this->headerCompressionDataFromBuffer(&hcData, packet->buffer + bufferIndex, packet->bufferSizeBytes - bufferIndex);
@@ -826,7 +826,7 @@ void Judp2Interface::recvThreadRun()
 					break;
 			} // switch message type
 			
-			delete judpMessage;
+			//delete judpMessage;
 			
 			bufferIndex = packet->bufferSizeBytes; // TODO: bufferIndex += judpMessage->getSize();
 			
