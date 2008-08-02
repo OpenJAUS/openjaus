@@ -18,7 +18,7 @@ public:
 	
 	virtual bool addFragment(Transportable otherFragment);
 	
-	virtual List<Transportable> toFragments(int maxTransmissionUnit);
+	//virtual List<Transportable> toFragments(int maxTransmissionUnit);
 	
 };
 
