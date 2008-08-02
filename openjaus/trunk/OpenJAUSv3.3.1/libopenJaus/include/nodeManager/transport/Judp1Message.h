@@ -50,7 +50,7 @@
 #include <jaus.h>
 #include "nodeManager/transport/Transportable.h"
 
-class Judp1Message : public Transportable 
+class Judp1Message : public virtual Transportable 
 {
 public:
 	Judp1Message();
@@ -70,6 +70,10 @@ public:
 	
 	JausMessage getJausMessage(void);
 	bool setJausMessage(JausMessage message);
+	
+	int toBuffer(unsigned char *buffer, int bufferSizeBytes);
+	int fromBuffer(unsigned char *buffer, int bufferSizeBytes);
+	int getSizeBytes(void); 	
 
 private:
 	int hcHeaderNumber;
