@@ -44,6 +44,12 @@
 
 void defaultJausMessageProcessor(JausMessage message, NodeManagerInterface nmi, JausComponent cmpt)
 {
+	defaultJausMessageProcessorNoDestroy(message, nmi, cmpt);
+	jausMessageDestroy(message);
+}
+
+void defaultJausMessageProcessorNoDestroy(JausMessage message, NodeManagerInterface nmi, JausComponent cmpt)
+{
 	JausMessage txMessage;
 	SetComponentAuthorityMessage setComponentAuthority;
 	RequestComponentControlMessage requestComponentControl;
@@ -71,13 +77,11 @@ void defaultJausMessageProcessor(JausMessage message, NodeManagerInterface nmi, 
 	
 	if(nmi == NULL)
 	{
-		jausMessageDestroy(message);
 		return;
 	}
 	
 	if(nmi->scm == NULL) 
 	{
-		jausMessageDestroy(message);
 		return;
 	}
 	
@@ -85,7 +89,6 @@ void defaultJausMessageProcessor(JausMessage message, NodeManagerInterface nmi, 
 	{
 		jausAddressToString(message->source, string);
 		////cError("DefaultMessageProcessor: Command %s, from non-controlling source: %s\n", jausMessageCommandCodeString(message));
-		jausMessageDestroy(message);
 		return;		
 	}	
 
@@ -103,12 +106,10 @@ void defaultJausMessageProcessor(JausMessage message, NodeManagerInterface nmi, 
 				//TODO: Throw errors (need a way to capture errors in this library)
 				////cError("DefaultMessageProcessor: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
 			}
-			jausMessageDestroy(message);
 			break;
 		
 		case JAUS_SHUTDOWN:
 			cmpt->state = JAUS_SHUTDOWN_STATE; 
-			jausMessageDestroy(message);
 			break;
 			
 		case JAUS_STANDBY:
@@ -116,7 +117,6 @@ void defaultJausMessageProcessor(JausMessage message, NodeManagerInterface nmi, 
 			{
 				cmpt->state = JAUS_STANDBY_STATE;
 			}
-			jausMessageDestroy(message);
 			break;
 			
 		case JAUS_RESUME:
@@ -124,22 +124,18 @@ void defaultJausMessageProcessor(JausMessage message, NodeManagerInterface nmi, 
 			{
 				cmpt->state = JAUS_READY_STATE;
 			}
-			jausMessageDestroy(message);
 			break;
 			
 		case JAUS_RESET:
 			cmpt->state = JAUS_INITIALIZE_STATE;
-			jausMessageDestroy(message);
 			break;
 			
 		case JAUS_SET_EMERGENCY:
 			cmpt->state = JAUS_EMERGENCY_STATE; 
-			jausMessageDestroy(message);
 			break;
 			
 		case JAUS_CLEAR_EMERGENCY:
 			cmpt->state = JAUS_STANDBY_STATE;
-			jausMessageDestroy(message);
 			break;
 			
 		case JAUS_REQUEST_COMPONENT_CONTROL:
@@ -225,7 +221,6 @@ void defaultJausMessageProcessor(JausMessage message, NodeManagerInterface nmi, 
 			{
 				//cError("DefaultMessageProcessor: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
 			}
-			jausMessageDestroy(message);
 			break;
 			
 		case JAUS_RELEASE_COMPONENT_CONTROL:
@@ -245,7 +240,6 @@ void defaultJausMessageProcessor(JausMessage message, NodeManagerInterface nmi, 
 			{
 				//cError("DefaultMessageProcessor: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
 			}
-			jausMessageDestroy(message);
 			break;
 
 		case JAUS_CONFIRM_SERVICE_CONNECTION:
@@ -259,7 +253,6 @@ void defaultJausMessageProcessor(JausMessage message, NodeManagerInterface nmi, 
 			{
 				//cError("DefaultMessageProcessor: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
 			}
-			jausMessageDestroy(message);
 			break;
 
 		case JAUS_CREATE_SERVICE_CONNECTION:
@@ -273,7 +266,7 @@ void defaultJausMessageProcessor(JausMessage message, NodeManagerInterface nmi, 
 			{
 				//cError("DefaultMessageProcessor: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
 			}
-			jausMessageDestroy(message);
+			
 			break;
 			
 		case JAUS_ACTIVATE_SERVICE_CONNECTION:
@@ -287,7 +280,7 @@ void defaultJausMessageProcessor(JausMessage message, NodeManagerInterface nmi, 
 			{
 				//cError("DefaultMessageProcessor: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
 			}
-			jausMessageDestroy(message);
+			
 			break;
 			
 		case JAUS_SUSPEND_SERVICE_CONNECTION:
@@ -301,7 +294,6 @@ void defaultJausMessageProcessor(JausMessage message, NodeManagerInterface nmi, 
 			{
 				//cError("DefaultMessageProcessor: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
 			}
-			jausMessageDestroy(message);
 			break;
 
 		case JAUS_TERMINATE_SERVICE_CONNECTION:
@@ -315,7 +307,6 @@ void defaultJausMessageProcessor(JausMessage message, NodeManagerInterface nmi, 
 			{
 				//cError("DefaultMessageProcessor: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
 			}
-			jausMessageDestroy(message);
 			break;
 					
 		case JAUS_QUERY_COMPONENT_AUTHORITY:
@@ -328,7 +319,6 @@ void defaultJausMessageProcessor(JausMessage message, NodeManagerInterface nmi, 
 			jausMessageDestroy(txMessage);
 			
 			reportComponentAuthorityMessageDestroy(reportComponentAuthority);
-			jausMessageDestroy(message);
 			break;
 			
 		case JAUS_QUERY_COMPONENT_STATUS:
@@ -342,7 +332,6 @@ void defaultJausMessageProcessor(JausMessage message, NodeManagerInterface nmi, 
 			jausMessageDestroy(txMessage);
 
 			reportComponentStatusMessageDestroy(reportComponentStatus);
-			jausMessageDestroy(message);
 			break;
 
 		case JAUS_REPORT_HEARTBEAT_PULSE:
@@ -352,8 +341,6 @@ void defaultJausMessageProcessor(JausMessage message, NodeManagerInterface nmi, 
 			{
 				nmi->timestamp = ojGetTimeSec();
 			}
-			
-			jausMessageDestroy(message);
 			break;
 					
 		case JAUS_QUERY_IDENTIFICATION:
@@ -367,8 +354,6 @@ void defaultJausMessageProcessor(JausMessage message, NodeManagerInterface nmi, 
 			jausMessageDestroy(txMessage);
 
 			reportIdentificationMessageDestroy(reportIdentification);
-			
-		    jausMessageDestroy(message);	// NMJ
 			break;
 			
 		case JAUS_REPORT_CONFIGURATION:
@@ -402,7 +387,6 @@ void defaultJausMessageProcessor(JausMessage message, NodeManagerInterface nmi, 
 			{
 				//cError("DefaultMessageProcessor: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
 			}
-			jausMessageDestroy(message);
 			break;
 
 		case JAUS_QUERY_SERVICES:
@@ -428,14 +412,12 @@ void defaultJausMessageProcessor(JausMessage message, NodeManagerInterface nmi, 
 			{
 				//cError("DefaultMessageProcessor: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
 			}
-			jausMessageDestroy(message);
 			break;
 
 		default:
 			// Destroy the rxMessage
 			jausAddressToString(message->source, string);
 			//cError("DefaultMessageProcessor: Unhandled code: %s, from: %s\n", jausMessageCommandCodeString(message), string);
-			jausMessageDestroy(message);
 			break;
 	}
 }
