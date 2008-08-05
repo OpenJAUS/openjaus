@@ -337,9 +337,11 @@ void ojCmptProcessMessage(OjCmpt ojCmpt, JausMessage message)
 		}
 		else
 		{
-			defaultJausMessageProcessor(message, ojCmpt->nmi, ojCmpt->jaus);
+			defaultJausMessageProcessorNoDestroy(message, ojCmpt->nmi, ojCmpt->jaus);
 		}
 	}
+	
+	jausMessageDestroy(message);
 }
 
 double ojCmptGetRateHz(OjCmpt ojCmpt)
@@ -458,7 +460,7 @@ JausBoolean ojCmptHasController(OjCmpt ojCmpt)
 
 void ojCmptDefaultMessageProcessor(OjCmpt ojCmpt, JausMessage message)
 {
-	defaultJausMessageProcessor(message, ojCmpt->nmi, ojCmpt->jaus);
+	defaultJausMessageProcessorNoDestroy(message, ojCmpt->nmi, ojCmpt->jaus);
 }
 
 int ojCmptGetState(OjCmpt ojCmpt)

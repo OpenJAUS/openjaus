@@ -174,7 +174,6 @@ void gposQueryGlobalPoseCallback(OjCmpt gpos, JausMessage query)
 		////cError("gpos: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
 	}
 	
-	jausMessageDestroy(query);
 }
 
 void gposReadyState(OjCmpt gpos)
