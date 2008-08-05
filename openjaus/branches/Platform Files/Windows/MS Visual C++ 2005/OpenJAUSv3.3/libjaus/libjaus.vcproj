@@ -40,7 +40,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="./include"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -173,6 +173,10 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath=".\include\message\command\planning\abortMissionMessage.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\message\command\core\activateServiceConnectionMessage.h"
 				>
 			</File>
@@ -273,6 +277,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\type\jausMissionCommand.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\type\jausMissionTask.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\jausNode.h"
 				>
 			</File>
@@ -322,6 +334,10 @@
 			</File>
 			<File
 				RelativePath=".\include\type\jausWorldModelVectorObject.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\message\command\planning\pauseMissionMessage.h"
 				>
 			</File>
 			<File
@@ -433,6 +449,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\message\query\planning\queryMissionStatusMessage.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\message\query\platform\queryPathSegmentCountMessage.h"
 				>
 			</File>
@@ -466,6 +486,10 @@
 			</File>
 			<File
 				RelativePath=".\include\message\query\dynamicconfiguration\queryServicesMessage.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\message\query\planning\querySpoolingPreferenceMessage.h"
 				>
 			</File>
 			<File
@@ -518,6 +542,14 @@
 			</File>
 			<File
 				RelativePath=".\include\message\command\core\releaseComponentControlMessage.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\message\command\planning\removeMessagesMessage.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\message\command\planning\replaceMessagesMessage.h"
 				>
 			</File>
 			<File
@@ -629,6 +661,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\message\inform\planning\reportMissionStatusMessage.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\message\inform\platform\reportPathSegmentCountMessage.h"
 				>
 			</File>
@@ -662,6 +698,10 @@
 			</File>
 			<File
 				RelativePath=".\include\message\inform\dynamicconfiguration\reportServicesMessage.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\message\inform\planning\reportSpoolingPreferenceMessage.h"
 				>
 			</File>
 			<File
@@ -722,6 +762,14 @@
 			</File>
 			<File
 				RelativePath=".\include\message\command\core\resumeMessage.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\message\command\planning\resumeMissionMessage.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\message\command\planning\runMissionMessage.h"
 				>
 			</File>
 			<File
@@ -889,6 +937,10 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\src\message\command\planning\abortMissionMessage.c"
+				>
+			</File>
+			<File
 				RelativePath=".\src\message\command\core\activateServiceConnectionMessage.c"
 				>
 			</File>
@@ -981,6 +1033,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\type\jausMissionCommand.c"
+				>
+			</File>
+			<File
+				RelativePath=".\src\type\jausMissionTask.c"
+				>
+			</File>
+			<File
 				RelativePath=".\src\jausNode.c"
 				>
 			</File>
@@ -1026,6 +1086,10 @@
 			</File>
 			<File
 				RelativePath=".\src\type\jausWorldModelVectorObject.c"
+				>
+			</File>
+			<File
+				RelativePath=".\src\message\command\planning\pauseMissionMessage.c"
 				>
 			</File>
 			<File
@@ -1137,6 +1201,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\message\query\planning\queryMissionStatusMessage.c"
+				>
+			</File>
+			<File
 				RelativePath=".\src\message\query\platform\queryPathSegmentCountMessage.c"
 				>
 			</File>
@@ -1170,6 +1238,10 @@
 			</File>
 			<File
 				RelativePath=".\src\message\query\dynamicconfiguration\queryServicesMessage.c"
+				>
+			</File>
+			<File
+				RelativePath=".\src\message\query\planning\querySpoolingPreferenceMessage.c"
 				>
 			</File>
 			<File
@@ -1222,6 +1294,14 @@
 			</File>
 			<File
 				RelativePath=".\src\message\command\core\releaseComponentControlMessage.c"
+				>
+			</File>
+			<File
+				RelativePath=".\src\message\command\planning\removeMessagesMessage.c"
+				>
+			</File>
+			<File
+				RelativePath=".\src\message\command\planning\replaceMessagesMessage.c"
 				>
 			</File>
 			<File
@@ -1333,6 +1413,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\message\inform\planning\reportMissionStatusMessage.c"
+				>
+			</File>
+			<File
 				RelativePath=".\src\message\inform\platform\reportPathSegmentCountMessage.c"
 				>
 			</File>
@@ -1366,6 +1450,10 @@
 			</File>
 			<File
 				RelativePath=".\src\message\inform\dynamicconfiguration\reportServicesMessage.c"
+				>
+			</File>
+			<File
+				RelativePath=".\src\message\inform\planning\reportSpoolingPreferenceMessage.c"
 				>
 			</File>
 			<File
@@ -1426,6 +1514,14 @@
 			</File>
 			<File
 				RelativePath=".\src\message\command\core\resumeMessage.c"
+				>
+			</File>
+			<File
+				RelativePath=".\src\message\command\planning\resumeMissionMessage.c"
+				>
+			</File>
+			<File
+				RelativePath=".\src\message\command\planning\runMissionMessage.c"
 				>
 			</File>
 			<File
@@ -1550,6 +1646,10 @@
 			</File>
 			<File
 				RelativePath=".\src\message\command\core\shutdownMessage.c"
+				>
+			</File>
+			<File
+				RelativePath=".\src\message\command\planning\spoolMissionMessage.c"
 				>
 			</File>
 			<File

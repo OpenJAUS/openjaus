@@ -225,10 +225,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\include\simulator.h"
-				>
-			</File>
-			<File
 				RelativePath=".\include\utm\utmLib.h"
 				>
 			</File>
@@ -294,10 +290,6 @@
 			</File>
 			<File
 				RelativePath=".\src\properties.c"
-				>
-			</File>
-			<File
-				RelativePath=".\src\simulator.c"
 				>
 			</File>
 			<File
