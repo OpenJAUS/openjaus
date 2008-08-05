@@ -204,6 +204,7 @@ JAUS_EXPORT JausBoolean scManagerReceiveServiceConnection(NodeManagerInterface n
 JAUS_EXPORT void scManagerReceiveMessage(NodeManagerInterface, JausMessage);
 
 JAUS_EXPORT void defaultJausMessageProcessor(JausMessage, NodeManagerInterface, JausComponent);
+JAUS_EXPORT void defaultJausMessageProcessorNoDestroy(JausMessage message, NodeManagerInterface nmi, JausComponent cmpt);
 
 JAUS_EXPORT LargeMessageHandler lmHandlerCreate(void);
 JAUS_EXPORT void lmHandlerDestroy(LargeMessageHandler);

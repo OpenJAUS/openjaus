@@ -183,7 +183,6 @@ void pdProcessMessage(OjCmpt pd, JausMessage message)
 		{		
 			//jausAddressToString(message->source, buf);
 			//cError("pd: Received command message %s from non-controlling component (%s).\n", jausMessageCommandCodeString(message), buf);
-			jausMessageDestroy(message); // Ignore this message
 			jausAddressDestroy(address);
 			return;
 		}
@@ -208,7 +207,6 @@ void pdProcessMessage(OjCmpt pd, JausMessage message)
 				}
 				jausAddressDestroy(address);
 			}
-			jausMessageDestroy(message);
 			break;
 		
 		case JAUS_SET_WRENCH_EFFORT:			
@@ -218,7 +216,6 @@ void pdProcessMessage(OjCmpt pd, JausMessage message)
 				setWrenchEffortMessageDestroy(data->setWrenchEffort);
 				data->setWrenchEffort = setWrenchEffort;
 			}
-			jausMessageDestroy(message);
 			break;
 
 		case JAUS_SET_DISCRETE_DEVICES:
@@ -228,7 +225,6 @@ void pdProcessMessage(OjCmpt pd, JausMessage message)
 				setDiscreteDevicesMessageDestroy(data->setDiscreteDevices);
 				data->setDiscreteDevices = setDiscreteDevices;
 			}
-			jausMessageDestroy(message);
 			break;
 
 		case JAUS_QUERY_PLATFORM_SPECIFICATIONS:
@@ -249,7 +245,6 @@ void pdProcessMessage(OjCmpt pd, JausMessage message)
 				reportPlatformSpecificationsMessageDestroy(reportPlatformSpecifications);
 				queryPlatformSpecificationsMessageDestroy(queryPlatformSpecifications);
 			}
-			jausMessageDestroy(message);			
 			break;
 
 		default:

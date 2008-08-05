@@ -521,7 +521,6 @@ void wdProcessMessage(OjCmpt wd, JausMessage message)
 		{		
 			//jausAddressToString(message->source, buf);
 			//cError("pd: Received command message %s from non-controlling component (%s).\n", jausMessageCommandCodeString(message), buf);
-			jausMessageDestroy(message); // Ignore this message
 			jausAddressDestroy(address);
 			return;
 		}
@@ -540,7 +539,6 @@ void wdProcessMessage(OjCmpt wd, JausMessage message)
 				}
 				reportComponentStatusMessageDestroy(reportComponentStatus);
 			}
-			jausMessageDestroy(message);
 			break;
 
 		case JAUS_CONFIRM_COMPONENT_CONTROL:
@@ -554,7 +552,6 @@ void wdProcessMessage(OjCmpt wd, JausMessage message)
 				}
 				confirmComponentControlMessageDestroy(confirmComponentControl);
 			}
-			jausMessageDestroy(message);
 			break;
 			
 		case JAUS_REJECT_COMPONENT_CONTROL:
@@ -568,7 +565,6 @@ void wdProcessMessage(OjCmpt wd, JausMessage message)
 				}
 				rejectComponentControlMessageDestroy(rejectComponentControl);
 			}
-			jausMessageDestroy(message);
 			break;
 			
 		case JAUS_SET_TRAVEL_SPEED:
@@ -578,7 +574,6 @@ void wdProcessMessage(OjCmpt wd, JausMessage message)
 				setTravelSpeedMessageDestroy(data->setSpeed);
 				data->setSpeed = setTravelSpeed;
 			}
-			jausMessageDestroy(message);
 			break;
 
 		case JAUS_REPORT_GLOBAL_POSE:
@@ -604,7 +599,6 @@ void wdProcessMessage(OjCmpt wd, JausMessage message)
 					data->currentWaypoint++;
 				}
 			}
-			jausMessageDestroy(message);
 			break;
 
 		case JAUS_REPORT_VELOCITY_STATE:
@@ -614,7 +608,6 @@ void wdProcessMessage(OjCmpt wd, JausMessage message)
 				reportVelocityStateMessageDestroy(data->reportVss);
 				data->reportVss = reportVss;
 			}
-			jausMessageDestroy(message);
 			break;
 
 		case JAUS_REPORT_WRENCH_EFFORT:
@@ -624,7 +617,6 @@ void wdProcessMessage(OjCmpt wd, JausMessage message)
 				reportWrenchEffortMessageDestroy(data->reportWrench);
 				data->reportWrench = reportWrench;
 			}
-			jausMessageDestroy(message);
 			break;
 			
 		case JAUS_SET_GLOBAL_WAYPOINT:
@@ -634,7 +626,6 @@ void wdProcessMessage(OjCmpt wd, JausMessage message)
 				data->setWaypoint = tempGlobalWaypoint;
 				jausArrayAdd(data->waypoints, tempGlobalWaypoint);
 			}
-			jausMessageDestroy(message);
 			break;
 
 		case JAUS_QUERY_GLOBAL_WAYPOINT:
@@ -662,7 +653,6 @@ void wdProcessMessage(OjCmpt wd, JausMessage message)
 				}
 			}
 			queryGlobalWaypointMessageDestroy(queryGlobalWaypointMessage);
-			jausMessageDestroy(message);
 			break;
 			
 		case JAUS_QUERY_WAYPOINT_COUNT:
@@ -681,7 +671,6 @@ void wdProcessMessage(OjCmpt wd, JausMessage message)
 			reportWaypointCountMessageDestroy(reportWaypointCountMessage);
 			ojCmptSendMessage(wd, txMessage);
 			queryWaypointCountMessageDestroy(queryWaypointCountMessage);
-			jausMessageDestroy(message);
 			break;
 		
 		default:

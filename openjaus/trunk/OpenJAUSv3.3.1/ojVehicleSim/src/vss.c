@@ -137,8 +137,6 @@ void vssQueryVelocityStateCallback(OjCmpt vss, JausMessage query)
 	{
 		////cError("vss: Error unpacking %s message.\n", jausMessageCommandCodeString(message));
 	}
-	
-	jausMessageDestroy(query);
 }
 
 
