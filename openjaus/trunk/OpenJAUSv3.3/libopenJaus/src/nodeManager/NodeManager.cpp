@@ -35,9 +35,9 @@
 //
 // Written By: Danny Kent (jaus AT dannykent DOT com)
 //
-// Version: 3.3.0
+// Version: 3.3.0a
 //
-// Date: 07/09/08
+// Date: 08/07/08
 //
 // Description: Wrapper class for the Node Manager as a whole. Provides user interface to create and run a Node Manager.
 

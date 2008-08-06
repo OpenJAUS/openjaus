@@ -35,9 +35,9 @@
 //
 // Written By: Luke Roseberry (MountainTop Technology, Inc)
 //
-// Version: 3.3.0
+// Version: 3.3.0a
 //
-// Date: 07/09/08
+// Date: 08/07/08
 //
 // Description: This file describes all the functionality associated with a JausMissionTask.
 //                JausMissionTasks are used to support the storage and transfer of mission through the planning message set.
