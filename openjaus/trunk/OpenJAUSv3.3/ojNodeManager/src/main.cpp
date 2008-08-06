@@ -47,6 +47,7 @@
 	#include <windows.h>
 	#define CLEAR_COMMAND "cls"
 #elif defined(__linux) || defined(linux) || defined(__linux__) || defined(__APPLE__)
+	#include <cstdlib>
 	#include <unistd.h>
 	#include <termios.h>
 	#define CLEAR_COMMAND "clear"
@@ -121,7 +122,7 @@ public:
 };
 
 #if defined(WIN32)
-int main(int argc, char *args)
+int main(int argc, char **args)
 {
 	// Console parameters
 	HANDLE handleStdin;
@@ -207,7 +208,7 @@ int main(int argc, char *args)
 
 #elif defined(__linux) || defined(linux) || defined(__linux__) || defined(__APPLE__)
 
-int main(int argc, char *args)
+int main(int argc, char **args)
 {
 	struct termios newTermio;
 	struct termios storedTermio;

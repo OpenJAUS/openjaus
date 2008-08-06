@@ -58,8 +58,7 @@
 #include "utils/FileLoader.h"
 #include "jaus.h"
 
-
-typedef enum JausTransportType {UNKNOWN_INTERFACE, SUBSYSTEM_INTERFACE, NODE_INTERFACE, COMPONENT_INTERFACE};
+enum JausTransportType {UNKNOWN_INTERFACE, SUBSYSTEM_INTERFACE, NODE_INTERFACE, COMPONENT_INTERFACE};
 
 class JausCommunicationManager;
 
