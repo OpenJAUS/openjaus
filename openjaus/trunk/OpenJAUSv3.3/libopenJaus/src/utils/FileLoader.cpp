@@ -55,6 +55,8 @@
 #include "utils/FileLoader.h"
 
 #ifndef WIN32
+	#include <cstdlib>
+	#include <string.h>
 	#define stricmp(x,y) strcasecmp(x,y)
 	#define strtok_s(x,y,z) strtok_r(x,y,z)
 #else

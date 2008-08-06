@@ -41,7 +41,9 @@
 //
 // Description: Wrapper class for the Node Manager as a whole. Provides user interface to create and run a Node Manager.
 
+#include <cstdlib>
 #include "nodeManager/NodeManager.h"
+
 
 NodeManager::NodeManager(FileLoader *configData, EventHandler *handler)
 {

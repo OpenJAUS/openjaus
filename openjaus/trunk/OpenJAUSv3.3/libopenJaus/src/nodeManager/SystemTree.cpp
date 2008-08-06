@@ -42,6 +42,7 @@
 // Description: This file defines the SystemTree class which manages the list of 
 //				JAUS subsystems and their associated nodes and components.
 
+#include <cstdlib>
 #include "nodeManager/SystemTree.h"
 #include "utils/timeLib.h"
 #include "nodeManager/events/SystemTreeEvent.h"
