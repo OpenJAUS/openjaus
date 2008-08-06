@@ -35,9 +35,9 @@
 //
 // Written By: Bob Toucthon, inspired by Danny Kent
 //
-// Version: 3.3.0
+// Version: 3.3.0a
 //
-// Date: 07/09/08
+// Date: 08/07/08
 //
 // This file defines the functionality of a QueryPayloadInterfaceMessage
 

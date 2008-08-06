@@ -35,9 +35,9 @@
 //
 // Written By: Bob Touchton (btouch AT comcast DOT net), inspired by Danny Kent (jaus AT dannykent DOT com)
 //
-// Version: 3.3.0
+// Version: 3.3.0a
 //
-// Date: 07/09/08
+// Date: 08/07/08
 //
 // This file defines the attributes of a ReportServicesMessage support functions
 

@@ -35,9 +35,9 @@
 //
 // Written By: Bob Touchton
 //
-// Version: 3.3.0
+// Version: 3.3.0a
 //
-// Date: 07/09/08
+// Date: 08/07/08
 //
 // Description: This file provides the general support functionality ReportPayloadInterfacesMessage
 // NOTE WELL: this message will also be used for general purpose information exchange

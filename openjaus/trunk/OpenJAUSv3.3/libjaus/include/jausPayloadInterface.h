@@ -35,9 +35,9 @@
 //
 // Written By: Bob Touchton (btouch AT comcast DOT net)
 //
-// Version: 3.3.0
+// Version: 3.3.0a
 //
-// Date: 07/09/08
+// Date: 08/07/08
 //
 // Description: This file defines the attributes of a ReportPayloadInterfaceMessage support functions
 

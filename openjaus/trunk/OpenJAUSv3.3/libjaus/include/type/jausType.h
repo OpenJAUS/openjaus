@@ -35,9 +35,9 @@
 //
 // Written By: Danny Kent (jaus AT dannykent DOT com)
 //
-// Version: 3.3.0
+// Version: 3.3.0a
 //
-// Date: 07/09/08
+// Date: 08/07/08
 //
 // Description: This file defines all the basic JausTypes and allows the user to use the JausType structure 
 // as a place-holder for any one type. This allows functions to operate on all JausTypes based on the 

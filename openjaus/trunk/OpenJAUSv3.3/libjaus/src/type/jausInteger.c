@@ -35,9 +35,9 @@
 //
 // Written By: Danny Kent (jaus AT dannykent DOT com), Tom Galluzzo (galluzzo AT gmail DOT com)
 //
-// Version: 3.3.0
+// Version: 3.3.0a
 //
-// Date: 07/09/08
+// Date: 08/07/08
 //
 // Description: This file defines all the basic JausFloat funtionality, this should be primarily used through the JausType file and its methods
 

@@ -35,9 +35,9 @@
 //
 // Written By: Danny Kent (jaus AT dannykent DOT com)
 //
-// Version: 3.3.0
+// Version: 3.3.0a
 //
-// Date: 07/09/08
+// Date: 08/07/08
 //
 // Description: This file describes all the functionality associated with a JausWorldModelVectorObject. 
 // JausWorldModelVectorObjects are used to support the storage and transfer of vector objects using the World Model message set.

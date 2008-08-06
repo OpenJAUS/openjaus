@@ -35,9 +35,9 @@
 //
 // Written By: Tom Galluzzo (galluzzo AT gmail DOT com)
 //
-// Version: 3.3.0
+// Version: 3.3.0a
 //
-// Date: 07/09/08
+// Date: 08/07/08
 //
 // Description: This file contains the code associated with the OpenJAUS
 //				Component Library. The Component Library is a wrapper around
