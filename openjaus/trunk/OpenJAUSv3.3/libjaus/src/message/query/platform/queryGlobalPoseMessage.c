@@ -41,7 +41,7 @@
 //
 // Description: This file defines the functionality of a QueryGlobalPoseMessage
 
-include <stdlib.h>
+#include <stdlib.h>
 #include <string.h>
 #include "jaus.h"
 
