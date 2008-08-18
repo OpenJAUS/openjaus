@@ -147,6 +147,10 @@ Judp2Interface::~Judp2Interface(void)
 	}
 	this->closeSocket();
 
+	if(this->hostIpAddress)
+	{
+		inetAddressDestroy(this->hostIpAddress);
+	}
 	// TODO: Check our threadIds to see if they terminated properly
 }
 
@@ -583,12 +587,11 @@ void Judp2Interface::recvThreadRun()
 	DatagramPacket packet;
 	JausMessage rxMessage;
 	Judp2TransportData data;
-	long bytesRecv = 0;
-	unsigned int bufferIndex = 0;
 	JudpMessage judpMessage;
 	Judp1Message *judp1Message;
 	JausMessage tempMessage = NULL;
 	JausMessageEvent *e = NULL;
+	int bytesRecv = 0;
 	unsigned char payloadBuffer[1024] = {0};
 	
 	
@@ -618,9 +621,6 @@ void Judp2Interface::recvThreadRun()
 		this->sendJausMessage(data, txMsg);
 		queryTransportAddressesMessageDestroy(query);
 		jausMessageDestroy(txMsg);
-
-		inetAddressToBuffer(this->hostIpAddress, (char *)payloadBuffer, 1024);
-		printf("Sent query to: %s, %d\n", payloadBuffer, data.port);
 	}
 	
 	
@@ -631,13 +631,8 @@ void Judp2Interface::recvThreadRun()
 		{
 			continue;
 		}
-		
-		printf("Unpacked %d Bytes\n", judpMessage.fromBuffer(packet->buffer, bytesRecv));
-		if(judpMessage.getVersion() > JUDP_VERSION_2_0) // Error, wrong JUDP version inbound
-		{
-			this->eventHandler->handleEvent(new ErrorEvent(ErrorEvent::Message, __FUNCTION__, __LINE__, "Invalid JUDP version number in received message"));
-			continue;				
-		}
+	
+		judpMessage.fromBuffer(packet->buffer, bytesRecv);
 		
 		Transportable *message = judpMessage.popMessage();
 		while(message)
@@ -647,23 +642,19 @@ void Judp2Interface::recvThreadRun()
 			switch(judpMessage.getVersion())
 			{
 				case JUDP_VERSION_1_0:
-					
 					judp1Message = (Judp1Message *)message;
 					rxMessage = judp1Message->getJausMessage();
 
-					printf("Received JAUS Message: %04X, from subs: %d\n", rxMessage->commandCode, rxMessage->source->subsystem);
+					data.addressValue = packet->address->value;
+					data.port = packet->port;
 					// Add to transportMap
 					switch(this->type)
 					{
 						case SUBSYSTEM_INTERFACE:
-							data.addressValue = packet->address->value;
-							data.port = packet->port;
 							this->addressMap[rxMessage->source->subsystem] = data;
 							break;
 
 						case NODE_INTERFACE:
-							data.addressValue = packet->address->value;
-							data.port = JUDP_DATA_PORT;
 							if(rxMessage->source->subsystem == mySubsystemId)
 							{
 								this->addressMap[rxMessage->source->node] = data;
@@ -676,8 +667,6 @@ void Judp2Interface::recvThreadRun()
 							break;
 
 						case COMPONENT_INTERFACE:
-							data.addressValue = packet->address->value;
-							data.port = packet->port;
 							this->addressMap[jausAddressHash(rxMessage->source)] = data;
 							break;
 
@@ -689,8 +678,10 @@ void Judp2Interface::recvThreadRun()
 					break;
 					
 				default:
-					messageType = ((Judp2Message *)message)->getMessageType();
-					break;
+					this->eventHandler->handleEvent(new ErrorEvent(ErrorEvent::Message, __FUNCTION__, __LINE__, "Invalid JUDP version number in received message"));
+					delete message;
+					message = NULL;
+					continue;				
 			}
 
 			switch(messageType)
@@ -727,10 +718,7 @@ void Judp2Interface::recvThreadRun()
 								txMsg->destination->subsystem = JAUS_BROADCAST_SUBSYSTEM_ID;
 								this->processMessage(txMsg);
 								reportTransportAddressesMessageDestroy(report);
-								jausMessageDestroy(txMsg);
 								jausMessageDestroy(rxMessage);
-								
-								inetAddressToBuffer(packet->address, (char *)payloadBuffer, 1024);								
 							}
 							break;
 							

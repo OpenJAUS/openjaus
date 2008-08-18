@@ -127,7 +127,6 @@ int JudpMessage::fromBuffer(unsigned char *buffer, int bufferSizeBytes)
 			break;
 		}
 
-		printf("Unpacked Jmessage Size: %d\n", bytesUnpacked);
 		this->messages.push_back(message);
 		index += bytesUnpacked;
 	}
