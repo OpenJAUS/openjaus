@@ -96,7 +96,7 @@ public:
 				}
 				else
 				{
-					printf("%s\n", messageEvent->toString().c_str());
+					//printf("%s\n", messageEvent->toString().c_str());
 				}
 				delete e;
 				break;

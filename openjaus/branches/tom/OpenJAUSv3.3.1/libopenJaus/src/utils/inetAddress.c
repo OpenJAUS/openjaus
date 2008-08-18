@@ -127,7 +127,7 @@ InetAddress inetAddressGetByName(char *nameString)
 	}
 	else
 	{
-		memcpy(address, host->h_addr_list[0], sizeof(InetAddressStruct));
+		address->value = ((struct in_addr*)host->h_addr)->s_addr;
 		return address;
 	}
 }
@@ -154,14 +154,14 @@ InetAddress inetAddressGetByString(char *addressString)
 		return NULL;
 	}
 	
-	host = gethostbyname(addressString);
+	host = gethostbyname(addressString); // TODO: gethostbyname is known to have memory issues, use getaddrinfo instead
 	if(host == NULL)
 	{
 		return NULL;
 	}
 	else
 	{
-		memcpy(address, host->h_addr_list[0], sizeof(InetAddressStruct));
+		address->value = ((struct in_addr*)host->h_addr)->s_addr;
 		return address;
 	}
 }
