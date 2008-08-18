@@ -7,6 +7,8 @@ Judp1Message::Judp1Message()
 	hcLength = 0;
 	hcFlags = JUDP1_MESSAGE_HC_NO_COMPRESSION;
 	messageLength = 0;
+	header = NULL;
+	jausData = NULL;
 	message = NULL;
 }
 	
@@ -59,8 +61,41 @@ bool Judp1Message::setMessageLength(int messageLength)
 	return true;
 }
 
+unsigned char * Judp1Message::getHeader(void)
+{
+	return header;	
+}
+
+bool Judp1Message::setHeader(unsigned char *header)
+{
+	this->messageLength = messageLength;
+	return true;
+}
+
 JausMessage Judp1Message::getJausMessage(void)
 {
+	unsigned char *fullBuffer = NULL;
+	
+	switch(hcFlags)
+	{
+		case JUDP1_MESSAGE_HC_COMPRESSION_ACKNOWLEDGE:
+			return 0;
+			
+		case JUDP1_MESSAGE_HC_COMPRESSED_MESSAGE:
+			if(header && jausData)
+			{
+				fullBuffer = (unsigned char *)malloc(hcLength + messageLength);
+				memcpy(fullBuffer, header, hcLength);
+				memcpy(fullBuffer + hcLength, jausData, messageLength);
+				jausMessageFromBuffer(message, fullBuffer, hcLength + messageLength);
+				free(fullBuffer);
+			}
+			break;
+			
+		default:
+			break;
+	}
+
 	return message;
 }
 
@@ -113,10 +148,12 @@ int Judp1Message::fromBuffer(unsigned char *buffer, int bufferSizeBytes)
 			break;
 			
 		case JUDP1_MESSAGE_HC_COMPRESSION_ACKNOWLEDGE:
-		case JUDP1_MESSAGE_HC_COMPRESSED_MESSAGE:
-//			e = new ErrorEvent(ErrorEvent::Message, __FUNCTION__, __LINE__, "Header Compression not yet supported!");
-//			this->eventHandler->handleEvent(e);
 			return 0;
+			
+		case JUDP1_MESSAGE_HC_COMPRESSED_MESSAGE:
+			jausData = buffer + index;
+			index += messageLength;
+			break;
 		
 		default:
 //			e = new ErrorEvent(ErrorEvent::Message, __FUNCTION__, __LINE__, "Unknown Header Compression Flag!");

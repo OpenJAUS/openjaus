@@ -73,6 +73,9 @@ public:
 	int getMessageLength(void);
 	bool setMessageLength(int messageLength);
 	
+	unsigned char* getHeader(void);
+	bool setHeader(unsigned char *header);
+	
 	JausMessage getJausMessage(void);
 	bool setJausMessage(JausMessage message);
 	
@@ -85,6 +88,8 @@ private:
 	int hcLength;
 	int hcFlags;
 	int messageLength;
+	unsigned char *header;
+	unsigned char *jausData;
 	JausMessage message;
 };
 
