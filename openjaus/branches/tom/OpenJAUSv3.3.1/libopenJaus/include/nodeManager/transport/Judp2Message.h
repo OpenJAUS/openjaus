@@ -69,14 +69,17 @@ public:
 	int getDataSize(void);
 	bool setDataSize(int dataSize);
 
-	int getHcHeaderNumber(void);
-	bool setHcHeaderNumber(int hcHeaderNumber);
+	int getHcNumber(void);
+	bool setHcNumber(int hcHeaderNumber);
 	
 	int getHcLength(void);
 	bool setHcLength(int hcLength);
 
 	int getPriority(void);
 	bool setPriority(int priority);
+
+	int getBroadcast(void);
+	bool setBroadcast(int priority);
 
 	int getAckNak(void);
 	bool setAckNak(int ackNak);
@@ -107,12 +110,15 @@ private:
 	int hcNumber;
 	int hcLength;
 	int priority;
+	int broadcast;
 	int ackNak;
 	int dataFlags;
 	int destinationId;
 	int sourceId;
 	Transportable *payload;
 	int sequenceNumber;
+	
+	unsigned char *payloadBuffer;
 	
 	int index;
 	unsigned char *buffer;
