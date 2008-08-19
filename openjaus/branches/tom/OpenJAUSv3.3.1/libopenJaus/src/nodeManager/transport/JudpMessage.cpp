@@ -6,34 +6,17 @@
 
 JudpMessage::JudpMessage()
 {
-	setVersion(JUDP_VERSION_UNDEFINED);
+	version = JUDP_VERSION_UNDEFINED;
 	messages.empty();
-}
-
-JudpMessage::JudpMessage(int version)
-{
-	JudpMessage();
-	setVersion(version);
 }
 
 JudpMessage::~JudpMessage(void)
 {
-	std::vector<Transportable *>::iterator iterator;
-	for(iterator = messages.begin(); iterator != messages.end(); iterator++) 
-	{
-		delete *iterator;
-	}	
 }
 
 int JudpMessage::getVersion(void)
 {
 	return version;
-}
-
-bool JudpMessage::setVersion(int version)
-{
-	this->version = version;
-	return false;
 }
 
 Transportable *JudpMessage::popMessage(void)
@@ -52,10 +35,28 @@ Transportable *JudpMessage::popMessage(void)
 	}
 }
 
-bool JudpMessage::pushMessage(Transportable *message)
+bool JudpMessage::pushMessage(Judp1Message *message)
 {
-	this->messages.push_back(message);
-	return true;
+	if(version == JUDP_VERSION_UNDEFINED || version == JUDP_VERSION_1_0)
+	{
+		version = JUDP_VERSION_1_0;
+		this->messages.push_back(message);
+		return true;
+	}
+
+	return false;
+}
+
+bool JudpMessage::pushMessage(Judp2Message *message)
+{
+	if(version == JUDP_VERSION_UNDEFINED || version == JUDP_VERSION_2_0)
+	{
+		version = JUDP_VERSION_2_0;
+		this->messages.push_back(message);
+		return true;
+	}
+
+	return false;
 }
 
 int JudpMessage::toBuffer(unsigned char *buffer, int bufferSizeBytes)
@@ -65,6 +66,7 @@ int JudpMessage::toBuffer(unsigned char *buffer, int bufferSizeBytes)
 	if(bufferSizeBytes >= getSizeBytes())
 	{
 		buffer[index] = version;
+		index++;
 		
 		std::vector<Transportable *>::iterator iterator;
 		switch(version)
@@ -117,13 +119,16 @@ int JudpMessage::fromBuffer(unsigned char *buffer, int bufferSizeBytes)
 				break;
 				
 			default:
-				// TODO: Throw error
+				bytesUnpacked = 0;
 				break;
 		}		
 
 		if(!bytesUnpacked)
 		{
-			delete message;
+			if(message)
+			{
+				delete message;
+			}
 			break;
 		}
 

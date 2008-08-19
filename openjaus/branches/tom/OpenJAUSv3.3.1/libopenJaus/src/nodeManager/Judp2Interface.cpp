@@ -48,7 +48,6 @@
 #include "nodeManager/transport/DiscoverHostMessage.h"
 #include "nodeManager/transport/queryTransportAddressesMessage.h"
 #include "nodeManager/transport/reportTransportAddressesMessage.h"
-#include "nodeManager/JudpInterface.h"
 #include "nodeManager/Judp2Interface.h"
 #include "nodeManager/JausSubsystemCommunicationManager.h"
 #include "nodeManager/JausNodeCommunicationManager.h"
@@ -77,6 +76,9 @@ Judp2Interface::Judp2Interface(FileLoader *configData, EventHandler *handler, Ja
 		else
 		{
 			this->hostIpAddress = inetAddressGetByString((char *)this->configData->GetConfigDataString("Subsystem_Communications", "System_Host").c_str());
+			char string[128] = {0};
+			inetAddressToString(this->hostIpAddress, string);
+			printf("Host IP Address: %s\n", string);
 		}
 	}
 	else if(dynamic_cast<JausNodeCommunicationManager *>(this->commMngr))
@@ -112,6 +114,21 @@ Judp2Interface::Judp2Interface(FileLoader *configData, EventHandler *handler, Ja
 	}
 }
 
+Judp2Interface::~Judp2Interface(void)
+{
+	if(running)
+	{
+		this->stopInterface();
+	}
+	this->closeSocket();
+
+	if(this->hostIpAddress)
+	{
+		inetAddressDestroy(this->hostIpAddress);
+	}
+	// TODO: Check our threadIds to see if they terminated properly
+}
+
 bool Judp2Interface::startInterface(void)
 {	
 	// Set our thread running flag
@@ -137,21 +154,6 @@ bool Judp2Interface::stopInterface(void)
 	this->stopRecvThread();
 
 	return true;
-}
-
-Judp2Interface::~Judp2Interface(void)
-{
-	if(running)
-	{
-		this->stopInterface();
-	}
-	this->closeSocket();
-
-	if(this->hostIpAddress)
-	{
-		inetAddressDestroy(this->hostIpAddress);
-	}
-	// TODO: Check our threadIds to see if they terminated properly
 }
 
 InetAddress Judp2Interface::getInetAddress(void)
@@ -519,54 +521,66 @@ bool Judp2Interface::openSocket(void)
 	return true;
 }
 
+void Judp2Interface::closeSocket(void)
+{
+	multicastSocketDestroy(this->socket);
+}
+
 void Judp2Interface::sendJausMessage(Judp2TransportData data, JausMessage message)
 {
-	DatagramPacket packet = NULL;
-	int result;
+	DatagramPacket packet = datagramPacketCreate();
+	JudpMessage judpMessage;
+	Judp1Message judp1Message;
+	
+	packet->port = data.port;
+	packet->address->value = data.addressValue;
 
 	switch(this->type)
 	{
 		case SUBSYSTEM_INTERFACE:
 		case NODE_INTERFACE:
-			if(this->supportHeaderCompression)
+			judp1Message.setJausMessage(message);
+			
+			judpMessage.pushMessage(&judp1Message);
+			
+			packet->bufferSizeBytes = judpMessage.getSizeBytes();
+			packet->buffer = (unsigned char *) calloc(packet->bufferSizeBytes, 1);
+			
+			if(judpMessage.toBuffer(packet->buffer, packet->bufferSizeBytes))
 			{
-				sendCompressedMessage(data, message);
+				multicastSocketSend(this->socket, packet);
+				JausMessage tempMessage = jausMessageClone(message);
+				JausMessageEvent *e = new JausMessageEvent(tempMessage, this, JausMessageEvent::Outbound);
+				this->eventHandler->handleEvent(e);
 			}
-			else
-			{
-				sendUncompressedMessage(data, message);
-			}
-			return;
+
+			judpMessage.popMessage();
+			
+			free(packet->buffer);
+			break;
 
 		case COMPONENT_INTERFACE:
 			// Sends a JAUS Message with no transport header
-			packet = datagramPacketCreate();
 			packet->bufferSizeBytes = (int) jausMessageSize(message);
 			packet->buffer = (unsigned char *) calloc(packet->bufferSizeBytes, 1);
-			packet->port = data.port;
-			packet->address->value = data.addressValue;
 
 			if(jausMessageToBuffer(message, packet->buffer, packet->bufferSizeBytes))
 			{
-				result = multicastSocketSend(this->socket, packet);
+				multicastSocketSend(this->socket, packet);
 			}
 
 			free(packet->buffer);
-			datagramPacketDestroy(packet);
-			return;
+			break;
 
 		default:
 			char errorString[128] = {0};
 			sprintf(errorString, "Unknown socket type %d\n", this->type);
 			ErrorEvent *e = new ErrorEvent(ErrorEvent::Configuration, __FUNCTION__, __LINE__, errorString);
 			this->eventHandler->handleEvent(e);
-			return;
+			break;
 	}
-}
 
-void Judp2Interface::closeSocket(void)
-{
-	multicastSocketDestroy(this->socket);
+	datagramPacketDestroy(packet);
 }
 
 void Judp2Interface::startRecvThread()
@@ -769,133 +783,6 @@ void Judp2Interface::recvThreadRun()
 
 	free(packet->buffer);
 	datagramPacketDestroy(packet);
-}
-
-void Judp2Interface::sendCompressedMessage(Judp2TransportData data, JausMessage message)
-{
-	//DatagramPacket packet = NULL;
-	//int result;
-	//int bufferIndex = 0;
-
-	//packet = datagramPacketCreate();
-	//packet->bufferSizeBytes = (int) jausMessageSize(message) + JUDP2_PER_PACKET_HEADER_SIZE_BYTES + JUDP2_PER_MESSAGE_HEADER_SIZE_BYTES;
-	//packet->buffer = (unsigned char *) calloc(packet->bufferSizeBytes, 1);
-	//packet->port = data.port;
-	//packet->address->value = data.addressValue;
-	//
-	//bufferIndex = 0;
-	//packet->buffer[0] = JUDP2_VERSION_NUMBER;
-	//bufferIndex += 1;
-
-	ErrorEvent *e = new ErrorEvent(ErrorEvent::Message, __FUNCTION__, __LINE__, "Header Compression not yet supported!");
-	this->eventHandler->handleEvent(e);
-}
-
-void Judp2Interface::sendUncompressedMessage(Judp2TransportData data, JausMessage message)
-{
-	DatagramPacket packet = NULL;
-	int result;
-	int bufferIndex = 0;
-	unsigned int bytesPacked = 0;
-	Judp2HeaderCompressionData hcData = {0};
-
-	packet = datagramPacketCreate();
-	packet->bufferSizeBytes = (int) jausMessageSize(message) + JUDP2_PER_PACKET_HEADER_SIZE_BYTES + JUDP2_PER_MESSAGE_HEADER_SIZE_BYTES;
-	packet->buffer = (unsigned char *) calloc(packet->bufferSizeBytes, 1);
-	packet->port = data.port;
-	packet->address->value = data.addressValue;
-	
-	bufferIndex = 0;
-	packet->buffer[0] = JUDP2_VERSION_1_0;
-	bufferIndex += 1;
-
-	hcData.flags = JUDP2_HC_NO_COMPRESSION;
-	hcData.headerNumber = 0;
-	hcData.length = 0;
-	hcData.messageLength = message->dataSize + JAUS_HEADER_SIZE_BYTES;
-	bytesPacked += headerCompressionDataToBuffer(&hcData, packet->buffer+bufferIndex, packet->bufferSizeBytes - bufferIndex);
-	if(bytesPacked == 0)
-	{
-		free(packet->buffer);
-		datagramPacketDestroy(packet);
-		return;
-	}
-	bufferIndex += bytesPacked;
-
-	if(jausMessageToBuffer(message, packet->buffer + bufferIndex, packet->bufferSizeBytes - bufferIndex))
-	{
-		result = multicastSocketSend(this->socket, packet);
-		JausMessage tempMessage = jausMessageClone(message);
-		JausMessageEvent *e = new JausMessageEvent(tempMessage, this, JausMessageEvent::Outbound);
-		this->eventHandler->handleEvent(e);
-	}
-
-	free(packet->buffer);
-	datagramPacketDestroy(packet);
-}
-
-bool Judp2Interface::receiveUncompressedMessage(JausMessage rxMessage, unsigned char *buffer, unsigned int bufferSizeBytes)
-{
-	return jausMessageFromBuffer(rxMessage, buffer, bufferSizeBytes)? true : false;
-}
-
-bool Judp2Interface::receiveCompressedMessage(JausMessage rxMessage, Judp2HeaderCompressionData *hcData, unsigned char *buffer, unsigned int bufferSizeBytes)
-{
-	ErrorEvent *e;
-
-	switch(hcData->flags)
-	{
-		case JUDP2_HC_ENGAGE_COMPRESSION:
-			// No support for Header Compression, but we can still receive these messages
-			return jausMessageFromBuffer(rxMessage, buffer, bufferSizeBytes)? true : false;
-
-		case JUDP2_HC_COMPRESSION_ACKNOWLEDGE:
-		case JUDP2_HC_COMPRESSED_MESSAGE:
-			e = new ErrorEvent(ErrorEvent::Message, __FUNCTION__, __LINE__, "Header Compression not yet supported!");
-			this->eventHandler->handleEvent(e);
-			return false;
-		
-		default:
-			e = new ErrorEvent(ErrorEvent::Message, __FUNCTION__, __LINE__, "Unknown Header Compression Flag!");
-			this->eventHandler->handleEvent(e);
-			return false;
-	}
-}
-
-unsigned int Judp2Interface::headerCompressionDataToBuffer(Judp2HeaderCompressionData *hcData, unsigned char *buffer, unsigned int bufferSizeBytes)
-{
-	if(bufferSizeBytes < JUDP2_PER_MESSAGE_HEADER_SIZE_BYTES)
-	{
-		ErrorEvent *e = new ErrorEvent(ErrorEvent::Message, __FUNCTION__, __LINE__, "Insufficient Size for Per Message Header");
-		this->eventHandler->handleEvent(e);
-		return 0;
-	}
-
-	buffer[0] = (unsigned char) (hcData->headerNumber);
-	buffer[1] = (unsigned char) (((hcData->length & 0x3F) << 6) | (hcData->flags & 0x03));
-	
-	// NOTE: The messageLength member is BIG ENDIAN, this is different for other JAUS messages
-	buffer[2] = (unsigned char) ((hcData->messageLength & 0xFF00) >> 8);
-	buffer[3] = (unsigned char) (hcData->messageLength & 0xFF);
-
-	return JUDP2_PER_MESSAGE_HEADER_SIZE_BYTES;
-}
-
-unsigned int Judp2Interface::headerCompressionDataFromBuffer(Judp2HeaderCompressionData *hcData, unsigned char *buffer, unsigned int bufferSizeBytes)
-{
-	if(bufferSizeBytes < JUDP2_PER_MESSAGE_HEADER_SIZE_BYTES)
-	{
-		ErrorEvent *e = new ErrorEvent(ErrorEvent::Message, __FUNCTION__, __LINE__, "Insufficient Size for Per Message Header");
-		this->eventHandler->handleEvent(e);
-		return 0;
-	}
-
-	hcData->headerNumber = buffer[0];
-	hcData->length = (buffer[1] >> 2) & 0x3F;
-	hcData->flags = (buffer[1] & 0x03);
-	hcData->messageLength = buffer[3] + (buffer[2] << 8);
-
-	return JUDP2_PER_MESSAGE_HEADER_SIZE_BYTES;
 }
 
 void *Judp2RecvThread(void *obj)

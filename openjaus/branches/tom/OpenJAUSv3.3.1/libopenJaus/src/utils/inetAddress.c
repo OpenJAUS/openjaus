@@ -130,6 +130,11 @@ InetAddress inetAddressGetByName(char *nameString)
 		address->value = ((struct in_addr*)host->h_addr)->s_addr;
 		return address;
 	}
+	
+#ifdef WIN32
+	WSACleanup();
+#endif
+	
 }
 
 InetAddress inetAddressGetByString(char *addressString)
@@ -154,7 +159,7 @@ InetAddress inetAddressGetByString(char *addressString)
 		return NULL;
 	}
 	
-	host = gethostbyname(addressString); // TODO: gethostbyname is known to have memory issues, use getaddrinfo instead
+	host = gethostbyname(addressString);
 	if(host == NULL)
 	{
 		return NULL;
@@ -164,6 +169,11 @@ InetAddress inetAddressGetByString(char *addressString)
 		address->value = ((struct in_addr*)host->h_addr)->s_addr;
 		return address;
 	}
+
+#ifdef WIN32
+	WSACleanup();
+#endif
+	
 }
 
 int inetAddressToString(InetAddress address, char *string)
