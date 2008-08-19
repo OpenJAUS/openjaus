@@ -166,5 +166,5 @@ int Judp1Message::fromBuffer(unsigned char *buffer, int bufferSizeBytes)
 
 int Judp1Message::getSizeBytes(void)
 {
-	return 4 + jausMessageSize(message);
+	return 4 + jausMessageSize(message) - hcLength;
 }

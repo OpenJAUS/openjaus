@@ -61,21 +61,17 @@ class JudpMessage : public virtual Transportable
 public:
 	JudpMessage();
 	
-	JudpMessage(int version);
-	
 	~JudpMessage(void);
 	
 	int getVersion(void);
 
-	bool setVersion(int version);
-	
 	Transportable *popMessage(void);
 	
 	Transportable *peekMessage(void);
 
-	bool pushMessage(Transportable *message);
+	bool pushMessage(Judp1Message *message);
 
-	bool resetMessageStack(void);
+	bool pushMessage(Judp2Message *message);
 
 	int toBuffer(unsigned char *buffer, int bufferSizeBytes);
 	int fromBuffer(unsigned char *buffer, int bufferSizeBytes);
