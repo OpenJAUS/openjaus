@@ -6,7 +6,6 @@ Judp2Message::Judp2Message()
 {
 	messageType = JUDP2_TRANSPORT_TYPE;
 	hcFlags = 0;
-	dataSize = 14;
 	hcNumber = 0;
 	hcLength = 0;
 	priority = 1;
@@ -34,6 +33,7 @@ int Judp2Message::getMessageType(void)
 
 bool Judp2Message::setMessageType(int messageType)
 {
+	this->messageType = messageType;
 	return true;
 }
 
@@ -44,17 +44,13 @@ int Judp2Message::getHcFlags(void)
 
 bool Judp2Message::setHcFlags(int hcFlags)
 {
+	this->hcFlags = hcFlags;
 	return true;
 }
 
 int Judp2Message::getDataSize(void)
 {
-	return dataSize;
-}
-
-bool Judp2Message::setDataSize(int dataSize)
-{
-	return true;
+	return getSizeBytes();
 }
 
 int Judp2Message::getHcNumber(void)
@@ -64,6 +60,7 @@ int Judp2Message::getHcNumber(void)
 
 bool Judp2Message::setHcNumber(int hcNumber)
 {
+	this->hcNumber = hcNumber;
 	return true;
 }
 
@@ -74,6 +71,7 @@ int Judp2Message::getHcLength(void)
 
 bool Judp2Message::setHcLength(int hcLength)
 {
+	this->hcLength = hcLength;
 	return true;
 }
 
@@ -84,6 +82,7 @@ int Judp2Message::getPriority(void)
 
 bool Judp2Message::setPriority(int priority)
 {
+	this->priority = priority;
 	return true;
 }
 
@@ -92,8 +91,9 @@ int Judp2Message::getBroadcast(void)
 	return broadcast;
 }
 
-bool Judp2Message::setBroadcast(int priority)
+bool Judp2Message::setBroadcast(int broadcast)
 {
+	this->broadcast = broadcast;
 	return true;
 }
 
@@ -104,6 +104,7 @@ int Judp2Message::getAckNak(void)
 
 bool Judp2Message::setAckNak(int ackNak)
 {
+	this->ackNak = ackNak;
 	return true;
 }
 
@@ -114,6 +115,7 @@ int Judp2Message::getDataFlags(void)
 
 bool Judp2Message::setDataFlags(int dataFlags)
 {
+	this->dataFlags = dataFlags;
 	return true;
 }
 
@@ -124,6 +126,7 @@ int Judp2Message::getDestinationId(void)
 
 bool Judp2Message::setDestinationId(int destinationId)
 {
+	this->destinationId = destinationId;
 	return true;
 }
 
@@ -134,6 +137,7 @@ int Judp2Message::getSourceId(void)
 
 bool Judp2Message::setSourceId(int sourceId)
 {
+	this->sourceId = sourceId;
 	return true;
 }
 
@@ -144,6 +148,7 @@ Transportable* Judp2Message::getPayload(void)
 
 bool Judp2Message::setPayload(Transportable *payload)
 {
+	this->payload = payload;
 	return true;
 }
 
@@ -154,18 +159,47 @@ int Judp2Message::getSequenceNumber(void)
 
 bool Judp2Message::setSequenceNumber(int sequenceNumber)
 {
+	this->sequenceNumber = sequenceNumber;
 	return true;
 }
 
 int Judp2Message::toBuffer(unsigned char *buffer, int bufferSizeBytes)
 {
-	return 0;
+	int index = 0;
+	int dataSize = getSizeBytes();
+
+	if(bufferSizeBytes >= getSizeBytes())
+	{
+		buffer[index] = (unsigned char) messageType << 2;
+		buffer[index++] += (unsigned char) (hcFlags & 0x3F);
+		buffer[index++] = (unsigned char) (dataSize & 0xFF);
+		buffer[index++] = (unsigned char) ((dataSize >> 8) & 0xFF);
+		if(hcFlags != 0)
+		{	
+			buffer[index++] = hcNumber; 
+			buffer[index++] = hcLength;
+		}
+		buffer[index++] = (priority << 6) | ((broadcast & 0x03) << 4) | ((ackNak & 0x03) << 2) | (dataFlags & 0x03);
+		
+		memcpy(buffer + index, &destinationId, 4);
+		index += 4;
+		
+		memcpy(buffer + index, &sourceId, 4);
+		index += 4;		
 	
+		index += payload->toBuffer(buffer + index, bufferSizeBytes - index);
+		
+		memcpy(buffer + index, &sequenceNumber, 2);
+		index += 2;
+	}
+
+	return index;
 }
 
 int Judp2Message::fromBuffer(unsigned char *buffer, int bufferSizeBytes)
 {
 	int index = 0;
+	int dataSize = 0;
 	
 	messageType = buffer[index] >> 2;
 	hcFlags = (buffer[index++] & 0x03);
@@ -193,12 +227,21 @@ int Judp2Message::fromBuffer(unsigned char *buffer, int bufferSizeBytes)
 	index = dataSize - 2;
 	
 	memcpy(&sequenceNumber, buffer + index, 2);
-	index += 4;
+	index += 2;
 	
 	return index;
 }
 
 int Judp2Message::getSizeBytes(void)
 {
-	return dataSize;
+	int index = 14;
+	
+	if(hcFlags != 0)
+	{
+		index += 2;
+	}
+	
+	index += payload->getSizeBytes();
+	
+	return index;
 }
