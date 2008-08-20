@@ -67,7 +67,6 @@ public:
 	bool setHcFlags(int hcFlags);
 
 	int getDataSize(void);
-	bool setDataSize(int dataSize);
 
 	int getHcNumber(void);
 	bool setHcNumber(int hcHeaderNumber);
@@ -106,7 +105,6 @@ public:
 private:
 	int messageType;
 	int hcFlags;
-	int dataSize;
 	int hcNumber;
 	int hcLength;
 	int priority;
