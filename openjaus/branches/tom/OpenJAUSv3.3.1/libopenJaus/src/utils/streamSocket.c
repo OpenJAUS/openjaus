@@ -1,12 +1,12 @@
 /*****************************************************************************
  *  Copyright (c) 2008, University of Florida
  *  All rights reserved.
- *  
- *  This file is part of OpenJAUS.  OpenJAUS is distributed under the BSD 
+ *
+ *  This file is part of OpenJAUS.  OpenJAUS is distributed under the BSD
  *  license.  See the LICENSE file for details.
- * 
- *  Redistribution and use in source and binary forms, with or without 
- *  modification, are permitted provided that the following conditions 
+ *
+ *  Redistribution and use in source and binary forms, with or without
+ *  modification, are permitted provided that the following conditions
  *  are met:
  *
  *     * Redistributions of source code must retain the above copyright
@@ -15,20 +15,20 @@
  *       copyright notice, this list of conditions and the following
  *       disclaimer in the documentation and/or other materials provided
  *       with the distribution.
- *     * Neither the name of the University of Florida nor the names of its 
- *       contributors may be used to endorse or promote products derived from 
+ *     * Neither the name of the University of Florida nor the names of its
+ *       contributors may be used to endorse or promote products derived from
  *       this software without specific prior written permission.
  *
- *   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- *   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- *   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR 
- *   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT 
+ *   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ *   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ *   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ *   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
  *   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- *   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT 
- *   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
- *   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY 
+ *   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ *   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ *   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
  *   THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
+ *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ****************************************************************************/
 // File Name: streamSocket.c
@@ -39,7 +39,7 @@
 //
 // Date: 07/09/08
 //
-// Description: This file describes the functionality associated with a StreamSocket object. 
+// Description: This file describes the functionality associated with a StreamSocket object.
 // Inspired by the class of the same name in the JAVA language.
 
 #include <stdio.h>
@@ -53,7 +53,7 @@ StreamSocket streamSocketCreate(short port, InetAddress ipAddress)
 	struct sockaddr_in address;
 	socklen_t addressLength = sizeof(address);
 
-#ifdef WIN32	
+#ifdef WIN32
 	// Initialize the socket subsystem
 	WSADATA wsaData;
 	int err;
@@ -69,14 +69,14 @@ StreamSocket streamSocketCreate(short port, InetAddress ipAddress)
 	{
 		return NULL;
 	}
-	
+
 	// Open a socket with: Protocol Family (PF) IPv4, of Stream Socket Type, and an implicit protocol
-	streamSocket->descriptor = (int) socket(PF_INET, SOCK_STREAM, 0); 
+	streamSocket->descriptor = (int) socket(PF_INET, SOCK_STREAM, 0);
 	if(streamSocket->descriptor == -1)
 	{
 		return NULL;
 	}
-	
+
 	memset(&address, 0, sizeof(address));		// Clear the data structure to zero
 	address.sin_family = AF_INET;				// Set Internet Socket (sin), Family to: Address Family (AF) IPv4 (INET)
 	address.sin_addr.s_addr = ipAddress->value;	// Set Internet Socket (sin), Address to: The ipAddressString argument
@@ -95,20 +95,22 @@ StreamSocket streamSocketCreate(short port, InetAddress ipAddress)
 		return NULL;
 	}
 
-	streamSocket->address = ipAddress;
+	streamSocket->address = inetAddressCreate();
+	streamSocket->address->value = ipAddress->value;
 	streamSocket->port = ntohs(address.sin_port);
 	streamSocket->timeout.tv_sec = 0;
 	streamSocket->timeout.tv_usec = 0;
 	streamSocket->blocking = 1;
-	
+
 	return streamSocket;
 }
 
 void streamSocketDestroy(StreamSocket streamSocket)
 {
 	CLOSE_SOCKET(streamSocket->descriptor);
+	inetAddressDestroy(streamSocket->address);
 	free(streamSocket);
-#ifdef WIN32	
+#ifdef WIN32
 	// Initialize the socket subsystem
 	WSACleanup();
 #endif
@@ -130,7 +132,7 @@ StreamSocket streamSocketListenAndAccept(StreamSocket streamSocket)
 	{
 		return NULL;
 	}
-	
+
 	newSocket->descriptor = (int)accept(streamSocket->descriptor, (struct sockaddr*)&fromAddress, &fromAddressLength);
 	if(newSocket->descriptor == -1)
 	{
@@ -138,7 +140,11 @@ StreamSocket streamSocketListenAndAccept(StreamSocket streamSocket)
 	}
 
 	newSocket->port = ntohs(fromAddress.sin_port);
+	newSocket->address = inetAddressCreate();
 	newSocket->address->value = fromAddress.sin_addr.s_addr;
+	newSocket->timeout.tv_sec = 0;
+	newSocket->timeout.tv_usec = 0;
+	newSocket->blocking = 1;
 
 	return newSocket;
 }
@@ -173,7 +179,7 @@ int streamSocketReceive(StreamSocket streamSocket, StreamPacket packet)
 		timeout = streamSocket->timeout;
 		timeoutPtr = &timeout;
 	}
-	
+
 	FD_ZERO(&readSet);
 	FD_SET(streamSocket->descriptor, &readSet);
 
@@ -198,14 +204,11 @@ int streamSocketReceive(StreamSocket streamSocket, StreamPacket packet)
 void streamSocketSetTimeout(StreamSocket streamSocket, double timeoutSec)
 {
 	long sec, usec;
-	
+
 	sec = (long)timeoutSec;
 	usec = (long)((timeoutSec - (double)sec) * 1.0e6);
-			
+
 	streamSocket->timeout.tv_sec = sec;
 	streamSocket->timeout.tv_usec = usec;
 	streamSocket->blocking = 0;
 }
-
-
-
