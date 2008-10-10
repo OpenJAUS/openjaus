@@ -109,4 +109,5 @@ JAUS_EXPORT JausMessage setJointMotionMessageToJausMessage(SetJointMotionMessage
 
 JAUS_EXPORT unsigned int setJointMotionMessageSize(SetJointMotionMessage message);
 
+JAUS_EXPORT char* setJointMotionMessageToString(SetJointMotionMessage message);
 #endif // SET_JOINT_MOTION_MESSAGE_H

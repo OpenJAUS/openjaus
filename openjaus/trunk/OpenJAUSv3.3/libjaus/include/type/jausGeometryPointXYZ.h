@@ -54,5 +54,6 @@ typedef JausGeometryPointXYZStruct *JausGeometryPointXYZ;
 
 JAUS_EXPORT JausGeometryPointXYZ jausGeometryPointXYZCreate(void);
 JAUS_EXPORT void jausGeometryPointXYZDestroy(JausGeometryPointXYZ);
+JAUS_EXPORT char* jausGeometryPointXYZToString(JausGeometryPointXYZ);
 
 #endif

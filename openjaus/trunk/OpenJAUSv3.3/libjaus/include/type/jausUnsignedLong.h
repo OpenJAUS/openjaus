@@ -60,6 +60,8 @@ JAUS_EXPORT JausUnsignedLong newJausUnsignedLong(unsigned long long val);
 JAUS_EXPORT JausBoolean jausUnsignedLongFromBuffer(JausUnsignedLong *jULong, unsigned char *buf, unsigned int bufferSizeBytes);
 JAUS_EXPORT JausBoolean jausUnsignedLongToBuffer(JausUnsignedLong input, unsigned char *buf, unsigned int bufferSizeBytes);
 
+JAUS_EXPORT int jausUnsignedLongToString(JausUnsignedLong value, char * buf);
+
 JAUS_EXPORT double jausUnsignedLongToDouble(JausUnsignedLong input, double min, double max);
 JAUS_EXPORT JausUnsignedLong jausUnsignedLongFromDouble(double value, double min, double max);
 

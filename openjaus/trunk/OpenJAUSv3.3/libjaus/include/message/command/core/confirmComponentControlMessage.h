@@ -111,4 +111,5 @@ JAUS_EXPORT JausMessage confirmComponentControlMessageToJausMessage(ConfirmCompo
 
 JAUS_EXPORT unsigned int confirmComponentControlMessageSize(ConfirmComponentControlMessage message);
 
+JAUS_EXPORT char* confirmComponentControlMessageToString(ConfirmComponentControlMessage message);
 #endif // CONFIRM_COMPONENT_CONTROL_MESSAGE_H

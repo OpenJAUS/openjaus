@@ -150,4 +150,5 @@ JAUS_EXPORT JausMessage createEventMessageToJausMessage(CreateEventMessage messa
 
 JAUS_EXPORT unsigned int createEventMessageSize(CreateEventMessage message);
 
+JAUS_EXPORT char* createEventMessageToString(CreateEventMessage message);
 #endif // CREATE_EVENT_MESSAGE_H

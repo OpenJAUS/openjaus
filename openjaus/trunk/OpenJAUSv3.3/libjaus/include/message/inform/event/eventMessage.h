@@ -103,4 +103,5 @@ JAUS_EXPORT JausMessage eventMessageToJausMessage(EventMessage message);
 
 JAUS_EXPORT unsigned int eventMessageSize(EventMessage message);
 
+JAUS_EXPORT char* eventMessageToString(EventMessage message);
 #endif // EVENT_MESSAGE_H

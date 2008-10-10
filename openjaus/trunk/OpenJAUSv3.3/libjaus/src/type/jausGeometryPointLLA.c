@@ -66,3 +66,26 @@ void jausGeometryPointLLADestroy(JausGeometryPointLLA jausGeometryPointLLA)
 {
 	free(jausGeometryPointLLA);
 }
+
+char* jausGeometryPointLLAToString(JausGeometryPointLLA point)
+{
+  char* buf;
+  int bufSize = 100;
+  buf = (char*)malloc(sizeof(char)*bufSize);
+  
+  strcpy(buf, "Latitude(radians): ");
+  jausDoubleToString(point->latitudeRadians, buf+strlen(buf));
+  
+  strcat(buf, "\nLongitude(radians): ");
+  jausDoubleToString(point->longitudeRadians, buf+strlen(buf));
+  
+  strcat(buf, "\nAltitude(meters): ");
+  jausDoubleToString(point->altitudeMeters, buf+strlen(buf));
+  
+  char* returnBuf;
+  returnBuf = (char*)malloc(sizeof(char)*( strlen(buf)+1 ));
+  strcpy(returnBuf, buf);
+  
+  free(buf);
+  return returnBuf;
+}

@@ -60,6 +60,8 @@ JAUS_EXPORT JausInteger newJausInteger(int val);
 JAUS_EXPORT JausBoolean jausIntegerFromBuffer(JausInteger *jInteger, unsigned char *buf, unsigned int bufferSizeBytes);
 JausBoolean jausIntegerToBuffer(JausInteger input, unsigned char *buf, unsigned int bufferSizeBytes);
 
+JAUS_EXPORT int jausIntegerToString(JausInteger value, char * buf);
+
 JAUS_EXPORT double jausIntegerToDouble(JausInteger input, double min, double max);
 JAUS_EXPORT JausInteger jausIntegerFromDouble(double value, double min, double max);
 

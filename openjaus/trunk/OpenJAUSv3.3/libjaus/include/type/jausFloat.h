@@ -56,4 +56,6 @@ JAUS_EXPORT JausFloat newJausFloat(float val);
 JAUS_EXPORT JausBoolean jausFloatFromBuffer(JausFloat *jFloat, unsigned char *buf, unsigned int bufferSizeBytes);
 JAUS_EXPORT JausBoolean jausFloatToBuffer(JausFloat input, unsigned char *buf, unsigned int bufferSizeBytes);
 
+JAUS_EXPORT int jausFloatToString(JausFloat value, char * buf);
+
 #endif // JAUS_FLOAT_H

@@ -101,4 +101,5 @@ JAUS_EXPORT JausMessage reportHeartbeatPulseMessageToJausMessage(ReportHeartbeat
 
 JAUS_EXPORT unsigned int reportHeartbeatPulseMessageSize(ReportHeartbeatPulseMessage message);
 
+JAUS_EXPORT char* reportHeartbeatPulseMessageToString(ReportHeartbeatPulseMessage message);
 #endif // REPORT_HEARTBEAT_PULSE_MESSAGE_H

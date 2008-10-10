@@ -101,4 +101,5 @@ JAUS_EXPORT JausMessage reportServicesMessageToJausMessage(ReportServicesMessage
 
 JAUS_EXPORT unsigned int reportServicesMessageSize(ReportServicesMessage message);
 
+JAUS_EXPORT char* reportServicesMessageToString(ReportServicesMessage message);
 #endif

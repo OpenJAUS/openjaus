@@ -123,4 +123,5 @@ JAUS_EXPORT JausMessage deleteVksObjectsMessageToJausMessage(DeleteVksObjectsMes
 
 JAUS_EXPORT unsigned int deleteVksObjectsMessageSize(DeleteVksObjectsMessage message);
 
+JAUS_EXPORT char* deleteVksObjectsMessageToString(DeleteVksObjectsMessage message);
 #endif // DELETE_VKS_OBJECTS_MESSAGE_H

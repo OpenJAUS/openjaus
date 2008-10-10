@@ -126,4 +126,5 @@ JAUS_EXPORT JausMessage queryPlatformSpecificationsMessageToJausMessage(QueryPla
 
 JAUS_EXPORT unsigned int queryPlatformSpecificationsMessageSize(QueryPlatformSpecificationsMessage message);
 
+JAUS_EXPORT char* queryPlatformSpecificationsMessageToString(QueryPlatformSpecificationsMessage message);
 #endif // QUERY_PLATFORM_SPECIFICATIONS_MESSAGE_H

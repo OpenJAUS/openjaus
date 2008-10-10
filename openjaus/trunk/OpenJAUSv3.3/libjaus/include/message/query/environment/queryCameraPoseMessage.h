@@ -103,4 +103,5 @@ JAUS_EXPORT JausMessage queryCameraPoseMessageToJausMessage(QueryCameraPoseMessa
 
 JAUS_EXPORT unsigned int queryCameraPoseMessageSize(QueryCameraPoseMessage message);
 
+JAUS_EXPORT char* queryCameraPoseMessageToString(QueryCameraPoseMessage message);
 #endif // QUERY_CAMERA_POSE_MESSAGE_H

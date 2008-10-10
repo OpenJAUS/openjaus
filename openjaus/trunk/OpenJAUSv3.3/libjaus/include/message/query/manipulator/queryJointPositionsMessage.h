@@ -101,4 +101,5 @@ JAUS_EXPORT JausMessage queryJointPositionsMessageToJausMessage(QueryJointPositi
 
 JAUS_EXPORT unsigned int queryJointPositionsMessageSize(QueryJointPositionsMessage message);
 
+JAUS_EXPORT char* queryJointPositionsMessageToString(QueryJointPositionsMessage message);
 #endif // QUERY_JOINT_POSITIONS_MESSAGE_H

@@ -101,4 +101,5 @@ JAUS_EXPORT JausMessage querySelectedDataLinkStatusMessageToJausMessage(QuerySel
 
 JAUS_EXPORT unsigned int querySelectedDataLinkStatusMessageSize(QuerySelectedDataLinkStatusMessage message);
 
+JAUS_EXPORT char* querySelectedDataLinkStatusMessageToString(QuerySelectedDataLinkStatusMessage message);
 #endif // QUERY_SELECTED_DATA_LINK_STATUS_MESSAGE_H

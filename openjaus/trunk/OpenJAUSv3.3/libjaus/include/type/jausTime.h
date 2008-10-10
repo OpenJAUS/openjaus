@@ -93,6 +93,8 @@ JAUS_EXPORT JausBoolean jausTimeCopy(JausTime dstTime, JausTime srcTime);
 
 JAUS_EXPORT JausBoolean jausTimeSetCurrentTime(JausTime time);
 JAUS_EXPORT JausBoolean jausTimeToString(JausTime time, char *buffer, size_t buffSize);
+JAUS_EXPORT JausBoolean jausTimeTimeToString(JausTime time, char *buffer);
+JAUS_EXPORT JausBoolean jausTimeDateToString(JausTime time, char *buffer);
 
 JAUS_EXPORT JausBoolean jausTimeStampFromBuffer(JausTime input, unsigned char *buf, unsigned int bufferSizeBytes);
 JAUS_EXPORT JausBoolean jausTimeStampToBuffer(JausTime input, unsigned char *buf, unsigned int bufferSizeBytes);

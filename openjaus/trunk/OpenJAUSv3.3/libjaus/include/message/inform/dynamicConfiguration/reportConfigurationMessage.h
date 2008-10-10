@@ -101,4 +101,5 @@ JAUS_EXPORT JausMessage reportConfigurationMessageToJausMessage(ReportConfigurat
 
 JAUS_EXPORT unsigned int reportConfigurationMessageSize(ReportConfigurationMessage message);
 
+JAUS_EXPORT char* reportConfigurationMessageToString(ReportConfigurationMessage message);
 #endif // REPORT_CONFIGURATION_MESSAGE_H

@@ -110,4 +110,5 @@ JAUS_EXPORT JausMessage queryIdentificationMessageToJausMessage(QueryIdentificat
 
 JAUS_EXPORT unsigned int queryIdentificationMessageSize(QueryIdentificationMessage message);
 
+JAUS_EXPORT char* queryIdentificationMessageToString(QueryIdentificationMessage message);
 #endif // QUERY_IDENTIFICATION_MESSAGE_H

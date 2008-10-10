@@ -115,4 +115,5 @@ JAUS_EXPORT JausMessage reportPlatformOperationalDataMessageToJausMessage(Report
 
 JAUS_EXPORT unsigned int reportPlatformOperationalDataMessageSize(ReportPlatformOperationalDataMessage message);
 
+JAUS_EXPORT char* reportPlatformOperationalDataMessageToString(ReportPlatformOperationalDataMessage message);
 #endif // REPORT_PLATFORM_OPERATIONAL_DATA_MESSAGE_H

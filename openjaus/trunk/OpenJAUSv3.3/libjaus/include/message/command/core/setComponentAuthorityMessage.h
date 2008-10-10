@@ -101,4 +101,5 @@ JAUS_EXPORT JausMessage setComponentAuthorityMessageToJausMessage(SetComponentAu
 
 JAUS_EXPORT unsigned int setComponentAuthorityMessageSize(SetComponentAuthorityMessage message);
 
+JAUS_EXPORT char* setComponentAuthorityMessageToString(SetComponentAuthorityMessage message);
 #endif // SET_COMPONENT_AUTHORITY_MESSAGE_H

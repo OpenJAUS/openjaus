@@ -130,4 +130,5 @@ JAUS_EXPORT JausMessage setWrenchEffortMessageToJausMessage(SetWrenchEffortMessa
 
 JAUS_EXPORT unsigned int setWrenchEffortMessageSize(SetWrenchEffortMessage message);
 
+JAUS_EXPORT char* setWrenchEffortMessageToString(SetWrenchEffortMessage message);
 #endif // SET_WRENCH_EFFORT_MESSAGE_H

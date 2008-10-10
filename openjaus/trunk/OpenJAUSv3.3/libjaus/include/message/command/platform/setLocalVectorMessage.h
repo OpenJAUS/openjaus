@@ -103,4 +103,5 @@ JAUS_EXPORT JausMessage setLocalVectorMessageToJausMessage(SetLocalVectorMessage
 
 JAUS_EXPORT unsigned int setLocalVectorMessageSize(SetLocalVectorMessage message);
 
+JAUS_EXPORT char* setLocalVectorMessageToString(SetLocalVectorMessage message);
 #endif // SET_LOCAL_VECTOR_MESSAGE_H

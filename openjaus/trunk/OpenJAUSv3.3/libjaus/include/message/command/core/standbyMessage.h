@@ -101,4 +101,5 @@ JAUS_EXPORT JausMessage standbyMessageToJausMessage(StandbyMessage message);
 
 JAUS_EXPORT unsigned int standbyMessageSize(StandbyMessage message);
 
+JAUS_EXPORT char* standbyMessageToString(StandbyMessage message);
 #endif // STANDBY_MESSAGE_H

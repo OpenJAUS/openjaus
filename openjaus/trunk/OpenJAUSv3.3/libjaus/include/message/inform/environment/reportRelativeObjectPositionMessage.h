@@ -123,4 +123,5 @@ JAUS_EXPORT JausMessage reportRelativeObjectPositionMessageToJausMessage(ReportR
 
 JAUS_EXPORT unsigned int reportRelativeObjectPositionMessageSize(ReportRelativeObjectPositionMessage message);
 
+JAUS_EXPORT char* reportRelativeObjectPositionMessageToString(ReportRelativeObjectPositionMessage message);
 #endif // REPORT_RELATIVE_OBJECT_POSITION_MESSAGE_H

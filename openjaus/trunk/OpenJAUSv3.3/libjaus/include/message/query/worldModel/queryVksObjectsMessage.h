@@ -124,4 +124,5 @@ JAUS_EXPORT JausMessage queryVksObjectsMessageToJausMessage(QueryVksObjectsMessa
 
 JAUS_EXPORT unsigned int queryVksObjectsMessageSize(QueryVksObjectsMessage message);
 
+JAUS_EXPORT char* queryVksObjectsMessageToString(QueryVksObjectsMessage message);
 #endif // QUERY_VKS_OBJECTS_MESSAGE_H

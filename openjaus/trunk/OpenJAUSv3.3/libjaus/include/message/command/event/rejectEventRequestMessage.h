@@ -123,4 +123,5 @@ JAUS_EXPORT JausMessage rejectEventRequestMessageToJausMessage(RejectEventReques
 
 JAUS_EXPORT unsigned int rejectEventRequestMessageSize(RejectEventRequestMessage message);
 
+JAUS_EXPORT char* rejectEventRequestMessageToString(RejectEventRequestMessage message);
 #endif // REJECT_EVENT_REQUEST_MESSAGE_H

@@ -101,4 +101,5 @@ JAUS_EXPORT JausMessage reportTravelSpeedMessageToJausMessage(ReportTravelSpeedM
 
 JAUS_EXPORT unsigned int reportTravelSpeedMessageSize(ReportTravelSpeedMessage message);
 
+JAUS_EXPORT char* reportTravelSpeedMessageToString(ReportTravelSpeedMessage message);
 #endif // REPORT_TRAVEL_SPEED_MESSAGE_H

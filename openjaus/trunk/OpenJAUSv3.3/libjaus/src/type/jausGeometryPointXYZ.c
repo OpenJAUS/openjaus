@@ -66,3 +66,25 @@ void jausGeometryPointXYZDestroy(JausGeometryPointXYZ jausGeometryPointXYZ)
 {
 	free(jausGeometryPointXYZ);
 }
+
+JAUS_EXPORT char* jausGeometryPointXYZToString(JausGeometryPointXYZ point)
+{
+  char* buf;
+  
+  int bufSize = 50;
+  buf = (char*)malloc(sizeof(char)*bufSize);
+  
+  strcpy(buf, "(X=");
+  jausDoubleToString(point->x, buf+strlen(buf));
+  strcat(buf, ", Y=");
+  jausDoubleToString(point->y, buf+strlen(buf));
+  strcat(buf, ", Z=");
+  jausDoubleToString(point->z, buf+strlen(buf));
+  
+  char* returnBuf;
+  returnBuf = (char*)malloc(sizeof(char)*( strlen(buf)+1 ));
+  
+  strcpy(returnBuf, buf);
+  free(buf);
+  return returnBuf;
+}

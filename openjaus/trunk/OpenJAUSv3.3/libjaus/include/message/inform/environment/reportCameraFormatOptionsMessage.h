@@ -157,4 +157,5 @@ JAUS_EXPORT JausMessage reportCameraFormatOptionsMessageToJausMessage(ReportCame
 
 JAUS_EXPORT unsigned int reportCameraFormatOptionsMessageSize(ReportCameraFormatOptionsMessage message);
 
+JAUS_EXPORT char* reportCameraFormatOptionsMessageToString(ReportCameraFormatOptionsMessage message);
 #endif // REPORT_CAMERA_FORMAT_OPTIONS_MESSAGE_H

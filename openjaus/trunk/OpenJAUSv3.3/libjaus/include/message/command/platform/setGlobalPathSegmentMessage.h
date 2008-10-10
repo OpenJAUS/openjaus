@@ -115,4 +115,5 @@ JAUS_EXPORT JausMessage setGlobalPathSegmentMessageToJausMessage(SetGlobalPathSe
 
 JAUS_EXPORT unsigned int setGlobalPathSegmentMessageSize(SetGlobalPathSegmentMessage message);
 
+JAUS_EXPORT char* setGlobalPathSegmentMessageToString(SetGlobalPathSegmentMessage message);
 #endif // SET_GLOBAL_PATH_SEGMENT_MESSAGE_H

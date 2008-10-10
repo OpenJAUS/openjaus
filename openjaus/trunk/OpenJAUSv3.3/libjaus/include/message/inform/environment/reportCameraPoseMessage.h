@@ -129,4 +129,5 @@ JAUS_EXPORT JausMessage reportCameraPoseMessageToJausMessage(ReportCameraPoseMes
 
 JAUS_EXPORT unsigned int reportCameraPoseMessageSize(ReportCameraPoseMessage message);
 
+JAUS_EXPORT char* reportCameraPoseMessageToString(ReportCameraPoseMessage message);
 #endif // REPORT_CAMERA_POSE_MESSAGE_H

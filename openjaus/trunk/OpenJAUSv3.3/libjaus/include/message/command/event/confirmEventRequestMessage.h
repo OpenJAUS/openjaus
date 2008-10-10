@@ -124,4 +124,5 @@ JAUS_EXPORT JausMessage confirmEventRequestMessageToJausMessage(ConfirmEventRequ
 
 JAUS_EXPORT unsigned int confirmEventRequestMessageSize(ConfirmEventRequestMessage message);
 
+JAUS_EXPORT char* confirmEventRequestMessageToString(ConfirmEventRequestMessage message);
 #endif // CONFIRM_EVENT_REQUEST_MESSAGE_H

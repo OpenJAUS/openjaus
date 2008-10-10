@@ -101,4 +101,5 @@ JAUS_EXPORT JausMessage queryLocalPoseMessageToJausMessage(QueryLocalPoseMessage
 
 JAUS_EXPORT unsigned int queryLocalPoseMessageSize(QueryLocalPoseMessage message);
 
+JAUS_EXPORT char* queryLocalPoseMessageToString(QueryLocalPoseMessage message);
 #endif // QUERY_LOCAL_POSE_MESSAGE_H

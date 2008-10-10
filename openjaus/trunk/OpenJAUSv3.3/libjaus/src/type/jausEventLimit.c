@@ -41,6 +41,7 @@
 //
 // Description:
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "jaus.h"
@@ -335,4 +336,102 @@ void jausEventDestroy(JausEvent event)
 	
 	jausEventLimitDestroy(event->previousLimitValue);	
 	free(event);	
+}
+
+char* jausEventLimitToString(JausEventLimit limit)
+{
+  if( limit )
+  {
+    char* buf;
+    buf = (char*)malloc(100);
+
+    
+    strcpy(buf, "Limit Data Field Type: ");
+    jausByteToString(limit->dataType, (buf)+strlen(buf));
+
+    switch(limit->dataType)
+    {
+    
+    case EVENT_LIMIT_UNDEFINED_TYPE:
+      strcat(buf, " Undefined Type");
+      break;
+      
+    case EVENT_LIMIT_BYTE_TYPE:
+      strcat(buf, " Byte");
+      strcat(buf, "\nLimit: ");
+      jausByteToString(limit->value.byteValue, (buf)+strlen(buf));
+      break;
+      
+    case EVENT_LIMIT_SHORT_TYPE:
+      strcat(buf, " Short Integer");
+      strcat(buf, "\nLimit: ");
+      jausShortToString(limit->value.shortValue, (buf)+strlen(buf));
+      break;
+      
+    case EVENT_LIMIT_INTEGER_TYPE:
+      strcat(buf, " Integer");
+      strcat(buf, "\nLimit: ");
+      jausIntegerToString(limit->value.integerValue, (buf)+strlen(buf));
+      break;
+      
+    case EVENT_LIMIT_LONG_TYPE:
+      strcat(buf, " Long Integer");
+      strcat(buf, "\nLimit: ");
+      jausLongToString(limit->value.longValue, (buf)+strlen(buf));
+      break;
+      
+    case EVENT_LIMIT_UNSIGNED_SHORT_TYPE:
+      strcat(buf, " Unsigned Short Integer");
+      strcat(buf, "\nLimit: ");
+      jausUnsignedShortToString(limit->value.unsignedShortValue, (buf)+strlen(buf));
+      break;
+      
+    case EVENT_LIMIT_UNSIGNED_INTEGER_TYPE:
+      strcat(buf, " Unsigned Integer");
+      strcat(buf, "\nLimit: ");
+      jausUnsignedIntegerToString(limit->value.unsignedIntegerValue, (buf)+strlen(buf));
+      break;
+      
+    case EVENT_LIMIT_UNSIGNED_LONG_TYPE:
+      strcat(buf, " Unsigned Long");
+      strcat(buf, "\nLimit: ");
+      jausUnsignedLongToString(limit->value.unsignedLongValue, (buf)+strlen(buf));
+      break;
+      
+    case EVENT_LIMIT_FLOAT_TYPE:
+      strcat(buf, " Float");
+      strcat(buf, "\nLimit: ");
+      jausFloatToString(limit->value.floatValue, (buf)+strlen(buf));
+      break;
+      
+    case EVENT_LIMIT_DOUBLE_TYPE:
+      strcat(buf, " Long Float");
+      strcat(buf, "\nLimit: ");
+      jausDoubleToString(limit->value.doubleValue, (buf)+strlen(buf));
+      break;
+      
+    case EVENT_LIMIT_RGB_TYPE:
+      strcat(buf, " RGB");
+      strcat(buf, "\nLimit: Red:");
+      jausByteToString(limit->value.rgb.redValue, (buf)+strlen(buf));
+      strcat(buf, " Green: ");
+      jausByteToString(limit->value.rgb.greenValue, (buf)+strlen(buf));
+      strcat(buf, " Blue: ");
+      jausByteToString(limit->value.rgb.blueValue, (buf)+strlen(buf));
+      break;
+      
+    }
+    char* returnBuf;
+    returnBuf = (char*)malloc(strlen(buf)+1);
+    strcpy(returnBuf, buf);
+    free(buf);
+    return returnBuf;
+  }
+  else
+  {
+    char* returnBuf;
+    returnBuf = (char*)malloc(21);
+    returnBuf = "Invalid Event Limit";
+    return returnBuf;
+  }
 }

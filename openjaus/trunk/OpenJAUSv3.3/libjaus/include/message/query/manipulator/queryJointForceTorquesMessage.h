@@ -101,4 +101,5 @@ JAUS_EXPORT JausMessage queryJointForceTorquesMessageToJausMessage(QueryJointFor
 
 JAUS_EXPORT unsigned int queryJointForceTorquesMessageSize(QueryJointForceTorquesMessage message);
 
+JAUS_EXPORT char* queryJointForceTorquesMessageToString(QueryJointForceTorquesMessage message);
 #endif // QUERY_JOINT_FORCE_TORQUES_MESSAGE_H

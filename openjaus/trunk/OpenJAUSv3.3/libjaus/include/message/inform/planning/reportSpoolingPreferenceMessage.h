@@ -114,4 +114,5 @@ JAUS_EXPORT JausMessage reportSpoolingPreferenceMessageToJausMessage(ReportSpool
 
 JAUS_EXPORT unsigned int reportSpoolingPreferenceMessageSize(ReportSpoolingPreferenceMessage message);
 
+JAUS_EXPORT char* reportSpoolingPreferenceMessageToString(ReportSpoolingPreferenceMessage message);
 #endif // REPORT_SPOOLING_PREFERENCE_MESSAGE_H

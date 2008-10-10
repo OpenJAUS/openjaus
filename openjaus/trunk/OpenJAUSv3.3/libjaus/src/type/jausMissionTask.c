@@ -292,3 +292,99 @@ unsigned int missionTaskSize(JausMissionTask object)
 	return size;
 }
 
+char* missionTaskToString(JausMissionTask object)
+{
+  char* buf;
+  buf = (char*)malloc(sizeof(char)*100);
+
+  strcpy(buf, "Task: ");
+  jausUnsignedShortToString(object->taskId, (buf)+strlen(buf));
+
+  strcat(buf, "\nTask Commands:");
+  char* taskCmdStr = NULL;
+  for(int i = 0; i<object->commands->elementCount; i++)
+  {
+    char* tmpStr2;
+    tmpStr2 = missionCommandToString((JausMissionCommand)(object->commands->elementData[i]) );
+    
+    if( taskCmdStr == NULL )
+    {
+      //strcat(buf, "\n");//taskCmdStr = tmpStr2;
+      taskCmdStr = (char*)malloc(sizeof(char));
+      taskCmdStr[0] = '\0';
+    }
+    //else
+    //{
+      char* tmpStr3;
+      tmpStr3 = (char*)malloc(sizeof(char)*(strlen(taskCmdStr) + strlen(tmpStr2) +1 +1) );
+      strcpy(tmpStr3, taskCmdStr);
+      strcat(tmpStr3, "\n");
+      strcat(tmpStr3, tmpStr2);
+      
+      free(tmpStr2);
+      free(taskCmdStr);
+      
+      taskCmdStr = tmpStr3;
+    //}
+  }
+  
+  char* childStr = NULL;
+  for(int k = 0; k<object->children->elementCount; k++)
+  {
+    char* tmpChildStr;
+    tmpChildStr = missionTaskToString( (JausMissionTask)(object->children->elementData[k]) );
+    
+    if( childStr == NULL )
+      childStr = tmpChildStr;
+    else
+    {
+      char* tmpComboStr;
+      tmpComboStr = (char*)malloc(sizeof(char)*( strlen(childStr) + strlen(tmpChildStr) +1 ));
+      strcpy(tmpComboStr, childStr);
+      strcat(tmpComboStr, tmpChildStr);
+      
+      free(childStr);
+      free(tmpChildStr);
+      
+      childStr = tmpComboStr;
+    }
+  }
+  
+  char* childrenIntro = "\nChildren: ";
+  
+  
+  //Form return string
+  char* returnBuf;
+  
+  int stringSize = 0;
+  if( buf != NULL )
+    stringSize += strlen(buf);
+  if( taskCmdStr != NULL )
+    stringSize += strlen(taskCmdStr);
+  if( childrenIntro != NULL )
+    stringSize += strlen(childrenIntro);
+  if( childStr != NULL )
+    stringSize += strlen(childStr);
+  
+  returnBuf = (char*)malloc(sizeof(char)*(  stringSize +1 ));
+  
+  strcpy(returnBuf, buf);
+  if( taskCmdStr != NULL )
+  {
+    strcat(returnBuf, taskCmdStr);
+    free(taskCmdStr);
+  }
+  
+  strcat(returnBuf, childrenIntro);
+  if( childStr != NULL )
+  {
+    strcat(returnBuf, childStr);
+    free(childStr);
+  }
+
+  //free(childrenIntro);
+  
+  
+  free(buf);
+  return returnBuf;
+}

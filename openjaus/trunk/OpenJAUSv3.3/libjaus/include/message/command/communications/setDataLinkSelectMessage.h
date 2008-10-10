@@ -103,4 +103,5 @@ JAUS_EXPORT JausMessage setDataLinkSelectMessageToJausMessage(SetDataLinkSelectM
 
 JAUS_EXPORT unsigned int setDataLinkSelectMessageSize(SetDataLinkSelectMessage message);
 
+JAUS_EXPORT char* setDataLinkSelectMessageToString(SetDataLinkSelectMessage message);
 #endif // SET_DATA_LINK_SELECT_MESSAGE_H

@@ -101,4 +101,5 @@ JAUS_EXPORT JausMessage requestComponentControlMessageToJausMessage(RequestCompo
 
 JAUS_EXPORT unsigned int requestComponentControlMessageSize(RequestComponentControlMessage message);
 
+JAUS_EXPORT char* requestComponentControlMessageToString(RequestComponentControlMessage message);
 #endif // REQUEST_COMPONENT_CONTROL_MESSAGE_H
