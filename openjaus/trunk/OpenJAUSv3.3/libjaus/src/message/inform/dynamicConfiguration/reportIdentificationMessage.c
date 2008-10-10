@@ -42,7 +42,7 @@
 // Description: This file defines the functionality of a ReportIdentificationMessage
 
 
-
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "jaus.h"
@@ -52,6 +52,7 @@ static const int maxDataSizeBytes = 84;
 
 static JausBoolean headerFromBuffer(ReportIdentificationMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static JausBoolean headerToBuffer(ReportIdentificationMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+static int headerToString(ReportIdentificationMessage message, char **buf);
 
 static JausBoolean dataFromBuffer(ReportIdentificationMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static int dataToBuffer(ReportIdentificationMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
@@ -137,6 +138,60 @@ static int dataToBuffer(ReportIdentificationMessage message, unsigned char *buff
 	}
 
 	return index;
+}
+
+static int dataToString(ReportIdentificationMessage message, char **buf)
+{
+  //message already verified 
+
+  //Setup temporary string buffer
+  
+  unsigned int bufSize = 200 + strlen(message->identification);
+  (*buf) = (char*)malloc(sizeof(char)*bufSize);
+  
+  strcpy((*buf), "\nQuery Type: " );
+  jausByteToString(message->queryType, (*buf)+strlen(*buf));
+  switch(message->queryType)
+  {
+    case 1:
+      strcat((*buf), " System Identification");
+      break;
+    case 2:
+      strcat((*buf), " SS Identification");
+      break;
+    case 3:
+      strcat((*buf), " Node Identification");
+      break;
+    case 4:
+      strcat((*buf), " Component Identification");
+      break;
+    default:
+      strcat((*buf), " Reserved Type");
+      break;
+  }
+  
+  strcat((*buf), "\nAuthority: ");
+  jausByteToString(message->authority, (*buf)+strlen(*buf));
+  
+  strcat((*buf), "\nType: ");
+  jausUnsignedShortToString(message->type, (*buf)+strlen(*buf));
+  if( (message->type > 10001) && (message->type < 20000) )
+    strcat((*buf), " Vehicle TBD");
+  else if( (message->type > 20001) && (message->type < 30000) )
+    strcat((*buf), " OCU TBD");
+  else if( (message->type > 30001) && (message->type < 40000) )
+    strcat((*buf), " Other Subsystem TBD");
+  else if( (message->type > 40001) && (message->type < 50000) )
+    strcat((*buf), " Node TBD");
+  else if( (message->type > 50001) && (message->type < 60000) )
+    strcat((*buf), " Payload TBD");
+  else
+    strcat((*buf), " Reserved Type");
+  
+  strcat((*buf), "Identification: ");
+  strcat((*buf), message->identification);
+  
+  return strlen((*buf));
 }
 
 static unsigned int dataSize(ReportIdentificationMessage message)
@@ -307,6 +362,39 @@ unsigned int reportIdentificationMessageSize(ReportIdentificationMessage message
 	return (unsigned int)(dataSize(message) + JAUS_HEADER_SIZE_BYTES);
 }
 
+char* reportIdentificationMessageToString(ReportIdentificationMessage message)
+{
+  if(message)
+  {
+    char* buf1 = NULL;
+    char* buf2 = NULL;
+    
+    int returnVal;
+    
+    //Print the message header to the string buffer
+    returnVal = headerToString(message, &buf1);
+    
+    //Print the message data fields to the string buffer
+    returnVal += dataToString(message, &buf2);
+    
+    char* buf;
+    buf = (char*)malloc(strlen(buf1)+strlen(buf2)+1);
+    strcpy(buf, buf1);
+    strcat(buf, buf2);
+
+    free(buf1);
+    free(buf2);
+    
+    return buf;
+  }
+  else
+  {
+    char* buf = "Invalid ReportIdentification Message";
+    char* msg = (char*)malloc(strlen(buf)+1);
+    strcpy(msg, buf);
+    return msg;
+  }
+}
 //********************* PRIVATE HEADER FUNCTIONS **********************//
 
 static JausBoolean headerFromBuffer(ReportIdentificationMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
@@ -383,3 +471,119 @@ static JausBoolean headerToBuffer(ReportIdentificationMessage message, unsigned 
 	}
 }
 
+static int headerToString(ReportIdentificationMessage message, char **buf)
+{
+  //message existance already verified 
+
+  //Setup temporary string buffer
+  
+  unsigned int bufSize = 500;
+  (*buf) = (char*)malloc(sizeof(char)*bufSize);
+  
+  strcpy((*buf), jausCommandCodeString(message->commandCode) );
+  strcat((*buf), " (0x");
+  sprintf((*buf)+strlen(*buf), "%04X", message->commandCode);
+
+  strcat((*buf), ")\nReserved: ");
+  jausUnsignedShortToString(message->properties.reserved, (*buf)+strlen(*buf));
+
+  strcat((*buf), "\nVersion: ");
+  switch(message->properties.version)
+  {
+    case 0:
+      strcat((*buf), "2.0 and 2.1 compatible");
+      break;
+    case 1:
+      strcat((*buf), "3.0 through 3.1 compatible");
+      break;
+    case 2:
+      strcat((*buf), "3.2 and 3.3 compatible");
+      break;
+    default:
+      strcat((*buf), "Reserved for Future: ");
+      jausUnsignedShortToString(message->properties.version, (*buf)+strlen(*buf));
+      break;
+  }
+
+  strcat((*buf), "\nExp. Flag: ");
+  if(message->properties.expFlag == 0)
+    strcat((*buf), "JAUS");
+  else 
+    strcat((*buf), "Experimental");
+  
+  strcat((*buf), "\nSC Flag: ");
+  if(message->properties.scFlag == 0)
+    strcat((*buf), "Service Connection");
+  else
+    strcat((*buf), "Not Service Connection");
+  
+  strcat((*buf), "\nACK/NAK: ");
+  switch(message->properties.ackNak)
+  {
+  case 0:
+    strcat((*buf), "None");
+    break;
+  case 1:
+    strcat((*buf), "Request ack/nak");
+    break;
+  case 2:
+    strcat((*buf), "nak response");
+    break;
+  case 3:
+    strcat((*buf), "ack response");
+    break;
+  default:
+    break;
+  }
+  
+  strcat((*buf), "\nPriority: ");
+  if(message->properties.priority < 12)
+  {
+    strcat((*buf), "Normal Priority ");
+    jausUnsignedShortToString(message->properties.priority, (*buf)+strlen(*buf));
+  }
+  else
+  {
+    strcat((*buf), "Safety Critical Priority ");
+    jausUnsignedShortToString(message->properties.priority, (*buf)+strlen(*buf));
+  }
+  
+  strcat((*buf), "\nSource: ");
+  jausAddressToString(message->source, (*buf)+strlen(*buf));
+  
+  strcat((*buf), "\nDestination: ");
+  jausAddressToString(message->destination, (*buf)+strlen(*buf));
+  
+  strcat((*buf), "\nData Size: ");
+  jausUnsignedIntegerToString(message->dataSize, (*buf)+strlen(*buf));
+  
+  strcat((*buf), "\nData Flag: ");
+  jausUnsignedIntegerToString(message->dataFlag, (*buf)+strlen(*buf));
+  switch(message->dataFlag)
+  {
+    case 0:
+      strcat((*buf), " Only data packet in single-packet stream");
+      break;
+    case 1:
+      strcat((*buf), " First data packet in muti-packet stream");
+      break;
+    case 2:
+      strcat((*buf), " Normal data packet");
+      break;
+    case 4:
+      strcat((*buf), " Retransmitted data packet");
+      break;
+    case 8:
+      strcat((*buf), " Last data packet in stream");
+      break;
+    default:
+      strcat((*buf), " Unrecognized data flag code");
+      break;
+  }
+  
+  strcat((*buf), "\nSequence Number: ");
+  jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
+  
+  return strlen((*buf));
+  
+}

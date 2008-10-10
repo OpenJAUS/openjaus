@@ -111,5 +111,5 @@ JAUS_EXPORT JausMessage cancelEventMessageToJausMessage(CancelEventMessage messa
 
 unsigned int cancelEventMessageSize(CancelEventMessage message);
 
-
+JAUS_EXPORT char* cancelEventMessageToString(CancelEventMessage message);
 #endif // CANCEL_EVENT_MESSAGE_H

@@ -106,5 +106,5 @@ JAUS_EXPORT JausMessage clearEmergencyMessageToJausMessage(ClearEmergencyMessage
 
 JAUS_EXPORT unsigned int clearEmergencyMessageSize(ClearEmergencyMessage message);
 
-
+JAUS_EXPORT char* clearEmergencyMessageToString(ClearEmergencyMessage message);
 #endif // CLEAR_EMERGENCY_MESSAGE_H

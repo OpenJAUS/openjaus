@@ -101,4 +101,5 @@ JAUS_EXPORT JausMessage queryImageMessageToJausMessage(QueryImageMessage message
 
 JAUS_EXPORT unsigned int queryImageMessageSize(QueryImageMessage message);
 
+JAUS_EXPORT char* queryImageMessageToString(QueryImageMessage message);
 #endif // QUERY_IMAGE_MESSAGE_H

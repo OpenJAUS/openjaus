@@ -101,4 +101,5 @@ JAUS_EXPORT JausMessage rejectComponentControlMessageToJausMessage(RejectCompone
 
 JAUS_EXPORT unsigned int rejectComponentControlMessageSize(RejectComponentControlMessage message);
 
+JAUS_EXPORT char* rejectComponentControlMessageToString(RejectComponentControlMessage message);
 #endif // REJECT_COMPONENT_CONTROL_MESSAGE_H

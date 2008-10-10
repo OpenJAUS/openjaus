@@ -56,4 +56,6 @@ JAUS_EXPORT JausDouble newJausDouble(double val);
 JAUS_EXPORT JausBoolean jausDoubleFromBuffer(JausDouble *jDouble, unsigned char *buf, unsigned int bufferSizeBytes);
 JAUS_EXPORT JausBoolean jausDoubleToBuffer(JausDouble input, unsigned char *buf, unsigned int bufferSizeBytes);
 
+JAUS_EXPORT int jausDoubleToString(JausDouble value, char * buf);
+
 #endif // JAUS_DOUBLE_H

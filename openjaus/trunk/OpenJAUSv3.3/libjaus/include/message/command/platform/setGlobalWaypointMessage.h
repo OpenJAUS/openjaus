@@ -116,4 +116,5 @@ JAUS_EXPORT JausMessage setGlobalWaypointMessageToJausMessage(SetGlobalWaypointM
 
 JAUS_EXPORT unsigned int setGlobalWaypointMessageSize(SetGlobalWaypointMessage message);
 
+JAUS_EXPORT char* setGlobalWaypointMessageToString(SetGlobalWaypointMessage message);
 #endif // SET_GLOBAL_WAYPOINT_MESSAGE_H

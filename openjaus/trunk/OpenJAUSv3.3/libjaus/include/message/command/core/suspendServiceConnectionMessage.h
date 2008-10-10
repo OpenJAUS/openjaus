@@ -102,4 +102,5 @@ JAUS_EXPORT JausMessage suspendServiceConnectionMessageToJausMessage(SuspendServ
 
 JAUS_EXPORT unsigned int suspendServiceConnectionMessageSize(SuspendServiceConnectionMessage message);
 
+JAUS_EXPORT char* suspendServiceConnectionMessageToString(SuspendServiceConnectionMessage message);
 #endif // SUSPEND_SERVICE_CONNECTION_MESSAGE_H

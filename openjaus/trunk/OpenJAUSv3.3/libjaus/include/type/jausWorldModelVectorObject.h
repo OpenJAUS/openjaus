@@ -107,4 +107,6 @@ JAUS_EXPORT int vectorObjectTypeToString(JausWorldModelVectorObject object, char
 // JausWorldModelVectorObject Copy
 JAUS_EXPORT JausWorldModelVectorObject vectorObjectCopy(JausWorldModelVectorObject input);
 
+JAUS_EXPORT char* vectorObjectToString(JausWorldModelVectorObject object);
+
 #endif // VECTOROBJECT_H

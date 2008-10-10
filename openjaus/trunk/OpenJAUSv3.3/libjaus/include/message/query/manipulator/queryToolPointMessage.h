@@ -101,4 +101,5 @@ JAUS_EXPORT JausMessage queryToolPointMessageToJausMessage(QueryToolPointMessage
 
 JAUS_EXPORT unsigned int queryToolPointMessageSize(QueryToolPointMessage message);
 
+JAUS_EXPORT char* queryToolPointMessageToString(QueryToolPointMessage message);
 #endif // QUERY_TOOL_POINT_MESSAGE_H

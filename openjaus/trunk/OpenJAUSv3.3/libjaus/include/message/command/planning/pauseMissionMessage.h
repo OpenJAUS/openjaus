@@ -117,4 +117,6 @@ JAUS_EXPORT JausMessage pauseMissionMessageToJausMessage
 
 JAUS_EXPORT unsigned int pauseMissionMessageSize(PauseMissionMessage message);
 
+JAUS_EXPORT char* pauseMissionMessageToString(PauseMissionMessage message);
+
 #endif // PAUSE_MISSION_MESSAGE_H

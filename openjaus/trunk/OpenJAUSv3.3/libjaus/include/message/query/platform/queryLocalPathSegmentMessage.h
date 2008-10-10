@@ -102,4 +102,5 @@ JAUS_EXPORT JausMessage queryLocalPathSegmentMessageToJausMessage(QueryLocalPath
 
 JAUS_EXPORT unsigned int queryLocalPathSegmentMessageSize(QueryLocalPathSegmentMessage message);
 
+JAUS_EXPORT char* queryLocalPathSegmentMessageToString(QueryLocalPathSegmentMessage message);
 #endif // QUERY_LOCAL_PATH_SEGMENT_MESSAGE_H

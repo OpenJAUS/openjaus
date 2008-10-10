@@ -60,6 +60,8 @@ JAUS_EXPORT JausShort newJausShort(short val);
 JAUS_EXPORT JausBoolean jausShortFromBuffer(JausShort *jShort, unsigned char *buf, unsigned int bufferSizeBytes);
 JAUS_EXPORT JausBoolean jausShortToBuffer(JausShort input, unsigned char *buf, unsigned int bufferSizeBytes);
 
+JAUS_EXPORT int jausShortToString(JausShort value, char * buf);
+
 JAUS_EXPORT double jausShortToDouble(JausShort input, double min, double max);
 JAUS_EXPORT JausShort jausShortFromDouble(double value, double min, double max);
 

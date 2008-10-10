@@ -117,4 +117,5 @@ JAUS_EXPORT JausMessage reportManipulatorSpecificationsMessageToJausMessage(Repo
 
 JAUS_EXPORT unsigned int reportManipulatorSpecificationsMessageSize(ReportManipulatorSpecificationsMessage message);
 
+JAUS_EXPORT char* reportManipulatorSpecificationsMessageToString(ReportManipulatorSpecificationsMessage message);
 #endif // REPORT_MANIPULATOR_SPECIFICATIONS_MESSAGE_H

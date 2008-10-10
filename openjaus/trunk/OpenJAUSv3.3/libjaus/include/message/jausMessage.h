@@ -248,7 +248,7 @@
 
 // Experimental Messages
 #define JAUS_SET_VELOCITY_STATE						0x0404
-
+#define JAUS_SET_MTT_LIGHTS						0xD000
 // Define JausMessage data structure
 struct JausMessageStruct
 {
@@ -309,5 +309,5 @@ JAUS_EXPORT JausMessage jausMessageClone(JausMessage);
 JAUS_EXPORT JausBoolean jausMessageIsRejectableCommand(JausMessage message);
 JAUS_EXPORT unsigned short jausMessageGetComplimentaryCommandCode(unsigned short commandCode);
 
-
+JAUS_EXPORT char* jausMessageToString(JausMessage message);
 #endif // JAUS_MESSAGE_H

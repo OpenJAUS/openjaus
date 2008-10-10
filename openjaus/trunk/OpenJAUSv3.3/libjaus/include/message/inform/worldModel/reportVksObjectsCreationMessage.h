@@ -104,4 +104,5 @@ JAUS_EXPORT JausMessage reportVksObjectsCreationMessageToJausMessage(ReportVksOb
 
 JAUS_EXPORT unsigned int reportVksObjectsCreationMessageSize(ReportVksObjectsCreationMessage message);
 
+JAUS_EXPORT char* reportVksObjectsCreationMessageToString(ReportVksObjectsCreationMessage message);
 #endif // REPORT_VKS_OBJECTS_CREATION_MESSAGE_H

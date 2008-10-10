@@ -408,3 +408,65 @@ JausWorldModelVectorObject vectorObjectCopy(JausWorldModelVectorObject input)
 	////cError("JausWorldModelVectorObject:%d: This shouldn't happen.\n", __LINE__);	
 	return NULL;
 }
+
+char* vectorObjectToString(JausWorldModelVectorObject object)
+{
+  int returnBufSize = 0;
+  char* buf;
+  int bufSize = 200;
+  buf = (char*)malloc(sizeof(char)*bufSize);
+  
+  strcpy(buf, "World Model Vector Object Id: ");
+  jausUnsignedShortToString(object->id, buf+strlen(buf));
+  
+  strcat(buf, "\nWorld Model Vector Object Type: ");
+  vectorObjectTypeToString(object, buf+strlen(buf), sizeof(buf)-strlen(buf));
+  
+  strcat(buf, "\nWorld Model Vector Object Buffer(meters): ");
+  jausFloatToString(object->bufferMeters, buf+strlen(buf));
+  
+  char* features[object->featureClasses->elementCount];
+  for(int i=0; i<object->featureClasses->elementCount; i++)
+  {
+    features[i] = featureClassToString(object->featureClasses->elementData[i]);
+    returnBufSize += strlen(features[i]) + 19;
+  }
+  
+  char* points[object->dataPoints->elementCount];
+  for(int k=0; k<object->dataPoints->elementCount; k++)
+  {
+    points[k] = jausGeometryPointLLAToString(object->dataPoints->elementData[k]);
+    returnBufSize += strlen(points[k]) + 19;
+  }
+  
+  returnBufSize += strlen(buf)+1;
+  char* returnBuf;
+  returnBuf = (char*)malloc(sizeof(char)*( returnBufSize ));
+  strcpy(returnBuf, buf);
+  for(int i=0; i<object->featureClasses->elementCount; i++)
+  {
+    strcat(returnBuf, "\nFeature Class #");
+    jausIntegerToString(i, returnBuf+strlen(returnBuf));
+    strcat(returnBuf, ": \n");
+    strcat(returnBuf, features[i]);
+  }
+  for(int k=0; k<object->dataPoints->elementCount; k++)
+  {
+    strcat(returnBuf, "\nPoint #");
+    jausIntegerToString(k, returnBuf+strlen(returnBuf));
+    strcat(returnBuf, ": \n");
+    strcat(returnBuf, points[k]);
+  }
+  
+  
+  for(int i=0; i<object->featureClasses->elementCount; i++)
+  {
+    free(features[i]);
+  }
+  for(int k=0; k<object->dataPoints->elementCount; k++)
+  {
+    free(points[k]);
+  }  
+  free(buf);
+  return returnBuf;
+}

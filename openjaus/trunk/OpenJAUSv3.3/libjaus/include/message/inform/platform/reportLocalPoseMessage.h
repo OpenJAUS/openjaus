@@ -123,4 +123,5 @@ JAUS_EXPORT JausMessage reportLocalPoseMessageToJausMessage(ReportLocalPoseMessa
 
 JAUS_EXPORT unsigned int reportLocalPoseMessageSize(ReportLocalPoseMessage message);
 
+JAUS_EXPORT char* reportLocalPoseMessageToString(ReportLocalPoseMessage message);
 #endif // REPORT_LOCAL_POSE_MESSAGE_H

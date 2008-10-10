@@ -102,4 +102,5 @@ JAUS_EXPORT JausMessage terminateServiceConnectionMessageToJausMessage(Terminate
 
 JAUS_EXPORT unsigned int terminateServiceConnectionMessageSize(TerminateServiceConnectionMessage message);
 
+JAUS_EXPORT char* terminateServiceConnectionMessageToString(TerminateServiceConnectionMessage message);
 #endif // TERMINATE_SERVICE_CONNECTION_MESSAGE_H

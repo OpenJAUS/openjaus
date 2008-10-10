@@ -109,4 +109,6 @@ JAUS_EXPORT unsigned int jausEventLimitSize(JausEventLimit limit);
 JAUS_EXPORT JausEvent jausEventCreate();
 JAUS_EXPORT void jausEventDestroy(JausEvent event);
 
+JAUS_EXPORT char* jausEventLimitToString(JausEventLimit limit);
+
 #endif

@@ -54,5 +54,5 @@ typedef JausGeometryPointLLAStruct *JausGeometryPointLLA;
 
 JAUS_EXPORT JausGeometryPointLLA jausGeometryPointLLACreate(void);
 JAUS_EXPORT void jausGeometryPointLLADestroy(JausGeometryPointLLA);
-
+JAUS_EXPORT char* jausGeometryPointLLAToString(JausGeometryPointLLA);
 #endif

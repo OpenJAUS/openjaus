@@ -101,4 +101,5 @@ JAUS_EXPORT JausMessage shutdownMessageToJausMessage(ShutdownMessage message);
 
 JAUS_EXPORT unsigned int shutdownMessageSize(ShutdownMessage message);
 
+JAUS_EXPORT char* shutdownMessageToString(ShutdownMessage message);
 #endif // SHUTDOWN_MESSAGE_H

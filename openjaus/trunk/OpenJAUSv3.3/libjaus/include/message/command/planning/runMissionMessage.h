@@ -114,4 +114,6 @@ JAUS_EXPORT JausMessage runMissionMessageToJausMessage
 
 JAUS_EXPORT unsigned int runMissionMessageSize(RunMissionMessage message);
 
+JAUS_EXPORT char* runMissionMessageToString(RunMissionMessage message);
+
 #endif // RUN_MISSION_MESSAGE_H

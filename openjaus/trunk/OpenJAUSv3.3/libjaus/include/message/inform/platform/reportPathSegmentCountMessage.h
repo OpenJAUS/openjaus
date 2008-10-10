@@ -101,4 +101,5 @@ JAUS_EXPORT JausMessage reportPathSegmentCountMessageToJausMessage(ReportPathSeg
 
 JAUS_EXPORT unsigned int reportPathSegmentCountMessageSize(ReportPathSegmentCountMessage message);
 
+JAUS_EXPORT char* reportPathSegmentCountMessageToString(ReportPathSegmentCountMessage message);
 #endif // REPORT_PATH_SEGMENT_COUNT_MESSAGE_H

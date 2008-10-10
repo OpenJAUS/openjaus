@@ -101,4 +101,5 @@ JAUS_EXPORT JausMessage queryHeartbeatPulseMessageToJausMessage(QueryHeartbeatPu
 
 JAUS_EXPORT unsigned int queryHeartbeatPulseMessageSize(QueryHeartbeatPulseMessage message);
 
+JAUS_EXPORT char* queryHeartbeatPulseMessageToString(QueryHeartbeatPulseMessage message);
 #endif // QUERY_HEARTBEAT_PULSE_MESSAGE_H

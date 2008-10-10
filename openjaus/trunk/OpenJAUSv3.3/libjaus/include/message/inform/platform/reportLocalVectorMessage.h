@@ -103,4 +103,5 @@ JAUS_EXPORT JausMessage reportLocalVectorMessageToJausMessage(ReportLocalVectorM
 
 JAUS_EXPORT unsigned int reportLocalVectorMessageSize(ReportLocalVectorMessage message);
 
+JAUS_EXPORT char* reportLocalVectorMessageToString(ReportLocalVectorMessage message);
 #endif // REPORT_LOCAL_VECTOR_MESSAGE_H

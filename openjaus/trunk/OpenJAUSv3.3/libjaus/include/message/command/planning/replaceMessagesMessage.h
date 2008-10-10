@@ -115,4 +115,6 @@ JAUS_EXPORT JausMessage replaceMessagesMessageToJausMessage(ReplaceMessagesMessa
 
 JAUS_EXPORT unsigned int replaceMessagesMessageSize(ReplaceMessagesMessage message);
 
+JAUS_EXPORT char* replaceMessagesMessageToString(ReplaceMessagesMessage message);
+
 #endif // REPLACE_MESSAGE_H

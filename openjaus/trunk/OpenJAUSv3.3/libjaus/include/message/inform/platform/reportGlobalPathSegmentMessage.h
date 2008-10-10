@@ -115,4 +115,5 @@ JAUS_EXPORT JausMessage reportGlobalPathSegmentMessageToJausMessage(ReportGlobal
 
 JAUS_EXPORT unsigned int reportGlobalPathSegmentMessageSize(ReportGlobalPathSegmentMessage message);
 
+JAUS_EXPORT char* reportGlobalPathSegmentMessageToString(ReportGlobalPathSegmentMessage message);
 #endif // REPORT_GLOBAL_PATH_SEGMENT_MESSAGE_H

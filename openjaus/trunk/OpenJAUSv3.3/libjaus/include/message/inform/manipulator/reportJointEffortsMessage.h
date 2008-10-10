@@ -103,4 +103,5 @@ JAUS_EXPORT JausMessage reportJointEffortsMessageToJausMessage(ReportJointEffort
 
 JAUS_EXPORT unsigned int reportJointEffortsMessageSize(ReportJointEffortsMessage message);
 
+JAUS_EXPORT char* reportJointEffortsMessageToString(ReportJointEffortsMessage message);
 #endif // REPORT_JOINT_EFFORTS_MESSAGE_H

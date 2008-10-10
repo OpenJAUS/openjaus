@@ -41,6 +41,7 @@
 //
 // Description: This file provides the general support functionality ReportServicesMessage
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "jaus.h"
@@ -356,4 +357,177 @@ JausService jausServiceRetrieveService(JausArray jausServices, JausUnsignedShort
 		}
 	}
 	return NULL;
+}
+
+
+char* jausCommandToString(JausCommand command)
+{
+  char* buffer = (char*)malloc(sizeof(char)*300);
+  
+  if(command)
+    sprintf(buffer, "Command Code: 0X%X %s  Presence Vector: 0X%X", command->commandCode, jausCommandCodeString(command->commandCode), command->presenceVector);
+  else
+    strcpy(buffer, "No Jaus Command");
+  
+  return buffer;
+}
+
+char* jausServicesToString(JausArray services)
+{
+  char* buffer = (char*)malloc(sizeof(char)*3000);
+  
+  if(services->elementCount > 0)
+  {
+    for(int serv=0; serv<services->elementCount; serv++)
+    {
+      strcpy(buffer, "Type: ");
+      jausByteToString(((JausService)(services->elementData[serv]))->type, buffer+strlen(buffer));
+      switch(((JausService)(services->elementData[serv]))->type)
+      {
+        case 0:
+          strcat(buffer, " Core Message Support");
+          break;
+          
+        case 32:
+          strcat(buffer, " Subsystem Commander");
+          break;
+          
+        case 33:
+          strcat(buffer, " Primitive Driver");
+          break;
+          
+        case 34:
+          strcat(buffer, " Global Vector Driver");
+          break;
+          
+        case 35:
+          strcat(buffer, " Communicator");
+          break;
+          
+        case 37:
+          strcat(buffer, " Visual Sensor");
+          break;
+          
+        case 38:
+          strcat(buffer, " Global Pose Sensor");
+          break;
+          
+        case 40:
+          strcat(buffer, " System Commander");
+          break;
+          
+        case 41:
+          strcat(buffer, " Local Pose Sensor");
+          break;
+          
+        case 42:
+          strcat(buffer, " Velocity State Sensor");
+          break;
+          
+        case 43:
+          strcat(buffer, " Reflexive Driver");
+          break;
+          
+        case 44:
+          strcat(buffer, " Local Vector Driver");
+          break;
+          
+        case 45:
+          strcat(buffer, " Global Waypoint Driver");
+          break;
+          
+        case 46:
+          strcat(buffer, " Local Waypoint Driver");
+          break;
+          
+        case 47:
+          strcat(buffer, " Global Path Segment Driver");
+          break;
+          
+        case 48:
+          strcat(buffer, " Local Path Segment Driver");
+          break;
+          
+        case 49:
+          strcat(buffer, " Primitive Manipulator");
+          break;
+          
+        case 50:
+          strcat(buffer, " Range Sensor");
+          break;
+          
+        case 51:
+          strcat(buffer, " Manipulator Joint Position Sensor");
+          break;
+          
+        case 52:
+          strcat(buffer, " Manipulator Joint Velocity Sensor");
+          break;
+          
+        case 53:
+          strcat(buffer, " Manipulator Joint Force/Torque Sensor");
+          break;
+          
+        case 54: 
+          strcat(buffer, " Manipulator Joint Positions Driver");
+          break;
+          
+        case 55:
+          strcat(buffer, " Manipulator End-Effector Pose Driver");
+          break;
+          
+        case 56:
+          strcat(buffer, " Manipulator Joint Velocities Driver");
+          break;
+          
+        case 57:
+          strcat(buffer, " Manipulator End-Effector Velocity State Driver");
+          break;
+          
+        case 58:
+          strcat(buffer, " Manipulator Joint Move Driver");
+          break;
+          
+        case 59:
+          strcat(buffer, " Manipulator End-Effector Discrete Pose Driver");
+          break;
+      }
+      
+      strcat(buffer, "\nInput Command List: Count:");
+      jausByteToString(((JausService)(services->elementData[serv]))->inputCommandCount, buffer+strlen(buffer));
+      
+      if(((JausService)(services->elementData[serv]))->inputCommandCount == 0)
+        strcat(buffer, " No Input Commands");
+      else
+      {
+        JausCommand tmpCmd = ((JausService)(services->elementData[serv]))->inputCommandList;
+        for(int cmd=0; cmd<((JausService)(services->elementData[serv]))->inputCommandCount ;cmd++)
+        {
+          strcat(buffer, "\n");
+          strcat(buffer, jausCommandToString(tmpCmd));
+          tmpCmd = tmpCmd->next;
+        }
+      }
+      
+      strcat(buffer, "\nOutput Command List: Count:");
+      jausByteToString(((JausService)(services->elementData[serv]))->outputCommandCount, buffer+strlen(buffer));
+      
+      if(((JausService)(services->elementData[serv]))->outputCommandCount == 0)
+        strcat(buffer, " No Output Commands");
+      else
+      {
+        JausCommand tmpCommand = ((JausService)(services->elementData[serv]))->outputCommandList;
+        for(int cmd=0; cmd<((JausService)(services->elementData[serv]))->outputCommandCount ;cmd++)
+        {
+          strcat(buffer, "\n");
+          strcat(buffer, jausCommandToString(tmpCommand));
+          tmpCommand = tmpCommand->next;
+        }
+      }
+    }
+  }
+  else
+    strcpy(buffer, " No Services");
+  
+  return buffer;
 }

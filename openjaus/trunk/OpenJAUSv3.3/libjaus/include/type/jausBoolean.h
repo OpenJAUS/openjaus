@@ -31,82 +31,28 @@
  *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
  *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ****************************************************************************/
-// File Name: setTimeMessage.h
+// File Name: jausBoolean.h
 //
-// Written By: Danny Kent (jaus AT dannykent DOT com), Tom Galluzzo 
+// Written By: Danny Kent (jaus AT dannykent DOT com)
 //
 // Version: 3.3.0a
 //
 // Date: 08/07/08
 //
-// Description: This file defines the attributes of a SetTimeMessage
+// Description: This file defines all the basic JausBoolean funtionality, this should be primarily used 
+// through the JausType file and its methods
 
-#ifndef SET_TIME_MESSAGE_H
-#define SET_TIME_MESSAGE_H
+#ifndef JAUS_BOOLEAN_H
+#define JAUS_BOOLEAN_H
 
 #include "jaus.h"
 
-#ifndef JAUS_TIME_PV
-#define JAUS_TIME_PV
-#define JAUS_TIME_PV_TIME_STAMP_BIT 0
-#define JAUS_TIME_PV_DATE_STAMP_BIT 1
-#endif
-
-typedef struct
+typedef enum
 {
-	// Include all parameters from a JausMessage structure:
-	// Header Properties
-	struct
-	{
-		// Properties by bit fields
-		#ifdef JAUS_BIG_ENDIAN
-			JausUnsignedShort reserved:2;
-			JausUnsignedShort version:6;
-			JausUnsignedShort expFlag:1;
-			JausUnsignedShort scFlag:1;
-			JausUnsignedShort ackNak:2;
-			JausUnsignedShort priority:4; 
-		#elif JAUS_LITTLE_ENDIAN
-			JausUnsignedShort priority:4; 
-			JausUnsignedShort ackNak:2;
-			JausUnsignedShort scFlag:1; 
-			JausUnsignedShort expFlag:1;
-			JausUnsignedShort version:6; 
-			JausUnsignedShort reserved:2;
-		#else
-			#error "Please define system endianess (see jaus.h)"
-		#endif
-	}properties;
+  JAUS_FALSE  = 0,
+  JAUS_TRUE = 1
+}JausBoolean;
 
-	JausUnsignedShort commandCode; 
+JAUS_EXPORT int jausBooleanToString(JausBoolean value, char * buf);
 
-	JausAddress destination;
-
-	JausAddress source;
-
-	JausUnsignedInteger dataSize;
-
-	JausUnsignedInteger dataFlag;
-	
-	JausUnsignedShort sequenceNumber;
-
-	JausByte presenceVector;
-	JausTime time;
-	
-}SetTimeMessageStruct;
-
-typedef SetTimeMessageStruct* SetTimeMessage;
-
-JAUS_EXPORT SetTimeMessage setTimeMessageCreate(void);
-JAUS_EXPORT void setTimeMessageDestroy(SetTimeMessage);
-
-JAUS_EXPORT JausBoolean setTimeMessageFromBuffer(SetTimeMessage message, unsigned char* buffer, unsigned int bufferSizeBytes);
-JAUS_EXPORT JausBoolean setTimeMessageToBuffer(SetTimeMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
-
-JAUS_EXPORT SetTimeMessage setTimeMessageFromJausMessage(JausMessage jausMessage);
-JAUS_EXPORT JausMessage setTimeMessageToJausMessage(SetTimeMessage message);
-
-JAUS_EXPORT unsigned int setTimeMessageSize(SetTimeMessage message);
-
-JAUS_EXPORT char* setTimeMessageToString(SetTimeMessage message);
-#endif // SET_TIME_MESSAGE_H
+#endif //JAUS_BOOLEAN_H

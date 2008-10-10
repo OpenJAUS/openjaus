@@ -53,6 +53,7 @@ static const int maxDataSizeBytes = 0;
 //Private Functions
 static JausBoolean headerToBuffer(JausMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static JausBoolean headerFromBuffer(JausMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+static int headerToString(JausMessage message, char **buf);
 
 JausMessage jausMessageCreate(void)
 {
@@ -255,6 +256,8 @@ char *jausCommandCodeString(unsigned short commandCode)
 			return "JAUS_SET_DATA_LINK_STATUS";
 		case JAUS_SET_DATA_LINK_SELECT:
 			return "JAUS_SET_DATA_LINK_SELECT";
+		case JAUS_SET_SELECTED_DATA_LINK_STATE:
+		  return "JAUS_SET_SELECTED_DATA_LINK_STATE";
 		case JAUS_SET_WRENCH_EFFORT:
 			return "JAUS_SET_WRENCH_EFFORT";
 		case JAUS_SET_DISCRETE_DEVICES:
@@ -273,6 +276,8 @@ char *jausCommandCodeString(unsigned short commandCode)
 			return "JAUS_SET_GLOBAL_PATH_SEGMENT";
 		case JAUS_SET_LOCAL_PATH_SEGMENT:
 			return "JAUS_SET_LOCAL_PATH_SEGMENT";
+		case JAUS_SET_VELOCITY_STATE:
+		  return "JAUS_SET_VELOCITY_STATE";
 		case JAUS_SET_JOINT_EFFORTS:
 			return "JAUS_SET_JOINT_EFFORTS";
 		case JAUS_SET_JOINT_POSITIONS:
@@ -297,6 +302,20 @@ char *jausCommandCodeString(unsigned short commandCode)
 			return "JAUS_SET_CAMERA_CAPABILITIES";
 		case JAUS_SET_CAMERA_FORMAT_OPTIONS:
 			return "JAUS_SET_CAMERA_FORMAT_OPTIONS";
+		case JAUS_SPOOL_MISSION:
+		  return "JAUS_SPOOL_MISSION";
+		case JAUS_RUN_MISSION:
+		  return "JAUS_RUN_MISSION";
+		case JAUS_ABORT_MISSION:
+		  return "JAUS_ABORT_MISSION";
+		case JAUS_PAUSE_MISSION:
+		  return "JAUS_PAUSE_MISSION";
+		case JAUS_RESUME_MISSION:
+		  return "JAUS_RESUME_MISSION";
+		case JAUS_REMOVE_MESSAGES:
+		  return "JAUS_REMOVE_MESSAGES";
+		case JAUS_REPLACE_MESSAGES:
+		  return "JAUS_REPLACE_MESSAGES";
 		case JAUS_QUERY_COMPONENT_AUTHORITY:
 			return "JAUS_QUERY_COMPONENT_AUTHORITY";
 		case JAUS_QUERY_COMPONENT_STATUS:
@@ -371,6 +390,10 @@ char *jausCommandCodeString(unsigned short commandCode)
 			return "JAUS_QUERY_IMAGE";
 		case JAUS_QUERY_COMPONENT_CONTROL:
 			return "JAUS_QUERY_COMPONENT_CONTROL";
+		case JAUS_QUERY_MISSION_STATUS:
+		  return "JAUS_QUERY_MISSION_STATUS";
+		case JAUS_QUERY_SPOOLING_PREFERENCE:
+		  return "JAUS_QUERY_SPOOLING_PREFERENCE";
 		case JAUS_REPORT_COMPONENT_AUTHORITY:
 			return "JAUS_REPORT_COMPONENT_AUTHORITY";
 		case JAUS_REPORT_COMPONENT_STATUS:
@@ -453,6 +476,10 @@ char *jausCommandCodeString(unsigned short commandCode)
 			return "JAUS_QUERY_CONFIGURATION";
 		case JAUS_REPORT_CONFIGURATION:
 			return "JAUS_REPORT_CONFIGURATION";
+		case JAUS_QUERY_SUBSYSTEM_LIST:
+		  return "JAUS_QUERY_SUBSYSTEM_LIST";
+		case JAUS_REPORT_SUBSYSTEM_LIST:
+		  return "JAUS_REPORT_SUBSYSTEM_LIST";
 		case JAUS_QUERY_PAYLOAD_DATA_ELEMENT:
 			return "JAUS_QUERY_PAYLOAD_DATA_ELEMENT";
 		case JAUS_QUERY_PAYLOAD_INTERFACE:
@@ -487,6 +514,10 @@ char *jausCommandCodeString(unsigned short commandCode)
 			return "JAUS_REPORT_VKS_OBJECTS_CREATION";
 		case JAUS_REPORT_VKS_OBJECTS:
 			return "JAUS_REPORT_VKS_OBJECTS";
+    case JAUS_REPORT_SPOOLING_PREFERENCE:
+      return "JAUS_REPORT_SPOOLING_PREFERENCE";
+    case JAUS_REPORT_MISSION_STATUS:
+      return "JAUS_REPORT_MISSION_STATUS";
 		default:
 			sprintf(string, "UNDEFINED MESSAGE: 0x%04X", commandCode); 
 			return string;
@@ -712,7 +743,33 @@ JausMessage jausMessageClone(JausMessage inputMessage)
 	return outputMessage;
 }
 
+char* jausMessageToString(JausMessage message)
+{
+  if(message)
+  {
+    char* buf1 = NULL;
+    
+    int returnVal;
+    
+    //Print the message header to the string buffer
+    returnVal = headerToString(message, &buf1);
+    
+    char* buf;
+    buf = (char*)malloc(strlen(buf1) +1);
+    strcpy(buf, buf1);
 
+    free(buf1);
+    
+    return buf;
+  }
+  else
+  {
+    char* buf = "Invalid Jaus Message";
+    char* msg = (char*)malloc(strlen(buf)+1);
+    strcpy(msg, buf);
+    return msg;
+  }
+}
 //********************* PRIVATE HEADER FUNCTIONS **********************//
 
 static JausBoolean headerToBuffer(JausMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
@@ -786,4 +843,121 @@ static JausBoolean headerFromBuffer(JausMessage message, unsigned char *buffer, 
 		
 		return JAUS_TRUE;
 	}
+}
+
+static int headerToString(JausMessage message, char **buf)
+{
+  //message existance already verified 
+
+  //Setup temporary string buffer
+  
+  unsigned int bufSize = 500;
+  (*buf) = (char*)malloc(sizeof(char)*bufSize);
+  
+  strcpy((*buf), jausCommandCodeString(message->commandCode) );
+  strcat((*buf), " (0x");
+  sprintf((*buf)+strlen(*buf), "%04X", message->commandCode);
+
+  strcat((*buf), ")\nReserved: ");
+  jausUnsignedShortToString(message->properties.reserved, (*buf)+strlen(*buf));
+
+  strcat((*buf), "\nVersion: ");
+  switch(message->properties.version)
+  {
+    case 0:
+      strcat((*buf), "2.0 and 2.1 compatible");
+      break;
+    case 1:
+      strcat((*buf), "3.0 through 3.1 compatible");
+      break;
+    case 2:
+      strcat((*buf), "3.2 and 3.3 compatible");
+      break;
+    default:
+      strcat((*buf), "Reserved for Future: ");
+      jausUnsignedShortToString(message->properties.version, (*buf)+strlen(*buf));
+      break;
+  }
+
+  strcat((*buf), "\nExp. Flag: ");
+  if(message->properties.expFlag == 0)
+    strcat((*buf), "JAUS");
+  else 
+    strcat((*buf), "Experimental");
+  
+  strcat((*buf), "\nSC Flag: ");
+  if(message->properties.scFlag == 0)
+    strcat((*buf), "Service Connection");
+  else
+    strcat((*buf), "Not Service Connection");
+  
+  strcat((*buf), "\nACK/NAK: ");
+  switch(message->properties.ackNak)
+  {
+  case 0:
+    strcat((*buf), "None");
+    break;
+  case 1:
+    strcat((*buf), "Request ack/nak");
+    break;
+  case 2:
+    strcat((*buf), "nak response");
+    break;
+  case 3:
+    strcat((*buf), "ack response");
+    break;
+  default:
+    break;
+  }
+  
+  strcat((*buf), "\nPriority: ");
+  if(message->properties.priority < 12)
+  {
+    strcat((*buf), "Normal Priority ");
+    jausUnsignedShortToString(message->properties.priority, (*buf)+strlen(*buf));
+  }
+  else
+  {
+    strcat((*buf), "Safety Critical Priority ");
+    jausUnsignedShortToString(message->properties.priority, (*buf)+strlen(*buf));
+  }
+  
+  strcat((*buf), "\nSource: ");
+  jausAddressToString(message->source, (*buf)+strlen(*buf));
+  
+  strcat((*buf), "\nDestination: ");
+  jausAddressToString(message->destination, (*buf)+strlen(*buf));
+  
+  strcat((*buf), "\nData Size: ");
+  jausUnsignedIntegerToString(message->dataSize, (*buf)+strlen(*buf));
+  
+  strcat((*buf), "\nData Flag: ");
+  jausUnsignedIntegerToString(message->dataFlag, (*buf)+strlen(*buf));
+  switch(message->dataFlag)
+  {
+    case 0:
+      strcat((*buf), " Only data packet in single-packet stream");
+      break;
+    case 1:
+      strcat((*buf), " First data packet in muti-packet stream");
+      break;
+    case 2:
+      strcat((*buf), " Normal data packet");
+      break;
+    case 4:
+      strcat((*buf), " Retransmitted data packet");
+      break;
+    case 8:
+      strcat((*buf), " Last data packet in stream");
+      break;
+    default:
+      strcat((*buf), " Unrecognized data flag code");
+      break;
+  }
+  
+  strcat((*buf), "\nSequence Number: ");
+  jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
+  
+  return strlen((*buf));
+  
 }

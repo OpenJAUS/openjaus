@@ -116,4 +116,5 @@ JAUS_EXPORT JausMessage reportGlobalWaypointMessageToJausMessage(ReportGlobalWay
 
 JAUS_EXPORT unsigned int reportGlobalWaypointMessageSize(ReportGlobalWaypointMessage message);
 
+JAUS_EXPORT char* reportGlobalWaypointMessageToString(ReportGlobalWaypointMessage message);
 #endif // REPORT_GLOBAL_WAYPOINT_MESSAGE_H

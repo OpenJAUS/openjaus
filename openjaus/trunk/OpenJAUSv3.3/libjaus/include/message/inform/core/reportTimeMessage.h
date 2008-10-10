@@ -109,4 +109,5 @@ JAUS_EXPORT JausMessage reportTimeMessageToJausMessage(ReportTimeMessage message
 
 JAUS_EXPORT unsigned int reportTimeMessageSize(ReportTimeMessage message);
 
+JAUS_EXPORT char* reportTimeMessageToString(ReportTimeMessage message);
 #endif // REPORT_TIME_MESSAGE_H

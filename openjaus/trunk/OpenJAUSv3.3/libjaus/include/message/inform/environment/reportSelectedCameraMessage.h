@@ -102,4 +102,5 @@ JAUS_EXPORT JausMessage reportSelectedCameraMessageToJausMessage(ReportSelectedC
 
 JAUS_EXPORT unsigned int reportSelectedCameraMessageSize(ReportSelectedCameraMessage message);
 
+JAUS_EXPORT char* reportSelectedCameraMessageToString(ReportSelectedCameraMessage message);
 #endif // REPORT_SELECTED_CAMERA_MESSAGE_H

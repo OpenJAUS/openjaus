@@ -123,4 +123,5 @@ JAUS_EXPORT JausMessage reportGlobalPoseMessageToJausMessage(ReportGlobalPoseMes
 
 JAUS_EXPORT unsigned int reportGlobalPoseMessageSize(ReportGlobalPoseMessage message);
 
+JAUS_EXPORT char* reportGlobalPoseMessageToString(ReportGlobalPoseMessage message);
 #endif // REPORT_GLOBAL_POSE_MESSAGE_H

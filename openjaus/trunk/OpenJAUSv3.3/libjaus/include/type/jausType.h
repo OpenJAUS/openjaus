@@ -47,6 +47,7 @@
 #define JAUS_TYPE_H
 
 //Individual Jaus Types
+#include "jausBoolean.h"
 #include "jausByte.h"
 #include "jausShort.h"
 #include "jausInteger.h"

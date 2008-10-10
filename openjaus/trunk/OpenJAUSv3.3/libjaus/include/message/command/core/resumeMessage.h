@@ -101,4 +101,5 @@ JAUS_EXPORT JausMessage resumeMessageToJausMessage(ResumeMessage message);
 
 JAUS_EXPORT unsigned int resumeMessageSize(ResumeMessage message);
 
+JAUS_EXPORT char* resumeMessageToString(ResumeMessage message);
 #endif // RESUME_MESSAGE_H

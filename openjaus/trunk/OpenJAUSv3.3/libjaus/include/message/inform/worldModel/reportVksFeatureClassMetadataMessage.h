@@ -100,4 +100,5 @@ JAUS_EXPORT JausMessage reportVksFeatureClassMetadataMessageToJausMessage(Report
 
 JAUS_EXPORT unsigned int reportVksFeatureClassMetadataMessageSize(ReportVksFeatureClassMetadataMessage message);
 
+JAUS_EXPORT char* reportVksFeatureClassMetadataMessageToString(ReportVksFeatureClassMetadataMessage message);
 #endif // REPORT_VKS_FEATURE_CLASS_METADATA_MESSAGE_H

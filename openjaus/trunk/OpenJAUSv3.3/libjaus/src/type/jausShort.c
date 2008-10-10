@@ -41,6 +41,7 @@
 //
 // Description: This file defines all the basic JausShort funtionality, this should be primarily used through the JausType file and its methods
 
+#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include "jaus.h"
@@ -115,4 +116,9 @@ JausShort jausShortFromDouble(double value, double min, double max)
 		
 	// calculate rounded integer value
 	return newJausShort((short)((value - bias)/scaleFactor + 0.5));
+}
+
+int jausShortToString(JausShort number, char *buf)
+{
+  return sprintf(buf, "%d", number);
 }

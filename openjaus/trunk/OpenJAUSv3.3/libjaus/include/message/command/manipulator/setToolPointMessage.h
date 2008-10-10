@@ -103,4 +103,5 @@ JAUS_EXPORT JausMessage setToolPointMessageToJausMessage(SetToolPointMessage mes
 
 JAUS_EXPORT unsigned int setToolPointMessageSize(SetToolPointMessage message);
 
+JAUS_EXPORT char* setToolPointMessageToString(SetToolPointMessage message);
 #endif // SET_TOOL_POINT_MESSAGE_H

@@ -107,4 +107,5 @@ JAUS_EXPORT JausMessage queryConfigurationMessageToJausMessage(QueryConfiguratio
 
 JAUS_EXPORT unsigned int queryConfigurationMessageSize(QueryConfigurationMessage message);
 
+JAUS_EXPORT char* queryConfigurationMessageToString(QueryConfigurationMessage message);
 #endif // QUERY_CONFIGURATION_MESSAGE_H
