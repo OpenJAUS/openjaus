@@ -279,8 +279,8 @@ char* queryJointForceTorquesMessageToString(QueryJointForceTorquesMessage messag
   if(message)
   {
     char* buf1 = NULL;
-    
-    int returnVal;
+    char* buf;
+	int returnVal;
     
     //Print the message header to the string buffer
     returnVal = headerToString(message, &buf1);
@@ -288,7 +288,6 @@ char* queryJointForceTorquesMessageToString(QueryJointForceTorquesMessage messag
     //Print the message data fields to the string buffer
     //No Data Members
     
-    char* buf;
     buf = (char*)malloc(strlen(buf1)+1);
     strcpy(buf, buf1);
 

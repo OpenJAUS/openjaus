@@ -332,8 +332,12 @@ static int dataToString(CreateEventMessage message, char **buf)
   //message already verified 
 
   //Setup temporary string buffer
-  
   unsigned int bufSize = 1000;
+  char* lowerLimitStr = NULL;
+  char* upperLimitStr = NULL;
+  char* stateLimitStr = NULL;
+  char* msgString = NULL;
+
   (*buf) = (char*)malloc(sizeof(char)*bufSize);
 
   strcpy((*buf), "\nPresence Vector: " );
@@ -440,7 +444,7 @@ static int dataToString(CreateEventMessage message, char **buf)
   {
     strcat((*buf), "\nLower Limit\n" );
       
-    char* lowerLimitStr = jausEventLimitToString(message->lowerLimit); 
+    lowerLimitStr = jausEventLimitToString(message->lowerLimit); 
     strcat((*buf), lowerLimitStr);
     free(lowerLimitStr);
   }
@@ -449,7 +453,7 @@ static int dataToString(CreateEventMessage message, char **buf)
   {
     strcat((*buf), "\nUpper Limit\n" );
       
-    char* upperLimitStr = jausEventLimitToString(message->upperLimit);
+    upperLimitStr = jausEventLimitToString(message->upperLimit);
     strcat((*buf), upperLimitStr);
     free(upperLimitStr);
   }
@@ -458,7 +462,7 @@ static int dataToString(CreateEventMessage message, char **buf)
   {
     strcat((*buf), "\nState Limit\n" );
       
-    char* stateLimitStr = jausEventLimitToString(message->stateLimit);
+    stateLimitStr = jausEventLimitToString(message->stateLimit);
     strcat((*buf), stateLimitStr);
     free(stateLimitStr);
   }
@@ -466,22 +470,19 @@ static int dataToString(CreateEventMessage message, char **buf)
   if(jausByteIsBitSet(message->presenceVector, UPDATE_EVENT_PV_MINIMUM_RATE_BIT))
   {
     strcat((*buf), "\nRequested Minimum Periodic Rate(Hz): " );
-      
-    jausUnsignedShortToString(message->requestedMinimumRate, (*buf)+strlen(*buf));
+    jausDoubleToString(message->requestedMinimumRate, (*buf)+strlen(*buf));
   }
   
   if(jausByteIsBitSet(message->presenceVector, UPDATE_EVENT_PV_REQUESTED_RATE_BIT))
   {
     strcat((*buf), "\nRequested Periodic Update Rate(Hz): " );
-      
-    jausUnsignedShortToString(message->requestedUpdateRate, (*buf)+strlen(*buf));
+    jausDoubleToString(message->requestedUpdateRate, (*buf)+strlen(*buf));
   }
   
   if(jausByteIsBitSet(message->presenceVector, UPDATE_EVENT_PV_QUERY_MESSAGE_BIT))
   {
     strcat((*buf), "\nQuery Message" );
-    
-    char* msgString = jausMessageToString(message->queryMessage);
+    msgString = jausMessageToString(message->queryMessage);
     strcat((*buf), msgString);
     free(msgString);
   }
@@ -725,6 +726,7 @@ char* createEventMessageToString(CreateEventMessage message)
   {
     char* buf1 = NULL;
     char* buf2 = NULL;
+    char* buf = NULL;
     
     int returnVal;
     
@@ -734,8 +736,7 @@ char* createEventMessageToString(CreateEventMessage message)
     //Print the message data fields to the string buffer
     returnVal += dataToString(message, &buf2);
     
-    char* buf;
-    buf = (char*)malloc(strlen(buf1)+strlen(buf2)+1);
+buf = (char*)malloc(strlen(buf1)+strlen(buf2)+1);
     strcpy(buf, buf1);
     strcat(buf, buf2);
 

@@ -198,7 +198,9 @@ static int dataToString(EventMessage message, char **buf)
   //message already verified 
 
   //Setup temporary string buffer
-  
+  char* reportMessageBuf = NULL;
+  char* oldBuf = NULL;
+
   unsigned int bufSize = 100;
   (*buf) = (char*)malloc(sizeof(char)*bufSize);
 
@@ -208,11 +210,10 @@ static int dataToString(EventMessage message, char **buf)
   strcat((*buf), "\nEvent Sequence Number: " );
   jausUnsignedShortToString(message->eventSequenceNumber, (*buf)+strlen(*buf));
 
-  char* reportMessageBuf;
   strcat((*buf), "\nReport Message: " );
   reportMessageBuf = jausMessageToString(message->reportMessage);
   
-  char* oldBuf = (*buf);
+  oldBuf = (*buf);
   
   (*buf) = (char*)malloc(sizeof(char)*( strlen(oldBuf)+1+strlen(reportMessageBuf) ) );
   strcpy((*buf), oldBuf);
@@ -422,6 +423,7 @@ char* eventMessageToString(EventMessage message)
   {
     char* buf1 = NULL;
     char* buf2 = NULL;
+    char* buf = NULL;
     
     int returnVal;
     
@@ -431,8 +433,7 @@ char* eventMessageToString(EventMessage message)
     //Print the message data fields to the string buffer
     returnVal += dataToString(message, &buf2);
     
-    char* buf;
-    buf = (char*)malloc(strlen(buf1)+strlen(buf2)+1);
+buf = (char*)malloc(strlen(buf1)+strlen(buf2)+1);
     strcpy(buf, buf1);
     strcat(buf, buf2);
 

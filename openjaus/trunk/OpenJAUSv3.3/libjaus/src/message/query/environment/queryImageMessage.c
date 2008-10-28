@@ -279,7 +279,7 @@ char* queryImageMessageToString(QueryImageMessage message)
   if(message)
   {
     char* buf1 = NULL;
-    
+    char* buf = NULL;
     int returnVal;
     
     //Print the message header to the string buffer
@@ -287,8 +287,6 @@ char* queryImageMessageToString(QueryImageMessage message)
     
     //Print the message data fields to the string buffer
     //No Data Members
-    
-    char* buf;
     buf = (char*)malloc(strlen(buf1)+1);
     strcpy(buf, buf1);
 

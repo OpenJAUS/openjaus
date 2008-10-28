@@ -145,13 +145,14 @@ static int dataToString(SetJointEffortsMessage message, char **buf)
 
   //Setup temporary string buffer
   
+  int i = 0;
   unsigned int bufSize = 50 + 50*message->numJoints;
   (*buf) = (char*)malloc(sizeof(char)*bufSize);
 
   strcpy((*buf), "\nNumber of Joints: " );
   jausByteToString(message->numJoints, (*buf)+strlen(*buf));
 
-  for(int i = 0; i<message->numJoints; i++)
+  for(i = 0; i<message->numJoints; i++)
   {
     strcat((*buf), "\nJoint ");
     jausIntegerToString(i, (*buf)+strlen(*buf));
@@ -343,6 +344,7 @@ char* setJointEffortsMessageToString(SetJointEffortsMessage message)
   {
     char* buf1 = NULL;
     char* buf2 = NULL;
+    char* buf = NULL;
     
     int returnVal;
     
@@ -352,8 +354,7 @@ char* setJointEffortsMessageToString(SetJointEffortsMessage message)
     //Print the message data fields to the string buffer
     returnVal += dataToString(message, &buf2);
     
-    char* buf;
-    buf = (char*)malloc(strlen(buf1)+strlen(buf2)+1);
+buf = (char*)malloc(strlen(buf1)+strlen(buf2)+1);
     strcpy(buf, buf1);
     strcat(buf, buf2);
 

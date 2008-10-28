@@ -324,27 +324,31 @@ static int dataToString(ReportEventsMessage message, char **buf)
   //message already verified 
 
   //Setup temporary string buffer
-  
+  int i = 0;
+  char* stateLimitStr = NULL;
+  char* lowerLimitStr = NULL;
+  char* upperLimitStr = NULL;
+
   unsigned int bufSize = 100 + 1000 * message->count;
   (*buf) = (char*)malloc(sizeof(char)*bufSize);
   
   strcpy((*buf), "\nCount: ");
   jausByteToString(message->count, (*buf)+strlen(*buf));
   
-  for(int event=0; event<message->count; event++)
+  for(i=0; i<message->count; i++)
   {
     strcat((*buf), "\nEvent #");
-    jausByteToString(event, (*buf)+strlen(*buf));
+    jausByteToString(i, (*buf)+strlen(*buf));
     
     strcat((*buf), "\nPresence Vector: " );
-    jausByteToHexString(message->presenceVector[event], (*buf)+strlen(*buf));
+    jausByteToHexString(message->presenceVector[i], (*buf)+strlen(*buf));
     
     strcat((*buf), "\nMessage Code: " );
-    jausUnsignedShortToString(message->messageCode[event], (*buf)+strlen(*buf));
+    jausUnsignedShortToString(message->messageCode[i], (*buf)+strlen(*buf));
   
     strcat((*buf), "\nEvent Type: " );
-    jausByteToString(message->eventType[event], (*buf)+strlen(*buf));
-    switch(message->eventType[event])
+    jausByteToString(message->eventType[i], (*buf)+strlen(*buf));
+    switch(message->eventType[i])
     {
       case EVENT_PERIODIC_TYPE:
         strcat((*buf), " Periodic(SC)");
@@ -371,11 +375,11 @@ static int dataToString(ReportEventsMessage message, char **buf)
         break;
     }
     
-    if(jausByteIsBitSet(message->presenceVector[event], REPORT_EVENTS_PV_BOUNDARY_BIT))
+    if(jausByteIsBitSet(message->presenceVector[i], REPORT_EVENTS_PV_BOUNDARY_BIT))
     {
       strcat((*buf), "\nEvent Boundary: " );
-      jausByteToString(message->eventBoundary[event], (*buf)+strlen(*buf));
-      switch(message->eventBoundary[event])
+      jausByteToString(message->eventBoundary[i], (*buf)+strlen(*buf));
+      switch(message->eventBoundary[i])
       {
       case EQUAL_BOUNDARY:
         strcat((*buf), " Equal");
@@ -419,47 +423,46 @@ static int dataToString(ReportEventsMessage message, char **buf)
       }
     }
   
-    if(jausByteIsBitSet(message->presenceVector[event], REPORT_EVENTS_PV_DATA_FIELD_BIT))
+    if(jausByteIsBitSet(message->presenceVector[i], REPORT_EVENTS_PV_DATA_FIELD_BIT))
     {
       strcat((*buf), "\nLimit Data Field: " );
-      jausByteToString(message->limitDataField[event], (*buf)+strlen(*buf));
+      jausByteToString(message->limitDataField[i], (*buf)+strlen(*buf));
     }
     
-    if(jausByteIsBitSet(message->presenceVector[event], REPORT_EVENTS_PV_LOWER_LIMIT_BIT))
+    if(jausByteIsBitSet(message->presenceVector[i], REPORT_EVENTS_PV_LOWER_LIMIT_BIT))
     {
       strcat((*buf), "\nLower Limit\n" );
-      char* lowerLimitStr = jausEventLimitToString(message->lowerLimit[event]); 
+      lowerLimitStr = jausEventLimitToString(message->lowerLimit[i]); 
       strcat((*buf), lowerLimitStr);
       free(lowerLimitStr);
     }
     
-    if(jausByteIsBitSet(message->presenceVector[event], REPORT_EVENTS_PV_UPPER_LIMIT_BIT))
+    if(jausByteIsBitSet(message->presenceVector[i], REPORT_EVENTS_PV_UPPER_LIMIT_BIT))
     {
       strcat((*buf), "\nUpper Limit\n" );
-      char* upperLimitStr = jausEventLimitToString(message->upperLimit[event]);
+      upperLimitStr = jausEventLimitToString(message->upperLimit[i]);
       strcat((*buf), upperLimitStr);
       free(upperLimitStr);
     }
     
-    if(jausByteIsBitSet(message->presenceVector[event], REPORT_EVENTS_PV_STATE_LIMIT_BIT))
+    if(jausByteIsBitSet(message->presenceVector[i], REPORT_EVENTS_PV_STATE_LIMIT_BIT))
     {
       strcat((*buf), "\nState Limit\n" );
-      char* stateLimitStr = jausEventLimitToString(message->stateLimit[event]);
+      stateLimitStr = jausEventLimitToString(message->stateLimit[i]);
       strcat((*buf), stateLimitStr);
       free(stateLimitStr);
     }
     
-    if(jausByteIsBitSet(message->presenceVector[event], REPORT_EVENTS_PV_EVENT_ID_BIT))
+    if(jausByteIsBitSet(message->presenceVector[i], REPORT_EVENTS_PV_EVENT_ID_BIT))
     {
       strcat((*buf), "\nEvent Id: " );
-      jausUnsignedShortToString(message->eventId[event], (*buf)+strlen(*buf));
+      jausUnsignedShortToString(message->eventId[i], (*buf)+strlen(*buf));
     }
   
-    if(jausByteIsBitSet(message->presenceVector[event], REPORT_EVENTS_PV_QUERY_MESSAGE_BIT))
+    if(jausByteIsBitSet(message->presenceVector[i], REPORT_EVENTS_PV_QUERY_MESSAGE_BIT))
     {
       strcat((*buf), "\nQuery Message" );
-      
-      strcat((*buf), jausMessageToString(message->queryMessage[event]));
+      strcat((*buf), jausMessageToString(message->queryMessage[i]));
     }
   }
   return strlen((*buf));
@@ -698,6 +701,7 @@ char* reportEventsMessageToString(ReportEventsMessage message)
   {
     char* buf1 = NULL;
     char* buf2 = NULL;
+    char* buf = NULL;
     
     int returnVal;
     
@@ -707,8 +711,7 @@ char* reportEventsMessageToString(ReportEventsMessage message)
     //Print the message data fields to the string buffer
     returnVal += dataToString(message, &buf2);
     
-    char* buf;
-    buf = (char*)malloc(strlen(buf1)+strlen(buf2)+1);
+buf = (char*)malloc(strlen(buf1)+strlen(buf2)+1);
     strcpy(buf, buf1);
     strcat(buf, buf2);
 

@@ -301,6 +301,7 @@ static int dataToString(SetCameraPoseMessage message, char **buf)
   //Setup temporary string buffer
   
   unsigned int bufSize = 14 * 50;
+  char modeEnumString[2][20] = { "Rate Mode", "Position Mode" };
   (*buf) = (char*)malloc(sizeof(char)*bufSize);
 
   strcpy((*buf), "\nPresence Vector: " );
@@ -309,8 +310,6 @@ static int dataToString(SetCameraPoseMessage message, char **buf)
   strcat((*buf), "\nCamera Id: " );
   jausByteToString(message->presenceVector, (*buf)+strlen(*buf));
 
-  char modeEnumString[2][20] = { "Rate Mode", "Position Mode" };
-  
   strcat((*buf), "\nLinear Mode X: " );
   strcat((*buf), modeEnumString[message->xLinearMode]);
   
@@ -596,6 +595,7 @@ char* setCameraPoseMessageToString(SetCameraPoseMessage message)
   {
     char* buf1 = NULL;
     char* buf2 = NULL;
+    char* buf = NULL;
     
     int returnVal;
     
@@ -605,8 +605,7 @@ char* setCameraPoseMessageToString(SetCameraPoseMessage message)
     //Print the message data fields to the string buffer
     returnVal += dataToString(message, &buf2);
     
-    char* buf;
-    buf = (char*)malloc(strlen(buf1)+strlen(buf2)+1);
+buf = (char*)malloc(strlen(buf1)+strlen(buf2)+1);
     strcpy(buf, buf1);
     strcat(buf, buf2);
 

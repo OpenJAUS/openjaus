@@ -418,14 +418,14 @@ static int dataToString(ReportManipulatorSpecificationsMessage message, char **b
   //message already verified 
 
   //Setup temporary string buffer
-  
+  int joint = 0;
   unsigned int bufSize = 400 + message->numJoints * 25;
   (*buf) = (char*)malloc(sizeof(char)*bufSize);
   
   strcpy((*buf), "\nNumber of Joints: " );
   jausByteToString(message->numJoints, (*buf)+strlen(*buf));
   
-  for(int joint=0; joint<message->numJoints; joint++)
+  for(joint=0; joint<message->numJoints; joint++)
   {
     strcat((*buf), "\nJoint #");
     jausByteToString(joint, (*buf)+strlen(*buf));
@@ -671,6 +671,7 @@ char* reportManipulatorSpecificationsMessageToString(ReportManipulatorSpecificat
   {
     char* buf1 = NULL;
     char* buf2 = NULL;
+    char* buf = NULL;
     
     int returnVal;
     
@@ -680,8 +681,7 @@ char* reportManipulatorSpecificationsMessageToString(ReportManipulatorSpecificat
     //Print the message data fields to the string buffer
     returnVal += dataToString(message, &buf2);
     
-    char* buf;
-    buf = (char*)malloc(strlen(buf1)+strlen(buf2)+1);
+buf = (char*)malloc(strlen(buf1)+strlen(buf2)+1);
     strcpy(buf, buf1);
     strcat(buf, buf2);
 

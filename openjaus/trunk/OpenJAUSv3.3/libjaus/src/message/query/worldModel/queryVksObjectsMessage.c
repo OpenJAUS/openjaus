@@ -381,8 +381,10 @@ static int dataToString(QueryVksObjectsMessage message, char **buf)
 {
   //message already verified 
 
-  unsigned int bufSize = 300 + 50*message->objectCount;
   char* region = NULL;
+  unsigned short i;
+  unsigned int bufSize = 300 + 50 * message->objectCount;
+  
   // Region is Optional
   if(jausByteIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_REGION_BIT))
   {
@@ -409,7 +411,7 @@ static int dataToString(QueryVksObjectsMessage message, char **buf)
     strcat((*buf), "\nObject Count: ");
     jausUnsignedShortToString(message->objectCount, (*buf)+strlen(*buf));
     
-    for(unsigned short i=0; i<message->objectCount; i++)
+    for(i=0; i<message->objectCount; i++)
     {
       strcat((*buf), "\nObject Id: ");
       jausUnsignedIntegerToString(message->objectIds[i], (*buf)+strlen(*buf));
@@ -715,6 +717,7 @@ char* queryVksObjectsMessageToString(QueryVksObjectsMessage message)
   {
     char* buf1 = NULL;
     char* buf2 = NULL;
+    char* buf = NULL;
     
     int returnVal;
     
@@ -724,8 +727,7 @@ char* queryVksObjectsMessageToString(QueryVksObjectsMessage message)
     //Print the message data fields to the string buffer
     returnVal += dataToString(message, &buf2);
     
-    char* buf;
-    buf = (char*)malloc(strlen(buf1)+strlen(buf2)+1);
+buf = (char*)malloc(strlen(buf1)+strlen(buf2)+1);
     strcpy(buf, buf1);
     strcat(buf, buf2);
 

@@ -65,7 +65,6 @@ JAUS_EXPORT JausBoolean jausByteToBuffer(JausByte input, unsigned char *buf, uns
 JAUS_EXPORT int jausByteToString(JausByte value, char * buf);
 JAUS_EXPORT int jausByteToHexString(JausByte value, char * buf);
 
-
 JAUS_EXPORT JausByte jausByteFromDouble(double val, double min, double max);
 JAUS_EXPORT double jausByteToDouble(JausByte input, double min, double max);
 

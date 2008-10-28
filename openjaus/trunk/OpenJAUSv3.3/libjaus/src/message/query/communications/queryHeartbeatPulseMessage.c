@@ -274,7 +274,7 @@ char* queryHeartbeatPulseMessageToString(QueryHeartbeatPulseMessage message)
   if(message)
   {
     char* buf1 = NULL;
-    
+    char* buf;
     int returnVal;
     
     //Print the message header to the string buffer
@@ -283,7 +283,6 @@ char* queryHeartbeatPulseMessageToString(QueryHeartbeatPulseMessage message)
     //Print the message data fields to the string buffer
     //No Data Members
     
-    char* buf;
     buf = (char*)malloc(strlen(buf1)+1);
     strcpy(buf, buf1);
 

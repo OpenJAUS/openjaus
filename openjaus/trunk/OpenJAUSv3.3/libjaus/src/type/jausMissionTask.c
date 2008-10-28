@@ -294,17 +294,27 @@ unsigned int missionTaskSize(JausMissionTask object)
 
 char* missionTaskToString(JausMissionTask object)
 {
-  char* buf;
+  char* buf = NULL;
+  char* taskCmdStr = NULL;
+  char* tmpStr3 = NULL;
+  char* tmpStr2 = NULL;
+  char* childStr = NULL;
+  char* tmpComboStr = NULL;
+  char* tmpChildStr = NULL;
+  char* childrenIntro = NULL;
+  char* returnBuf = NULL;
+  int i = 0;
+  int k = 0;
+  int stringSize = 0;
+
   buf = (char*)malloc(sizeof(char)*100);
 
   strcpy(buf, "Task: ");
   jausUnsignedShortToString(object->taskId, (buf)+strlen(buf));
 
   strcat(buf, "\nTask Commands:");
-  char* taskCmdStr = NULL;
-  for(int i = 0; i<object->commands->elementCount; i++)
+  for(i = 0; i<object->commands->elementCount; i++)
   {
-    char* tmpStr2;
     tmpStr2 = missionCommandToString((JausMissionCommand)(object->commands->elementData[i]) );
     
     if( taskCmdStr == NULL )
@@ -313,32 +323,28 @@ char* missionTaskToString(JausMissionTask object)
       taskCmdStr = (char*)malloc(sizeof(char));
       taskCmdStr[0] = '\0';
     }
-    //else
-    //{
-      char* tmpStr3;
-      tmpStr3 = (char*)malloc(sizeof(char)*(strlen(taskCmdStr) + strlen(tmpStr2) +1 +1) );
-      strcpy(tmpStr3, taskCmdStr);
-      strcat(tmpStr3, "\n");
-      strcat(tmpStr3, tmpStr2);
-      
-      free(tmpStr2);
-      free(taskCmdStr);
-      
-      taskCmdStr = tmpStr3;
-    //}
+
+	tmpStr3 = (char*)malloc(sizeof(char)*(strlen(taskCmdStr) + strlen(tmpStr2) +1 +1) );
+	strcpy(tmpStr3, taskCmdStr);
+	strcat(tmpStr3, "\n");
+	strcat(tmpStr3, tmpStr2);
+
+	free(tmpStr2);
+	free(taskCmdStr);
+
+	taskCmdStr = tmpStr3;
   }
   
-  char* childStr = NULL;
-  for(int k = 0; k<object->children->elementCount; k++)
+  for(k = 0; k<object->children->elementCount; k++)
   {
-    char* tmpChildStr;
     tmpChildStr = missionTaskToString( (JausMissionTask)(object->children->elementData[k]) );
     
     if( childStr == NULL )
+	{
       childStr = tmpChildStr;
+	}
     else
     {
-      char* tmpComboStr;
       tmpComboStr = (char*)malloc(sizeof(char)*( strlen(childStr) + strlen(tmpChildStr) +1 ));
       strcpy(tmpComboStr, childStr);
       strcat(tmpComboStr, tmpChildStr);
@@ -350,13 +356,9 @@ char* missionTaskToString(JausMissionTask object)
     }
   }
   
-  char* childrenIntro = "\nChildren: ";
+  childrenIntro = "\nChildren: ";
   
-  
-  //Form return string
-  char* returnBuf;
-  
-  int stringSize = 0;
+  //Form return string  
   if( buf != NULL )
     stringSize += strlen(buf);
   if( taskCmdStr != NULL )
@@ -382,9 +384,6 @@ char* missionTaskToString(JausMissionTask object)
     free(childStr);
   }
 
-  //free(childrenIntro);
-  
-  
   free(buf);
   return returnBuf;
 }

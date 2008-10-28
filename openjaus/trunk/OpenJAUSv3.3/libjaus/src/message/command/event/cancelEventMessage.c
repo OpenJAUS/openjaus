@@ -371,7 +371,8 @@ char* cancelEventMessageToString(CancelEventMessage message)
   {
     char* buf1 = NULL;
     char* buf2 = NULL;
-    
+    char* buf = NULL;
+
     int returnVal;
     
     //Print the message header to the string buffer
@@ -380,8 +381,7 @@ char* cancelEventMessageToString(CancelEventMessage message)
     //Print the message data fields to the string buffer
     returnVal += dataToString(message, &buf2);
     
-    char* buf;
-    buf = (char*)malloc(strlen(buf1)+strlen(buf2)+1);
+	buf = (char*)malloc(strlen(buf1)+strlen(buf2)+1);
     strcpy(buf, buf1);
     strcat(buf, buf2);
 

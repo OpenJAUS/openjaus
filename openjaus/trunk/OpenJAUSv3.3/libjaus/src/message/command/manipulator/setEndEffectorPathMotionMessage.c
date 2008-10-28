@@ -253,7 +253,7 @@ static int dataToString(SetEndEffectorPathMotionMessage message, char **buf)
   //message already verified 
 
   //Setup temporary string buffer
-  
+  int i = 0;
   unsigned int bufSize = 50 + 350 * message->numPoses;
   (*buf) = (char*)malloc(sizeof(char)*bufSize);
 
@@ -261,7 +261,7 @@ static int dataToString(SetEndEffectorPathMotionMessage message, char **buf)
   
   jausByteToString(message->numPoses, (*buf)+strlen(*buf));
 
-  for(int i = 0; i<message->numPoses; i++)
+  for(i = 0; i<message->numPoses; i++)
   {
     //Output Pose Number
     strcat((*buf), "\n\nPose #" );
@@ -481,6 +481,7 @@ char* setEndEffectorPathMotionMessageToString(SetEndEffectorPathMotionMessage me
   {
     char* buf1 = NULL;
     char* buf2 = NULL;
+    char* buf = NULL;
     
     int returnVal;
     
@@ -490,8 +491,7 @@ char* setEndEffectorPathMotionMessageToString(SetEndEffectorPathMotionMessage me
     //Print the message data fields to the string buffer
     returnVal += dataToString(message, &buf2);
     
-    char* buf;
-    buf = (char*)malloc(strlen(buf1)+strlen(buf2)+1);
+buf = (char*)malloc(strlen(buf1)+strlen(buf2)+1);
     strcpy(buf, buf1);
     strcat(buf, buf2);
 

@@ -277,8 +277,8 @@ char* queryToolPointMessageToString(QueryToolPointMessage message)
 {
   if(message)
   {
+    char* buf = NULL;
     char* buf1 = NULL;
-    
     int returnVal;
     
     //Print the message header to the string buffer
@@ -287,7 +287,7 @@ char* queryToolPointMessageToString(QueryToolPointMessage message)
     //Print the message data fields to the string buffer
     //No Data Members
     
-    char* buf;
+
     buf = (char*)malloc(strlen(buf1)+1);
     strcpy(buf, buf1);
 

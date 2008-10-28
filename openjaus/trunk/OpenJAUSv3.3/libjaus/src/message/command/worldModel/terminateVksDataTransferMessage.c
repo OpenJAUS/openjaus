@@ -278,14 +278,14 @@ char* terminateVksDataTransferMessageToString(TerminateVksDataTransferMessage me
 {
   if(message)
   {
+    char* buf = NULL;
     char* buf1 = NULL;
-    
     int returnVal;
     
     //Print the message header to the string buffer
     returnVal = headerToString(message, &buf1);
     
-    char* buf;
+
     buf = (char*)malloc(strlen(buf1)+1);
     strcpy(buf, buf1);
 
