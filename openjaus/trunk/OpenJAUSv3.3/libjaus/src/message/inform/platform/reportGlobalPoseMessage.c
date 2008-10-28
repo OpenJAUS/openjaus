@@ -330,49 +330,49 @@ static int dataToString(ReportGlobalPoseMessage message, char **buf)
   if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_POSE_PV_LATITUDE_BIT))
   {
     strcat((*buf), "\nLatitude(degrees): ");
-    jausByteToString(message->latitudeDegrees, (*buf)+strlen(*buf));
+    jausDoubleToString(message->latitudeDegrees, (*buf)+strlen(*buf));
   }
   
   if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_POSE_PV_LONGITUDE_BIT))
   {
     strcat((*buf), "\nLongitude(degrees): ");
-    jausByteToString(message->longitudeDegrees, (*buf)+strlen(*buf));
+    jausDoubleToString(message->longitudeDegrees, (*buf)+strlen(*buf));
   }
 
   if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_POSE_PV_ELEVATION_BIT))
   {
     strcat((*buf), "\nElevation(meters): ");
-    jausByteToString(message->elevationMeters, (*buf)+strlen(*buf));
+    jausDoubleToString(message->elevationMeters, (*buf)+strlen(*buf));
   }
   
   if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_POSE_PV_POSITION_RMS_BIT))
   {
     strcat((*buf), "\nPosition RMS(meters): ");
-    jausByteToString(message->positionRmsMeters, (*buf)+strlen(*buf));
+    jausDoubleToString(message->positionRmsMeters, (*buf)+strlen(*buf));
   }
 
   if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_POSE_PV_ROLL_BIT))
   {
     strcat((*buf), "\nRoll(radians): ");
-    jausByteToString(message->rollRadians, (*buf)+strlen(*buf));
+    jausDoubleToString(message->rollRadians, (*buf)+strlen(*buf));
   }
   
   if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_POSE_PV_PITCH_BIT))
   {
     strcat((*buf), "\nPitch(radians): ");
-    jausByteToString(message->pitchRadians, (*buf)+strlen(*buf));
+    jausDoubleToString(message->pitchRadians, (*buf)+strlen(*buf));
   }
   
   if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_POSE_PV_YAW_BIT))
   {
     strcat((*buf), "\nYaw(radians): ");
-    jausByteToString(message->yawRadians, (*buf)+strlen(*buf));
+    jausDoubleToString(message->yawRadians, (*buf)+strlen(*buf));
   }
   
   if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_POSE_PV_ATTITUDE_RMS_BIT))
   {
     strcat((*buf), "\nAttitude RMS(radians): ");
-    jausByteToString(message->attitudeRmsRadians, (*buf)+strlen(*buf));
+    jausDoubleToString(message->attitudeRmsRadians, (*buf)+strlen(*buf));
   }
   
   if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_POSE_PV_TIME_STAMP_BIT))
@@ -609,6 +609,7 @@ char* reportGlobalPoseMessageToString(ReportGlobalPoseMessage message)
   {
     char* buf1 = NULL;
     char* buf2 = NULL;
+    char* buf = NULL;
     
     int returnVal;
     
@@ -618,8 +619,7 @@ char* reportGlobalPoseMessageToString(ReportGlobalPoseMessage message)
     //Print the message data fields to the string buffer
     returnVal += dataToString(message, &buf2);
     
-    char* buf;
-    buf = (char*)malloc(strlen(buf1)+strlen(buf2)+1);
+buf = (char*)malloc(strlen(buf1)+strlen(buf2)+1);
     strcpy(buf, buf1);
     strcat(buf, buf2);
 

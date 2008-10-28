@@ -188,8 +188,11 @@ static int dataToString(ReportVksObjectsMessage message, char **buf)
   //Setup temporary string buffer
   
   unsigned int bufSize = 100;
-  char* mainBuf;
-  (mainBuf) = (char*)malloc(sizeof(char)*bufSize);
+  char* mainBuf = NULL;
+  char** objectStrings = NULL; //[message->objectCount];
+  unsigned short obj = 0;
+
+  mainBuf = (char*)malloc(sizeof(char)*bufSize);
   
   strcpy((mainBuf), "\nPresence Vector: " );
   jausByteToHexString(message->presenceVector, (mainBuf)+strlen(mainBuf));
@@ -201,8 +204,8 @@ static int dataToString(ReportVksObjectsMessage message, char **buf)
   jausUnsignedShortToString(message->objectCount, (mainBuf)+strlen(mainBuf));
 
   bufSize = strlen(mainBuf) + 1;
-  char* objectStrings[message->objectCount];
-  for(unsigned short obj=0; obj<message->objectCount; obj++)
+  objectStrings = (char**)malloc(sizeof(char*) * message->objectCount);
+  for(obj=0; obj<message->objectCount; obj++)
   {
     objectStrings[obj] = vectorObjectToString(message->vectorObjects->elementData[obj]);
     bufSize += strlen(objectStrings[obj]);
@@ -210,13 +213,14 @@ static int dataToString(ReportVksObjectsMessage message, char **buf)
   
   (*buf) = (char*)malloc(sizeof(char)*bufSize);
   strcpy((*buf), mainBuf);
-  for(unsigned short obj=0; obj<message->objectCount; obj++)
+  for(obj=0; obj<message->objectCount; obj++)
   {
     strcat((*buf), objectStrings[obj]);
     free(objectStrings[obj]);
   }
   
   free(mainBuf);
+  free(objectStrings);
   
   return strlen((*buf));
 }
@@ -428,6 +432,7 @@ char* reportVksObjectsMessageToString(ReportVksObjectsMessage message)
   {
     char* buf1 = NULL;
     char* buf2 = NULL;
+    char* buf = NULL;
     
     int returnVal;
     
@@ -437,8 +442,7 @@ char* reportVksObjectsMessageToString(ReportVksObjectsMessage message)
     //Print the message data fields to the string buffer
     returnVal += dataToString(message, &buf2);
     
-    char* buf;
-    buf = (char*)malloc(strlen(buf1)+strlen(buf2)+1);
+buf = (char*)malloc(strlen(buf1)+strlen(buf2)+1);
     strcpy(buf, buf1);
     strcat(buf, buf2);
 

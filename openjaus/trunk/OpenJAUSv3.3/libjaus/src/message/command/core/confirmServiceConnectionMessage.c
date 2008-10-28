@@ -153,12 +153,10 @@ static int dataToString(ConfirmServiceConnectionMessage message, char **buf)
   strcat((*buf), jausCommandCodeString(message->serviceConnectionCommandCode));
   
   strcat((*buf), "\nInstance Id: " );
-  
   jausByteToString(message->instanceId, (*buf)+strlen(*buf));
 
   strcat((*buf), "\nConfirmed Periodic Update Rate(Hz): " );
-  
-  jausUnsignedShortToString(message->confirmedPeriodicUpdateRateHertz, (*buf)+strlen(*buf));
+  jausDoubleToString(message->confirmedPeriodicUpdateRateHertz, (*buf)+strlen(*buf));
 
   strcat((*buf), "\nResponse Code: ");
   jausIntegerToString(message->responseCode, (*buf)+strlen(*buf));
@@ -373,6 +371,7 @@ char* confirmServiceConnectionMessageToString(ConfirmServiceConnectionMessage me
     //buf = char* malloc(sizeof(char)*100);
     char* buf1 = NULL;
     char* buf2 = NULL;
+    char* buf = NULL;
     
     int returnVal;
     
@@ -382,8 +381,7 @@ char* confirmServiceConnectionMessageToString(ConfirmServiceConnectionMessage me
     //Print the message data fields to the string buffer
     returnVal += dataToString(message, &buf2);
     
-    char* buf;
-    buf = (char*)malloc(strlen(buf1)+strlen(buf2)+1);
+buf = (char*)malloc(strlen(buf1)+strlen(buf2)+1);
     strcpy(buf, buf1);
     strcat(buf, buf2);
 

@@ -196,21 +196,20 @@ static int dataToString(ReportVksBoundsMessage message, char **buf)
   jausByteToString(message->requestId, (*buf)+strlen(*buf));
   
   strcat((*buf), "\nFeature Class: ");
-  jausByteToString(message->featureClass, (*buf)+strlen(*buf));
+  jausUnsignedShortToHexString(message->featureClass, (*buf)+strlen(*buf));
   strcat((*buf), " See Feature Class Table");
   
   strcat((*buf), "\nSouth West Latitude(degrees): ");
-  jausByteToString(message->southWestLatitudeDegrees, (*buf)+strlen(*buf));
+  jausDoubleToString(message->southWestLatitudeDegrees, (*buf)+strlen(*buf));
   
   strcat((*buf), "\nSouth West Longitude(degrees): ");
-  jausByteToString(message->southWestLongitudeDegrees, (*buf)+strlen(*buf));
+  jausDoubleToString(message->southWestLongitudeDegrees, (*buf)+strlen(*buf));
   
   strcat((*buf), "\nNorth East Latitude(degrees): ");
-  jausByteToString(message->northEastLatitudeDegrees, (*buf)+strlen(*buf));
+  jausDoubleToString(message->northEastLatitudeDegrees, (*buf)+strlen(*buf));
   
   strcat((*buf), "\nNorth East Longitude(degrees): ");
-  jausByteToString(message->northEastLongitudeDegrees, (*buf)+strlen(*buf));
-  
+  jausDoubleToString(message->northEastLongitudeDegrees, (*buf)+strlen(*buf));
   
   return strlen((*buf));
 }
@@ -390,6 +389,7 @@ char* reportVksBoundsMessageToString(ReportVksBoundsMessage message)
   {
     char* buf1 = NULL;
     char* buf2 = NULL;
+    char* buf = NULL;
     
     int returnVal;
     
@@ -399,8 +399,7 @@ char* reportVksBoundsMessageToString(ReportVksBoundsMessage message)
     //Print the message data fields to the string buffer
     returnVal += dataToString(message, &buf2);
     
-    char* buf;
-    buf = (char*)malloc(strlen(buf1)+strlen(buf2)+1);
+buf = (char*)malloc(strlen(buf1)+strlen(buf2)+1);
     strcpy(buf, buf1);
     strcat(buf, buf2);
 

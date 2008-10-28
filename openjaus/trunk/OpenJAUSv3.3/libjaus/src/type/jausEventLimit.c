@@ -340,12 +340,13 @@ void jausEventDestroy(JausEvent event)
 
 char* jausEventLimitToString(JausEventLimit limit)
 {
+  char* buf = NULL;
+  char* returnBuf = NULL;
+
   if( limit )
   {
-    char* buf;
-    buf = (char*)malloc(100);
+	buf = (char*)malloc(100);
 
-    
     strcpy(buf, "Limit Data Field Type: ");
     jausByteToString(limit->dataType, (buf)+strlen(buf));
 
@@ -421,7 +422,6 @@ char* jausEventLimitToString(JausEventLimit limit)
       break;
       
     }
-    char* returnBuf;
     returnBuf = (char*)malloc(strlen(buf)+1);
     strcpy(returnBuf, buf);
     free(buf);
@@ -429,7 +429,6 @@ char* jausEventLimitToString(JausEventLimit limit)
   }
   else
   {
-    char* returnBuf;
     returnBuf = (char*)malloc(21);
     returnBuf = "Invalid Event Limit";
     return returnBuf;

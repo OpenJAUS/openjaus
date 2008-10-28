@@ -146,7 +146,7 @@ static int dataToString(ReportVksObjectsCreationMessage message, char **buf)
   //message already verified 
 
   //Setup temporary string buffer
-  
+  unsigned short obj = 0;
   unsigned int bufSize = 100 + 50*message->objectCount;
   (*buf) = (char*)malloc(sizeof(char)*bufSize);
   
@@ -156,7 +156,7 @@ static int dataToString(ReportVksObjectsCreationMessage message, char **buf)
   strcat((*buf), "\nObject Count: ");
   jausUnsignedShortToString(message->objectCount, (*buf)+strlen(*buf));
   
-  for(unsigned short obj=0; obj<message->objectCount; obj++)
+  for(obj=0; obj<message->objectCount; obj++)
   {
     strcat((*buf), "\nObject Id: ");
     jausUnsignedShortToString(message->objectIds[obj], (*buf)+strlen(*buf));
@@ -353,6 +353,7 @@ char* reportVksObjectsCreationMessageToString(ReportVksObjectsCreationMessage me
   {
     char* buf1 = NULL;
     char* buf2 = NULL;
+    char* buf = NULL;
     
     int returnVal;
     
@@ -362,8 +363,7 @@ char* reportVksObjectsCreationMessageToString(ReportVksObjectsCreationMessage me
     //Print the message data fields to the string buffer
     returnVal += dataToString(message, &buf2);
     
-    char* buf;
-    buf = (char*)malloc(strlen(buf1)+strlen(buf2)+1);
+buf = (char*)malloc(strlen(buf1)+strlen(buf2)+1);
     strcpy(buf, buf1);
     strcat(buf, buf2);
 

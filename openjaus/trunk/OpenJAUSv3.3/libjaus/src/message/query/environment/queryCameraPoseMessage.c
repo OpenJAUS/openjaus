@@ -127,7 +127,7 @@ static int dataToString(QueryCameraPoseMessage message, char **buf)
   (*buf) = (char*)malloc(sizeof(char)*bufSize);
   
   strcpy((*buf), "\nPresence Vector: " );
-  jausByteToString(message->presenceVector, (*buf)+strlen(*buf));
+  jausUnsignedShortToHexString(message->presenceVector, (*buf)+strlen(*buf));
   
   strcat((*buf), "\nCamera Id: " );
   jausByteToString(message->cameraID, (*buf)+strlen(*buf));
@@ -309,6 +309,7 @@ char* queryCameraPoseMessageToString(QueryCameraPoseMessage message)
   {
     char* buf1 = NULL;
     char* buf2 = NULL;
+    char* buf = NULL;
     
     int returnVal;
     
@@ -318,8 +319,7 @@ char* queryCameraPoseMessageToString(QueryCameraPoseMessage message)
     //Print the message data fields to the string buffer
     returnVal += dataToString(message, &buf2);
     
-    char* buf;
-    buf = (char*)malloc(strlen(buf1)+strlen(buf2)+1);
+buf = (char*)malloc(strlen(buf1)+strlen(buf2)+1);
     strcpy(buf, buf1);
     strcat(buf, buf2);
 

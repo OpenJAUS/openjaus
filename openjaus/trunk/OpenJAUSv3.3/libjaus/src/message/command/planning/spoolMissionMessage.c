@@ -179,14 +179,14 @@ static int dataToString(SpoolMissionMessage message, char **buf)
   //Setup temporary string buffer
   
   unsigned int bufSize = 1000;
+  char* tasks = NULL;
+  char* comboBuf;
+  
   (*buf) = (char*)malloc(sizeof(char)*bufSize);
-
   strcpy((*buf), "\nMission Id: " );
-    
   jausUnsignedShortToString(message->missionId, (*buf)+strlen(*buf));
 
   strcat((*buf), "\nAppend Flag: " );
-    
   jausByteToString(message->appendFlag, (*buf)+strlen(*buf));
 
   switch(message->appendFlag)
@@ -201,9 +201,8 @@ static int dataToString(SpoolMissionMessage message, char **buf)
     strcat((*buf), " Unknown append flag\n");
     break;
   }
-  char* tasks = missionTaskToString(message->naryTree);
+  tasks = missionTaskToString(message->naryTree);
   
-  char* comboBuf;
   comboBuf = (char*)malloc(sizeof(char)*( strlen((*buf))+ strlen(tasks) + 1));
   strcpy(comboBuf, (*buf));
   strcat(comboBuf, (tasks));
@@ -407,6 +406,7 @@ char* spoolMissionMessageToString(SpoolMissionMessage message)
   {
     char* buf1 = NULL;
     char* buf2 = NULL;
+    char* buf = NULL;
     
     int returnVal;
     
@@ -416,8 +416,7 @@ char* spoolMissionMessageToString(SpoolMissionMessage message)
     //Print the message data fields to the string buffer
     returnVal += dataToString(message, &buf2);
     
-    char* buf;
-    buf = (char*)malloc(strlen(buf1)+strlen(buf2)+1);
+buf = (char*)malloc(strlen(buf1)+strlen(buf2)+1);
     strcpy(buf, buf1);
     strcat(buf, buf2);
 

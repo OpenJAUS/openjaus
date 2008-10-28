@@ -174,7 +174,11 @@ static int dataToString(CreateVksObjectsMessage message, char **buf)
   //Setup temporary string buffer
   
   unsigned int bufSize = 0;
-  char* mainBuf;
+  char* mainBuf = NULL;
+  char** objects = NULL;//[message->vectorObjects->elementCount];
+  int i = 0;
+  int k = 0;
+
   mainBuf = (char*)malloc(sizeof(char)*150);
 
   strcpy(mainBuf, "\nPresence Vector: " );
@@ -191,8 +195,8 @@ static int dataToString(CreateVksObjectsMessage message, char **buf)
   strcat(mainBuf, "\nLocal Request Id: ");
   jausByteToString(message->requestId, mainBuf+strlen(mainBuf));
   
-  char* objects[message->vectorObjects->elementCount];
-  for(int i=0; i<message->vectorObjects->elementCount; i++)
+  objects = (char **) malloc(message->vectorObjects->elementCount * sizeof(char *));
+  for(i = 0; i < message->vectorObjects->elementCount; i++)
   {
     objects[i] = vectorObjectToString(message->vectorObjects->elementData[i]);
     bufSize += strlen(objects[i]) + 1;
@@ -201,13 +205,15 @@ static int dataToString(CreateVksObjectsMessage message, char **buf)
   bufSize += strlen(mainBuf) + 1;
   (*buf) = (char*)malloc(sizeof(char)*bufSize);
   strcpy((*buf), mainBuf);
-  for(int k=0; k<message->vectorObjects->elementCount; k++)
+
+  for(k = 0; k < message->vectorObjects->elementCount; k++)
   {
     strcat((*buf), "\n");
     strcat((*buf), objects[k]);
     free(objects[k]);
   }
   
+  free(objects);
   free(mainBuf);
   return strlen((*buf));
 }
@@ -413,6 +419,7 @@ char* createVksObjectsMessageToString(CreateVksObjectsMessage message)
   {
     char* buf1 = NULL;
     char* buf2 = NULL;
+    char* buf = NULL;
     
     int returnVal;
     
@@ -422,8 +429,7 @@ char* createVksObjectsMessageToString(CreateVksObjectsMessage message)
     //Print the message data fields to the string buffer
     returnVal += dataToString(message, &buf2);
     
-    char* buf;
-    buf = (char*)malloc(strlen(buf1)+strlen(buf2)+1);
+buf = (char*)malloc(strlen(buf1)+strlen(buf2)+1);
     strcpy(buf, buf1);
     strcat(buf, buf2);
 

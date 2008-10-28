@@ -235,43 +235,36 @@ static int dataToString(SetLocalWaypointMessage message, char **buf)
   jausByteToHexString(message->presenceVector, (*buf)+strlen(*buf));
 
   strcat((*buf), "\nWaypoint Number: " );
-    
   jausUnsignedShortToString(message->waypointNumber, (*buf)+strlen(*buf));
 
   strcat((*buf), "\nX(meters): " );
-    
-  jausIntegerToString(message->xM, (*buf)+strlen(*buf));
+  jausDoubleToString(message->xM, (*buf)+strlen(*buf));
 
   strcat((*buf), "\nY(meters): " );
-    
-  jausIntegerToString(message->yM, (*buf)+strlen(*buf));
+  jausDoubleToString(message->yM, (*buf)+strlen(*buf));
 
   if(jausByteIsBitSet(message->presenceVector, JAUS_LOCAL_WAYPOINT_PV_Z_BIT))
   {
     strcat((*buf), "\nZ(meters): " );
-      
-    jausIntegerToString(message->zM, (*buf)+strlen(*buf));
+    jausDoubleToString(message->zM, (*buf)+strlen(*buf));
   }
 
   if(jausByteIsBitSet(message->presenceVector, JAUS_LOCAL_WAYPOINT_PV_ROLL_BIT))
   {
     strcat((*buf), "\nRoll(radians): " );
-      
-    jausShortToString(message->rollRadians, (*buf)+strlen(*buf));
+    jausDoubleToString(message->rollRadians, (*buf)+strlen(*buf));
   }
 
   if(jausByteIsBitSet(message->presenceVector, JAUS_LOCAL_WAYPOINT_PV_PITCH_BIT))
   {
     strcat((*buf), "\nPitch(radians): " );
-      
-    jausShortToString(message->pitchRadians, (*buf)+strlen(*buf));
+    jausDoubleToString(message->pitchRadians, (*buf)+strlen(*buf));
   }
 
   if(jausByteIsBitSet(message->presenceVector, JAUS_LOCAL_WAYPOINT_PV_YAW_BIT))
   {
     strcat((*buf), "\nYaw(radians): " );
-      
-    jausShortToString(message->yawRadians, (*buf)+strlen(*buf));
+    jausDoubleToString(message->yawRadians, (*buf)+strlen(*buf));
   }
   
   return strlen((*buf));
@@ -481,6 +474,7 @@ char* setLocalWaypointMessageToString(SetLocalWaypointMessage message)
   {
     char* buf1 = NULL;
     char* buf2 = NULL;
+    char* buf = NULL;
     
     int returnVal;
     
@@ -490,8 +484,7 @@ char* setLocalWaypointMessageToString(SetLocalWaypointMessage message)
     //Print the message data fields to the string buffer
     returnVal += dataToString(message, &buf2);
     
-    char* buf;
-    buf = (char*)malloc(strlen(buf1)+strlen(buf2)+1);
+buf = (char*)malloc(strlen(buf1)+strlen(buf2)+1);
     strcpy(buf, buf1);
     strcat(buf, buf2);
 

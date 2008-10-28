@@ -172,7 +172,10 @@ unsigned int missionCommandSize(JausMissionCommand object)
 
 char* missionCommandToString(JausMissionCommand object)
 {
-  char* buf;
+  char* buf = NULL;
+  char* tmpMessageStr = NULL;
+  char* returnBuf = NULL;
+
   buf = (char*)malloc(sizeof(char)*1000);
   
   strcpy(buf, "Command: ");
@@ -180,7 +183,6 @@ char* missionCommandToString(JausMissionCommand object)
   strcat(buf, "\nUID: ");
   jausUnsignedShortToString(object->uid, (buf)+strlen(buf));
 
-  char* tmpMessageStr;
   if( object->message != NULL )
     tmpMessageStr = jausMessageToString(object->message);
   else
@@ -209,7 +211,6 @@ char* missionCommandToString(JausMissionCommand object)
     break;
   }
   
-  char* returnBuf;
   returnBuf = (char*)malloc(sizeof(char)*(strlen(buf) + 1));
   strcpy(returnBuf, buf);
   free(buf);

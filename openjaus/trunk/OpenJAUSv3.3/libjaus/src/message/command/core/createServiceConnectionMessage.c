@@ -140,11 +140,9 @@ static int dataToString(CreateServiceConnectionMessage message, char **buf)
   strcat((*buf), jausCommandCodeString(message->serviceConnectionCommandCode));
   
   strcat((*buf), "\nRequested Periodic Update Rate(Hz): " );
-  
-  jausUnsignedShortToString(message->requestedPeriodicUpdateRateHertz, (*buf)+strlen(*buf));
+  jausDoubleToString(message->requestedPeriodicUpdateRateHertz, (*buf)+strlen(*buf));
   
   strcat((*buf), "\nPresence Vector: " );
-  
   jausUnsignedIntegerToHexString(message->presenceVector, (*buf)+strlen(*buf));
 
   return strlen((*buf));
@@ -327,6 +325,7 @@ char* createServiceConnectionMessageToString(CreateServiceConnectionMessage mess
     //buf = char* malloc(sizeof(char)*100);
     char* buf1 = NULL;
     char* buf2 = NULL;
+    char* buf = NULL;
     
     int returnVal;
     
@@ -336,8 +335,7 @@ char* createServiceConnectionMessageToString(CreateServiceConnectionMessage mess
     //Print the message data fields to the string buffer
     returnVal += dataToString(message, &buf2);
     
-    char* buf;
-    buf = (char*)malloc(strlen(buf1)+strlen(buf2)+1);
+buf = (char*)malloc(strlen(buf1)+strlen(buf2)+1);
     strcpy(buf, buf1);
     strcat(buf, buf2);
     

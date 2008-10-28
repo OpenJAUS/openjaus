@@ -219,7 +219,8 @@ static int dataToString(SetJointMotionMessage message, char **buf)
   //message already verified 
 
   //Setup temporary string buffer
-  
+  int pose = 0;
+  int joint = 0;
   unsigned int bufSize = 50 + ((message->numJoints * 150) + 50)*message->numPoses;
   (*buf) = (char*)malloc(sizeof(char)*bufSize);
 
@@ -229,7 +230,7 @@ static int dataToString(SetJointMotionMessage message, char **buf)
   strcat((*buf), "\nNumber of Poses: " );
   jausByteToString(message->numPoses, (*buf)+strlen(*buf));
 
-  for(int pose = 0; pose<message->numPoses; pose++)
+  for(pose = 0; pose<message->numPoses; pose++)
   {
     strcat((*buf), "\nPose Number ");
     jausIntegerToString(pose, (*buf)+strlen(*buf));
@@ -237,7 +238,7 @@ static int dataToString(SetJointMotionMessage message, char **buf)
     strcat((*buf), "\nTime for Pose(s): ");
     jausDoubleToString(message->poseTime[pose], (*buf)+strlen(*buf));
 
-    for(int joint=0; joint<message->numJoints; joint++)
+    for(joint=0; joint<message->numJoints; joint++)
     {
       strcat((*buf), "\nJoint Number ");
       jausIntegerToString(joint, (*buf)+strlen(*buf));
@@ -442,6 +443,7 @@ char* setJointMotionMessageToString(SetJointMotionMessage message)
   {
     char* buf1 = NULL;
     char* buf2 = NULL;
+    char* buf = NULL;
     
     int returnVal;
     
@@ -451,8 +453,7 @@ char* setJointMotionMessageToString(SetJointMotionMessage message)
     //Print the message data fields to the string buffer
     returnVal += dataToString(message, &buf2);
     
-    char* buf;
-    buf = (char*)malloc(strlen(buf1)+strlen(buf2)+1);
+buf = (char*)malloc(strlen(buf1)+strlen(buf2)+1);
     strcpy(buf, buf1);
     strcat(buf, buf2);
 

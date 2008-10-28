@@ -113,7 +113,7 @@ static void dataDestroy(ReplaceMessagesMessage message)
 static JausBoolean dataFromBuffer(ReplaceMessagesMessage message,unsigned char *buffer,unsigned int bufferSizeBytes)
 {
 
- 	int index = 0;
+	int index = 0;
   int i;
   JausMissionCommand tempObject;          //used to unpack fields [1+n+3m to 3+n+3m]
   JausUnsignedShort tempNumMsgsInsert = 0;//used to unpack field 4+n
@@ -229,8 +229,15 @@ static int dataToString(ReplaceMessagesMessage message, char **buf)
   //message already verified 
 
   //Setup temporary string buffer
-  
+  int msg = 0;
+  int msg2 = 0;
+  int stringSize = 0;
+  char* replaceMsgs = NULL;
+  char* tmpMsgString = NULL;
+  char* comboStr = NULL;
+  char* restOfMsg = NULL;
   unsigned int bufSize = 150 + 50*message->numMsgsToRemove;
+
   (*buf) = (char*)malloc(sizeof(char)*bufSize);
 
   strcpy((*buf), "\nMission Id: " );
@@ -242,7 +249,7 @@ static int dataToString(ReplaceMessagesMessage message, char **buf)
   strcat((*buf), "\nNumber of Messages To Remove: " );
   jausUnsignedShortToString(message->numMsgsToRemove, (*buf)+strlen(*buf));
 
-  for(int msg=0; msg<message->numMsgsToRemove; msg++)
+  for(msg=0; msg<message->numMsgsToRemove; msg++)
   {
     strcat((*buf), "\nUID To Remove: " );
     jausUnsignedShortToString(message->uid[msg], (*buf)+strlen(*buf));
@@ -251,21 +258,16 @@ static int dataToString(ReplaceMessagesMessage message, char **buf)
   strcat((*buf), "\nNumber of Messages To Replace: ");
   jausIntegerToString(message->command->elementCount, (*buf)+strlen(*buf));
   
-  char* replaceMsgs = NULL;
-  for(int msg2=0; message->command->elementCount; msg2++)
+  for(msg2=0; message->command->elementCount; msg2++)
   {
-    char* tmpMsgString;
-    
     strcat((*buf), "\nMessage To Replace and New Message: " );
     tmpMsgString = missionCommandToString(message->command->elementData[msg2]);
     
-    int stringSize;
     if(replaceMsgs == NULL)
       stringSize = strlen(tmpMsgString);
     else
       stringSize = strlen(tmpMsgString) + strlen(replaceMsgs);
     
-    char* comboStr;
     comboStr = (char*)malloc(sizeof(char)*stringSize + 1);
     
     if(replaceMsgs == NULL)
@@ -281,13 +283,11 @@ static int dataToString(ReplaceMessagesMessage message, char **buf)
     replaceMsgs = comboStr;
   }
   
-
-  char* restOfMsg;
   if( replaceMsgs != NULL )
   {
     restOfMsg = ((*buf));
     
-    int stringSize = strlen((*buf)) + strlen(replaceMsgs) + 1;
+    stringSize = strlen((*buf)) + strlen(replaceMsgs) + 1;
     (*buf) = (char*)malloc(sizeof(char)*stringSize);
     strcpy((*buf), restOfMsg);
     strcat((*buf), replaceMsgs);
@@ -500,6 +500,7 @@ char* replaceMessagesMessageToString(ReplaceMessagesMessage message)
   {
     char* buf1 = NULL;
     char* buf2 = NULL;
+    char* buf = NULL;
     
     int returnVal;
     
@@ -509,8 +510,7 @@ char* replaceMessagesMessageToString(ReplaceMessagesMessage message)
     //Print the message data fields to the string buffer
     returnVal += dataToString(message, &buf2);
     
-    char* buf;
-    buf = (char*)malloc(strlen(buf1)+strlen(buf2)+1);
+buf = (char*)malloc(strlen(buf1)+strlen(buf2)+1);
     strcpy(buf, buf1);
     strcat(buf, buf2);
 

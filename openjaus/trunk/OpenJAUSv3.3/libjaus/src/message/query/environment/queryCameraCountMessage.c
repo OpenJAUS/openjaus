@@ -277,6 +277,7 @@ char* queryCameraCountMessageToString(QueryCameraCountMessage message)
   if(message)
   {
     char* buf1 = NULL;
+    char* buf = NULL;
     
     int returnVal;
     
@@ -286,7 +287,6 @@ char* queryCameraCountMessageToString(QueryCameraCountMessage message)
     //Print the message data fields to the string buffer
     //No Data Members
     
-    char* buf;
     buf = (char*)malloc(strlen(buf1)+1);
     strcpy(buf, buf1);
 

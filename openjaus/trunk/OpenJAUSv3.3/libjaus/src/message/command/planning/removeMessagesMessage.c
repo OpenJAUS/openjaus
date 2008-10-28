@@ -170,7 +170,7 @@ static int dataToString(RemoveMessagesMessage message, char **buf)
   //message already verified 
 
   //Setup temporary string buffer
-  
+  int msg = 0;
   unsigned int bufSize = 100 + 25*message->numMsgs;
   (*buf) = (char*)malloc(sizeof(char)*bufSize);
 
@@ -183,7 +183,7 @@ static int dataToString(RemoveMessagesMessage message, char **buf)
   strcat((*buf), "\nNumber of Messages: " );
   jausUnsignedShortToString(message->numMsgs, (*buf)+strlen(*buf));
 
-  for(int msg=0; msg<message->numMsgs; msg++)
+  for(msg=0; msg<message->numMsgs; msg++)
   {
     strcat((*buf), "\nRemove UID: ");
     jausUnsignedShortToString(message->uid[msg], (*buf)+strlen(*buf));
@@ -383,6 +383,7 @@ char* removeMessagesMessageToString(RemoveMessagesMessage message)
   {
     char* buf1 = NULL;
     char* buf2 = NULL;
+    char* buf = NULL;
     
     int returnVal;
     
@@ -392,8 +393,7 @@ char* removeMessagesMessageToString(RemoveMessagesMessage message)
     //Print the message data fields to the string buffer
     returnVal += dataToString(message, &buf2);
     
-    char* buf;
-    buf = (char*)malloc(strlen(buf1)+strlen(buf2)+1);
+buf = (char*)malloc(strlen(buf1)+strlen(buf2)+1);
     strcpy(buf, buf1);
     strcat(buf, buf2);
 

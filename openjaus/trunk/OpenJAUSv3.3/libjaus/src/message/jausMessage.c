@@ -748,16 +748,14 @@ char* jausMessageToString(JausMessage message)
   if(message)
   {
     char* buf1 = NULL;
-    
+    char* buf = NULL;    
     int returnVal;
     
     //Print the message header to the string buffer
     returnVal = headerToString(message, &buf1);
     
-    char* buf;
     buf = (char*)malloc(strlen(buf1) +1);
     strcpy(buf, buf1);
-
     free(buf1);
     
     return buf;

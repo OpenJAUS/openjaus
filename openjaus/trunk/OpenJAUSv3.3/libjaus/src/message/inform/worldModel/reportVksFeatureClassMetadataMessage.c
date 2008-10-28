@@ -143,9 +143,9 @@ static int dataToString(ReportVksFeatureClassMetadataMessage message, char **buf
   (*buf) = (char*)malloc(sizeof(char)*bufSize);
   
   strcpy((*buf), "\nFeature Class Id: " );
-  jausByteToString(message->fcClass->id, (*buf)+strlen(*buf));
+  jausUnsignedShortToHexString(message->fcClass->id, (*buf)+strlen(*buf));
   
-  strcat((*buf), "\nNumber of Strign Characters: ");
+  strcat((*buf), "\nNumber of String Characters: ");
   jausIntegerToString(strlen(message->fcClass->metaData), (*buf)+strlen(*buf));
   
   strcat((*buf), "\nFeature Class Metadata: ");
@@ -338,6 +338,7 @@ char* reportVksFeatureClassMetadataMessageToString(ReportVksFeatureClassMetadata
   {
     char* buf1 = NULL;
     char* buf2 = NULL;
+    char* buf = NULL;
     
     int returnVal;
     
@@ -347,8 +348,7 @@ char* reportVksFeatureClassMetadataMessageToString(ReportVksFeatureClassMetadata
     //Print the message data fields to the string buffer
     returnVal += dataToString(message, &buf2);
     
-    char* buf;
-    buf = (char*)malloc(strlen(buf1)+strlen(buf2)+1);
+buf = (char*)malloc(strlen(buf1)+strlen(buf2)+1);
     strcpy(buf, buf1);
     strcat(buf, buf2);
 

@@ -270,9 +270,8 @@ char* querySelectedDataLinkStatusMessageToString(QuerySelectedDataLinkStatusMess
   {
     //Remove the current buffer if it exists
     
-    //buf = char* malloc(sizeof(char)*100);
     char* buf1 = NULL;
-    
+    char* buf = NULL;
     int returnVal;
     
     //Print the message header to the string buffer
@@ -282,7 +281,6 @@ char* querySelectedDataLinkStatusMessageToString(QuerySelectedDataLinkStatusMess
     //returnVal += dataToString(message, &buf2);
     //No Data Members
     
-    char* buf;
     buf = (char*)malloc(strlen(buf1)+1);
     strcpy(buf, buf1);
 

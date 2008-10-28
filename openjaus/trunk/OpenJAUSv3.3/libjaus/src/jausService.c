@@ -375,13 +375,16 @@ char* jausCommandToString(JausCommand command)
 char* jausServicesToString(JausArray services)
 {
   char* buffer = (char*)malloc(sizeof(char)*3000);
-  
+  int serv = 0;
+  int cmd = 0;
+  JausCommand tmpCommand = NULL;
+
   if(services->elementCount > 0)
   {
-    for(int serv=0; serv<services->elementCount; serv++)
+    for(serv=0; serv<services->elementCount; serv++)
     {
       strcpy(buffer, "Type: ");
-      jausByteToString(((JausService)(services->elementData[serv]))->type, buffer+strlen(buffer));
+      jausUnsignedShortToString(((JausService)(services->elementData[serv]))->type, buffer+strlen(buffer));
       switch(((JausService)(services->elementData[serv]))->type)
       {
         case 0:
@@ -501,7 +504,7 @@ char* jausServicesToString(JausArray services)
       else
       {
         JausCommand tmpCmd = ((JausService)(services->elementData[serv]))->inputCommandList;
-        for(int cmd=0; cmd<((JausService)(services->elementData[serv]))->inputCommandCount ;cmd++)
+        for(cmd=0; cmd<((JausService)(services->elementData[serv]))->inputCommandCount ;cmd++)
         {
           strcat(buffer, "\n");
           strcat(buffer, jausCommandToString(tmpCmd));
@@ -516,8 +519,8 @@ char* jausServicesToString(JausArray services)
         strcat(buffer, " No Output Commands");
       else
       {
-        JausCommand tmpCommand = ((JausService)(services->elementData[serv]))->outputCommandList;
-        for(int cmd=0; cmd<((JausService)(services->elementData[serv]))->outputCommandCount ;cmd++)
+        tmpCommand = ((JausService)(services->elementData[serv]))->outputCommandList;
+        for(cmd=0; cmd<((JausService)(services->elementData[serv]))->outputCommandCount ;cmd++)
         {
           strcat(buffer, "\n");
           strcat(buffer, jausCommandToString(tmpCommand));

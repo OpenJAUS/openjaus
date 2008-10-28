@@ -300,8 +300,9 @@ char* clearEmergencyMessageToString(ClearEmergencyMessage message)
   {
     char* buf1 = NULL;
     char* buf2 = NULL;
-    
-    int returnVal;
+    char* buf = NULL;
+
+	int returnVal;
     
     //Print the message header to the string buffer
     returnVal = headerToString(message, &buf1);
@@ -309,7 +310,6 @@ char* clearEmergencyMessageToString(ClearEmergencyMessage message)
     //Print the message data fields to the string buffer
     returnVal += dataToString(message, &buf2);
     
-    char* buf;
     buf = (char*)malloc(strlen(buf1)+strlen(buf2)+1);
     strcpy(buf, buf1);
     strcat(buf, buf2);

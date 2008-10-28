@@ -115,7 +115,10 @@ JausBoolean featureClassToBuffer(JausWorldModelFeatureClass fcClass, unsigned ch
 
 char* featureClassToString(JausWorldModelFeatureClass fcClass)
 {
-  char* buf;
+  char* buf = NULL;
+  char* att = NULL;
+  char* returnBuf = NULL;
+
   int bufSize = 150 + JAUS_WM_FC_METADATA_STRING_LENGTH;
   buf = (char*)malloc(sizeof(char)*bufSize);
   
@@ -124,13 +127,11 @@ char* featureClassToString(JausWorldModelFeatureClass fcClass)
   
   strcat(buf, "\nMetaData: ");
   strcat(buf, fcClass->metaData);
-  
-  char* att;
+
   att = (char*)malloc(sizeof(char*)*100);
   strcpy(att, "\n");
   featureClassAttributeToString(fcClass->attribute, att+strlen(att), sizeof(att));
   
-  char* returnBuf;
   returnBuf = (char*)malloc(sizeof(char)*( strlen(buf)+1+strlen(att) ));
   strcpy(returnBuf, buf);
   strcat(returnBuf, att);
