@@ -188,7 +188,7 @@ static int dataToString(ReportIdentificationMessage message, char **buf)
   else
     strcat((*buf), " Reserved Type");
   
-  strcat((*buf), "Identification: ");
+  strcat((*buf), "\nIdentification: ");
   strcat((*buf), message->identification);
   
   return strlen((*buf));

@@ -136,7 +136,7 @@ static int dataToString(SetLocalVectorMessage message, char **buf)
 
   //Setup temporary string buffer
   
-  unsigned int bufSize = 50;
+  unsigned int bufSize = 75;
   (*buf) = (char*)malloc(sizeof(char)*bufSize);
 
   strcpy((*buf), "\nSpeed(meters/second): " );

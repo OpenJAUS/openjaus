@@ -206,7 +206,7 @@ static JausBoolean dataFromBuffer(CreateEventMessage message, unsigned char *buf
 			jausAddressCopy(message->queryMessage->source, message->source);
 			jausAddressCopy(message->queryMessage->destination, message->destination);
 			
-			message->queryMessage->commandCode = jausMessageGetComplimentaryCommandCode(message->reportMessageCode);
+			message->queryMessage->commandCode = jausMessageGetComplementaryCommandCode(message->reportMessageCode);
 
 			// Allocate Memory
 			message->queryMessage->data = (unsigned char *) malloc(queryMessageSize);

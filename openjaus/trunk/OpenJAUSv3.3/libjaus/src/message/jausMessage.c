@@ -514,6 +514,8 @@ char *jausCommandCodeString(unsigned short commandCode)
 			return "JAUS_REPORT_VKS_OBJECTS_CREATION";
 		case JAUS_REPORT_VKS_OBJECTS:
 			return "JAUS_REPORT_VKS_OBJECTS";
+		case JAUS_REPORT_VKS_DATA_TRANSFER_TERMINATION:
+		  return "JAUS_REPORT_VKS_DATA_TRANSFER_TERMINATION";
     case JAUS_REPORT_SPOOLING_PREFERENCE:
       return "JAUS_REPORT_SPOOLING_PREFERENCE";
     case JAUS_REPORT_MISSION_STATUS:
@@ -524,7 +526,7 @@ char *jausCommandCodeString(unsigned short commandCode)
 	}	
 }
 
-unsigned short jausMessageGetComplimentaryCommandCode(unsigned short commandCode)
+unsigned short jausMessageGetComplementaryCommandCode(unsigned short commandCode)
 {
 	switch(commandCode)
 	{
@@ -616,6 +618,10 @@ unsigned short jausMessageGetComplimentaryCommandCode(unsigned short commandCode
 			return JAUS_REPORT_VKS_FEATURE_CLASS_METADATA;
 		case JAUS_QUERY_VKS_OBJECTS:
 			return JAUS_REPORT_VKS_OBJECTS;
+		case JAUS_QUERY_MISSION_STATUS:
+		  return JAUS_REPORT_MISSION_STATUS;
+		case JAUS_QUERY_SPOOLING_PREFERENCE:
+		  return JAUS_REPORT_SPOOLING_PREFERENCE;
 		case JAUS_REPORT_COMPONENT_AUTHORITY:
 			return JAUS_QUERY_COMPONENT_AUTHORITY;
 		case JAUS_REPORT_COMPONENT_STATUS:
@@ -704,6 +710,10 @@ unsigned short jausMessageGetComplimentaryCommandCode(unsigned short commandCode
 			return JAUS_QUERY_VKS_FEATURE_CLASS_METADATA;
 		case JAUS_REPORT_VKS_OBJECTS:
 			return JAUS_QUERY_VKS_OBJECTS;
+		case JAUS_REPORT_MISSION_STATUS:
+		  return JAUS_QUERY_MISSION_STATUS;
+		case JAUS_REPORT_SPOOLING_PREFERENCE:
+		  return JAUS_QUERY_SPOOLING_PREFERENCE;
 		default:
 			// Unknown Command Code
 			return 0;
