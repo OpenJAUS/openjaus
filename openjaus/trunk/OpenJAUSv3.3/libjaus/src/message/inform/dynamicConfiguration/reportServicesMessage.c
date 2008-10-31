@@ -227,7 +227,7 @@ static int dataToString(ReportServicesMessage message, char **buf)
   
   char* services = jausServicesToString(message->jausServices);
   
-  unsigned int bufSize = strlen(services);
+  unsigned int bufSize = strlen(services)+1;
   (*buf) = (char*)malloc(sizeof(char)*bufSize);
   
   strcpy((*buf), services );
