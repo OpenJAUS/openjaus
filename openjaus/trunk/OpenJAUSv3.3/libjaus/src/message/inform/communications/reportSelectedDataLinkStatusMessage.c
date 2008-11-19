@@ -122,7 +122,7 @@ static int dataToString(ReportSelectedDataLinkStatusMessage message, char **buf)
   strcpy((*buf), "\nData Link Id: " );
   jausByteToString(message->dataLinkId, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
 }
 
 // Returns number of bytes put into the buffer
@@ -517,6 +517,6 @@ static int headerToString(ReportSelectedDataLinkStatusMessage message, char **bu
   strcat((*buf), "\nSequence Number: ");
   jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
   
 }

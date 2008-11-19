@@ -389,7 +389,7 @@ static int dataToString(QueryVksObjectsMessage message, char **buf)
   if(jausByteIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_REGION_BIT))
   {
     region = vectorObjectToString(message->queryRegion);
-    bufSize += strlen(region);
+    bufSize += (int)strlen(region);
   }
   
   //Setup temporary string buffer
@@ -426,7 +426,7 @@ static int dataToString(QueryVksObjectsMessage message, char **buf)
     free(region);
   }
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
 }
 
 static unsigned int dataSize(QueryVksObjectsMessage message)
@@ -933,6 +933,6 @@ static int headerToString(QueryVksObjectsMessage message, char **buf)
   strcat((*buf), "\nSequence Number: ");
   jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
   
 }

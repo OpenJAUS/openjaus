@@ -191,7 +191,7 @@ static int dataToString(QueryEventsMessage message, char **buf)
   strcat((*buf), "\nEvent Id: " );
   jausByteToString(message->eventId, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
 }
 
 static unsigned int dataSize(QueryEventsMessage message)
@@ -605,6 +605,6 @@ static int headerToString(QueryEventsMessage message, char **buf)
   strcat((*buf), "\nSequence Number: ");
   jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
   
 }

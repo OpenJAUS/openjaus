@@ -57,5 +57,5 @@ int jausBooleanToString(JausBoolean value, char *buf)
     return sprintf(buf, "%s", "True");
   }
   else
-    return strlen(buf);
+    return (int)strlen(buf);
 }

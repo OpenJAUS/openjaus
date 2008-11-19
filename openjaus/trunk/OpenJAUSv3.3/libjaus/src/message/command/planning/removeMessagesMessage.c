@@ -189,7 +189,7 @@ static int dataToString(RemoveMessagesMessage message, char **buf)
     jausUnsignedShortToString(message->uid[msg], (*buf)+strlen(*buf));
   }
 
-  return strlen((*buf));
+  return (int)strlen(*buf);
 }
 
 // Returns number of bytes put into the buffer
@@ -604,6 +604,6 @@ static int headerToString(RemoveMessagesMessage message, char **buf)
   strcat((*buf), "\nSequence Number: ");
   jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
   
 }

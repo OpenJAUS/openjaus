@@ -123,7 +123,7 @@ static int dataToString(SelectCameraMessage message, char **buf)
   strcpy((*buf), "\nCamera Id: " );
   jausByteToString(message->cameraID, (*buf)+strlen(*buf));
 
-  return strlen((*buf));
+  return (int)strlen(*buf);
 }
 
 static unsigned int dataSize(SelectCameraMessage message)
@@ -517,6 +517,6 @@ static int headerToString(SelectCameraMessage message, char **buf)
   strcat((*buf), "\nSequence Number: ");
   jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
   
 }

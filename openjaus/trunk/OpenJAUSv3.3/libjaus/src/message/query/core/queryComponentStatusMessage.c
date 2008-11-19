@@ -110,7 +110,7 @@ static int dataToString(QueryComponentStatusMessage message, char **buf)
   unsigned int bufSize = 25;
   (*buf) = (char*)malloc(sizeof(char)*bufSize);
   strcpy((*buf), "\n\0");
-  return strlen((*buf));
+  return (int)strlen(*buf);
 }
 
 static unsigned int dataSize(QueryComponentStatusMessage message)
@@ -505,6 +505,6 @@ static int headerToString(QueryComponentStatusMessage message, char **buf)
   strcat((*buf), "\nSequence Number: ");
   jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
   
 }

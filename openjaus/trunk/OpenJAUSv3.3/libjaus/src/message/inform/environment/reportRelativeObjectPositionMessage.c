@@ -345,7 +345,7 @@ static int dataToString(ReportRelativeObjectPositionMessage message, char **buf)
     strcat((*buf), "\nObject Id: ");
     jausUnsignedShortToString(message->objectId, (*buf)+strlen(*buf));
   }
-  return strlen((*buf));
+  return (int)strlen(*buf);
 }
 
 // Returns number of bytes put into the buffer
@@ -785,6 +785,6 @@ static int headerToString(ReportRelativeObjectPositionMessage message, char **bu
   strcat((*buf), "\nSequence Number: ");
   jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
   
 }

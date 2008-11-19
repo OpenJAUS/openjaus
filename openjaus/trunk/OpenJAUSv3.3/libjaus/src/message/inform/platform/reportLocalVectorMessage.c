@@ -145,7 +145,7 @@ static int dataToString(ReportLocalVectorMessage message, char **buf)
   strcat((*buf), "\nHeading(radians): ");
   jausDoubleToString(message->headingRadians, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
 }
 
 static unsigned int dataSize(ReportLocalVectorMessage message)
@@ -543,6 +543,6 @@ static int headerToString(ReportLocalVectorMessage message, char **buf)
   strcat((*buf), "\nSequence Number: ");
   jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
   
 }

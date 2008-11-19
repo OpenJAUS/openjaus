@@ -360,13 +360,13 @@ char* missionTaskToString(JausMissionTask object)
   
   //Form return string  
   if( buf != NULL )
-    stringSize += strlen(buf);
+    stringSize += (int)strlen(buf);
   if( taskCmdStr != NULL )
-    stringSize += strlen(taskCmdStr);
+    stringSize += (int)strlen(taskCmdStr);
   if( childrenIntro != NULL )
-    stringSize += strlen(childrenIntro);
+    stringSize += (int)strlen(childrenIntro);
   if( childStr != NULL )
-    stringSize += strlen(childStr);
+    stringSize += (int)strlen(childStr);
   
   returnBuf = (char*)malloc(sizeof(char)*(  stringSize +1 ));
   

@@ -123,7 +123,7 @@ static int dataToString(ReportSelectedCameraMessage message, char **buf)
   strcpy((*buf), "\nCamera Id: " );
   jausByteToString(message->cameraID, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
 }
 
 // Returns number of bytes put into the buffer
@@ -517,6 +517,6 @@ static int headerToString(ReportSelectedCameraMessage message, char **buf)
   strcat((*buf), "\nSequence Number: ");
   jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
   
 }

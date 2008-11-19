@@ -275,19 +275,18 @@ unsigned int querySubsystemListMessageSize(QuerySubsystemListMessage message)
 
 char* querySubsystemListMessageToString(QuerySubsystemListMessage message)
 {
+    char* buf1 = NULL;
+    char* buf;
+    int returnVal;
+
   if(message)
   {
-    char* buf1 = NULL;
-    
-    int returnVal;
-    
     //Print the message header to the string buffer
     returnVal = headerToString(message, &buf1);
     
     //Print the message data fields to the string buffer
     //No Data Members
     
-    char* buf;
     buf = (char*)malloc(strlen(buf1)+1);
     strcpy(buf, buf1);
 
@@ -492,6 +491,6 @@ static int headerToString(QuerySubsystemListMessage message, char **buf)
   strcat((*buf), "\nSequence Number: ");
   jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
   
 }

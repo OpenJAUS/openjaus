@@ -126,7 +126,7 @@ static int dataToString(QueryLocalPathSegmentMessage message, char **buf)
   strcat((*buf), "\nPresence Vector: " );
   jausByteToHexString(message->presenceVector, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
 }
 
 static unsigned int dataSize(QueryLocalPathSegmentMessage message)
@@ -519,6 +519,6 @@ static int headerToString(QueryLocalPathSegmentMessage message, char **buf)
   strcat((*buf), "\nSequence Number: ");
   jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
   
 }

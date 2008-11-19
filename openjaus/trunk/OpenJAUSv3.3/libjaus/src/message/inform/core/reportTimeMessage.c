@@ -169,7 +169,7 @@ static int dataToString(ReportTimeMessage message, char **buf)
     jausTimeDateToString(message->time, (*buf)+strlen(*buf));
   }
 
-  return strlen((*buf));
+  return (int)strlen(*buf);
 }
 
 // Returns number of bytes put into the buffer
@@ -580,6 +580,6 @@ static int headerToString(ReportTimeMessage message, char **buf)
   strcat((*buf), "\nSequence Number: ");
   jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
   
 }

@@ -493,6 +493,6 @@ static int headerToString(QueryManipulatorSpecificationsMessage message, char **
   strcat((*buf), "\nSequence Number: ");
   jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
   
 }

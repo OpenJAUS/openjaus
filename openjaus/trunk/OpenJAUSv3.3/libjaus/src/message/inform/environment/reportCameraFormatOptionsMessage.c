@@ -685,7 +685,7 @@ static int dataToString(ReportCameraFormatOptionsMessage message, char **buf)
     strcat((*buf), "\nFormat Option: ");
     jausUnsignedIntegerToString(message->formatOption, (*buf)+strlen(*buf));
   }
-  return strlen((*buf));
+  return (int)strlen(*buf);
 }
 
 // Returns number of bytes put into the buffer
@@ -1129,6 +1129,6 @@ static int headerToString(ReportCameraFormatOptionsMessage message, char **buf)
   strcat((*buf), "\nSequence Number: ");
   jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
   
 }

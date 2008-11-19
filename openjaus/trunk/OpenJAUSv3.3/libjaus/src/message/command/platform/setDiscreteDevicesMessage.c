@@ -304,7 +304,7 @@ static int dataToString(SetDiscreteDevicesMessage message, char **buf)
   else if ( (message->transferCase > 128) && (message->transferCase <= 255) )
     strcat((*buf), " High");
 
-  return strlen((*buf));
+  return (int)strlen(*buf);
 }
 
 static unsigned int dataSize(SetDiscreteDevicesMessage message)
@@ -721,6 +721,6 @@ static int headerToString(SetDiscreteDevicesMessage message, char **buf)
   strcat((*buf), "\nSequence Number: ");
   jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
   
 }

@@ -265,7 +265,7 @@ static int dataToString(ReportLocalWaypointMessage message, char **buf)
     strcat((*buf), "\nYaw(radians): ");
     jausDoubleToString(message->yawRadians, (*buf)+strlen(*buf));
   }
-  return strlen((*buf));
+  return (int)strlen(*buf);
 }
 
 static unsigned int dataSize(ReportLocalWaypointMessage message)
@@ -688,6 +688,6 @@ static int headerToString(ReportLocalWaypointMessage message, char **buf)
   strcat((*buf), "\nSequence Number: ");
   jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
   
 }

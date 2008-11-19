@@ -129,7 +129,7 @@ static int dataToString(SuspendServiceConnectionMessage message, char **buf)
     
   jausByteToString(message->instanceId, (*buf)+strlen(*buf));
 
-  return strlen((*buf));
+  return (int)strlen(*buf);
 }
 
 static unsigned int dataSize(SuspendServiceConnectionMessage message)
@@ -525,6 +525,6 @@ static int headerToString(SuspendServiceConnectionMessage message, char **buf)
   strcat((*buf), "\nSequence Number: ");
   jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
   
 }

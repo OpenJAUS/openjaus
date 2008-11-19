@@ -376,7 +376,7 @@ static int dataToString(DeleteVksObjectsMessage message, char **buf)
   {
     strcat((*buf), "\nDeletion Region: ");
     region = vectorObjectToString(message->deletionRegion);
-    bufSize += strlen(region);
+    bufSize += (int)strlen(region);
   }
   
   //Setup temporary string buffer
@@ -409,7 +409,7 @@ static int dataToString(DeleteVksObjectsMessage message, char **buf)
     free(region);
   }
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
 }
 
 static unsigned int dataSize(DeleteVksObjectsMessage message)
@@ -914,6 +914,6 @@ static int headerToString(DeleteVksObjectsMessage message, char **buf)
   strcat((*buf), "\nSequence Number: ");
   jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
   
 }

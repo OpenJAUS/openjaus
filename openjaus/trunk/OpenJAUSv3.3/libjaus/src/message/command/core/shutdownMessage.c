@@ -110,7 +110,7 @@ static int dataToString(ShutdownMessage message, char **buf)
   unsigned int bufSize = 2;
   (*buf) = (char*)malloc(sizeof(char)*bufSize);
   strcpy((*buf), "\n\0");
-  return strlen((*buf));
+  return (int)strlen(*buf);
 }
 
 static unsigned int dataSize(ShutdownMessage message)
@@ -506,7 +506,7 @@ static int headerToString(ShutdownMessage message, char **buf)
   strcat((*buf), "\nSequence Number: ");
   jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
   
 }
 

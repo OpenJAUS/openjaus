@@ -146,12 +146,12 @@ static int dataToString(ReportVksFeatureClassMetadataMessage message, char **buf
   jausUnsignedShortToHexString(message->fcClass->id, (*buf)+strlen(*buf));
   
   strcat((*buf), "\nNumber of String Characters: ");
-  jausIntegerToString(strlen(message->fcClass->metaData), (*buf)+strlen(*buf));
+  jausIntegerToString((int)strlen(message->fcClass->metaData), (*buf)+(int)strlen(*buf));
   
   strcat((*buf), "\nFeature Class Metadata: ");
   strcat((*buf), message->fcClass->metaData);
    
-  return strlen((*buf));
+  return (int)strlen(*buf);
 }
 
 static unsigned int dataSize(ReportVksFeatureClassMetadataMessage message)
@@ -554,6 +554,6 @@ static int headerToString(ReportVksFeatureClassMetadataMessage message, char **b
   strcat((*buf), "\nSequence Number: ");
   jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
   
 }

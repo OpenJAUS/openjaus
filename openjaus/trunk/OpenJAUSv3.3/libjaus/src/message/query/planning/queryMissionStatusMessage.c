@@ -231,7 +231,7 @@ static int dataToString(QueryMissionStatusMessage message, char **buf)
   
   
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
 }
 
 // Returns number of bytes put into the buffer
@@ -646,6 +646,6 @@ static int headerToString(QueryMissionStatusMessage message, char **buf)
   strcat((*buf), "\nSequence Number: ");
   jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
   
 }

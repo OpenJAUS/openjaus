@@ -471,7 +471,7 @@ static int dataToString(ReportManipulatorSpecificationsMessage message, char **b
   strcat((*buf), "\n D of unit quaternion q: ");
   jausDoubleToString(message->coordinateSysD, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
 }
 
 // Returns number of bytes put into the buffer
@@ -887,6 +887,6 @@ static int headerToString(ReportManipulatorSpecificationsMessage message, char *
   strcat((*buf), "\nSequence Number: ");
   jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
   
 }

@@ -264,7 +264,7 @@ static int dataToString(ReportGlobalVectorMessage message, char **buf)
     jausDoubleToString(message->pitchRadians, (*buf)+strlen(*buf));
   }
 
-  return strlen((*buf));
+  return (int)strlen(*buf);
 }
 
 // Returns number of bytes put into the buffer
@@ -687,6 +687,6 @@ static int headerToString(ReportGlobalVectorMessage message, char **buf)
   strcat((*buf), "\nSequence Number: ");
   jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
   
 }

@@ -381,7 +381,7 @@ static int dataToString(ReportGlobalPoseMessage message, char **buf)
     jausTimeToString(message->time, (*buf)+strlen(*buf), bufSize-strlen(*buf)-1);
   }
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
 }
 
 // Returns number of bytes put into the buffer
@@ -825,6 +825,6 @@ static int headerToString(ReportGlobalPoseMessage message, char **buf)
   strcat((*buf), "\nSequence Number: ");
   jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
   
 }

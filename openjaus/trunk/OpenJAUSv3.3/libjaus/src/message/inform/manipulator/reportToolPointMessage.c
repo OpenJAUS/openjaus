@@ -154,7 +154,7 @@ static int dataToString(ReportToolPointMessage message, char **buf)
   strcat((*buf), "\nZ Coordinate of Tool Point(meters): " );
   jausDoubleToString(message->z, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
 }
 
 // Returns number of bytes put into the buffer
@@ -548,6 +548,6 @@ static int headerToString(ReportToolPointMessage message, char **buf)
   strcat((*buf), "\nSequence Number: ");
   jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
   
 }

@@ -123,7 +123,7 @@ static int dataToString(ClearEmergencyMessage message, char **buf)
   
   jausBooleanToString(message->clearEmergency, (*buf)+strlen(*buf));
 
-  return strlen((*buf));
+  return (int)strlen(*buf);
 }
 
 static unsigned int dataSize(ClearEmergencyMessage message)
@@ -516,6 +516,6 @@ static int headerToString(ClearEmergencyMessage message, char **buf)
   strcat((*buf), "\nSequence Number: ");
   jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
   
 }

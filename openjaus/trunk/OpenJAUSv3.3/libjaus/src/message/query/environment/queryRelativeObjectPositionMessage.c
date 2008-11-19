@@ -124,7 +124,7 @@ static int dataToString(QueryRelativeObjectPositionMessage message, char **buf)
   strcpy((*buf), "\nPresence Vector: " );
   jausByteToString(message->presenceVector, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
 }
 
 // Returns number of bytes put into the buffer
@@ -518,6 +518,6 @@ static int headerToString(QueryRelativeObjectPositionMessage message, char **buf
   strcat((*buf), "\nSequence Number: ");
   jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
   
 }

@@ -116,7 +116,7 @@ static int dataToString(QueryPlatformOperationalDataMessage message, char **buf)
   strcpy((*buf), "\nPresence Vector: " );
   jausByteToHexString(message->presenceVector, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
 }
 
 static unsigned int dataSize(QueryPlatformOperationalDataMessage message)
@@ -509,6 +509,6 @@ static int headerToString(QueryPlatformOperationalDataMessage message, char **bu
   strcat((*buf), "\nSequence Number: ");
   jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
   
 }

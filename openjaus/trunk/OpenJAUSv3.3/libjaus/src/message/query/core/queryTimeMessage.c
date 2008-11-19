@@ -117,7 +117,7 @@ static int dataToString(QueryTimeMessage message, char **buf)
     
   jausByteToHexString(message->presenceVector, (*buf)+strlen(*buf));
 
-  return strlen((*buf));
+  return (int)strlen(*buf);
 }
 
 static unsigned int dataSize(QueryTimeMessage message)
@@ -510,6 +510,6 @@ static int headerToString(QueryTimeMessage message, char **buf)
   strcat((*buf), "\nSequence Number: ");
   jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
   
 }

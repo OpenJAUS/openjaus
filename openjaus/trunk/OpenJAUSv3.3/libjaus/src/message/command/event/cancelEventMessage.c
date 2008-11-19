@@ -178,7 +178,7 @@ static int dataToString(CancelEventMessage message, char **buf)
     jausByteToString(message->eventId, (*buf)+strlen(*buf));
   }
 
-  return strlen((*buf));
+  return (int)strlen(*buf);
 }
 
 static unsigned int dataSize(CancelEventMessage message)
@@ -587,6 +587,6 @@ static int headerToString(CancelEventMessage message, char **buf)
   strcat((*buf), "\nSequence Number: ");
   jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
   
 }

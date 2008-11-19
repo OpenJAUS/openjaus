@@ -199,10 +199,10 @@ static int dataToString(CreateVksObjectsMessage message, char **buf)
   for(i = 0; i < message->vectorObjects->elementCount; i++)
   {
     objects[i] = vectorObjectToString(message->vectorObjects->elementData[i]);
-    bufSize += strlen(objects[i]) + 1;
+    bufSize += (int)strlen(objects[i]) + 1;
   }
   
-  bufSize += strlen(mainBuf) + 1;
+  bufSize += (int)strlen(mainBuf) + 1;
   (*buf) = (char*)malloc(sizeof(char)*bufSize);
   strcpy((*buf), mainBuf);
 
@@ -215,7 +215,7 @@ static int dataToString(CreateVksObjectsMessage message, char **buf)
   
   free(objects);
   free(mainBuf);
-  return strlen((*buf));
+  return (int)strlen(*buf);
 }
 
 // Returns number of bytes put into the buffer
@@ -635,6 +635,6 @@ static int headerToString(CreateVksObjectsMessage message, char **buf)
   strcat((*buf), "\nSequence Number: ");
   jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
   
 }

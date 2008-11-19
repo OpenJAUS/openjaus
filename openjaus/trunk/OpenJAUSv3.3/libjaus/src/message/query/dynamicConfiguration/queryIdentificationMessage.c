@@ -133,7 +133,7 @@ static int dataToString(QueryIdentificationMessage message, char **buf)
       strcat((*buf), " Unkown Value");
       break;
   }
-  return strlen((*buf));
+  return (int)strlen(*buf);
 }
 
 static unsigned int dataSize(QueryIdentificationMessage message)
@@ -526,6 +526,6 @@ static int headerToString(QueryIdentificationMessage message, char **buf)
   strcat((*buf), "\nSequence Number: ");
   jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
   
 }

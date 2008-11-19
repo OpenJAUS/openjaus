@@ -275,11 +275,12 @@ unsigned int queryServicesMessageSize(QueryServicesMessage message)
 
 char* queryServicesMessageToString(QueryServicesMessage message)
 {
+    char* buf1 = NULL;
+    int returnVal;
+    char* buf;
+
   if(message)
   {
-    char* buf1 = NULL;
-    
-    int returnVal;
     
     //Print the message header to the string buffer
     returnVal = headerToString(message, &buf1);
@@ -287,7 +288,6 @@ char* queryServicesMessageToString(QueryServicesMessage message)
     //Print the message data fields to the string buffer
     //No Data Members
     
-    char* buf;
     buf = (char*)malloc(strlen(buf1)+1);
     strcpy(buf, buf1);
 
@@ -492,6 +492,6 @@ static int headerToString(QueryServicesMessage message, char **buf)
   strcat((*buf), "\nSequence Number: ");
   jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
   
 }

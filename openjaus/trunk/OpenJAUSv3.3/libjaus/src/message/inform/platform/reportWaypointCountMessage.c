@@ -116,7 +116,7 @@ static int dataToString(ReportWaypointCountMessage message, char **buf)
   strcpy((*buf), "\nWaypoint Count: " );
   jausUnsignedShortToString(message->waypointCount, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
 }
 
 static unsigned int dataSize(ReportWaypointCountMessage message)
@@ -509,6 +509,6 @@ static int headerToString(ReportWaypointCountMessage message, char **buf)
   strcat((*buf), "\nSequence Number: ");
   jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
   
 }

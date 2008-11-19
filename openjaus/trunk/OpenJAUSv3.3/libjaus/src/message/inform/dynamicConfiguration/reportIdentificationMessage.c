@@ -146,7 +146,7 @@ static int dataToString(ReportIdentificationMessage message, char **buf)
 
   //Setup temporary string buffer
   
-  unsigned int bufSize = 200 + strlen(message->identification);
+  unsigned int bufSize = 200 + (int)strlen(message->identification);
   (*buf) = (char*)malloc(sizeof(char)*bufSize);
   
   strcpy((*buf), "\nQuery Type: " );
@@ -191,7 +191,7 @@ static int dataToString(ReportIdentificationMessage message, char **buf)
   strcat((*buf), "\nIdentification: ");
   strcat((*buf), message->identification);
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
 }
 
 static unsigned int dataSize(ReportIdentificationMessage message)
@@ -584,6 +584,6 @@ static int headerToString(ReportIdentificationMessage message, char **buf)
   strcat((*buf), "\nSequence Number: ");
   jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
   
 }
