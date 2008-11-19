@@ -119,4 +119,6 @@ JAUS_EXPORT JausMessage removeMessagesMessageToJausMessage
 
 JAUS_EXPORT unsigned int removeMessagesMessageSize(RemoveMessagesMessage message);
 
+JAUS_EXPORT char* removeMessagesMessageToString(RemoveMessagesMessage message);
+
 #endif // REMOVE_MESSAGE_H

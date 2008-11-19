@@ -69,4 +69,6 @@ JAUS_EXPORT JausBoolean jausUnsignedShortIsBitSet(JausUnsignedShort input, int b
 JAUS_EXPORT JausBoolean jausUnsignedShortSetBit(JausUnsignedShort *input, int bit);
 JAUS_EXPORT JausBoolean jausUnsignedShortClearBit(JausUnsignedShort *input, int bit);
 
+JAUS_EXPORT int jausUnsignedShortToString(JausUnsignedShort number, char * buf);
+JAUS_EXPORT int jausUnsignedShortToHexString(JausUnsignedShort value, char * buf);
 #endif // JAUS_UNSIGNED_SHORT_H

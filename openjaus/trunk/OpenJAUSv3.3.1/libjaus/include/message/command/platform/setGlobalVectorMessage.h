@@ -115,4 +115,5 @@ JAUS_EXPORT JausMessage setGlobalVectorMessageToJausMessage(SetGlobalVectorMessa
 
 JAUS_EXPORT unsigned int setGlobalVectorMessageSize(SetGlobalVectorMessage message);
 
+JAUS_EXPORT char* setGlobalVectorMessageToString(SetGlobalVectorMessage message);
 #endif // SET_GLOBAL_VECTOR_MESSAGE_H

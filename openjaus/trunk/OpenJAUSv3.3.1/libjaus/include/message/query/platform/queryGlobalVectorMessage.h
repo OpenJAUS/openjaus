@@ -101,4 +101,5 @@ JAUS_EXPORT JausMessage queryGlobalVectorMessageToJausMessage(QueryGlobalVectorM
 
 JAUS_EXPORT unsigned int queryGlobalVectorMessageSize(QueryGlobalVectorMessage message);
 
+JAUS_EXPORT char* queryGlobalVectorMessageToString(QueryGlobalVectorMessage message);
 #endif // QUERY_GLOBAL_VECTOR_MESSAGE_H

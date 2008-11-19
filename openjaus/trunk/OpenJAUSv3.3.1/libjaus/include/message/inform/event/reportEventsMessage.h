@@ -149,4 +149,5 @@ JAUS_EXPORT JausMessage reportEventsMessageToJausMessage(ReportEventsMessage mes
 
 JAUS_EXPORT unsigned int reportEventsMessageSize(ReportEventsMessage message);
 
+JAUS_EXPORT char* reportEventsMessageToString(ReportEventsMessage message);
 #endif // REPORT_EVENTS_MESSAGE_H

@@ -101,4 +101,5 @@ JAUS_EXPORT JausMessage querySubsystemListMessageToJausMessage(QuerySubsystemLis
 
 JAUS_EXPORT unsigned int querySubsystemListMessageSize(QuerySubsystemListMessage message);
 
+JAUS_EXPORT char* querySubsystemListMessageToString(QuerySubsystemListMessage message);
 #endif // QUERY_SUBSYSTEM_LIST_MESSAGE_H

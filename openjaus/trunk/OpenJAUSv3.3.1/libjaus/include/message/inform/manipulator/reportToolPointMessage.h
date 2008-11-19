@@ -103,4 +103,5 @@ JAUS_EXPORT JausMessage reportToolPointMessageToJausMessage(ReportToolPointMessa
 
 JAUS_EXPORT unsigned int reportToolPointMessageSize(ReportToolPointMessage message);
 
+JAUS_EXPORT char* reportToolPointMessageToString(ReportToolPointMessage message);
 #endif // REPORT_TOOL_POINT_MESSAGE_H

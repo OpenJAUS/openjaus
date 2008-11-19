@@ -108,4 +108,5 @@ JAUS_EXPORT JausMessage reportComponentStatusMessageToJausMessage(ReportComponen
 
 JAUS_EXPORT unsigned int reportComponentStatusMessageSize(ReportComponentStatusMessage message);
 
+JAUS_EXPORT char* reportComponentStatusMessageToString(ReportComponentStatusMessage message);
 #endif // REPORT_COMPONENT_STATUS_MESSAGE_H

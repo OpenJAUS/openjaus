@@ -43,6 +43,7 @@
 
 #include <string.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include "jaus.h"
 
 JausUnsignedInteger newJausUnsignedInteger(unsigned int val)
@@ -148,3 +149,12 @@ JausBoolean jausUnsignedIntegerClearBit(JausUnsignedInteger *input, int bit)
 	}
 }
 
+int jausUnsignedIntegerToString(JausUnsignedInteger number, char *buf)
+{
+  return sprintf(buf, "%d", number);
+}
+
+int jausUnsignedIntegerToHexString(JausUnsignedInteger number, char *buf)
+{
+  return sprintf(buf, "0x%X", number);
+}

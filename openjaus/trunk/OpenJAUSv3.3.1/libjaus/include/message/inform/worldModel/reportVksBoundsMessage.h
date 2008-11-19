@@ -107,4 +107,5 @@ JAUS_EXPORT JausMessage reportVksBoundsMessageToJausMessage(ReportVksBoundsMessa
 
 JAUS_EXPORT unsigned int reportVksBoundsMessageSize(ReportVksBoundsMessage message);
 
+JAUS_EXPORT char* reportVksBoundsMessageToString(ReportVksBoundsMessage message);
 #endif // REPORT_VKS_BOUNDS_MESSAGE_H

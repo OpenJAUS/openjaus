@@ -31,31 +31,31 @@
  *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
  *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ****************************************************************************/
-// File Name: jausFloat.h
+// File Name: jausBoolean.c
 //
-// Written By: Danny Kent (jaus AT dannykent DOT com)
+// Written By: Danny Kent (jaus AT dannykent DOT com), Tom Galluzzo (galluzzo AT gmail DOT com)
 //
-// Version: 3.3.0
+// Version: 3.3.0a
 //
-// Date: 07/09/08
+// Date: 08/07/08
 //
-// Description: This file defines all the basic JausFloat funtionality, this should be primarily used 
-// through the JausType file and its methods
+// Description: This file defines all the basic JausUnsignedShort funtionality, this should be primarily used through the JausType file and its methods
 
-#ifndef JAUS_FLOAT_H
-#define JAUS_FLOAT_H
-
+#include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include "jaus.h"
 
-#define JAUS_FLOAT_SIZE_BYTES	4
-
-typedef float JausFloat;
-
-JAUS_EXPORT JausFloat newJausFloat(float val);
-
-JAUS_EXPORT JausBoolean jausFloatFromBuffer(JausFloat *jFloat, unsigned char *buf, unsigned int bufferSizeBytes);
-JAUS_EXPORT JausBoolean jausFloatToBuffer(JausFloat input, unsigned char *buf, unsigned int bufferSizeBytes);
-
-JAUS_EXPORT int jausFloatToString(JausFloat value, char * buf);
-
-#endif // JAUS_FLOAT_H
+int jausBooleanToString(JausBoolean value, char *buf)
+{
+  if(value == JAUS_FALSE)
+  {
+    return sprintf(buf, "%s", "False");
+  }
+  else if(value == JAUS_TRUE)
+  {
+    return sprintf(buf, "%s", "True");
+  }
+  else
+    return (int)strlen(buf);
+}

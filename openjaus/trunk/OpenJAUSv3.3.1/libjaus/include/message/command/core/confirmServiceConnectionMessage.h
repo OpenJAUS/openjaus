@@ -110,4 +110,5 @@ JAUS_EXPORT JausMessage confirmServiceConnectionMessageToJausMessage(ConfirmServ
 
 JAUS_EXPORT unsigned int confirmServiceConnectionMessageSize(ConfirmServiceConnectionMessage message);
 
+JAUS_EXPORT char* confirmServiceConnectionMessageToString(ConfirmServiceConnectionMessage message);
 #endif // CONFIRM_SERVICE_CONNECTION_MESSAGE_H

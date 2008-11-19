@@ -123,4 +123,5 @@ JAUS_EXPORT JausMessage setVelocityStateMessageToJausMessage(SetVelocityStateMes
 
 JAUS_EXPORT unsigned int setVelocityStateMessageSize(SetVelocityStateMessage message);
 
+JAUS_EXPORT char* setVelocityStateMessageToString(SetVelocityStateMessage message);
 #endif // SET_VELOCITY_STATE_MESSAGE_H

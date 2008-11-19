@@ -101,4 +101,5 @@ JAUS_EXPORT JausMessage queryPathSegmentCountMessageToJausMessage(QueryPathSegme
 
 JAUS_EXPORT unsigned int queryPathSegmentCountMessageSize(QueryPathSegmentCountMessage message);
 
+JAUS_EXPORT char* queryPathSegmentCountMessageToString(QueryPathSegmentCountMessage message);
 #endif // QUERY_PATH_SEGMENT_COUNT_MESSAGE_H

@@ -107,4 +107,5 @@ JAUS_EXPORT JausMessage setEmergencyMessageToJausMessage(SetEmergencyMessage mes
 
 JAUS_EXPORT unsigned int setEmergencyMessageSize(SetEmergencyMessage message);
 
+JAUS_EXPORT char* setEmergencyMessageToString(SetEmergencyMessage message);
 #endif // SET_EMERGENCY_MESSAGE_H

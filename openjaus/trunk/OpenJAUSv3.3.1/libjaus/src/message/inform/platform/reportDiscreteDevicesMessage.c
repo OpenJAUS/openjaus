@@ -42,7 +42,7 @@
 // Description: This file defines the functionality of a ReportDiscreteDevicesMessage
 
 
-
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "jaus.h"
@@ -52,6 +52,7 @@ static const int maxDataSizeBytes = 5;
 
 static JausBoolean headerFromBuffer(ReportDiscreteDevicesMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static JausBoolean headerToBuffer(ReportDiscreteDevicesMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+static int headerToString(ReportDiscreteDevicesMessage message, char **buf);
 
 static JausBoolean dataFromBuffer(ReportDiscreteDevicesMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static int dataToBuffer(ReportDiscreteDevicesMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
@@ -203,6 +204,119 @@ static int dataToBuffer(ReportDiscreteDevicesMessage message, unsigned char *buf
 	}
 
 	return index;
+}
+
+static int dataToString(ReportDiscreteDevicesMessage message, char **buf)
+{
+  //message already verified 
+
+  //Setup temporary string buffer
+  
+  unsigned int bufSize = 700;
+  (*buf) = (char*)malloc(sizeof(char)*bufSize);
+  
+  strcpy((*buf), "\nPresence Vector: " );
+  jausByteToHexString(message->presenceVector, (*buf)+strlen(*buf));
+  
+
+  if(jausByteIsBitSet(message->presenceVector, JAUS_DEVICES_PV_PROPULSION_BIT))
+  {  
+    strcat((*buf), "\nMain Propulsion\n  Main Propulsion: " );
+    
+    if( message->mainPropulsion == JAUS_TRUE )
+      strcat((*buf), "On");
+    else
+      strcat((*buf), "Off");
+      
+    strcat((*buf), "\n  Main Energy/Fuel Supply: " );
+    
+    if( message->mainFuelSupply == JAUS_TRUE )
+      strcat((*buf), "On");
+    else
+      strcat((*buf), "Off");
+      
+    strcat((*buf), "\n  Auxiliary Energy/Fuel Supply: " );
+    
+    if( message->auxFuelSupply == JAUS_TRUE )
+      strcat((*buf), "On");
+    else
+      strcat((*buf), "Off");
+      
+    strcat((*buf), "\n  Power to Auxiliary Devices: " );
+    
+    if( message->powerAuxDevices == JAUS_TRUE )
+      strcat((*buf), "On");
+    else
+      strcat((*buf), "Off");
+      
+    strcat((*buf), "\n  Starting Device: " );
+    
+    if( message->startingDevice == JAUS_TRUE )
+      strcat((*buf), "On");
+    else
+      strcat((*buf), "Off");
+      
+    strcat((*buf), "\n  Cold Start: " );
+    
+    jausBooleanToString(message->coldStart, (*buf)+strlen(*buf));
+      
+    strcat((*buf), "\n  Commence Automatic Start Sequence: " );
+    
+    jausBooleanToString(message->automaticStart, (*buf)+strlen(*buf));
+      
+    strcat((*buf), "\n  Commence Automatic Shutdown Sequence: " );
+    
+    jausBooleanToString(message->automaticStop, (*buf)+strlen(*buf));
+  }
+  
+  if(jausByteIsBitSet(message->presenceVector, JAUS_DEVICES_PV_PARKING_BIT))
+  {   
+    strcat((*buf), "\nParking Brake and Horn\n  Parking Brake: " );
+    
+    if( message->parkingBrake == JAUS_TRUE  )
+      strcat((*buf), "Set");
+    else
+      strcat((*buf), "Release");
+      
+    strcat((*buf), "\n  Horn: " );
+    
+    if( message->horn == JAUS_TRUE )
+      strcat((*buf), "On");
+    else
+      strcat((*buf), "Off");
+  }
+
+  if(jausByteIsBitSet(message->presenceVector, JAUS_DEVICES_PV_GEAR_BIT))
+  {    
+    strcat((*buf), "\nGear: " );
+    
+    jausByteToString(message->gear, (*buf)+strlen(*buf));
+    
+    if( message->gear == 0 )
+      strcat((*buf), " Park");
+    else if ( message->gear == 128 )
+      strcat((*buf), " Neutral");
+    else if ( (message->gear >= 1) && (message->gear <= 127) )
+      strcat((*buf), " Forward");
+    else if ( (message->gear > 128) && (message->gear <= 255) )
+      strcat((*buf), " Reverse");
+  }
+
+  if(jausByteIsBitSet(message->presenceVector, JAUS_DEVICES_PV_TRANSFER_BIT))
+  {  
+    strcat((*buf), "\nTransfer Case: " );
+    
+    jausByteToString(message->transferCase, (*buf)+strlen(*buf));
+    
+    if ( message->transferCase == 128 )
+      strcat((*buf), " Neutral");
+    else if ( (message->transferCase >= 0) && (message->transferCase <= 127) )
+      strcat((*buf), " Low");
+    else if ( (message->transferCase > 128) && (message->transferCase <= 255) )
+      strcat((*buf), " High");
+  }
+  
+  return (int)strlen(*buf);
 }
 
 // Returns number of bytes put into the buffer
@@ -398,6 +512,39 @@ unsigned int reportDiscreteDevicesMessageSize(ReportDiscreteDevicesMessage messa
 	return (unsigned int)(dataSize(message) + JAUS_HEADER_SIZE_BYTES);
 }
 
+char* reportDiscreteDevicesMessageToString(ReportDiscreteDevicesMessage message)
+{
+  if(message)
+  {
+    char* buf1 = NULL;
+    char* buf2 = NULL;
+    char* buf = NULL;
+    
+    int returnVal;
+    
+    //Print the message header to the string buffer
+    returnVal = headerToString(message, &buf1);
+    
+    //Print the message data fields to the string buffer
+    returnVal += dataToString(message, &buf2);
+    
+buf = (char*)malloc(strlen(buf1)+strlen(buf2)+1);
+    strcpy(buf, buf1);
+    strcat(buf, buf2);
+
+    free(buf1);
+    free(buf2);
+    
+    return buf;
+  }
+  else
+  {
+    char* buf = "Invalid ReportDiscreteDevices Message";
+    char* msg = (char*)malloc(strlen(buf)+1);
+    strcpy(msg, buf);
+    return msg;
+  }
+}
 //********************* PRIVATE HEADER FUNCTIONS **********************//
 
 static JausBoolean headerFromBuffer(ReportDiscreteDevicesMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
@@ -474,3 +621,119 @@ static JausBoolean headerToBuffer(ReportDiscreteDevicesMessage message, unsigned
 	}
 }
 
+static int headerToString(ReportDiscreteDevicesMessage message, char **buf)
+{
+  //message existance already verified 
+
+  //Setup temporary string buffer
+  
+  unsigned int bufSize = 500;
+  (*buf) = (char*)malloc(sizeof(char)*bufSize);
+  
+  strcpy((*buf), jausCommandCodeString(message->commandCode) );
+  strcat((*buf), " (0x");
+  sprintf((*buf)+strlen(*buf), "%04X", message->commandCode);
+
+  strcat((*buf), ")\nReserved: ");
+  jausUnsignedShortToString(message->properties.reserved, (*buf)+strlen(*buf));
+
+  strcat((*buf), "\nVersion: ");
+  switch(message->properties.version)
+  {
+    case 0:
+      strcat((*buf), "2.0 and 2.1 compatible");
+      break;
+    case 1:
+      strcat((*buf), "3.0 through 3.1 compatible");
+      break;
+    case 2:
+      strcat((*buf), "3.2 and 3.3 compatible");
+      break;
+    default:
+      strcat((*buf), "Reserved for Future: ");
+      jausUnsignedShortToString(message->properties.version, (*buf)+strlen(*buf));
+      break;
+  }
+
+  strcat((*buf), "\nExp. Flag: ");
+  if(message->properties.expFlag == 0)
+    strcat((*buf), "JAUS");
+  else 
+    strcat((*buf), "Experimental");
+  
+  strcat((*buf), "\nSC Flag: ");
+  if(message->properties.scFlag == 0)
+    strcat((*buf), "Service Connection");
+  else
+    strcat((*buf), "Not Service Connection");
+  
+  strcat((*buf), "\nACK/NAK: ");
+  switch(message->properties.ackNak)
+  {
+  case 0:
+    strcat((*buf), "None");
+    break;
+  case 1:
+    strcat((*buf), "Request ack/nak");
+    break;
+  case 2:
+    strcat((*buf), "nak response");
+    break;
+  case 3:
+    strcat((*buf), "ack response");
+    break;
+  default:
+    break;
+  }
+  
+  strcat((*buf), "\nPriority: ");
+  if(message->properties.priority < 12)
+  {
+    strcat((*buf), "Normal Priority ");
+    jausUnsignedShortToString(message->properties.priority, (*buf)+strlen(*buf));
+  }
+  else
+  {
+    strcat((*buf), "Safety Critical Priority ");
+    jausUnsignedShortToString(message->properties.priority, (*buf)+strlen(*buf));
+  }
+  
+  strcat((*buf), "\nSource: ");
+  jausAddressToString(message->source, (*buf)+strlen(*buf));
+  
+  strcat((*buf), "\nDestination: ");
+  jausAddressToString(message->destination, (*buf)+strlen(*buf));
+  
+  strcat((*buf), "\nData Size: ");
+  jausUnsignedIntegerToString(message->dataSize, (*buf)+strlen(*buf));
+  
+  strcat((*buf), "\nData Flag: ");
+  jausUnsignedIntegerToString(message->dataFlag, (*buf)+strlen(*buf));
+  switch(message->dataFlag)
+  {
+    case 0:
+      strcat((*buf), " Only data packet in single-packet stream");
+      break;
+    case 1:
+      strcat((*buf), " First data packet in muti-packet stream");
+      break;
+    case 2:
+      strcat((*buf), " Normal data packet");
+      break;
+    case 4:
+      strcat((*buf), " Retransmitted data packet");
+      break;
+    case 8:
+      strcat((*buf), " Last data packet in stream");
+      break;
+    default:
+      strcat((*buf), " Unrecognized data flag code");
+      break;
+  }
+  
+  strcat((*buf), "\nSequence Number: ");
+  jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
+  
+  return (int)strlen(*buf);
+  
+}

@@ -104,4 +104,5 @@ JAUS_EXPORT JausMessage reportSubsystemListMessageToJausMessage(ReportSubsystemL
 
 JAUS_EXPORT unsigned int reportSubsystemListMessageSize(ReportSubsystemListMessage message);
 
+JAUS_EXPORT char* reportSubsystemListMessageToString(ReportSubsystemListMessage message);
 #endif

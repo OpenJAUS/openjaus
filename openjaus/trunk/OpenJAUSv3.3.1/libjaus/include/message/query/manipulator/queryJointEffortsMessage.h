@@ -101,4 +101,5 @@ JAUS_EXPORT JausMessage queryJointEffortsMessageToJausMessage(QueryJointEffortsM
 
 JAUS_EXPORT unsigned int queryJointEffortsMessageSize(QueryJointEffortsMessage message);
 
+JAUS_EXPORT char* queryJointEffortsMessageToString(QueryJointEffortsMessage message);
 #endif // QUERY_JOINT_EFFORTS_MESSAGE_H

@@ -101,4 +101,5 @@ JAUS_EXPORT JausMessage releaseComponentControlMessageToJausMessage(ReleaseCompo
 
 JAUS_EXPORT unsigned int releaseComponentControlMessageSize(ReleaseComponentControlMessage message);
 
+JAUS_EXPORT char* releaseComponentControlMessageToString(ReleaseComponentControlMessage message);
 #endif // RELEASE_COMPONENT_CONTROL_MESSAGE_H

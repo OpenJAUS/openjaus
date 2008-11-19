@@ -101,4 +101,5 @@ JAUS_EXPORT JausMessage reportVksDataTransferTerminationMessageToJausMessage(Rep
 
 JAUS_EXPORT unsigned int reportVksDataTransferTerminationMessageSize(ReportVksDataTransferTerminationMessage message);
 
+JAUS_EXPORT char* reportVksDataTransferTerminationMessageToString(ReportVksDataTransferTerminationMessage message);
 #endif // REPORT_VKS_DATA_TRANSFER_TERMINATION_MESSAGE_H

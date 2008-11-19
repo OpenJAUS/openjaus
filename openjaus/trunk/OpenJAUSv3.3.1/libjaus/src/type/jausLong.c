@@ -41,6 +41,7 @@
 //
 // Description: This file defines all the basic JausLong funtionality, this should be primarily used through the JausType file and its methods
 
+#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include "jaus.h"
@@ -124,4 +125,9 @@ JausLong jausLongFromDouble(double value, double min, double max)
 		
 	// return rounded integer value
 	return newJausLong((long)((value - bias)/scaleFactor + 0.5));
+}
+
+int jausLongToString(JausLong number, char *buf)
+{
+  return sprintf(buf, "%lld", number);
 }

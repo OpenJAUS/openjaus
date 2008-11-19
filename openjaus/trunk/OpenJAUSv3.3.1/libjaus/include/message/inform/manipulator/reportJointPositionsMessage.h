@@ -103,4 +103,5 @@ JAUS_EXPORT JausMessage reportJointPositionsMessageToJausMessage(ReportJointPosi
 
 JAUS_EXPORT unsigned int reportJointPositionsMessageSize(ReportJointPositionsMessage message);
 
+JAUS_EXPORT char* reportJointPositionsMessageToString(ReportJointPositionsMessage message);
 #endif // REPORT_JOINT_POSITIONS_MESSAGE_H

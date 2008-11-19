@@ -156,6 +156,30 @@ JausBoolean jausTimeToString(JausTime time, char *buffer, size_t buffSize)
 		return JAUS_FALSE;
 }
 
+JausBoolean jausTimeDateToString(JausTime time, char *buffer)
+{
+  const char *months[] = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
+
+  if(time)
+  {   
+    sprintf(buffer, "%s %02d, %04d", months[time->month], time->day, time->year);
+    return JAUS_TRUE;
+  }
+  else
+    return JAUS_FALSE;
+}
+
+JausBoolean jausTimeTimeToString(JausTime time, char *buffer)
+{
+  if(time)
+  {   
+    sprintf(buffer, "%02d:%02d:%02d.%d", time->hour, time->minute, time->second, time->millisec);
+    return JAUS_TRUE;
+  }
+  else
+    return JAUS_FALSE;
+}
+
 JausBoolean jausTimeStampFromBuffer(JausTime input, unsigned char *buffer, unsigned int bufferSizeBytes)
 {
 	// Unpack TimeStamp

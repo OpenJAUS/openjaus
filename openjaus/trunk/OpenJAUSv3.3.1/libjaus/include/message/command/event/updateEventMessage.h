@@ -152,4 +152,5 @@ JAUS_EXPORT JausMessage updateEventMessageToJausMessage(UpdateEventMessage messa
 
 JAUS_EXPORT unsigned int updateEventMessageSize(UpdateEventMessage message);
 
+JAUS_EXPORT char* updateEventMessageToString(UpdateEventMessage message);
 #endif // UPDATE_EVENT_MESSAGE_H

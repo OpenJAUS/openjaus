@@ -103,4 +103,5 @@ JAUS_EXPORT JausMessage queryCameraCapabilitiesMessageToJausMessage(QueryCameraC
 
 JAUS_EXPORT unsigned int queryCameraCapabilitiesMessageSize(QueryCameraCapabilitiesMessage message);
 
+JAUS_EXPORT char* queryCameraCapabilitiesMessageToString(QueryCameraCapabilitiesMessage message);
 #endif // QUERY_CAMERA_CAPABILITIES_MESSAGE_H

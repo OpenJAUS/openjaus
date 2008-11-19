@@ -52,7 +52,8 @@ typedef enum
 {	
 	JAUS_DATA_LINK_OFF = 0,
 	JAUS_DATA_LINK_ON = 1,
-	JAUS_DATA_LINK_STANDBY = 2
+	JAUS_DATA_LINK_STANDBY = 2,
+	JAUS_DATA_LINK_LOSS_OF_COMMAND = 3
 } JausDataLinkEnum;
 #endif
 
@@ -114,4 +115,5 @@ JAUS_EXPORT JausMessage reportDataLinkStatusMessageToJausMessage(ReportDataLinkS
 
 JAUS_EXPORT unsigned int reportDataLinkStatusMessageSize(ReportDataLinkStatusMessage message);
 
+JAUS_EXPORT char* reportDataLinkStatusMessageToString(ReportDataLinkStatusMessage message);
 #endif // REPORT_DATA_LINK_STATUS_MESSAGE_H

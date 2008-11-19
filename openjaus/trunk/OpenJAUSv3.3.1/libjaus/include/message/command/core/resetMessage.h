@@ -101,4 +101,5 @@ JAUS_EXPORT JausMessage resetMessageToJausMessage(ResetMessage message);
 
 JAUS_EXPORT unsigned int resetMessageSize(ResetMessage message);
 
+JAUS_EXPORT char* resetMessageToString(ResetMessage message);
 #endif // RESET_MESSAGE_H

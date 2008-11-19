@@ -101,4 +101,5 @@ JAUS_EXPORT JausMessage queryManipulatorSpecificationsMessageToJausMessage(Query
 
 JAUS_EXPORT unsigned int queryManipulatorSpecificationsMessageSize(QueryManipulatorSpecificationsMessage message);
 
+JAUS_EXPORT char* queryManipulatorSpecificationsMessageToString(QueryManipulatorSpecificationsMessage message);
 #endif // QUERY_MANIPULATOR_SPECIFICATIONS_MESSAGE_H

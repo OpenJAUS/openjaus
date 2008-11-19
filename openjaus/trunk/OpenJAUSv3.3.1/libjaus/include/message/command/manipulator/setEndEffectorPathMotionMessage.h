@@ -109,4 +109,5 @@ JAUS_EXPORT JausMessage setEndEffectorPathMotionMessageToJausMessage(SetEndEffec
 
 JAUS_EXPORT unsigned int setEndEffectorPathMotionMessageSize(SetEndEffectorPathMotionMessage message);
 
+JAUS_EXPORT char* setEndEffectorPathMotionMessageToString(SetEndEffectorPathMotionMessage message);
 #endif // SET_END_EFFECTOR_PATH_MOTION_MESSAGE_H

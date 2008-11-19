@@ -103,4 +103,5 @@ JAUS_EXPORT JausMessage setJointVelocitiesMessageToJausMessage(SetJointVelocitie
 
 JAUS_EXPORT unsigned int setJointVelocitiesMessageSize(SetJointVelocitiesMessage message);
 
+JAUS_EXPORT char* setJointVelocitiesMessageToString(SetJointVelocitiesMessage message);
 #endif // SET_JOINT_VELOCITIES_MESSAGE_H

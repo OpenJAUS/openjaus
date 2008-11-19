@@ -114,4 +114,5 @@ JAUS_EXPORT JausMessage xXXXMessageToJausMessage(XxXxMessage message);
 
 JAUS_EXPORT unsigned int xXXXMessageSize(XxXxMessage message);
 
+JAUS_EXPORT char* xXXXMessageToString(XxXxMessage message);
 #endif // XXXX_MESSAGE_H

@@ -41,6 +41,7 @@
 //
 // Description: This file defines all the basic JausFloat funtionality, this should be primarily used through the JausType file and its methods
 
+#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include "jaus.h"
@@ -103,4 +104,9 @@ JausBoolean jausFloatToBuffer(JausFloat input, unsigned char *buf, unsigned int 
 #endif
 		return JAUS_TRUE;
 	}
+}
+
+int jausFloatToString(JausFloat number, char *buf)
+{
+  return sprintf(buf, "%f", number);
 }

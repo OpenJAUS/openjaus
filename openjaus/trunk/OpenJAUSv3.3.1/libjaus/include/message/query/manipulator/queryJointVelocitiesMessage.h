@@ -101,4 +101,5 @@ JAUS_EXPORT JausMessage queryJointVelocitiesMessageToJausMessage(QueryJointVeloc
 
 JAUS_EXPORT unsigned int queryJointVelocitiesMessageSize(QueryJointVelocitiesMessage message);
 
+JAUS_EXPORT char* queryJointVelocitiesMessageToString(QueryJointVelocitiesMessage message);
 #endif // QUERY_JOINT_VELOCITIES_MESSAGE_H

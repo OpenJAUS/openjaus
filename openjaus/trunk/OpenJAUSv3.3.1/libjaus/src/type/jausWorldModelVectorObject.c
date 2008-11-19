@@ -408,3 +408,75 @@ JausWorldModelVectorObject vectorObjectCopy(JausWorldModelVectorObject input)
 	////cError("JausWorldModelVectorObject:%d: This shouldn't happen.\n", __LINE__);	
 	return NULL;
 }
+
+char* vectorObjectToString(JausWorldModelVectorObject object)
+{
+  int returnBufSize = 0;
+  char* returnBuf = NULL;
+  char* buf = NULL;
+  char **features = NULL;
+  char **points = NULL;
+  int bufSize = 200;
+  int i = 0;
+  int k = 0;
+
+  buf = (char*)malloc(sizeof(char)*bufSize);
+  
+  strcpy(buf, "World Model Vector Object Id: ");
+  jausUnsignedShortToString(object->id, buf+strlen(buf));
+  
+  strcat(buf, "\nWorld Model Vector Object Type: ");
+  vectorObjectTypeToString(object, buf+strlen(buf), sizeof(buf)-strlen(buf));
+  
+  strcat(buf, "\nWorld Model Vector Object Buffer(meters): ");
+  jausFloatToString(object->bufferMeters, buf+strlen(buf));
+  
+  features = (char **) malloc(sizeof(char *) * object->featureClasses->elementCount); 
+  for(i=0; i<object->featureClasses->elementCount; i++)
+  {
+    features[i] = featureClassToString(object->featureClasses->elementData[i]);
+    returnBufSize += (int)strlen(features[i]) + 19;
+  }
+  
+  points = (char **) malloc(sizeof(char *) * object->dataPoints->elementCount);
+  for(k=0; k<object->dataPoints->elementCount; k++)
+  {
+    points[k] = jausGeometryPointLLAToString(object->dataPoints->elementData[k]);
+    returnBufSize += (int)strlen(points[k]) + 19;
+  }
+  
+  returnBufSize += (int)strlen(buf)+1;
+  returnBuf = (char*)malloc(sizeof(char)*( returnBufSize ));
+  strcpy(returnBuf, buf);
+
+  for(i=0; i<object->featureClasses->elementCount; i++)
+  {
+    strcat(returnBuf, "\nFeature Class #");
+    jausIntegerToString(i, returnBuf+strlen(returnBuf));
+    strcat(returnBuf, ": \n");
+    strcat(returnBuf, features[i]);
+  }
+
+  for(k=0; k<object->dataPoints->elementCount; k++)
+  {
+    strcat(returnBuf, "\nPoint #");
+    jausIntegerToString(k, returnBuf+strlen(returnBuf));
+    strcat(returnBuf, ": \n");
+    strcat(returnBuf, points[k]);
+  }
+  
+  for(i=0; i<object->featureClasses->elementCount; i++)
+  {
+    free(features[i]);
+  }
+
+  for(k=0; k<object->dataPoints->elementCount; k++)
+  {
+    free(points[k]);
+  }  
+
+  free(features);
+  free(points);
+  free(buf);
+  return returnBuf;
+}

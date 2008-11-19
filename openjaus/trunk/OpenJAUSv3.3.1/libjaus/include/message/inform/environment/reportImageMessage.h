@@ -106,4 +106,5 @@ JAUS_EXPORT JausMessage reportImageMessageToJausMessage(ReportImageMessage messa
 
 JAUS_EXPORT unsigned int reportImageMessageSize(ReportImageMessage message);
 
+JAUS_EXPORT char* reportImageMessageToString(ReportImageMessage message);
 #endif // REPORT_IMAGE_MESSAGE_H

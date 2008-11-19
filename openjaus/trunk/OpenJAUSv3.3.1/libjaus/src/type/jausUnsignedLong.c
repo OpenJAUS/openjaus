@@ -41,6 +41,7 @@
 //
 // Description: This file defines all the basic JausUnsignedLong funtionality, this should be primarily used through the JausType file and its methods
 
+#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include "jaus.h"
@@ -114,5 +115,10 @@ JausUnsignedLong jausUnsignedLongFromDouble(double value, double min, double max
 		
 	// calculate rounded integer value
 	return newJausUnsignedLong((unsigned long)((value - bias)/scaleFactor + 0.5));
+}
+
+int jausUnsignedLongToString(JausUnsignedLong number, char *buf)
+{
+  return sprintf(buf, "%llu", number);
 }
 

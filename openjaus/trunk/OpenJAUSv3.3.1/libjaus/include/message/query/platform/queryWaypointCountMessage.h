@@ -101,4 +101,5 @@ JAUS_EXPORT JausMessage queryWaypointCountMessageToJausMessage(QueryWaypointCoun
 
 JAUS_EXPORT unsigned int queryWaypointCountMessageSize(QueryWaypointCountMessage message);
 
+JAUS_EXPORT char* queryWaypointCountMessageToString(QueryWaypointCountMessage message);
 #endif // QUERY_WAYPOINT_COUNT_MESSAGE_H

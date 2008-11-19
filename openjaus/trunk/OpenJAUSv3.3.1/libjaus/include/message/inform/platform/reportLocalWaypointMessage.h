@@ -116,4 +116,5 @@ JAUS_EXPORT JausMessage reportLocalWaypointMessageToJausMessage(ReportLocalWaypo
 
 JAUS_EXPORT unsigned int reportLocalWaypointMessageSize(ReportLocalWaypointMessage message);
 
+JAUS_EXPORT char* reportLocalWaypointMessageToString(ReportLocalWaypointMessage message);
 #endif // REPORT_LOCAL_WAYPOINT_MESSAGE_H

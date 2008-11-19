@@ -101,4 +101,5 @@ JAUS_EXPORT JausMessage queryPlatformOperationalDataMessageToJausMessage(QueryPl
 
 JAUS_EXPORT unsigned int queryPlatformOperationalDataMessageSize(QueryPlatformOperationalDataMessage message);
 
+JAUS_EXPORT char* queryPlatformOperationalDataMessageToString(QueryPlatformOperationalDataMessage message);
 #endif // QUERY_PLATFORM_OPERATIONAL_DATA_MESSAGE_H

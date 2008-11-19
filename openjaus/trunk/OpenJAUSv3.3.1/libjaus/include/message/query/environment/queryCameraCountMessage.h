@@ -102,4 +102,5 @@ JAUS_EXPORT JausMessage queryCameraCountMessageToJausMessage(QueryCameraCountMes
 
 JAUS_EXPORT unsigned int queryCameraCountMessageSize(QueryCameraCountMessage message);
 
+JAUS_EXPORT char* queryCameraCountMessageToString(QueryCameraCountMessage message);
 #endif // QUERY_CAMERA_COUNT_MESSAGE_H

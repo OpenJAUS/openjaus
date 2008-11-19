@@ -103,4 +103,5 @@ JAUS_EXPORT JausMessage reportJointForceTorquesMessageToJausMessage(ReportJointF
 
 JAUS_EXPORT unsigned int reportJointForceTorquesMessageSize(ReportJointForceTorquesMessage message);
 
+JAUS_EXPORT char* reportJointForceTorquesMessageToString(ReportJointForceTorquesMessage message);
 #endif // REPORT_JOINT_FORCE_TORQUES_MESSAGE_H

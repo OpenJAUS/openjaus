@@ -143,4 +143,6 @@ JAUS_EXPORT JausMessage spoolMissionMessageToJausMessage(SpoolMissionMessage mes
 
 JAUS_EXPORT unsigned int spoolMissionMessageSize(SpoolMissionMessage message);
 
+JAUS_EXPORT char* spoolMissionMessageToString(SpoolMissionMessage message);
+
 #endif // SPOOL_MISSION_MESSAGE_H

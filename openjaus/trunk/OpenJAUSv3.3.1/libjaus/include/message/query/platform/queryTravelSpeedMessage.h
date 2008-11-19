@@ -101,4 +101,5 @@ JAUS_EXPORT JausMessage queryTravelSpeedMessageToJausMessage(QueryTravelSpeedMes
 
 JAUS_EXPORT unsigned int queryTravelSpeedMessageSize(QueryTravelSpeedMessage message);
 
+JAUS_EXPORT char* queryTravelSpeedMessageToString(QueryTravelSpeedMessage message);
 #endif // QUERY_TRAVEL_SPEED_MESSAGE_H

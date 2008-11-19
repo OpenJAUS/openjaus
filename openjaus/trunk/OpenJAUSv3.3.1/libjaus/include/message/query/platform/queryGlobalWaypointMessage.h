@@ -101,4 +101,5 @@ JAUS_EXPORT JausMessage queryGlobalWaypointMessageToJausMessage(QueryGlobalWaypo
 
 JAUS_EXPORT unsigned int queryGlobalWaypointMessageSize(QueryGlobalWaypointMessage message);
 
+JAUS_EXPORT char* queryGlobalWaypointMessageToString(QueryGlobalWaypointMessage message);
 #endif // QUERY_GLOBAL_WAYPOINT_MESSAGE_H

@@ -101,4 +101,5 @@ JAUS_EXPORT JausMessage queryWrenchEffortMessageToJausMessage(QueryWrenchEffortM
 
 JAUS_EXPORT unsigned int queryWrenchEffortMessageSize(QueryWrenchEffortMessage message);
 
+JAUS_EXPORT char* queryWrenchEffortMessageToString(QueryWrenchEffortMessage message);
 #endif // QUERY_WRENCH_EFFORT_MESSAGE_H

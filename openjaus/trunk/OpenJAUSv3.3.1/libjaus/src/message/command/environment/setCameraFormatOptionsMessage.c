@@ -41,6 +41,7 @@
 //
 // Description: This file defines the functionality of a SetCameraFormatOptionsMessage
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "jaus.h"
@@ -50,6 +51,7 @@ static const int maxDataSizeBytes = 8;
 
 static JausBoolean headerFromBuffer(SetCameraFormatOptionsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static JausBoolean headerToBuffer(SetCameraFormatOptionsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+static int headerToString(SetCameraFormatOptionsMessage message, char **buf);
 
 static JausBoolean dataFromBuffer(SetCameraFormatOptionsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static int dataToBuffer(SetCameraFormatOptionsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
@@ -168,6 +170,163 @@ static int dataToBuffer(SetCameraFormatOptionsMessage message, unsigned char *bu
 	}
 
 	return index;
+}
+
+static int dataToString(SetCameraFormatOptionsMessage message, char **buf)
+{
+  //message already verified 
+
+  //Setup temporary string buffer
+  
+  unsigned int bufSize = 100;
+  (*buf) = (char*)malloc(sizeof(char)*bufSize);
+
+  // Presence Vector    
+  strcpy((*buf), "\nPresence Vector: ");
+  jausByteToHexString(message->presenceVector, (*buf)+strlen(*buf));
+
+  // CameraID
+  strcat((*buf), "\nCamera Id: ");
+  jausByteToString(message->cameraID, (*buf)+strlen(*buf));
+
+  // AudioFormat
+  if(jausByteIsBitSet(message->presenceVector, JAUS_CAMERA_FORMAT_OPTIONS_PV_AUDIO_FORMAT_BIT))
+  {
+    strcat((*buf), "\nAudio Format: ");
+    
+    switch(message->audioFormat)
+    {
+      case UnusedAudioFormat:
+        strcat((*buf), "Unused");
+        break;
+        
+      case RAW_AUDIO:
+        strcat((*buf), "RAW");
+        break;
+        
+      case PCM:
+        strcat((*buf), "PCM");
+        break;
+        
+      case AU:
+        strcat((*buf), "AU");
+        break;
+        
+      case WAV:
+        strcat((*buf), "WAV");
+        break;
+        
+      case MID:
+        strcat((*buf), "MID");
+        break;
+        
+      case MP3:
+        strcat((*buf), "MP3");
+        break;
+        
+      case MP2:
+        strcat((*buf), "MP2");
+        break;
+        
+      case ASF:
+        strcat((*buf), "ASF");
+        break;
+        
+      default:
+        strcat((*buf), "Unknown Format Code");
+        break;
+    }
+  }
+
+  // ImageFormat
+  if(jausByteIsBitSet(message->presenceVector, JAUS_CAMERA_FORMAT_OPTIONS_PV_IMAGE_FORMAT_BIT))
+  {
+    strcat((*buf), "\nImage Format: ");
+    
+    switch(message->imageFormat)
+    {
+      case UnusedImageFormat:
+        strcat((*buf), "Unused");
+        break;
+        
+      case MPEG2:
+        strcat((*buf), "MPEG2");
+        break;
+        
+      case MPEG4:
+        strcat((*buf), "MPEG4");
+        break;
+        
+      case MJPEG:
+        strcat((*buf), "MJPEG");
+        break;
+        
+      case NTSC:
+        strcat((*buf), "NTSC");
+        break;
+        
+      case PAL:
+        strcat((*buf), "PAL");
+        break;
+        
+      case TIFF:
+        strcat((*buf), "TIFF");
+        break;
+        
+      case JPEG:
+        strcat((*buf), "JPEG");
+        break;
+        
+      case GIF:
+        strcat((*buf), "GIF");
+        break;
+        
+      case H263:
+        strcat((*buf), "H263");
+        break;
+        
+      case H264:
+        strcat((*buf), "H264");
+        break;
+        
+      case PNG:
+        strcat((*buf), "PNG");
+        break;
+        
+      case BMP:
+        strcat((*buf), "BMP");
+        break;
+        
+      case RAW_IMAGE:
+        strcat((*buf), "RAW_IMAGE");
+        break;
+        
+      case PPM:
+        strcat((*buf), "PPM");
+        break;
+        
+      case PGM:
+        strcat((*buf), "PGM");
+        break;
+        
+      case PNM: 
+        strcat((*buf), "PNM");
+        break;
+        
+      default:
+        strcat((*buf), "Unknown Fomat Code");
+        break;
+    }
+  }
+
+  // FormatOptions
+  if(jausByteIsBitSet(message->presenceVector, JAUS_CAMERA_FORMAT_OPTIONS_PV_FORMAT_OPTION_BIT))
+  {
+    strcat((*buf), "\nFormat Option: ");
+    jausUnsignedIntegerToString(message->formatOption, (*buf)+strlen(*buf));
+  }
+
+  return (int)strlen(*buf);
 }
 
 // Returns number of bytes put into the buffer
@@ -365,6 +524,39 @@ unsigned int setCameraFormatOptionsMessageSize(SetCameraFormatOptionsMessage mes
 	return (unsigned int)(dataSize(message) + JAUS_HEADER_SIZE_BYTES);
 }
 
+char* setCameraFormatOptionsMessageToString(SetCameraFormatOptionsMessage message)
+{
+  if(message)
+  {
+    char* buf1 = NULL;
+    char* buf2 = NULL;
+    char* buf = NULL;
+    
+    int returnVal;
+    
+    //Print the message header to the string buffer
+    returnVal = headerToString(message, &buf1);
+    
+    //Print the message data fields to the string buffer
+    returnVal += dataToString(message, &buf2);
+    
+buf = (char*)malloc(strlen(buf1)+strlen(buf2)+1);
+    strcpy(buf, buf1);
+    strcat(buf, buf2);
+
+    free(buf1);
+    free(buf2);
+    
+    return buf;
+  }
+  else
+  {
+    char* buf = "Invalid SetCameraFormatOptions Message";
+    char* msg = (char*)malloc(strlen(buf)+1);
+    strcpy(msg, buf);
+    return msg;
+  }
+}
 //********************* PRIVATE HEADER FUNCTIONS **********************//
 
 static JausBoolean headerFromBuffer(SetCameraFormatOptionsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
@@ -441,3 +633,119 @@ static JausBoolean headerToBuffer(SetCameraFormatOptionsMessage message, unsigne
 	}
 }
 
+static int headerToString(SetCameraFormatOptionsMessage message, char **buf)
+{
+  //message existance already verified 
+
+  //Setup temporary string buffer
+  
+  unsigned int bufSize = 500;
+  (*buf) = (char*)malloc(sizeof(char)*bufSize);
+  
+  strcpy((*buf), jausCommandCodeString(message->commandCode) );
+  strcat((*buf), " (0x");
+  sprintf((*buf)+strlen(*buf), "%04X", message->commandCode);
+
+  strcat((*buf), ")\nReserved: ");
+  jausUnsignedShortToString(message->properties.reserved, (*buf)+strlen(*buf));
+
+  strcat((*buf), "\nVersion: ");
+  switch(message->properties.version)
+  {
+    case 0:
+      strcat((*buf), "2.0 and 2.1 compatible");
+      break;
+    case 1:
+      strcat((*buf), "3.0 through 3.1 compatible");
+      break;
+    case 2:
+      strcat((*buf), "3.2 and 3.3 compatible");
+      break;
+    default:
+      strcat((*buf), "Reserved for Future: ");
+      jausUnsignedShortToString(message->properties.version, (*buf)+strlen(*buf));
+      break;
+  }
+
+  strcat((*buf), "\nExp. Flag: ");
+  if(message->properties.expFlag == 0)
+    strcat((*buf), "JAUS");
+  else 
+    strcat((*buf), "Experimental");
+  
+  strcat((*buf), "\nSC Flag: ");
+  if(message->properties.scFlag == 0)
+    strcat((*buf), "Service Connection");
+  else
+    strcat((*buf), "Not Service Connection");
+  
+  strcat((*buf), "\nACK/NAK: ");
+  switch(message->properties.ackNak)
+  {
+  case 0:
+    strcat((*buf), "None");
+    break;
+  case 1:
+    strcat((*buf), "Request ack/nak");
+    break;
+  case 2:
+    strcat((*buf), "nak response");
+    break;
+  case 3:
+    strcat((*buf), "ack response");
+    break;
+  default:
+    break;
+  }
+  
+  strcat((*buf), "\nPriority: ");
+  if(message->properties.priority < 12)
+  {
+    strcat((*buf), "Normal Priority ");
+    jausUnsignedShortToString(message->properties.priority, (*buf)+strlen(*buf));
+  }
+  else
+  {
+    strcat((*buf), "Safety Critical Priority ");
+    jausUnsignedShortToString(message->properties.priority, (*buf)+strlen(*buf));
+  }
+  
+  strcat((*buf), "\nSource: ");
+  jausAddressToString(message->source, (*buf)+strlen(*buf));
+  
+  strcat((*buf), "\nDestination: ");
+  jausAddressToString(message->destination, (*buf)+strlen(*buf));
+  
+  strcat((*buf), "\nData Size: ");
+  jausUnsignedIntegerToString(message->dataSize, (*buf)+strlen(*buf));
+  
+  strcat((*buf), "\nData Flag: ");
+  jausUnsignedIntegerToString(message->dataFlag, (*buf)+strlen(*buf));
+  switch(message->dataFlag)
+  {
+    case 0:
+      strcat((*buf), " Only data packet in single-packet stream");
+      break;
+    case 1:
+      strcat((*buf), " First data packet in muti-packet stream");
+      break;
+    case 2:
+      strcat((*buf), " Normal data packet");
+      break;
+    case 4:
+      strcat((*buf), " Retransmitted data packet");
+      break;
+    case 8:
+      strcat((*buf), " Last data packet in stream");
+      break;
+    default:
+      strcat((*buf), " Unrecognized data flag code");
+      break;
+  }
+  
+  strcat((*buf), "\nSequence Number: ");
+  jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
+  
+  return (int)strlen(*buf);
+  
+}

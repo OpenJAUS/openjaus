@@ -115,4 +115,5 @@ JAUS_EXPORT JausMessage reportGlobalVectorMessageToJausMessage(ReportGlobalVecto
 
 JAUS_EXPORT unsigned int reportGlobalVectorMessageSize(ReportGlobalVectorMessage message);
 
+JAUS_EXPORT char* reportGlobalVectorMessageToString(ReportGlobalVectorMessage message);
 #endif // REPORT_GLOBAL_VECTOR_MESSAGE_H

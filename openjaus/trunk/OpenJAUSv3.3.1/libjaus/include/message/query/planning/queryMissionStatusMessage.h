@@ -127,4 +127,5 @@ JAUS_EXPORT JausMessage queryMissionStatusMessageToJausMessage
 JAUS_EXPORT unsigned int queryMissionStatusMessageSize
                                           (QueryMissionStatusMessage message);
 
+JAUS_EXPORT char* queryMissionStatusMessageToString(QueryMissionStatusMessage message);
 #endif // QUERY_MISSION_STATUS_MESSAGE_H

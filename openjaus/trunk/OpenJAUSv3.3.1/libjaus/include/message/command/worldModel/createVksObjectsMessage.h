@@ -112,4 +112,5 @@ JAUS_EXPORT JausMessage createVksObjectsMessageToJausMessage(CreateVksObjectsMes
 
 JAUS_EXPORT unsigned int createVksObjectsMessageSize(CreateVksObjectsMessage message);
 
+JAUS_EXPORT char* createVksObjectsMessageToString(CreateVksObjectsMessage message);
 #endif // CREATE_VKS_OBJECTS_MESSAGE_H

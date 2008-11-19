@@ -108,4 +108,5 @@ JAUS_EXPORT JausMessage setEndEffectorPoseMessageToJausMessage(SetEndEffectorPos
 
 JAUS_EXPORT unsigned int setEndEffectorPoseMessageSize(SetEndEffectorPoseMessage message);
 
+JAUS_EXPORT char* setEndEffectorPoseMessageToString(SetEndEffectorPoseMessage message);
 #endif // SET_END_EFFECTOR_POSE_MESSAGE_H

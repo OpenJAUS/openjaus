@@ -100,4 +100,5 @@ JAUS_EXPORT JausMessage queryLocalVectorMessageToJausMessage(QueryLocalVectorMes
 
 JAUS_EXPORT unsigned int queryLocalVectorMessageSize(QueryLocalVectorMessage message);
 
+JAUS_EXPORT char* queryLocalVectorMessageToString(QueryLocalVectorMessage message);
 #endif // QUERY_LOCAL_VECTOR_MESSAGE_H

@@ -130,4 +130,5 @@ JAUS_EXPORT JausMessage reportWrenchEffortMessageToJausMessage(ReportWrenchEffor
 
 JAUS_EXPORT unsigned int reportWrenchEffortMessageSize(ReportWrenchEffortMessage message);
 
+JAUS_EXPORT char* reportWrenchEffortMessageToString(ReportWrenchEffortMessage message);
 #endif // REPORT_WRENCH_EFFORT_MESSAGE_H

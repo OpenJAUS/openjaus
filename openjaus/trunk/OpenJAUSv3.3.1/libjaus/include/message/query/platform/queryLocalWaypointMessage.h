@@ -101,4 +101,5 @@ JAUS_EXPORT JausMessage queryLocalWaypointMessageToJausMessage(QueryLocalWaypoin
 
 JAUS_EXPORT unsigned int queryLocalWaypointMessageSize(QueryLocalWaypointMessage message);
 
+JAUS_EXPORT char* queryLocalWaypointMessageToString(QueryLocalWaypointMessage message);
 #endif // QUERY_LOCAL_WAYPOINT_MESSAGE_H

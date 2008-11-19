@@ -143,4 +143,5 @@ JAUS_EXPORT JausMessage setDiscreteDevicesMessageToJausMessage(SetDiscreteDevice
 
 JAUS_EXPORT unsigned int setDiscreteDevicesMessageSize(SetDiscreteDevicesMessage message);
 
+JAUS_EXPORT char* setDiscreteDevicesMessageToString(SetDiscreteDevicesMessage message);
 #endif // SET_DISCRETE_DEVICES_MESSAGE_H

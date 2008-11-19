@@ -102,4 +102,5 @@ JAUS_EXPORT JausMessage queryGlobalPathSegmentMessageToJausMessage(QueryGlobalPa
 
 JAUS_EXPORT unsigned int queryGlobalPathSegmentMessageSize(QueryGlobalPathSegmentMessage message);
 
+JAUS_EXPORT char* queryGlobalPathSegmentMessageToString(QueryGlobalPathSegmentMessage message);
 #endif // QUERY_GLOBAL_PATH_SEGMENT_MESSAGE_H

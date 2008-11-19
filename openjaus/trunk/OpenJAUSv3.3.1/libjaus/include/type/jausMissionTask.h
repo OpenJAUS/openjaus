@@ -81,4 +81,5 @@ JAUS_EXPORT void missionTaskDestroy(JausMissionTask object);
 // JausMissionTask Buffer Size
 JAUS_EXPORT unsigned int missionTaskSize(JausMissionTask object);
 
+JAUS_EXPORT char* missionTaskToString(JausMissionTask value);
 #endif // JAUSMISSIONTASK_H

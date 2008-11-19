@@ -42,7 +42,7 @@
 // Description: This file defines the functionality of a ReportPlatformSpecificationsMessage
 
 
-
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "jaus.h"
@@ -52,6 +52,7 @@ static const int maxDataSizeBytes = 59;
 
 static JausBoolean headerFromBuffer(ReportPlatformSpecificationsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static JausBoolean headerToBuffer(ReportPlatformSpecificationsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+static int headerToString(ReportPlatformSpecificationsMessage message, char **buf);
 
 static JausBoolean dataFromBuffer(ReportPlatformSpecificationsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static int dataToBuffer(ReportPlatformSpecificationsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
@@ -548,6 +549,147 @@ static int dataToBuffer(ReportPlatformSpecificationsMessage message, unsigned ch
 	return index;
 }
 
+static int dataToString(ReportPlatformSpecificationsMessage message, char **buf)
+{
+  //message already verified 
+
+  //Setup temporary string buffer
+  
+  unsigned int bufSize = 1400 + JAUS_PLATFORM_NAME_LENGTH_BYTES;
+  (*buf) = (char*)malloc(sizeof(char)*bufSize);
+  
+  strcpy((*buf), "\nPresence Vector: " );
+  jausUnsignedIntegerToHexString(message->presenceVector, (*buf)+strlen(*buf));
+
+  if(jausUnsignedIntegerIsBitSet(message->presenceVector, JAUS_DISCRETE_PV_PLATFORM_NAME_BIT))
+  {
+    strcat((*buf), "\nPlatform Name: ");
+    strcat((*buf), message->platformName);
+  }
+
+  if(jausUnsignedIntegerIsBitSet(message->presenceVector, JAUS_DISCRETE_PV_FRONT_BIT))
+  {
+    strcat((*buf), "\nDistance from vehicle origin to front(meters): ");
+    jausDoubleToString(message->frontMeters, (*buf)+strlen(*buf));
+  }
+
+  if(jausUnsignedIntegerIsBitSet(message->presenceVector, JAUS_DISCRETE_PV_BACK_BIT))
+  {
+    strcat((*buf), "\nDistance from vehicle origin to back(meters): ");
+    jausDoubleToString(message->backMeters, (*buf)+strlen(*buf));
+  }
+
+  if(jausUnsignedIntegerIsBitSet(message->presenceVector, JAUS_DISCRETE_PV_RIGHT_BIT))
+  {
+    strcat((*buf), "\nDistance from vehicle origin to right(meters): ");
+    jausDoubleToString(message->rightMeters, (*buf)+strlen(*buf));
+  }
+
+  if(jausUnsignedIntegerIsBitSet(message->presenceVector, JAUS_DISCRETE_PV_LEFT_BIT))
+  {
+    strcat((*buf), "\nDistance from vehicle origin to left(meters): ");
+    jausDoubleToString(message->leftMeters, (*buf)+strlen(*buf));
+  }
+
+  if(jausUnsignedIntegerIsBitSet(message->presenceVector, JAUS_DISCRETE_PV_BOTTOM_BIT))
+  {
+    strcat((*buf), "\nDistance from vehicle origin to bottom(meters): ");
+    jausDoubleToString(message->bottomMeters, (*buf)+strlen(*buf));
+  }
+
+  if(jausUnsignedIntegerIsBitSet(message->presenceVector, JAUS_DISCRETE_PV_TOP_BIT))
+  {
+    strcat((*buf), "\nDistance from vehicle origin to top(meters): ");
+    jausDoubleToString(message->topMeters, (*buf)+strlen(*buf));
+  }
+
+  if(jausUnsignedIntegerIsBitSet(message->presenceVector, JAUS_DISCRETE_PV_X_CG_BIT))
+  {
+    strcat((*buf), "\nDistance from vehicle origin to X center of gravity(meters): ");
+    jausDoubleToString(message->xCgMeters, (*buf)+strlen(*buf));
+  }
+
+  if(jausUnsignedIntegerIsBitSet(message->presenceVector, JAUS_DISCRETE_PV_Y_CG_BIT))
+  {
+    strcat((*buf), "\nDistance from vehicle origin to Y center of gravity(meters): ");
+    jausDoubleToString(message->yCgMeters, (*buf)+strlen(*buf));
+  }
+
+  if(jausUnsignedIntegerIsBitSet(message->presenceVector, JAUS_DISCRETE_PV_Z_CG_BIT))
+  {
+    strcat((*buf), "\nDistance from vehicle origin to Z center of gravity(meters): ");
+    jausDoubleToString(message->zCgMeters, (*buf)+strlen(*buf));
+  }
+
+  if(jausUnsignedIntegerIsBitSet(message->presenceVector, JAUS_DISCRETE_PV_TURNING_RADIUS_BIT))
+  {
+    strcat((*buf), "\nMinimum Turning Radius(meters): ");
+    jausDoubleToString(message->turningRadiusMeters, (*buf)+strlen(*buf));
+  }
+
+  if(jausUnsignedIntegerIsBitSet(message->presenceVector, JAUS_DISCRETE_PV_WHEEL_BASE_BIT))
+  {
+    strcat((*buf), "\nWheel Base(meters): ");
+    jausDoubleToString(message->wheelBaseMeters, (*buf)+strlen(*buf));
+  }
+
+  if(jausUnsignedIntegerIsBitSet(message->presenceVector, JAUS_DISCRETE_PV_TRACK_WIDTH_BIT))
+  {
+    strcat((*buf), "\nTrack Width(meters): ");
+    jausDoubleToString(message->trackWidthMeters, (*buf)+strlen(*buf));
+  }
+
+  if(jausUnsignedIntegerIsBitSet(message->presenceVector, JAUS_DISCRETE_PV_PITCH_OVER_BIT))
+  {
+    strcat((*buf), "\nStatic Pitch Over(radians): ");
+    jausDoubleToString(message->pitchOverRadians, (*buf)+strlen(*buf));
+  }
+
+  if(jausUnsignedIntegerIsBitSet(message->presenceVector, JAUS_DISCRETE_PV_ROLL_OVER_BIT))
+  {
+    strcat((*buf), "\nStatic Roll Over(radians): ");
+    jausDoubleToString(message->rollOverRadians, (*buf)+strlen(*buf));
+  }
+
+  if(jausUnsignedIntegerIsBitSet(message->presenceVector, JAUS_DISCRETE_PV_MAX_VELOCITY_X_BIT))
+  {
+    strcat((*buf), "\nMaximum Velocity X(meters/second): ");
+    jausDoubleToString(message->maximumVelocityXMps, (*buf)+strlen(*buf));
+  }
+
+  if(jausUnsignedIntegerIsBitSet(message->presenceVector, JAUS_DISCRETE_PV_MAX_VELOCITY_Y_BIT))
+  {
+    strcat((*buf), "\nMaximum Velocity Y(meters/second): ");
+    jausDoubleToString(message->maximumVelocityYMps, (*buf)+strlen(*buf));
+  }
+
+  if(jausUnsignedIntegerIsBitSet(message->presenceVector, JAUS_DISCRETE_PV_MAX_VELOCITY_Z_BIT))
+  {
+    strcat((*buf), "\nMaximum Velocity Z(meters/second): ");
+    jausDoubleToString(message->maximumVelocityZMps, (*buf)+strlen(*buf));
+  }
+
+  if(jausUnsignedIntegerIsBitSet(message->presenceVector, JAUS_DISCRETE_PV_MAX_ROLL_RATE_BIT))
+  {
+    strcat((*buf), "\nMaximum Roll Rate(radians/second): ");
+    jausDoubleToString(message->maximumRollRateRps, (*buf)+strlen(*buf));
+  }
+
+  if(jausUnsignedIntegerIsBitSet(message->presenceVector, JAUS_DISCRETE_PV_MAX_PITCH_RATE_BIT))
+  {
+    strcat((*buf), "\nMaximum Pitch Rate(radians/second): ");
+    jausDoubleToString(message->maximumPitchRateRps, (*buf)+strlen(*buf));
+  }
+
+  if(jausUnsignedIntegerIsBitSet(message->presenceVector, JAUS_DISCRETE_PV_MAX_YAW_RATE_BIT))
+  {
+    strcat((*buf), "\nMaximum Yaw Rate(radians/second): ");
+    jausDoubleToString(message->maximumYawRateRps, (*buf)+strlen(*buf));
+  }
+  
+  return (int)strlen(*buf);
+}
+
 // Returns number of bytes put into the buffer
 static unsigned int dataSize(ReportPlatformSpecificationsMessage message)
 {
@@ -826,6 +968,39 @@ unsigned int reportPlatformSpecificationsMessageSize(ReportPlatformSpecification
 	return (unsigned int)(dataSize(message) + JAUS_HEADER_SIZE_BYTES);
 }
 
+char* reportPlatformSpecificationsMessageToString(ReportPlatformSpecificationsMessage message)
+{
+  if(message)
+  {
+    char* buf1 = NULL;
+    char* buf2 = NULL;
+    char* buf = NULL;
+    
+    int returnVal;
+    
+    //Print the message header to the string buffer
+    returnVal = headerToString(message, &buf1);
+    
+    //Print the message data fields to the string buffer
+    returnVal += dataToString(message, &buf2);
+    
+buf = (char*)malloc(strlen(buf1)+strlen(buf2)+1);
+    strcpy(buf, buf1);
+    strcat(buf, buf2);
+
+    free(buf1);
+    free(buf2);
+    
+    return buf;
+  }
+  else
+  {
+    char* buf = "Invalid ReportPlatformSpecifications Message";
+    char* msg = (char*)malloc(strlen(buf)+1);
+    strcpy(msg, buf);
+    return msg;
+  }
+}
 //********************* PRIVATE HEADER FUNCTIONS **********************//
 
 static JausBoolean headerFromBuffer(ReportPlatformSpecificationsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
@@ -902,3 +1077,119 @@ static JausBoolean headerToBuffer(ReportPlatformSpecificationsMessage message, u
 	}
 }
 
+static int headerToString(ReportPlatformSpecificationsMessage message, char **buf)
+{
+  //message existance already verified 
+
+  //Setup temporary string buffer
+  
+  unsigned int bufSize = 500;
+  (*buf) = (char*)malloc(sizeof(char)*bufSize);
+  
+  strcpy((*buf), jausCommandCodeString(message->commandCode) );
+  strcat((*buf), " (0x");
+  sprintf((*buf)+strlen(*buf), "%04X", message->commandCode);
+
+  strcat((*buf), ")\nReserved: ");
+  jausUnsignedShortToString(message->properties.reserved, (*buf)+strlen(*buf));
+
+  strcat((*buf), "\nVersion: ");
+  switch(message->properties.version)
+  {
+    case 0:
+      strcat((*buf), "2.0 and 2.1 compatible");
+      break;
+    case 1:
+      strcat((*buf), "3.0 through 3.1 compatible");
+      break;
+    case 2:
+      strcat((*buf), "3.2 and 3.3 compatible");
+      break;
+    default:
+      strcat((*buf), "Reserved for Future: ");
+      jausUnsignedShortToString(message->properties.version, (*buf)+strlen(*buf));
+      break;
+  }
+
+  strcat((*buf), "\nExp. Flag: ");
+  if(message->properties.expFlag == 0)
+    strcat((*buf), "JAUS");
+  else 
+    strcat((*buf), "Experimental");
+  
+  strcat((*buf), "\nSC Flag: ");
+  if(message->properties.scFlag == 0)
+    strcat((*buf), "Service Connection");
+  else
+    strcat((*buf), "Not Service Connection");
+  
+  strcat((*buf), "\nACK/NAK: ");
+  switch(message->properties.ackNak)
+  {
+  case 0:
+    strcat((*buf), "None");
+    break;
+  case 1:
+    strcat((*buf), "Request ack/nak");
+    break;
+  case 2:
+    strcat((*buf), "nak response");
+    break;
+  case 3:
+    strcat((*buf), "ack response");
+    break;
+  default:
+    break;
+  }
+  
+  strcat((*buf), "\nPriority: ");
+  if(message->properties.priority < 12)
+  {
+    strcat((*buf), "Normal Priority ");
+    jausUnsignedShortToString(message->properties.priority, (*buf)+strlen(*buf));
+  }
+  else
+  {
+    strcat((*buf), "Safety Critical Priority ");
+    jausUnsignedShortToString(message->properties.priority, (*buf)+strlen(*buf));
+  }
+  
+  strcat((*buf), "\nSource: ");
+  jausAddressToString(message->source, (*buf)+strlen(*buf));
+  
+  strcat((*buf), "\nDestination: ");
+  jausAddressToString(message->destination, (*buf)+strlen(*buf));
+  
+  strcat((*buf), "\nData Size: ");
+  jausUnsignedIntegerToString(message->dataSize, (*buf)+strlen(*buf));
+  
+  strcat((*buf), "\nData Flag: ");
+  jausUnsignedIntegerToString(message->dataFlag, (*buf)+strlen(*buf));
+  switch(message->dataFlag)
+  {
+    case 0:
+      strcat((*buf), " Only data packet in single-packet stream");
+      break;
+    case 1:
+      strcat((*buf), " First data packet in muti-packet stream");
+      break;
+    case 2:
+      strcat((*buf), " Normal data packet");
+      break;
+    case 4:
+      strcat((*buf), " Retransmitted data packet");
+      break;
+    case 8:
+      strcat((*buf), " Last data packet in stream");
+      break;
+    default:
+      strcat((*buf), " Unrecognized data flag code");
+      break;
+  }
+  
+  strcat((*buf), "\nSequence Number: ");
+  jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
+  
+  return (int)strlen(*buf);
+  
+}

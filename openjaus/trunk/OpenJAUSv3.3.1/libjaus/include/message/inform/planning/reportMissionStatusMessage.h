@@ -150,4 +150,5 @@ JAUS_EXPORT JausMessage reportMissionStatusMessageToJausMessage
 
 JAUS_EXPORT unsigned int reportMissionStatusMessageSize(ReportMissionStatusMessage message);
 
+JAUS_EXPORT char* reportMissionStatusMessageToString(ReportMissionStatusMessage message);
 #endif // REPORT_MISSION_STATUS_MESSAGE_H

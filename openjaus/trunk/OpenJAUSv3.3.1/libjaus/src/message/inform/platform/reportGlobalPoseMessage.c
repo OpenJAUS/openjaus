@@ -42,7 +42,7 @@
 // Description: This file defines the functionality of a ReportGlobalPoseMessage
 
 
-
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "jaus.h"
@@ -52,6 +52,7 @@ static const int maxDataSizeBytes = 30;
 
 static JausBoolean headerFromBuffer(ReportGlobalPoseMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static JausBoolean headerToBuffer(ReportGlobalPoseMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
+static int headerToString(ReportGlobalPoseMessage message, char **buf);
 
 static JausBoolean dataFromBuffer(ReportGlobalPoseMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
 static int dataToBuffer(ReportGlobalPoseMessage message, unsigned char *buffer, unsigned int bufferSizeBytes);
@@ -314,6 +315,75 @@ static int dataToBuffer(ReportGlobalPoseMessage message, unsigned char *buffer, 
 	return index;
 }
 
+static int dataToString(ReportGlobalPoseMessage message, char **buf)
+{
+  //message already verified 
+
+  //Setup temporary string buffer
+  
+  unsigned int bufSize = 500;
+  (*buf) = (char*)malloc(sizeof(char)*bufSize);
+  
+  strcpy((*buf), "\nPresence Vector: " );
+  jausUnsignedShortToHexString(message->presenceVector, (*buf)+strlen(*buf));
+  
+  if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_POSE_PV_LATITUDE_BIT))
+  {
+    strcat((*buf), "\nLatitude(degrees): ");
+    jausDoubleToString(message->latitudeDegrees, (*buf)+strlen(*buf));
+  }
+  
+  if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_POSE_PV_LONGITUDE_BIT))
+  {
+    strcat((*buf), "\nLongitude(degrees): ");
+    jausDoubleToString(message->longitudeDegrees, (*buf)+strlen(*buf));
+  }
+
+  if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_POSE_PV_ELEVATION_BIT))
+  {
+    strcat((*buf), "\nElevation(meters): ");
+    jausDoubleToString(message->elevationMeters, (*buf)+strlen(*buf));
+  }
+  
+  if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_POSE_PV_POSITION_RMS_BIT))
+  {
+    strcat((*buf), "\nPosition RMS(meters): ");
+    jausDoubleToString(message->positionRmsMeters, (*buf)+strlen(*buf));
+  }
+
+  if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_POSE_PV_ROLL_BIT))
+  {
+    strcat((*buf), "\nRoll(radians): ");
+    jausDoubleToString(message->rollRadians, (*buf)+strlen(*buf));
+  }
+  
+  if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_POSE_PV_PITCH_BIT))
+  {
+    strcat((*buf), "\nPitch(radians): ");
+    jausDoubleToString(message->pitchRadians, (*buf)+strlen(*buf));
+  }
+  
+  if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_POSE_PV_YAW_BIT))
+  {
+    strcat((*buf), "\nYaw(radians): ");
+    jausDoubleToString(message->yawRadians, (*buf)+strlen(*buf));
+  }
+  
+  if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_POSE_PV_ATTITUDE_RMS_BIT))
+  {
+    strcat((*buf), "\nAttitude RMS(radians): ");
+    jausDoubleToString(message->attitudeRmsRadians, (*buf)+strlen(*buf));
+  }
+  
+  if(jausUnsignedShortIsBitSet(message->presenceVector, JAUS_POSE_PV_TIME_STAMP_BIT))
+  {
+    strcat((*buf), "\nTime Stamp: ");
+    jausTimeToString(message->time, (*buf)+strlen(*buf), bufSize-strlen(*buf)-1);
+  }
+  
+  return (int)strlen(*buf);
+}
+
 // Returns number of bytes put into the buffer
 static unsigned int dataSize(ReportGlobalPoseMessage message)
 {
@@ -533,6 +603,39 @@ unsigned int reportGlobalPoseMessageSize(ReportGlobalPoseMessage message)
 	return (unsigned int)(dataSize(message) + JAUS_HEADER_SIZE_BYTES);
 }
 
+char* reportGlobalPoseMessageToString(ReportGlobalPoseMessage message)
+{
+  if(message)
+  {
+    char* buf1 = NULL;
+    char* buf2 = NULL;
+    char* buf = NULL;
+    
+    int returnVal;
+    
+    //Print the message header to the string buffer
+    returnVal = headerToString(message, &buf1);
+    
+    //Print the message data fields to the string buffer
+    returnVal += dataToString(message, &buf2);
+    
+buf = (char*)malloc(strlen(buf1)+strlen(buf2)+1);
+    strcpy(buf, buf1);
+    strcat(buf, buf2);
+
+    free(buf1);
+    free(buf2);
+    
+    return buf;
+  }
+  else
+  {
+    char* buf = "Invalid ReportGlobalPose Message";
+    char* msg = (char*)malloc(strlen(buf)+1);
+    strcpy(msg, buf);
+    return msg;
+  }
+}
 //********************* PRIVATE HEADER FUNCTIONS **********************//
 
 static JausBoolean headerFromBuffer(ReportGlobalPoseMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
@@ -609,3 +712,119 @@ static JausBoolean headerToBuffer(ReportGlobalPoseMessage message, unsigned char
 	}
 }
 
+static int headerToString(ReportGlobalPoseMessage message, char **buf)
+{
+  //message existance already verified 
+
+  //Setup temporary string buffer
+  
+  unsigned int bufSize = 500;
+  (*buf) = (char*)malloc(sizeof(char)*bufSize);
+  
+  strcpy((*buf), jausCommandCodeString(message->commandCode) );
+  strcat((*buf), " (0x");
+  sprintf((*buf)+strlen(*buf), "%04X", message->commandCode);
+
+  strcat((*buf), ")\nReserved: ");
+  jausUnsignedShortToString(message->properties.reserved, (*buf)+strlen(*buf));
+
+  strcat((*buf), "\nVersion: ");
+  switch(message->properties.version)
+  {
+    case 0:
+      strcat((*buf), "2.0 and 2.1 compatible");
+      break;
+    case 1:
+      strcat((*buf), "3.0 through 3.1 compatible");
+      break;
+    case 2:
+      strcat((*buf), "3.2 and 3.3 compatible");
+      break;
+    default:
+      strcat((*buf), "Reserved for Future: ");
+      jausUnsignedShortToString(message->properties.version, (*buf)+strlen(*buf));
+      break;
+  }
+
+  strcat((*buf), "\nExp. Flag: ");
+  if(message->properties.expFlag == 0)
+    strcat((*buf), "JAUS");
+  else 
+    strcat((*buf), "Experimental");
+  
+  strcat((*buf), "\nSC Flag: ");
+  if(message->properties.scFlag == 0)
+    strcat((*buf), "Service Connection");
+  else
+    strcat((*buf), "Not Service Connection");
+  
+  strcat((*buf), "\nACK/NAK: ");
+  switch(message->properties.ackNak)
+  {
+  case 0:
+    strcat((*buf), "None");
+    break;
+  case 1:
+    strcat((*buf), "Request ack/nak");
+    break;
+  case 2:
+    strcat((*buf), "nak response");
+    break;
+  case 3:
+    strcat((*buf), "ack response");
+    break;
+  default:
+    break;
+  }
+  
+  strcat((*buf), "\nPriority: ");
+  if(message->properties.priority < 12)
+  {
+    strcat((*buf), "Normal Priority ");
+    jausUnsignedShortToString(message->properties.priority, (*buf)+strlen(*buf));
+  }
+  else
+  {
+    strcat((*buf), "Safety Critical Priority ");
+    jausUnsignedShortToString(message->properties.priority, (*buf)+strlen(*buf));
+  }
+  
+  strcat((*buf), "\nSource: ");
+  jausAddressToString(message->source, (*buf)+strlen(*buf));
+  
+  strcat((*buf), "\nDestination: ");
+  jausAddressToString(message->destination, (*buf)+strlen(*buf));
+  
+  strcat((*buf), "\nData Size: ");
+  jausUnsignedIntegerToString(message->dataSize, (*buf)+strlen(*buf));
+  
+  strcat((*buf), "\nData Flag: ");
+  jausUnsignedIntegerToString(message->dataFlag, (*buf)+strlen(*buf));
+  switch(message->dataFlag)
+  {
+    case 0:
+      strcat((*buf), " Only data packet in single-packet stream");
+      break;
+    case 1:
+      strcat((*buf), " First data packet in muti-packet stream");
+      break;
+    case 2:
+      strcat((*buf), " Normal data packet");
+      break;
+    case 4:
+      strcat((*buf), " Retransmitted data packet");
+      break;
+    case 8:
+      strcat((*buf), " Last data packet in stream");
+      break;
+    default:
+      strcat((*buf), " Unrecognized data flag code");
+      break;
+  }
+  
+  strcat((*buf), "\nSequence Number: ");
+  jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
+  
+  return (int)strlen(*buf);
+  
+}

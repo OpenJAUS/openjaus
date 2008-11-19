@@ -42,6 +42,7 @@
 // Description: This file defines all the basic JausUnsignedShort funtionality, this should be primarily used through the JausType file and its methods
 
 #include <string.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include "jaus.h"
 
@@ -150,4 +151,14 @@ JausBoolean jausUnsignedShortClearBit(JausUnsignedShort *input, int bit)
 		 *input &= ~(0x01 << bit);
 		return JAUS_TRUE;
 	}
+}
+
+int jausUnsignedShortToString(JausUnsignedShort number, char *buf)
+{
+  return sprintf(buf, "%d", number);
+}
+
+int jausUnsignedShortToHexString(JausUnsignedShort number, char *buf)
+{
+  return sprintf(buf, "0x%X", number);
 }

@@ -116,4 +116,5 @@ JAUS_EXPORT JausMessage setLocalWaypointMessageToJausMessage(SetLocalWaypointMes
 
 JAUS_EXPORT unsigned int setLocalWaypointMessageSize(SetLocalWaypointMessage message);
 
+JAUS_EXPORT char* setLocalWaypointMessageToString(SetLocalWaypointMessage message);
 #endif // SET_LOCAL_WAYPOINT_MESSAGE_H

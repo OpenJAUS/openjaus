@@ -102,4 +102,5 @@ JAUS_EXPORT JausMessage queryComponentControlMessageToJausMessage(QueryComponent
 
 JAUS_EXPORT unsigned int queryComponentControlMessageSize(QueryComponentControlMessage message);
 
+JAUS_EXPORT char* queryComponentControlMessageToString(QueryComponentControlMessage message);
 #endif // QUERY_COMPONENT_CONTROL_MESSAGE_H
