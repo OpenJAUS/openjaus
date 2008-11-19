@@ -77,6 +77,11 @@ static void dataInitialize(ReportImageMessage message)
 static void dataDestroy(ReportImageMessage message)
 {
 	// Free message fields
+	if(message->data)
+	{
+		free(message->data);
+		message->data = NULL;
+	}
 }
 
 // Return boolean of success
@@ -94,8 +99,8 @@ static JausBoolean dataFromBuffer(ReportImageMessage message, unsigned char *buf
 		if(!jausByteFromBuffer(&message->videoFormat, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
 		
+		message->data = (unsigned char *)malloc(bufferSizeBytes-index);
 		memcpy(message->data, buffer+index, bufferSizeBytes-index);
-		index += bufferSizeBytes-index;
 
 		message->bufferSizeBytes = bufferSizeBytes-index;
 
@@ -149,7 +154,7 @@ static int dataToString(ReportImageMessage message, char **buf)
   strcat((*buf), "\nImage Data Size(bytes): ");
   jausUnsignedIntegerToString(message->bufferSizeBytes, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
 }
 
 static unsigned int dataSize(ReportImageMessage message)
@@ -550,6 +555,6 @@ static int headerToString(ReportImageMessage message, char **buf)
   strcat((*buf), "\nSequence Number: ");
   jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
   
 }
