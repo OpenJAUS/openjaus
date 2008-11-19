@@ -41,6 +41,7 @@
 //
 // Description: This file defines all the basic JausFloat funtionality, this should be primarily used through the JausType file and its methods
 
+#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include "jaus.h"
@@ -124,4 +125,9 @@ JausInteger jausIntegerFromDouble(double value, double min, double max)
 		
 	// return rounded integer value
 	return newJausInteger((int)((value - bias)/scaleFactor + 0.5));
+}
+
+int jausIntegerToString(JausInteger number, char *buf)
+{
+  return sprintf(buf, "%d", number);
 }

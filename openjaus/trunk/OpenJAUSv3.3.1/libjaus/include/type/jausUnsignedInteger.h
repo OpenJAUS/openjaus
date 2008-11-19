@@ -69,4 +69,6 @@ JAUS_EXPORT JausBoolean jausUnsignedIntegerIsBitSet(JausUnsignedInteger input, i
 JAUS_EXPORT JausBoolean jausUnsignedIntegerSetBit(JausUnsignedInteger *input, int bit);
 JAUS_EXPORT JausBoolean jausUnsignedIntegerClearBit(JausUnsignedInteger *input, int bit);
 
+JAUS_EXPORT int jausUnsignedIntegerToString(JausUnsignedInteger number, char * buf);
+JAUS_EXPORT int jausUnsignedIntegerToHexString(JausUnsignedInteger number, char *buf);
 #endif // JAUS_UNSIGNED_INTEGER_H

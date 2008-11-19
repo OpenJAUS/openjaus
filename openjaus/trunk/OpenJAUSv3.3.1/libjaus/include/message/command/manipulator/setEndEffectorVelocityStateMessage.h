@@ -109,4 +109,5 @@ JAUS_EXPORT JausMessage setEndEffectorVelocityStateMessageToJausMessage(SetEndEf
 
 JAUS_EXPORT unsigned int setEndEffectorVelocityStateMessageSize(SetEndEffectorVelocityStateMessage message);
 
+JAUS_EXPORT char* setEndEffectorVelocityStateMessageToString(SetEndEffectorVelocityStateMessage message);
 #endif // SET_END_EFFECTOR_VELOCITY_STATE_MESSAGE_H

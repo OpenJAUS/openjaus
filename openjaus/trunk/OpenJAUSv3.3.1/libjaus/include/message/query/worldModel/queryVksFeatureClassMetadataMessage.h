@@ -102,4 +102,5 @@ JAUS_EXPORT JausMessage queryVksFeatureClassMetadataMessageToJausMessage(QueryVk
 
 JAUS_EXPORT unsigned int queryVksFeatureClassMetadataMessageSize(QueryVksFeatureClassMetadataMessage message);
 
+JAUS_EXPORT char* queryVksFeatureClassMetadataMessageToString(QueryVksFeatureClassMetadataMessage message);
 #endif // QUERY_VKS_FEATURE_CLASS_METADATA_MESSAGE_H

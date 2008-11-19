@@ -144,4 +144,5 @@ JAUS_EXPORT JausMessage setCameraPoseMessageToJausMessage(SetCameraPoseMessage m
 
 JAUS_EXPORT unsigned int setCameraPoseMessageSize(SetCameraPoseMessage message);
 
+JAUS_EXPORT char* setCameraPoseMessageToString(SetCameraPoseMessage message);
 #endif // SET_CAMERA_POSE_MESSAGE_H

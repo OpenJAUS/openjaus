@@ -101,4 +101,5 @@ JAUS_EXPORT JausMessage queryGlobalPoseMessageToJausMessage(QueryGlobalPoseMessa
 
 JAUS_EXPORT unsigned int queryGlobalPoseMessageSize(QueryGlobalPoseMessage message);
 
+JAUS_EXPORT char* queryGlobalPoseMessageToString(QueryGlobalPoseMessage message);
 #endif // QUERY_GLOBAL_POSE_MESSAGE_H

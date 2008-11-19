@@ -103,4 +103,5 @@ JAUS_EXPORT JausMessage querySpoolingPreferenceMessageToJausMessage(QuerySpoolin
 
 JAUS_EXPORT unsigned int querySpoolingPreferenceMessageSize(QuerySpoolingPreferenceMessage message);
 
+JAUS_EXPORT char* querySpoolingPreferenceMessageToString(QuerySpoolingPreferenceMessage message);
 #endif // QUERY_SPOOLING_PREFERENCE_MESSAGE_H

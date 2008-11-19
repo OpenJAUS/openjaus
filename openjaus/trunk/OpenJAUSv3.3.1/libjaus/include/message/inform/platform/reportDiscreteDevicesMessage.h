@@ -144,4 +144,5 @@ JAUS_EXPORT JausMessage reportDiscreteDevicesMessageToJausMessage(ReportDiscrete
 
 JAUS_EXPORT unsigned int reportDiscreteDevicesMessageSize(ReportDiscreteDevicesMessage message);
 
+JAUS_EXPORT char* reportDiscreteDevicesMessageToString(ReportDiscreteDevicesMessage message);
 #endif // REPORT_DISCRETE_DEVICES_MESSAGE_H

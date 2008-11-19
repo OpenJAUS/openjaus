@@ -183,4 +183,5 @@ JAUS_EXPORT JausMessage reportCameraCapabilitiesMessageToJausMessage(ReportCamer
 
 JAUS_EXPORT unsigned int reportCameraCapabilitiesMessageSize(ReportCameraCapabilitiesMessage message);
 
+JAUS_EXPORT char* reportCameraCapabilitiesMessageToString(ReportCameraCapabilitiesMessage message);
 #endif // REPORT_CAMERA_CAPABILITIES_MESSAGE_H

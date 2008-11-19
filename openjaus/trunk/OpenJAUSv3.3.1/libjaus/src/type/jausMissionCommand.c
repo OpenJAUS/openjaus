@@ -145,7 +145,7 @@ void missionCommandDestroy(JausMissionCommand object)
 {
 	if(object)
 	{
-    if(!object->message)
+    if(object->message != NULL)
 		  jausMessageDestroy(object->message);
 		
 
@@ -170,3 +170,49 @@ unsigned int missionCommandSize(JausMissionCommand object)
 	return size;
 }
 
+char* missionCommandToString(JausMissionCommand object)
+{
+  char* buf = NULL;
+  char* tmpMessageStr = NULL;
+  char* returnBuf = NULL;
+
+  buf = (char*)malloc(sizeof(char)*1000);
+  
+  strcpy(buf, "Command: ");
+  
+  strcat(buf, "\nUID: ");
+  jausUnsignedShortToString(object->uid, (buf)+strlen(buf));
+
+  if( object->message != NULL )
+    tmpMessageStr = jausMessageToString(object->message);
+  else
+  {
+    tmpMessageStr = (char*)malloc(50);
+    strcpy(tmpMessageStr, "No Message");
+  }
+  
+  strcat(buf, "\n");
+  strcat(buf, tmpMessageStr);
+  free(tmpMessageStr);
+  
+  strcat(buf, "\nBlocking: ");
+  jausByteToString(object->blocking, (buf)+strlen(buf));
+
+  switch(object->blocking)
+  {
+  case 0:
+    strcat(buf, " Blocking");
+    break;
+  case 1:
+    strcat(buf, " Non-Blocking");
+    break;
+  default:
+    strcat(buf, " Unknown Value");
+    break;
+  }
+  
+  returnBuf = (char*)malloc(sizeof(char)*(strlen(buf) + 1));
+  strcpy(returnBuf, buf);
+  free(buf);
+  return returnBuf;
+}

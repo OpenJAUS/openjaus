@@ -101,4 +101,5 @@ JAUS_EXPORT JausMessage queryDiscreteDevicesMessageToJausMessage(QueryDiscreteDe
 
 JAUS_EXPORT unsigned int queryDiscreteDevicesMessageSize(QueryDiscreteDevicesMessage message);
 
+JAUS_EXPORT char* queryDiscreteDevicesMessageToString(QueryDiscreteDevicesMessage message);
 #endif // QUERY_DISCRETE_DEVICES_MESSAGE_H

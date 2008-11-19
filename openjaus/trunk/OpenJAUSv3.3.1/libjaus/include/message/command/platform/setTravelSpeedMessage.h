@@ -101,4 +101,5 @@ JAUS_EXPORT JausMessage setTravelSpeedMessageToJausMessage(SetTravelSpeedMessage
 
 JAUS_EXPORT unsigned int setTravelSpeedMessageSize(SetTravelSpeedMessage message);
 
+JAUS_EXPORT char* setTravelSpeedMessageToString(SetTravelSpeedMessage message);
 #endif // SET_TRAVEL_SPEED_MESSAGE_H

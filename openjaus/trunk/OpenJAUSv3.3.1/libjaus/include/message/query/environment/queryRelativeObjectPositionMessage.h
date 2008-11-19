@@ -102,4 +102,5 @@ JAUS_EXPORT JausMessage queryRelativeObjectPositionMessageToJausMessage(QueryRel
 
 JAUS_EXPORT unsigned int queryRelativeObjectPositionMessageSize(QueryRelativeObjectPositionMessage message);
 
+JAUS_EXPORT char* queryRelativeObjectPositionMessageToString(QueryRelativeObjectPositionMessage message);
 #endif // QUERY_RELATIVE_OBJECT_POSITION_MESSAGE_H

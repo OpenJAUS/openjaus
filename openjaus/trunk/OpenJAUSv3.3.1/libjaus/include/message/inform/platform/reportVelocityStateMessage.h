@@ -123,4 +123,5 @@ JAUS_EXPORT JausMessage reportVelocityStateMessageToJausMessage(ReportVelocitySt
 
 JAUS_EXPORT unsigned int reportVelocityStateMessageSize(ReportVelocityStateMessage message);
 
+JAUS_EXPORT char* reportVelocityStateMessageToString(ReportVelocityStateMessage message);
 #endif // REPORT_VELOCITY_STATE_MESSAGE_H

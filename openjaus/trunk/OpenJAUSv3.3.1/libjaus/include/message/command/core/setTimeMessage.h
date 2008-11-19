@@ -108,4 +108,5 @@ JAUS_EXPORT JausMessage setTimeMessageToJausMessage(SetTimeMessage message);
 
 JAUS_EXPORT unsigned int setTimeMessageSize(SetTimeMessage message);
 
+JAUS_EXPORT char* setTimeMessageToString(SetTimeMessage message);
 #endif // SET_TIME_MESSAGE_H

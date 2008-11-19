@@ -115,4 +115,6 @@ JAUS_EXPORT JausMessage abortMissionMessageToJausMessage
 
 JAUS_EXPORT unsigned int abortMissionMessageSize(AbortMissionMessage message);
 
+JAUS_EXPORT char* abortMissionMessageToString(AbortMissionMessage message);
+
 #endif // ABORT_MISSION_MESSAGE_H

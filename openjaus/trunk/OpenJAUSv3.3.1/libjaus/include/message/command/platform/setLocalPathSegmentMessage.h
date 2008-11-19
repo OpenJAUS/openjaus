@@ -115,4 +115,5 @@ JAUS_EXPORT JausMessage setLocalPathSegmentMessageToJausMessage(SetLocalPathSegm
 
 JAUS_EXPORT unsigned int setLocalPathSegmentMessageSize(SetLocalPathSegmentMessage message);
 
+JAUS_EXPORT char* setLocalPathSegmentMessageToString(SetLocalPathSegmentMessage message);
 #endif // SET_LOCAL_PATH_SEGMENT_MESSAGE_H

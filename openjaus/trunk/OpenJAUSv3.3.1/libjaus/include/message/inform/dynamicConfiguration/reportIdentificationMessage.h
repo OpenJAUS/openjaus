@@ -113,4 +113,5 @@ JAUS_EXPORT JausMessage reportIdentificationMessageToJausMessage(ReportIdentific
 
 JAUS_EXPORT unsigned int reportIdentificationMessageSize(ReportIdentificationMessage message);
 
+JAUS_EXPORT char* reportIdentificationMessageToString(ReportIdentificationMessage message);
 #endif // REPORT_IDENTIFICATION_MESSAGE_H

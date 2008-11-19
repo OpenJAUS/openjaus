@@ -104,4 +104,5 @@ JAUS_EXPORT JausMessage setSelectedDataLinkStateMessageToJausMessage(SetSelected
 
 JAUS_EXPORT unsigned int setSelectedDataLinkStateMessageSize(SetSelectedDataLinkStateMessage message);
 
+JAUS_EXPORT char* setSelectedDataLinkStateMessageToString(SetSelectedDataLinkStateMessage message);
 #endif // SET_SELECTED_DATA_LINK_STATE_MESSAGE_H

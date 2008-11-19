@@ -57,13 +57,13 @@ extern "C"
 #endif
 
 #define JAUS_LIBRARY_VERSION	"3.3.0"
-
+/*
 typedef enum
 {
 	JAUS_FALSE	= 0,
 	JAUS_TRUE	= 1
 }JausBoolean;
-
+*/
 #define JAUS_IDENTIFICATION_LENGTH_BYTES	80
 				
 #define JAUS_PI				3.14159265358979323846

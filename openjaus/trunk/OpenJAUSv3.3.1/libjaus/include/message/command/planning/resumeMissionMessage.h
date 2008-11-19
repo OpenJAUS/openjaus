@@ -116,4 +116,6 @@ JAUS_EXPORT JausMessage resumeMissionMessageToJausMessage
 
 JAUS_EXPORT unsigned int resumeMissionMessageSize(ResumeMissionMessage message);
 
+JAUS_EXPORT char* resumeMissionMessageToString(ResumeMissionMessage message);
+
 #endif // RESUME_MISSION_MESSAGE_H

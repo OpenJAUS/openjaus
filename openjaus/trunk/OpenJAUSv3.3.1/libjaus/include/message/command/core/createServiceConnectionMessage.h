@@ -103,4 +103,5 @@ JAUS_EXPORT JausMessage createServiceConnectionMessageToJausMessage(CreateServic
 
 JAUS_EXPORT unsigned int createServiceConnectionMessageSize(CreateServiceConnectionMessage message);
 
+JAUS_EXPORT char* createServiceConnectionMessageToString(CreateServiceConnectionMessage message);
 #endif // CREATE_SERVICE_CONNECTION_MESSAGE_H

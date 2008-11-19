@@ -102,4 +102,5 @@ JAUS_EXPORT JausMessage queryTimeMessageToJausMessage(QueryTimeMessage message);
 
 JAUS_EXPORT unsigned int queryTimeMessageSize(QueryTimeMessage message);
 
+JAUS_EXPORT char* queryTimeMessageToString(QueryTimeMessage message);
 #endif // QUERY_TIME_MESSAGE_H

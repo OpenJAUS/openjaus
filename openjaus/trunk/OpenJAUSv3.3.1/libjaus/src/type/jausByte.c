@@ -42,6 +42,7 @@
 // Description: This file defines all the basic JausByte funtionality, this should be primarily used through the 
 // JausType file and its methods
 
+#include <stdio.h>
 #include <stdlib.h>
 #include "jaus.h"
 
@@ -130,3 +131,12 @@ JausBoolean jausByteClearBit(JausByte *input, int bit)
         }
 }
 
+int jausByteToString(JausByte number, char *buf)
+{
+  return sprintf(buf, "%d", number);
+}
+
+int jausByteToHexString(JausByte number, char *buf)
+{
+  return sprintf(buf, "0x%X", number);
+}

@@ -113,6 +113,34 @@ JausBoolean featureClassToBuffer(JausWorldModelFeatureClass fcClass, unsigned ch
 	return JAUS_FALSE;
 }
 
+char* featureClassToString(JausWorldModelFeatureClass fcClass)
+{
+  char* buf = NULL;
+  char* att = NULL;
+  char* returnBuf = NULL;
+
+  int bufSize = 150 + JAUS_WM_FC_METADATA_STRING_LENGTH;
+  buf = (char*)malloc(sizeof(char)*bufSize);
+  
+  strcpy(buf, "Feature Class Id: ");
+  jausUnsignedShortToString(fcClass->id, buf+strlen(buf));
+  
+  strcat(buf, "\nMetaData: ");
+  strcat(buf, fcClass->metaData);
+
+  att = (char*)malloc(sizeof(char*)*100);
+  strcpy(att, "\n");
+  featureClassAttributeToString(fcClass->attribute, att+strlen(att), sizeof(att));
+  
+  returnBuf = (char*)malloc(sizeof(char)*( strlen(buf)+1+strlen(att) ));
+  strcpy(returnBuf, buf);
+  strcat(returnBuf, att);
+  free(att);
+  free(buf);
+  
+  return returnBuf;
+}
+
 // JausWorldModelFeatureClass Destructor
 void featureClassDestroy(JausWorldModelFeatureClass fcClass)
 {

@@ -112,5 +112,5 @@ JAUS_EXPORT JausMessage queryEventsMessageToJausMessage(QueryEventsMessage messa
 
 unsigned int queryEventsMessageSize(QueryEventsMessage message);
 
-
+JAUS_EXPORT char* queryEventsMessageToString(QueryEventsMessage message);
 #endif // QUERY_EVENTS_MESSAGE_H

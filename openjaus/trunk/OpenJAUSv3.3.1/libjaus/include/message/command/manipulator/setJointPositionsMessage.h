@@ -103,4 +103,5 @@ JAUS_EXPORT JausMessage setJointPositionsMessageToJausMessage(SetJointPositionsM
 
 JAUS_EXPORT unsigned int setJointPositionsMessageSize(SetJointPositionsMessage message);
 
+JAUS_EXPORT char* setJointPositionsMessageToString(SetJointPositionsMessage message);
 #endif // SET_JOINT_POSITIONS_MESSAGE_H

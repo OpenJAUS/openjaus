@@ -41,6 +41,7 @@
 //
 // Description: This file defines all the basic JausDouble funtionality, this should be primarily used through the JausType file and its methods
 
+#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include "jaus.h"
@@ -107,3 +108,7 @@ JausBoolean jausDoubleToBuffer(JausDouble input, unsigned char *buf, unsigned in
 	}
 }
 
+int jausDoubleToString(JausDouble number, char *buf)
+{
+  return sprintf(buf, "%f", number);
+}

@@ -115,5 +115,7 @@ JAUS_EXPORT JausBoolean jausServiceAddService(JausArray jausServices, JausServic
 
 JAUS_EXPORT JausService jausServiceRetrieveService(JausArray jausServices, JausUnsignedShort serviceType);
 
+JAUS_EXPORT char* jausServicesToString(JausArray jausServices);
+JAUS_EXPORT char* jausCommandToString(JausCommand command);
 #endif
 

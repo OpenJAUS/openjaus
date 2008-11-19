@@ -103,4 +103,5 @@ JAUS_EXPORT JausMessage reportSelectedDataLinkStatusMessageToJausMessage(ReportS
 
 JAUS_EXPORT unsigned int reportSelectedDataLinkStatusMessageSize(ReportSelectedDataLinkStatusMessage message);
 
+JAUS_EXPORT char* reportSelectedDataLinkStatusMessageToString(ReportSelectedDataLinkStatusMessage message);
 #endif // REPORT_SELECTED_DATA_LINK_STATUS_MESSAGE_H

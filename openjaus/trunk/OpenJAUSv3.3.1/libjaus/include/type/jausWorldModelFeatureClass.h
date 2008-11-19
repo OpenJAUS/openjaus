@@ -130,4 +130,6 @@ JAUS_EXPORT unsigned int featureClassSizeBytes(JausWorldModelFeatureClass fcClas
 // JausWorldModelFeatureClass Copy
 JAUS_EXPORT JausWorldModelFeatureClass featureClassCopy(JausWorldModelFeatureClass fcClass);
 
+JAUS_EXPORT char* featureClassToString(JausWorldModelFeatureClass fcClass);
+
 #endif

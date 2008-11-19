@@ -31,28 +31,28 @@
  *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
  *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ****************************************************************************/
-// File Name: jausGeometryPointLLA.h
+// File Name: jausBoolean.h
 //
 // Written By: Danny Kent (jaus AT dannykent DOT com)
 //
-// Version: 3.3
+// Version: 3.3.0a
 //
-// Date: 08/14/07
+// Date: 08/07/08
 //
-// Description: This file defines the functions of a JausGeometryPoint Object
+// Description: This file defines all the basic JausBoolean funtionality, this should be primarily used 
+// through the JausType file and its methods
 
-#ifndef JAUS_GEOMETRY_POINT_LLA_H
-#define JAUS_GEOMETRY_POINT_LLA_H
+#ifndef JAUS_BOOLEAN_H
+#define JAUS_BOOLEAN_H
 
-typedef struct{
-	double latitudeRadians;
-	double longitudeRadians;
-	double altitudeMeters;
-} JausGeometryPointLLAStruct;
+#include "jaus.h"
 
-typedef JausGeometryPointLLAStruct *JausGeometryPointLLA;
+typedef enum
+{
+  JAUS_FALSE  = 0,
+  JAUS_TRUE = 1
+}JausBoolean;
 
-JAUS_EXPORT JausGeometryPointLLA jausGeometryPointLLACreate(void);
-JAUS_EXPORT void jausGeometryPointLLADestroy(JausGeometryPointLLA);
-JAUS_EXPORT char* jausGeometryPointLLAToString(JausGeometryPointLLA);
-#endif
+JAUS_EXPORT int jausBooleanToString(JausBoolean value, char * buf);
+
+#endif //JAUS_BOOLEAN_H

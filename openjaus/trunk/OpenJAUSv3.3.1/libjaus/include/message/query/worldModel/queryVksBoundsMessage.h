@@ -103,4 +103,5 @@ JAUS_EXPORT JausMessage queryVksBoundsMessageToJausMessage(QueryVksBoundsMessage
 
 JAUS_EXPORT unsigned int queryVksBoundsMessageSize(QueryVksBoundsMessage message);
 
+JAUS_EXPORT char* queryVksBoundsMessageToString(QueryVksBoundsMessage message);
 #endif // QUERY_VKS_BOUNDS_MESSAGE_H

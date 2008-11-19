@@ -101,4 +101,5 @@ JAUS_EXPORT JausMessage reportWaypointCountMessageToJausMessage(ReportWaypointCo
 
 JAUS_EXPORT unsigned int reportWaypointCountMessageSize(ReportWaypointCountMessage message);
 
+JAUS_EXPORT char* reportWaypointCountMessageToString(ReportWaypointCountMessage message);
 #endif // REPORT_WAYPOINT_COUNT_MESSAGE_H

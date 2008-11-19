@@ -153,4 +153,5 @@ JAUS_EXPORT JausMessage setCameraFormatOptionsMessageToJausMessage(SetCameraForm
 
 JAUS_EXPORT unsigned int setCameraFormatOptionsMessageSize(SetCameraFormatOptionsMessage message);
 
+JAUS_EXPORT char* setCameraFormatOptionsMessageToString(SetCameraFormatOptionsMessage message);
 #endif // SET_CAMERA_FORMAT_OPTIONS_MESSAGE_H

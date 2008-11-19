@@ -102,5 +102,5 @@ JAUS_EXPORT JausMessage activateServiceConnectionMessageToJausMessage(ActivateSe
 
 JAUS_EXPORT unsigned int activateServiceConnectionMessageSize(ActivateServiceConnectionMessage message);
 
-
+JAUS_EXPORT char* activateServiceConnectionMessageToString(ActivateServiceConnectionMessage message);
 #endif // ACTIVATE_SERVICE_CONNECTION_MESSAGE_H

@@ -101,4 +101,5 @@ JAUS_EXPORT JausMessage queryServicesMessageToJausMessage(QueryServicesMessage m
 
 JAUS_EXPORT unsigned int queryServicesMessageSize(QueryServicesMessage message);
 
+JAUS_EXPORT char* queryServicesMessageToString(QueryServicesMessage message);
 #endif // QUERY_SERVICES_MESSAGE_H

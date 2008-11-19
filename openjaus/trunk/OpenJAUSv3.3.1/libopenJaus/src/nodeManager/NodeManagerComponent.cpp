@@ -2074,7 +2074,7 @@ bool NodeManagerComponent::sendQueryNodeConfiguration(JausAddress address, bool 
 			createEventMsg->presenceVector = 0;
 			jausByteSetBit(&createEventMsg->presenceVector, CREATE_EVENT_PV_QUERY_MESSAGE_BIT);
 
-			createEventMsg->reportMessageCode = jausMessageGetComplimentaryCommandCode(query->commandCode);
+			createEventMsg->reportMessageCode = jausMessageGetComplementaryCommandCode(query->commandCode);
 			createEventMsg->eventType = EVENT_EVERY_CHANGE_TYPE;
 			createEventMsg->queryMessage = queryConfigurationMessageToJausMessage(query);
 			if(!createEventMsg->queryMessage)
@@ -2151,7 +2151,7 @@ bool NodeManagerComponent::sendQuerySubsystemConfiguration(JausAddress address, 
 			createEventMsg->presenceVector = 0;
 			jausByteSetBit(&createEventMsg->presenceVector, CREATE_EVENT_PV_QUERY_MESSAGE_BIT);
 			
-			createEventMsg->reportMessageCode = jausMessageGetComplimentaryCommandCode(query->commandCode);
+			createEventMsg->reportMessageCode = jausMessageGetComplementaryCommandCode(query->commandCode);
 			createEventMsg->eventType = EVENT_EVERY_CHANGE_TYPE;
 			createEventMsg->queryMessage = queryConfigurationMessageToJausMessage(query);
 			if(!createEventMsg->queryMessage)
