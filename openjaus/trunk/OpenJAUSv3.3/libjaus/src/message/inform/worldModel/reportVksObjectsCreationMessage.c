@@ -162,7 +162,7 @@ static int dataToString(ReportVksObjectsCreationMessage message, char **buf)
     jausUnsignedShortToString(message->objectIds[obj], (*buf)+strlen(*buf));
   }
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
 }
 
 static unsigned int dataSize(ReportVksObjectsCreationMessage message)
@@ -569,6 +569,6 @@ static int headerToString(ReportVksObjectsCreationMessage message, char **buf)
   strcat((*buf), "\nSequence Number: ");
   jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
   
 }

@@ -115,7 +115,7 @@ static int dataToString(QueryGlobalPoseMessage message, char **buf)
   strcpy((*buf), "\nPresence Vector: " );
   jausUnsignedShortToHexString(message->presenceVector, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
 }
 
 static unsigned int dataSize(QueryGlobalPoseMessage message)
@@ -508,6 +508,6 @@ static int headerToString(QueryGlobalPoseMessage message, char **buf)
   strcat((*buf), "\nSequence Number: ");
   jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
   
 }

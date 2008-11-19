@@ -115,7 +115,7 @@ static int dataToString(ReportComponentAuthorityMessage message, char **buf)
   
   jausByteToString(message->authorityCode, (*buf)+strlen(*buf));
 
-  return strlen((*buf));
+  return (int)strlen(*buf);
 }
 
 static unsigned int dataSize(ReportComponentAuthorityMessage message)
@@ -511,7 +511,7 @@ static int headerToString(ReportComponentAuthorityMessage message, char **buf)
   strcat((*buf), "\nSequence Number: ");
   jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
   
 }
 

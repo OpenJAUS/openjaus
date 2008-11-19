@@ -185,7 +185,7 @@ static int dataToString(SetVksFeatureClassMetadataMessage message, char **buf)
 
   //Setup temporary string buffer
   
-  unsigned int bufSize = 150 + strlen(message->featureClassMetadataString);
+  unsigned int bufSize = 150 + (int)strlen(message->featureClassMetadataString);
   (*buf) = (char*)malloc(sizeof(char)*bufSize);
   
   strcpy((*buf), "\nMetadata Options: " );
@@ -215,7 +215,7 @@ static int dataToString(SetVksFeatureClassMetadataMessage message, char **buf)
   strcat((*buf), "\n Feature Class Metadata String: ");
   strcat((*buf), message->featureClassMetadataString);
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
 }
 
 // Returns number of bytes put into the buffer
@@ -626,6 +626,6 @@ static int headerToString(SetVksFeatureClassMetadataMessage message, char **buf)
   strcat((*buf), "\nSequence Number: ");
   jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
   
 }

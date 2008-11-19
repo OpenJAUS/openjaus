@@ -159,7 +159,7 @@ static int dataToString(ReportJointEffortsMessage message, char **buf)
     jausDoubleToString(message->jointEffort[joint], (*buf)+strlen(*buf));
   }
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
 }
 
 // Returns number of bytes put into the buffer
@@ -559,6 +559,6 @@ static int headerToString(ReportJointEffortsMessage message, char **buf)
   strcat((*buf), "\nSequence Number: ");
   jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
   
 }

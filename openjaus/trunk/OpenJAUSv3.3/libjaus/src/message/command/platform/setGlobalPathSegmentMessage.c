@@ -268,7 +268,7 @@ static int dataToString(SetGlobalPathSegmentMessage message, char **buf)
     
   jausDoubleToString(message->weightingFactor, (*buf)+strlen(*buf));
 
-  return strlen((*buf));
+  return (int)strlen(*buf);
 }
 
 static unsigned int dataSize(SetGlobalPathSegmentMessage message)
@@ -687,6 +687,6 @@ static int headerToString(SetGlobalPathSegmentMessage message, char **buf)
   strcat((*buf), "\nSequence Number: ");
   jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
   
 }

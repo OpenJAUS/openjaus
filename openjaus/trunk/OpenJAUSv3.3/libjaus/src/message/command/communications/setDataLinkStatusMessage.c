@@ -144,7 +144,7 @@ static int dataToString(SetDataLinkStatusMessage message, char **buf)
       break;
   }
 
-  return strlen((*buf));
+  return (int)strlen(*buf);
 }
 
 // Returns number of bytes put into the buffer
@@ -538,6 +538,6 @@ static int headerToString(SetDataLinkStatusMessage message, char **buf)
   strcat((*buf), "\nSequence Number: ");
   jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
   
 }

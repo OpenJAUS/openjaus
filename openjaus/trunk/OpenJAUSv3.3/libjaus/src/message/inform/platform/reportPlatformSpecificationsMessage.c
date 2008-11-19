@@ -687,7 +687,7 @@ static int dataToString(ReportPlatformSpecificationsMessage message, char **buf)
     jausDoubleToString(message->maximumYawRateRps, (*buf)+strlen(*buf));
   }
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
 }
 
 // Returns number of bytes put into the buffer
@@ -1190,6 +1190,6 @@ static int headerToString(ReportPlatformSpecificationsMessage message, char **bu
   strcat((*buf), "\nSequence Number: ");
   jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
   
 }

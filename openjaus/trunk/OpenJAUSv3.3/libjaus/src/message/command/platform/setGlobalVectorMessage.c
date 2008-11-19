@@ -270,7 +270,7 @@ static int dataToString(SetGlobalVectorMessage message, char **buf)
     jausDoubleToString(message->pitchRadians, (*buf)+strlen(*buf));
   }
 
-  return strlen((*buf));
+  return (int)strlen(*buf);
 }
 
 static unsigned int dataSize(SetGlobalVectorMessage message)
@@ -693,6 +693,6 @@ static int headerToString(SetGlobalVectorMessage message, char **buf)
   strcat((*buf), "\nSequence Number: ");
   jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
   
 }

@@ -340,7 +340,7 @@ static int dataToString(ReportCameraPoseMessage message, char **buf)
 
   //Setup temporary string buffer
   
-  unsigned int bufSize = 500 + strlen(message->cameraName);
+  unsigned int bufSize = 500 + (int)strlen(message->cameraName);
   (*buf) = (char*)malloc(sizeof(char)*bufSize);
   
   strcpy((*buf), "\nPresence Vector: " );
@@ -418,7 +418,7 @@ static int dataToString(ReportCameraPoseMessage message, char **buf)
     strcat((*buf), "\nZ Camera Axis Direction Cosine Z: ");
     jausDoubleToString(message->zCameraAxisDirectionCosineZ, (*buf)+strlen(*buf));
   } 
-  return strlen((*buf));
+  return (int)strlen(*buf);
 }
 
 // Returns number of bytes put into the buffer
@@ -880,6 +880,6 @@ static int headerToString(ReportCameraPoseMessage message, char **buf)
   strcat((*buf), "\nSequence Number: ");
   jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
   
 }

@@ -169,7 +169,7 @@ static int dataToString(SetTimeMessage message, char **buf)
     jausTimeDateToString(message->time, (*buf)+strlen(*buf));
   }
 
-  return strlen((*buf));
+  return (int)strlen(*buf);
 }
 
 static unsigned int dataSize(SetTimeMessage message)
@@ -576,6 +576,6 @@ static int headerToString(SetTimeMessage message, char **buf)
   strcat((*buf), "\nSequence Number: ");
   jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
   
 }

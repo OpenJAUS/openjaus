@@ -116,7 +116,7 @@ static int dataToString(ReportPathSegmentCountMessage message, char **buf)
   strcpy((*buf), "\nPath Segment Count: " );
   jausUnsignedShortToString(message->pathSegmentCount, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
 }
 
 static unsigned int dataSize(ReportPathSegmentCountMessage message)
@@ -509,6 +509,6 @@ static int headerToString(ReportPathSegmentCountMessage message, char **buf)
   strcat((*buf), "\nSequence Number: ");
   jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
   
 }

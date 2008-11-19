@@ -264,9 +264,9 @@ static int dataToString(ReplaceMessagesMessage message, char **buf)
     tmpMsgString = missionCommandToString(message->command->elementData[msg2]);
     
     if(replaceMsgs == NULL)
-      stringSize = strlen(tmpMsgString);
+      stringSize = (int)strlen(tmpMsgString);
     else
-      stringSize = strlen(tmpMsgString) + strlen(replaceMsgs);
+      stringSize = (int)strlen(tmpMsgString) + (int)strlen(replaceMsgs);
     
     comboStr = (char*)malloc(sizeof(char)*stringSize + 1);
     
@@ -287,13 +287,13 @@ static int dataToString(ReplaceMessagesMessage message, char **buf)
   {
     restOfMsg = ((*buf));
     
-    stringSize = strlen((*buf)) + strlen(replaceMsgs) + 1;
+    stringSize = (int)strlen((*buf)) + (int)strlen(replaceMsgs) + 1;
     (*buf) = (char*)malloc(sizeof(char)*stringSize);
     strcpy((*buf), restOfMsg);
     strcat((*buf), replaceMsgs);
     free(restOfMsg);
   }
-  return strlen((*buf));
+  return (int)strlen(*buf);
 }
 
 // Returns number of bytes put into the buffer
@@ -717,6 +717,6 @@ static int headerToString(ReplaceMessagesMessage message, char **buf)
   strcat((*buf), "\nSequence Number: ");
   jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
   
 }

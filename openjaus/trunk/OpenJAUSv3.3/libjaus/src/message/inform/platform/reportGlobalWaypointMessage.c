@@ -266,7 +266,7 @@ static int dataToString(ReportGlobalWaypointMessage message, char **buf)
     jausDoubleToString(message->yawRadians, (*buf)+strlen(*buf));
   }
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
 }
 
 // Returns number of bytes put into the buffer
@@ -690,6 +690,6 @@ static int headerToString(ReportGlobalWaypointMessage message, char **buf)
   strcat((*buf), "\nSequence Number: ");
   jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
   
 }

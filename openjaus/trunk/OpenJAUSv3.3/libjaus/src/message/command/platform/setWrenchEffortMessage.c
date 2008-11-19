@@ -462,7 +462,7 @@ static int dataToString(SetWrenchEffortMessage message, char **buf)
     jausDoubleToString(message->resistiveLinearEffortZPercent, (*buf)+strlen(*buf));
   }
 
-  return strlen((*buf));
+  return (int)strlen(*buf);
 }
 
 static unsigned int dataSize(SetWrenchEffortMessage message)
@@ -919,6 +919,6 @@ static int headerToString(SetWrenchEffortMessage message, char **buf)
   strcat((*buf), "\nSequence Number: ");
   jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
   
 }

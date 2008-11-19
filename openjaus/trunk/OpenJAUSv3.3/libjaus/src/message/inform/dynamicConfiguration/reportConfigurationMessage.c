@@ -194,14 +194,14 @@ static int dataToString(ReportConfigurationMessage message, char **buf)
   if(message->subsystem->identification == NULL)
     bufSize = 100;
   else
-    bufSize = 100+strlen(message->subsystem->identification);
+    bufSize = 100+(int)strlen(message->subsystem->identification);
   
   (*buf) = (char*)malloc(sizeof(char)*bufSize);
 
   jausSubsystemToString(message->subsystem, (*buf));
   
    
-  return strlen((*buf));
+  return (int)strlen(*buf);
 }
 
 // Returns number of bytes put into the buffer
@@ -623,6 +623,6 @@ static int headerToString(ReportConfigurationMessage message, char **buf)
   strcat((*buf), "\nSequence Number: ");
   jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
   
 }

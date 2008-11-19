@@ -173,6 +173,8 @@ static int dataToBuffer(ReportSubsystemListMessage message, unsigned char *buffe
 
 static int dataToString(ReportSubsystemListMessage message, char **buf)
 {
+	int sys;
+
   //message already verified 
 
   //Setup temporary string buffer
@@ -183,7 +185,7 @@ static int dataToString(ReportSubsystemListMessage message, char **buf)
   strcpy((*buf), "\nSubsystem Count: " );
   jausByteToString(message->subsystemCount, (*buf)+strlen(*buf));
   
-  for( int sys = 0; sys<message->subsystemCount; sys++)
+  for( sys = 0; sys<message->subsystemCount; sys++)
   {
     strcat((*buf), "\nSubsystem Id: ");
     jausByteToString(message->subsystemId[sys], (*buf)+strlen(*buf));
@@ -199,7 +201,7 @@ static int dataToString(ReportSubsystemListMessage message, char **buf)
   }
   
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
 }
 
 // Returns number of bytes put into the buffer
@@ -381,10 +383,12 @@ unsigned int reportSubsystemListMessageSize(ReportSubsystemListMessage message)
 
 char* reportSubsystemListMessageToString(ReportSubsystemListMessage message)
 {
-  if(message)
-  {
+    char* buf;
     char* buf1 = NULL;
     char* buf2 = NULL;
+	
+  if(message)
+  {
     
     int returnVal;
     
@@ -394,7 +398,6 @@ char* reportSubsystemListMessageToString(ReportSubsystemListMessage message)
     //Print the message data fields to the string buffer
     returnVal += dataToString(message, &buf2);
     
-    char* buf;
     buf = (char*)malloc(strlen(buf1)+strlen(buf2)+1);
     strcpy(buf, buf1);
     strcat(buf, buf2);
@@ -601,6 +604,6 @@ static int headerToString(ReportSubsystemListMessage message, char **buf)
   strcat((*buf), "\nSequence Number: ");
   jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
   
 }

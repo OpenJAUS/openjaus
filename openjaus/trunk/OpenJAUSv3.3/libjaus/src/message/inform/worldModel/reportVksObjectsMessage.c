@@ -203,12 +203,12 @@ static int dataToString(ReportVksObjectsMessage message, char **buf)
   strcat((mainBuf), "\nObject Count: ");
   jausUnsignedShortToString(message->objectCount, (mainBuf)+strlen(mainBuf));
 
-  bufSize = strlen(mainBuf) + 1;
+  bufSize = (int)strlen(mainBuf) + 1;
   objectStrings = (char**)malloc(sizeof(char*) * message->objectCount);
   for(obj=0; obj<message->objectCount; obj++)
   {
     objectStrings[obj] = vectorObjectToString(message->vectorObjects->elementData[obj]);
-    bufSize += strlen(objectStrings[obj]);
+    bufSize += (int)strlen(objectStrings[obj]);
   }
   
   (*buf) = (char*)malloc(sizeof(char)*bufSize);
@@ -222,7 +222,7 @@ static int dataToString(ReportVksObjectsMessage message, char **buf)
   free(mainBuf);
   free(objectStrings);
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
 }
 
 static unsigned int dataSize(ReportVksObjectsMessage message)
@@ -648,6 +648,6 @@ static int headerToString(ReportVksObjectsMessage message, char **buf)
   strcat((*buf), "\nSequence Number: ");
   jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
   
 }

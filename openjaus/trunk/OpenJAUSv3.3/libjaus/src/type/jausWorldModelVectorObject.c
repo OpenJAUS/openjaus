@@ -435,17 +435,17 @@ char* vectorObjectToString(JausWorldModelVectorObject object)
   for(i=0; i<object->featureClasses->elementCount; i++)
   {
     features[i] = featureClassToString(object->featureClasses->elementData[i]);
-    returnBufSize += strlen(features[i]) + 19;
+    returnBufSize += (int)strlen(features[i]) + 19;
   }
   
   points = (char **) malloc(sizeof(char *) * object->dataPoints->elementCount);
   for(k=0; k<object->dataPoints->elementCount; k++)
   {
     points[k] = jausGeometryPointLLAToString(object->dataPoints->elementData[k]);
-    returnBufSize += strlen(points[k]) + 19;
+    returnBufSize += (int)strlen(points[k]) + 19;
   }
   
-  returnBufSize += strlen(buf)+1;
+  returnBufSize += (int)strlen(buf)+1;
   returnBuf = (char*)malloc(sizeof(char)*( returnBufSize ));
   strcpy(returnBuf, buf);
 

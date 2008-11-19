@@ -116,7 +116,7 @@ static int dataToString(QueryGlobalWaypointMessage message, char **buf)
   strcpy((*buf), "\nWaypoint Number: " );
   jausUnsignedShortToString(message->waypointNumber, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
 }
 
 static unsigned int dataSize(QueryGlobalWaypointMessage message)
@@ -509,6 +509,6 @@ static int headerToString(QueryGlobalWaypointMessage message, char **buf)
   strcat((*buf), "\nSequence Number: ");
   jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
   
 }

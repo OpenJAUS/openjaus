@@ -259,7 +259,7 @@ static int dataToString(ReportLocalPathSegmentMessage message, char **buf)
   strcat((*buf), "\nWeighting Factor: ");
   jausDoubleToString(message->weightingFactor, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
 }
 
 static unsigned int dataSize(ReportLocalPathSegmentMessage message)
@@ -678,6 +678,6 @@ static int headerToString(ReportLocalPathSegmentMessage message, char **buf)
   strcat((*buf), "\nSequence Number: ");
   jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
   
 }

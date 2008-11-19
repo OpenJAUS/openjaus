@@ -171,7 +171,7 @@ static int dataToString(RejectEventRequestMessage message, char **buf)
   //Setup temporary string buffer
   unsigned int bufSize;
   if( message->errorMessage != NULL )
-    bufSize = 100 + strlen(message->errorMessage);
+    bufSize = 100 + (int)strlen(message->errorMessage);
   else
     bufSize = 100;
   (*buf) = (char*)malloc(sizeof(char)*bufSize);
@@ -223,7 +223,7 @@ static int dataToString(RejectEventRequestMessage message, char **buf)
       strcat((*buf), message->errorMessage);
   }
 
-  return strlen((*buf));
+  return (int)strlen(*buf);
 }
 
 // Returns number of bytes put into the buffer
@@ -640,6 +640,6 @@ static int headerToString(RejectEventRequestMessage message, char **buf)
   strcat((*buf), "\nSequence Number: ");
   jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
   
 }

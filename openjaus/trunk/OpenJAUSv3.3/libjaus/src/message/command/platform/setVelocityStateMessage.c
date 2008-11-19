@@ -369,7 +369,7 @@ static int dataToString(SetVelocityStateMessage message, char **buf)
     strcat((*buf), "\nTime Stamp: ");
     jausUnsignedIntegerToString(message->timeStamp, (*buf)+strlen(*buf));
   }
-  return strlen((*buf));
+  return (int)strlen(*buf);
 }
 
 static unsigned int dataSize(SetVelocityStateMessage message)
@@ -813,6 +813,6 @@ static int headerToString(SetVelocityStateMessage message, char **buf)
   strcat((*buf), "\nSequence Number: ");
   jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
   
 }

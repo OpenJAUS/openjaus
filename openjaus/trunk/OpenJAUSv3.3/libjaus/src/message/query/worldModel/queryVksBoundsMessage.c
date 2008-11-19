@@ -133,7 +133,7 @@ static int dataToString(QueryVksBoundsMessage message, char **buf)
   strcat((*buf), "\nFeature Class Id: ");
   jausUnsignedShortToString(message->featureClassId, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
 }
 
 static unsigned int dataSize(QueryVksBoundsMessage message)
@@ -527,6 +527,6 @@ static int headerToString(QueryVksBoundsMessage message, char **buf)
   strcat((*buf), "\nSequence Number: ");
   jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
   
 }

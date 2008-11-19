@@ -227,14 +227,14 @@ static int dataToString(ReportServicesMessage message, char **buf)
   
   char* services = jausServicesToString(message->jausServices);
   
-  unsigned int bufSize = strlen(services)+1;
+  unsigned int bufSize = (int)strlen(services)+1;
   (*buf) = (char*)malloc(sizeof(char)*bufSize);
   
   strcpy((*buf), services );
   
   free(services);
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
 }
 
 // Returns number of bytes put into the buffer
@@ -455,10 +455,12 @@ unsigned int reportServicesMessageSize(ReportServicesMessage message)
 
 char* reportServicesMessageToString(ReportServicesMessage message)
 {
-  if(message)
-  {
+    char* buf;
     char* buf1 = NULL;
     char* buf2 = NULL;
+
+  if(message)
+  {
     
     int returnVal;
     
@@ -468,7 +470,6 @@ char* reportServicesMessageToString(ReportServicesMessage message)
     //Print the message data fields to the string buffer
     returnVal += dataToString(message, &buf2);
     
-    char* buf;
     buf = (char*)malloc(strlen(buf1)+strlen(buf2)+1);
     strcpy(buf, buf1);
     strcat(buf, buf2);
@@ -675,6 +676,6 @@ static int headerToString(ReportServicesMessage message, char **buf)
   strcat((*buf), "\nSequence Number: ");
   jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
   
 }

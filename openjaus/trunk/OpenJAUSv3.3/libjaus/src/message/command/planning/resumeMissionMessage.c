@@ -152,7 +152,7 @@ static int dataToString(ResumeMissionMessage message, char **buf)
   if(message->taskId == 0)
     strcat((*buf), " Resume entire mission");
 
-  return strlen((*buf));
+  return (int)strlen(*buf);
 }
 
 // Returns number of bytes put into the buffer
@@ -564,6 +564,6 @@ static int headerToString(ResumeMissionMessage message, char **buf)
   strcat((*buf), "\nSequence Number: ");
   jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
   
 }

@@ -211,7 +211,7 @@ static int dataToString(ReportVksBoundsMessage message, char **buf)
   strcat((*buf), "\nNorth East Longitude(degrees): ");
   jausDoubleToString(message->northEastLongitudeDegrees, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
 }
 
 static unsigned int dataSize(ReportVksBoundsMessage message)
@@ -605,6 +605,6 @@ static int headerToString(ReportVksBoundsMessage message, char **buf)
   strcat((*buf), "\nSequence Number: ");
   jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
   
 }

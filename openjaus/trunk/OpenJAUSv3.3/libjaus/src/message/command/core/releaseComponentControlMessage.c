@@ -110,7 +110,7 @@ static int dataToString(ReleaseComponentControlMessage message, char **buf)
   (*buf) = (char*)malloc(sizeof(char)*bufSize);
   strcpy((*buf), "\n\0");
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
 }
 
 static unsigned int dataSize(ReleaseComponentControlMessage message)
@@ -506,6 +506,6 @@ static int headerToString(ReleaseComponentControlMessage message, char **buf)
   strcat((*buf), "\nSequence Number: ");
   jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
   
 }

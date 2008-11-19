@@ -126,7 +126,7 @@ static int dataToString(SetTravelSpeedMessage message, char **buf)
   strcpy((*buf), "\nSpeed(meters/second): " );
   jausDoubleToString(message->speedMps, (*buf)+strlen(*buf));
 
-  return strlen((*buf));
+  return (int)strlen(*buf);
 }
 
 static unsigned int dataSize(SetTravelSpeedMessage message)
@@ -519,6 +519,6 @@ static int headerToString(SetTravelSpeedMessage message, char **buf)
   strcat((*buf), "\nSequence Number: ");
   jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
   
-  return strlen((*buf));
+  return (int)strlen(*buf);
   
 }
