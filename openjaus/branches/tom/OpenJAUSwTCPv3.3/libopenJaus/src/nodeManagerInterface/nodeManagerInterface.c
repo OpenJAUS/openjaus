@@ -80,6 +80,17 @@
 #define INTERFACE_MESSAGE_LOOKUP_SERVICE_ADDRESS_LIST			0x0C
 #define INTERFACE_MESSAGE_LOOKUP_SERVICE_ADDRESS_LIST_RESPONSE	0x0D
 
+#define JTCP_PER_PACKET_HEADER_SIZE_BYTES		1
+#define JTCP_PER_MESSAGE_HEADER_SIZE_BYTES		4
+#define JTCP_VERSION_NUMBER						2 // per AS5669 v1.0
+#define JTCP_MAX_PACKET_SIZE					4101 // per AS5669 v1.0
+
+// Header Compression Flag Values
+#define JTCP_HC_NO_COMPRESSION			0
+#define JTCP_HC_ENGAGE_COMPRESSION		1
+#define JTCP_HC_COMPRESSION_ACKNOWLEDGE	2 // Note: This value has multiple interpretations, depending on the message length field
+#define JTCP_HC_COMPRESSED_MESSAGE		3
+
 static int checkIntoNodeManager(NodeManagerInterface);
 static int checkOutOfNodeManager(NodeManagerInterface);
 void *heartbeatThread(void *);
@@ -122,7 +133,7 @@ NodeManagerInterface nodeManagerOpen(JausComponent cmpt)
 	datagramSocketSetTimeout(nmi->interfaceSocket, INTERFACE_SOCKET_TIMEOUT_SEC);
 	
 	memset(&nmi->messageSocket, 0, sizeof(nmi->messageSocket));
-	nmi->messageSocket = datagramSocketCreate(0, nmi->ipAddress);
+	nmi->messageSocket = streamSocketCreate(0, nmi->ipAddress);
 	if(nmi->messageSocket == NULL)
 	{
 		datagramSocketDestroy(nmi->interfaceSocket);
@@ -130,16 +141,19 @@ NodeManagerInterface nodeManagerOpen(JausComponent cmpt)
 		free(nmi);
 		return NULL;
 	}
-	datagramSocketSetTimeout(nmi->messageSocket, MESSAGE_SOCKET_TIMEOUT_SEC);
+	streamSocketSetTimeout(nmi->messageSocket, MESSAGE_SOCKET_TIMEOUT_SEC);
 
 	if(checkIntoNodeManager(nmi))
 	{
-		datagramSocketDestroy(nmi->messageSocket);
+		streamSocketDestroy(nmi->messageSocket);
 		datagramSocketDestroy(nmi->interfaceSocket);
 		inetAddressDestroy(nmi->ipAddress);
 		free(nmi);
 		return NULL;
 	}
+
+	// Node manager checkin succeeded so connect to message socket
+	streamSocketConnectTo(nmi->messageSocket, 3794, nmi->ipAddress);
 
 	nmi->receiveQueue = queueCreate();
 	
@@ -148,7 +162,7 @@ NodeManagerInterface nodeManagerOpen(JausComponent cmpt)
 	{
 		queueDestroy(nmi->receiveQueue, NULL);
 		checkOutOfNodeManager(nmi);
-		datagramSocketDestroy(nmi->messageSocket);
+		streamSocketDestroy(nmi->messageSocket);
 		datagramSocketDestroy(nmi->interfaceSocket);
 		inetAddressDestroy(nmi->ipAddress);
 		free(nmi);
@@ -161,7 +175,7 @@ NodeManagerInterface nodeManagerOpen(JausComponent cmpt)
 		scManagerDestroy(nmi->scm);
 		queueDestroy(nmi->receiveQueue, NULL);
 		checkOutOfNodeManager(nmi);
-		datagramSocketDestroy(nmi->messageSocket);
+		streamSocketDestroy(nmi->messageSocket);
 		datagramSocketDestroy(nmi->interfaceSocket);
 		inetAddressDestroy(nmi->ipAddress);
 		free(nmi);
@@ -176,7 +190,7 @@ NodeManagerInterface nodeManagerOpen(JausComponent cmpt)
 		scManagerDestroy(nmi->scm);
 		queueDestroy(nmi->receiveQueue, NULL);
 		checkOutOfNodeManager(nmi);
-		datagramSocketDestroy(nmi->messageSocket);
+		streamSocketDestroy(nmi->messageSocket);
 		datagramSocketDestroy(nmi->interfaceSocket);
 		inetAddressDestroy(nmi->ipAddress);
 		free(nmi);
@@ -190,7 +204,7 @@ NodeManagerInterface nodeManagerOpen(JausComponent cmpt)
 		scManagerDestroy(nmi->scm);
 		queueDestroy(nmi->receiveQueue, NULL);
 		checkOutOfNodeManager(nmi);
-		datagramSocketDestroy(nmi->messageSocket);
+		streamSocketDestroy(nmi->messageSocket);
 		datagramSocketDestroy(nmi->interfaceSocket);
 		inetAddressDestroy(nmi->ipAddress);
 		free(nmi);
@@ -229,7 +243,7 @@ int nodeManagerClose(NodeManagerInterface nmi)
 		scManagerDestroy(nmi->scm);
 		queueDestroy(nmi->receiveQueue, (void*)jausMessageDestroy); 
 		checkOutOfNodeManager(nmi);
-		datagramSocketDestroy(nmi->messageSocket);
+		streamSocketDestroy(nmi->messageSocket);
 		datagramSocketDestroy(nmi->interfaceSocket);
 		inetAddressDestroy(nmi->ipAddress);
 		pthread_cond_destroy(&nmi->recvCondition);
@@ -363,7 +377,7 @@ void *receiveThread(void *threadArgument)
 	int index;
 	
 	NodeManagerInterface nmi = (NodeManagerInterface)threadArgument;
-	DatagramPacket packet;
+	StreamPacket packet;
 
 	JausMessage message;
 
@@ -371,7 +385,7 @@ void *receiveThread(void *threadArgument)
 
 	nmi->receiveCount = 0;
 	
-	packet = datagramPacketCreate();
+	packet = streamPacketCreate();
 
 	packet->bufferSizeBytes = JAUS_HEADER_SIZE_BYTES + JAUS_MAX_DATA_SIZE_BYTES;
 	packet->buffer = (unsigned char*)malloc(packet->bufferSizeBytes);
@@ -379,19 +393,16 @@ void *receiveThread(void *threadArgument)
 	
 	while(nmi->isOpen)
 	{
-		if(datagramSocketReceive(nmi->messageSocket, packet) > 0)
+		if(streamSocketReceive(nmi->messageSocket, packet) > 0)
 		{	
 			index = 0;
-			if(!strncmp((char *)packet->buffer, JAUS_OPC_UDP_HEADER, JAUS_OPC_UDP_HEADER_SIZE_BYTES)) // equals 1 if same
-			{
-				index += JAUS_OPC_UDP_HEADER_SIZE_BYTES;
-			}
 
 			message = jausMessageCreate();
 			if(jausMessageFromBuffer(message, packet->buffer + index, packet->bufferSizeBytes - index))
 			{
 				if(message->dataFlag)
 				{
+					printf("NMI: Rx large message\n");
 					lmHandlerReceiveLargeMessage(nmi, message);
 				}
 				else
@@ -425,6 +436,7 @@ void *receiveThread(void *threadArgument)
 			}
 			else
 			{
+				printf("NMI: Message parse error\n");
 				jausMessageDestroy(message);
 			}
 		}
@@ -432,7 +444,7 @@ void *receiveThread(void *threadArgument)
 	
 	free(packet->buffer);
 
-	datagramPacketDestroy(packet);
+	streamPacketDestroy(packet);
 
 	nmi->receiveThreadRunning = 0;
 	
@@ -802,24 +814,25 @@ int nodeManagerSend(NodeManagerInterface nmi, JausMessage message)
 
 int nodeManagerSendSingleMessage(NodeManagerInterface nmi, JausMessage message)
 {
-	DatagramPacket packet;
+	StreamPacket packet;
 	int result = -1;
-	
+	int bufferIndex = 0;
+
 	if(nmi->isOpen)
 	{
-		packet = datagramPacketCreate();
+		packet = streamPacketCreate();
 		packet->bufferSizeBytes = (int)jausMessageSize(message);
 		packet->buffer = (unsigned char*)malloc(packet->bufferSizeBytes);
 		packet->port = NODE_MANAGER_MESSAGE_PORT;
 		packet->address->value = nmi->ipAddress->value;
 		memset(packet->buffer, 0, packet->bufferSizeBytes);
-		
+
 		if(jausMessageToBuffer(message, packet->buffer, packet->bufferSizeBytes))
 		{
-			result = datagramSocketSend(nmi->messageSocket, packet);
+			result = streamSocketSend(nmi->messageSocket, packet);
 		}
 		free(packet->buffer);
-		datagramPacketDestroy(packet);
+		streamPacketDestroy(packet);
 	}
 		
 	return result;

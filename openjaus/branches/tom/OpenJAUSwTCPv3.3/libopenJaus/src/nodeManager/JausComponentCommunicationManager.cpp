@@ -47,6 +47,7 @@
 #include "nodeManager/NodeManagerComponent.h"
 #include "nodeManager/CommunicatorComponent.h"
 #include "nodeManager/JausOpcUdpInterface.h"
+#include "nodeManager/JtcpComponentInterface.h"
 #include "nodeManager/JudpInterface.h"
 #include "nodeManager/OjUdpComponentInterface.h"
 #include "nodeManager/events/ErrorEvent.h"
@@ -108,6 +109,17 @@ JausComponentCommunicationManager::JausComponentCommunicationManager(FileLoader 
 
 		char buf[128] = {0};
 		sprintf(buf, "Opened Component Interface:\t%s", etgUdpInterface->toString().c_str());
+		ConfigurationEvent *e = new ConfigurationEvent(__FUNCTION__, __LINE__, buf);
+		this->eventHandler->handleEvent(e);
+	}
+
+	if(configData->GetConfigDataBool("Component_Communications", "JTCP_Interface"))
+	{
+		JtcpInterface *jtcpInterface = new JtcpInterface(configData, this->eventHandler, this);
+		this->interfaces.push_back(jtcpInterface);
+
+		char buf[128] = {0};
+		sprintf(buf, "Opened Component Interface:\t%s", jtcpInterface->toString().c_str());
 		ConfigurationEvent *e = new ConfigurationEvent(__FUNCTION__, __LINE__, buf);
 		this->eventHandler->handleEvent(e);
 	}
