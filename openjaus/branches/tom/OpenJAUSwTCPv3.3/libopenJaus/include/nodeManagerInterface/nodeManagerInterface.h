@@ -35,6 +35,7 @@
 #define NODE_MANAGER_H
 
 #include "utils/datagramSocket.h"
+#include "utils/streamSocket.h"
 #include "utils/inetAddress.h"
 #include "utils/queue.h"
 #include "utils/timeLib.h"
@@ -135,7 +136,7 @@ typedef LargeMessageListStruct *LargeMessageList;
 typedef struct
 {
 	DatagramSocket interfaceSocket;
-	DatagramSocket messageSocket;
+	StreamSocket messageSocket;
 	
 	pthread_t heartbeatThreadId;
 	int heartbeatThreadRunning;
