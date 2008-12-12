@@ -59,7 +59,7 @@
 
 // Incoming Service Connection Defines
 #define WD_INC_SC_TIMEOUT_SEC 			1.0		// The timeout between receiving service connection messages
-#define WD_INC_SC_UPDATE_RATE_HZ 		20.0	// Requested service connection update rate
+#define WD_INC_SC_UPDATE_RATE_HZ 		2.0	// Requested service connection update rate
 #define WD_INC_SC_PRESENCE_VECTOR 		0xFF	// The GPOS Presence Vector, set this to the fields desired (default = ALL)
 #define WD_INC_SC_QUEUE_SIZE			1		// The Service Connection Manager's queue size (0 = infinite)
 

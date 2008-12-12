@@ -67,7 +67,7 @@
 #define JTCP_PER_PACKET_HEADER_SIZE_BYTES		1
 #define JTCP_PER_MESSAGE_HEADER_SIZE_BYTES		4
 #define JTCP_VERSION_NUMBER						2 // per AS5669 v1.0
-#define JTCP_MAX_PACKET_SIZE					4101 // per AS5669 v1.0
+#define JTCP_MAX_PACKET_SIZE					4096 // per AS5669 v1.0
 
 // Header Compression Flag Values
 #define JTCP_HC_NO_COMPRESSION			0

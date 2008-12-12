@@ -137,11 +137,13 @@ typedef struct
 {
 	DatagramSocket interfaceSocket;
 	StreamSocket messageSocket;
+	StreamPacket sendPacket;
 	
 	pthread_t heartbeatThreadId;
 	int heartbeatThreadRunning;
 	pthread_t receiveThreadId;
 	int receiveThreadRunning;
+	pthread_mutex_t sendMutex;
 	
 	pthread_cond_t recvCondition;
 	pthread_cond_t hbWakeCondition;

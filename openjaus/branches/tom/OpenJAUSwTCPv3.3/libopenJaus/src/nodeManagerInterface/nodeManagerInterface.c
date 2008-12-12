@@ -184,6 +184,15 @@ NodeManagerInterface nodeManagerOpen(JausComponent cmpt)
 
 	nmi->isOpen = JAUS_TRUE;
 
+	nmi->sendPacket = streamPacketCreate();
+	nmi->sendPacket->bufferSizeBytes = JAUS_HEADER_SIZE_BYTES + JAUS_MAX_DATA_SIZE_BYTES;
+	nmi->sendPacket->buffer = (unsigned char*)malloc(nmi->sendPacket->bufferSizeBytes);
+	nmi->sendPacket->port = NODE_MANAGER_MESSAGE_PORT;
+	nmi->sendPacket->address->value = nmi->ipAddress->value;
+	memset(nmi->sendPacket->buffer, 0, nmi->sendPacket->bufferSizeBytes);
+
+	pthread_mutex_init(&nmi->sendMutex, NULL);
+
 	if(pthread_create(&nmi->heartbeatThreadId, NULL, heartbeatThread, (void *)nmi))
 	{
 		lmHandlerDestroy(nmi->lmh);
@@ -248,6 +257,11 @@ int nodeManagerClose(NodeManagerInterface nmi)
 		inetAddressDestroy(nmi->ipAddress);
 		pthread_cond_destroy(&nmi->recvCondition);
 		pthread_cond_destroy(&nmi->hbWakeCondition);
+
+		free(nmi->sendPacket->buffer);
+		streamPacketDestroy(nmi->sendPacket);
+
+		pthread_mutex_destroy(&nmi->sendMutex);
 		free(nmi);
 	}
 	else
@@ -402,7 +416,6 @@ void *receiveThread(void *threadArgument)
 			{
 				if(message->dataFlag)
 				{
-					printf("NMI: Rx large message\n");
 					lmHandlerReceiveLargeMessage(nmi, message);
 				}
 				else
@@ -806,7 +819,9 @@ int nodeManagerSend(NodeManagerInterface nmi, JausMessage message)
 	
 	if(nmi->isOpen)
 	{
+		pthread_mutex_lock(&nmi->sendMutex);
 		result = lmHandlerSendLargeMessage(nmi, message);
+		pthread_mutex_unlock(&nmi->sendMutex);
 	}
 		
 	return result;
@@ -822,6 +837,7 @@ int nodeManagerSendSingleMessage(NodeManagerInterface nmi, JausMessage message)
 	{
 		packet = streamPacketCreate();
 		packet->bufferSizeBytes = (int)jausMessageSize(message);
+		//printf("NMI: TX %d\n", packet->bufferSizeBytes);
 		packet->buffer = (unsigned char*)malloc(packet->bufferSizeBytes);
 		packet->port = NODE_MANAGER_MESSAGE_PORT;
 		packet->address->value = nmi->ipAddress->value;
