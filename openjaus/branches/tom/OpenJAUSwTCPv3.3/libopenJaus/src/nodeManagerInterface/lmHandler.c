@@ -376,6 +376,8 @@ int lmHandlerSendLargeMessage(NodeManagerInterface nmi, JausMessage inMessage)
 		
 		result = nodeManagerSendSingleMessage(nmi, outMessage);
 		jausMessageDestroy(outMessage);
+
+		ojSleepMsec(1);
 	}
 	else
 	{
