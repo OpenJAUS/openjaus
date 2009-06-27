@@ -1,12 +1,12 @@
 /*****************************************************************************
  *  Copyright (c) 2008, University of Florida
  *  All rights reserved.
- *  
- *  This file is part of OpenJAUS.  OpenJAUS is distributed under the BSD 
+ *
+ *  This file is part of OpenJAUS.  OpenJAUS is distributed under the BSD
  *  license.  See the LICENSE file for details.
- * 
- *  Redistribution and use in source and binary forms, with or without 
- *  modification, are permitted provided that the following conditions 
+ *
+ *  Redistribution and use in source and binary forms, with or without
+ *  modification, are permitted provided that the following conditions
  *  are met:
  *
  *     * Redistributions of source code must retain the above copyright
@@ -15,25 +15,25 @@
  *       copyright notice, this list of conditions and the following
  *       disclaimer in the documentation and/or other materials provided
  *       with the distribution.
- *     * Neither the name of the University of Florida nor the names of its 
- *       contributors may be used to endorse or promote products derived from 
+ *     * Neither the name of the University of Florida nor the names of its
+ *       contributors may be used to endorse or promote products derived from
  *       this software without specific prior written permission.
  *
- *   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- *   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- *   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR 
- *   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT 
+ *   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ *   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ *   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ *   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
  *   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- *   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT 
- *   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
- *   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY 
+ *   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ *   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ *   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
  *   THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
+ *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ****************************************************************************/
 // File Name: JausSubsystemCommunicationManager.cpp
 //
-// Written By: Danny Kent (jaus AT dannykent DOT com) 
+// Written By: Danny Kent (jaus AT dannykent DOT com)
 //
 // Version: 3.3.0
 //
@@ -57,7 +57,7 @@ JausSubsystemCommunicationManager::JausSubsystemCommunicationManager(FileLoader 
 	this->configData = configData;
 	this->eventHandler = handler;
 
-	// NOTE: These two values should exist in the properties file and should be checked 
+	// NOTE: These two values should exist in the properties file and should be checked
 	// in the NodeManager class prior to constructing this object
 	mySubsystemId = configData->GetConfigDataInt("JAUS", "SubsystemId");
 	if(mySubsystemId > JAUS_MAXIMUM_SUBSYSTEM_ID)
@@ -105,16 +105,16 @@ JausSubsystemCommunicationManager::JausSubsystemCommunicationManager(FileLoader 
 			this->eventHandler->handleEvent(e);
 		}
 
-		if(configData->GetConfigDataBool("Subsystem_Communications", "JUDP2_Interface"))
-		{
-			Judp2Interface *judp2Interface = new Judp2Interface(configData, this->eventHandler, this);
-			this->interfaces.push_back(judp2Interface);
-
-			char buf[128] = {0};
-			sprintf(buf, "Opened Subsystem Interface:\t%s", judp2Interface->toString().c_str());
-			ConfigurationEvent *e = new ConfigurationEvent(__FUNCTION__, __LINE__, buf);
-			this->eventHandler->handleEvent(e);
-		}
+//		if(configData->GetConfigDataBool("Subsystem_Communications", "JUDP2_Interface"))
+//		{
+//			Judp2Interface *judp2Interface = new Judp2Interface(configData, this->eventHandler, this);
+//			this->interfaces.push_back(judp2Interface);
+//
+//			char buf[128] = {0};
+//			sprintf(buf, "Opened Subsystem Interface:\t%s", judp2Interface->toString().c_str());
+//			ConfigurationEvent *e = new ConfigurationEvent(__FUNCTION__, __LINE__, buf);
+//			this->eventHandler->handleEvent(e);
+//		}
 
 		if( this->interfaces.size() > 0)
 		{
@@ -135,7 +135,7 @@ JausSubsystemCommunicationManager::JausSubsystemCommunicationManager(FileLoader 
 JausSubsystemCommunicationManager::~JausSubsystemCommunicationManager(void)
 {
 	std::vector<JausTransportInterface *>::iterator iterator;
-	for(iterator = interfaces.begin(); iterator != interfaces.end(); iterator++) 
+	for(iterator = interfaces.begin(); iterator != interfaces.end(); iterator++)
 	{
 		delete *iterator;
 	}
@@ -182,7 +182,7 @@ bool JausSubsystemCommunicationManager::sendJausMessage(JausMessage message)
 		this->eventHandler->handleEvent(e);
 		return false;
 	}
-	
+
 	// Check for Errors
 	if(message->source->subsystem != mySubsystemId)
 	{

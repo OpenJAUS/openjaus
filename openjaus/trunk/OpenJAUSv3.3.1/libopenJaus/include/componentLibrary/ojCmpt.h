@@ -1,12 +1,12 @@
 /*****************************************************************************
  *  Copyright (c) 2008, University of Florida
  *  All rights reserved.
- *  
- *  This file is part of OpenJAUS.  OpenJAUS is distributed under the BSD 
+ *
+ *  This file is part of OpenJAUS.  OpenJAUS is distributed under the BSD
  *  license.  See the LICENSE file for details.
- * 
- *  Redistribution and use in source and binary forms, with or without 
- *  modification, are permitted provided that the following conditions 
+ *
+ *  Redistribution and use in source and binary forms, with or without
+ *  modification, are permitted provided that the following conditions
  *  are met:
  *
  *     * Redistributions of source code must retain the above copyright
@@ -15,20 +15,20 @@
  *       copyright notice, this list of conditions and the following
  *       disclaimer in the documentation and/or other materials provided
  *       with the distribution.
- *     * Neither the name of the University of Florida nor the names of its 
- *       contributors may be used to endorse or promote products derived from 
+ *     * Neither the name of the University of Florida nor the names of its
+ *       contributors may be used to endorse or promote products derived from
  *       this software without specific prior written permission.
  *
- *   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- *   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- *   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR 
- *   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT 
+ *   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ *   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ *   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ *   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
  *   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- *   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT 
- *   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
- *   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY 
+ *   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ *   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ *   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
  *   THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
+ *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ****************************************************************************/
 // File Name: ojCmpt.h
@@ -43,7 +43,6 @@
 //				Component Library. The Component Library is a wrapper around
 //				common component functionality which accelerates and eases
 //				the creation of JAUS components.
-
 
 #ifndef OJ_CMPT_H
 #define OJ_CMPT_H
@@ -67,7 +66,7 @@ extern "C"
 #define OJ_CMPT_MIN_FREQUENCY_HZ		0.1
 #define OJ_CMPT_MAX_FREQUENCY_HZ		1000.0
 #define OJ_CMPT_DEFAULT_FREQUENCY_HZ	1.0
-	
+
 typedef struct OjCmptStruct *OjCmpt;
 
 JAUS_EXPORT OjCmpt ojCmptCreate(char *name, JausByte id, double frequency);
@@ -97,6 +96,9 @@ JAUS_EXPORT char* ojCmptGetName(OjCmpt ojCmpt);
 JAUS_EXPORT void *ojCmptGetUserData(OjCmpt ojCmpt);
 JAUS_EXPORT double ojCmptGetRateHz(OjCmpt ojCmpt);
 
+// Component Control
+JAUS_EXPORT JausBoolean ojCmptTerminateController(OjCmpt ojCmpt);
+
 // Services
 JAUS_EXPORT JausBoolean ojCmptAddService(OjCmpt ojCmpt, JausUnsignedShort serviceType);
 JAUS_EXPORT JausBoolean ojCmptAddServiceInputMessage(OjCmpt ojCmpt, JausUnsignedShort serviceType, JausUnsignedShort commandCode, JausUnsignedInteger presenceVector);
@@ -114,9 +116,9 @@ JAUS_EXPORT void ojCmptRemoveSupportedSc(OjCmpt ojCmpt, unsigned short commandCo
 JAUS_EXPORT ServiceConnection ojCmptGetScSendList(OjCmpt ojCmpt, unsigned short commandCode);
 JAUS_EXPORT void ojCmptDestroySendList(ServiceConnection scList);
 JAUS_EXPORT JausBoolean ojCmptIsOutgoingScActive(OjCmpt ojCmpt, unsigned short commandCode);
-	
+
 // System Discovery
-JAUS_EXPORT int ojCmptLookupAddress(OjCmpt ojCmpt, JausAddress address);
+JAUS_EXPORT JausBoolean ojCmptLookupAddress(OjCmpt ojCmpt, JausAddress address);
 
 
 #ifdef __cplusplus
