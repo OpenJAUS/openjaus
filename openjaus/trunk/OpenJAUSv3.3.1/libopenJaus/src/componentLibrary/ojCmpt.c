@@ -196,7 +196,7 @@ void ojCmptDestroy(OjCmpt ojCmpt)
 			{
 				scManagerTerminateServiceConnection(ojCmpt->nmi, ojCmpt->inConnection[i]);
 			}
-			serviceConnectionDestroy(ojCmpt->inConnection[i]);
+			serviceConnectionDestroy(ojCmpt->inConnection[i], ojCmpt->nmi->scm);
 		}
 	}
 
@@ -632,7 +632,7 @@ int ojCmptTerminateSc(OjCmpt ojCmpt, int scIndex)
 	{
 		scManagerTerminateServiceConnection(ojCmpt->nmi, ojCmpt->inConnection[scIndex]);
 	}
-	serviceConnectionDestroy(ojCmpt->inConnection[scIndex]);
+	serviceConnectionDestroy(ojCmpt->inConnection[scIndex], ojCmpt->nmi->scm);
 	ojCmpt->inConnection[scIndex] = NULL;
 
 	return TRUE;
