@@ -181,7 +181,7 @@ JAUS_EXPORT JausBoolean nodeManagerLookupServiceAddress(NodeManagerInterface, Ja
 JAUS_EXPORT JausAddressList* nodeManagerLookupServiceAddressList(NodeManagerInterface, JausAddress, unsigned short, int);
 
 JAUS_EXPORT ServiceConnection serviceConnectionCreate(void);
-JAUS_EXPORT void serviceConnectionDestroy(ServiceConnection sc);
+JAUS_EXPORT void serviceConnectionDestroy(ServiceConnection sc, ServiceConnectionManager scm);
 
 JAUS_EXPORT ServiceConnectionManager scManagerCreate(void);
 JAUS_EXPORT void scManagerDestroy(ServiceConnectionManager);
