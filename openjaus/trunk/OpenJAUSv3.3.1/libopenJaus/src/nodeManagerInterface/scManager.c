@@ -53,6 +53,21 @@ ServiceConnection serviceConnectionCreate(void)
 	sc = (ServiceConnection) malloc(sizeof(ServiceConnectionStruct));
 	if(sc)
 	{
+		sc->requestedUpdateRateHz = 0;
+		sc->confirmedUpdateRateHz = 0;
+		sc->lastSentTime = 0;
+		sc->timeoutSec = 0;
+		sc->nextRequestTimeSec = 0;
+	
+		sc->presenceVector = 0;
+		sc->commandCode = 0;
+		sc->sequenceNumber = 0;
+	
+		sc->instanceId = -1;
+		sc->isActive = JAUS_FALSE;
+		sc->queueSize = 0;
+		sc->nextSc = NULL;
+		
 		sc->address = jausAddressCreate();
 		if(!sc->address)
 		{
@@ -124,6 +139,8 @@ void scManagerDestroy(ServiceConnectionManager scm)
 		return;
 	}
 	
+	pthread_mutex_lock(&scm->mutex);
+	
 	// Free the supported message list
 	while(scm->supportedScMsgList)
 	{
@@ -141,6 +158,7 @@ void scManagerDestroy(ServiceConnectionManager scm)
 		free(supportedScMsg);
 	}
 	
+	pthread_mutex_unlock(&scm->mutex);
 	pthread_mutex_destroy(&scm->mutex);
 	free(scm);	
 }
@@ -784,17 +802,16 @@ JausBoolean scManagerCreateServiceConnection(NodeManagerInterface nmi, ServiceCo
 	ServiceConnection prevSc = NULL;
 	ServiceConnection testSc = NULL;
 	
-	pthread_mutex_lock(&nmi->scm->mutex);
-	
-	testSc = nmi->scm->incomingSc;
-	
 	if(!sc)
 	{
-		pthread_mutex_unlock(&nmi->scm->mutex);
 		return JAUS_FALSE;
 	}
+
+	pthread_mutex_lock(&nmi->scm->mutex);
 	
+	// Check: Is this SC already on the incomingSc list? If so, remove it (otherwise it ends up on the list twice == bad)
 	// Remove this service connection from the list of incoming service connections
+	testSc = nmi->scm->incomingSc;
 	while(testSc)
 	{                      
 		if(sc == testSc)
@@ -807,11 +824,14 @@ JausBoolean scManagerCreateServiceConnection(NodeManagerInterface nmi, ServiceCo
 			{
 		        nmi->scm->incomingSc = testSc->nextSc;
 			}
+			testSc = testSc->nextSc;
 			nmi->scm->incomingScCount--;
 		}
-		
-		prevSc = testSc;
-		testSc = testSc->nextSc;
+		else
+		{
+			prevSc = testSc;
+			testSc = testSc->nextSc;
+		}
 	}
 	
 	sc->confirmedUpdateRateHz = 0;
@@ -886,7 +906,8 @@ JausBoolean scManagerCreateServiceConnection(NodeManagerInterface nmi, ServiceCo
 		}
 	}
 	
-	pthread_mutex_unlock(&nmi->scm->mutex);	
+	pthread_mutex_unlock(&nmi->scm->mutex);
+	return JAUS_FALSE;	
 }
 
 JausBoolean scManagerTerminateServiceConnection(NodeManagerInterface nmi, ServiceConnection deadSc)
@@ -899,7 +920,6 @@ JausBoolean scManagerTerminateServiceConnection(NodeManagerInterface nmi, Servic
 	pthread_mutex_lock(&nmi->scm->mutex);
 	
 	sc = nmi->scm->incomingSc;
-	
 	while(sc)
 	{
 		if(sc->commandCode == deadSc->commandCode && jausAddressEqual(sc->address, deadSc->address) )
