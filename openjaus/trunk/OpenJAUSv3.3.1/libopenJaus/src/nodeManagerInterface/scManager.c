@@ -96,11 +96,36 @@ ServiceConnection serviceConnectionCreate(void)
 
 void serviceConnectionDestroy(ServiceConnection sc, ServiceConnectionManager scm)
 {
+	ServiceConnection testSc = NULL;
+	ServiceConnection prevSc = NULL;
+	
 	pthread_mutex_lock(&scm->mutex);
 
-	jausAddressDestroy(sc->address);
-	queueDestroy(sc->queue, (void *)jausMessageDestroy);
-	free(sc);
+	// Check if this sc is in the scm->incomingSc list
+	testSc = scm->incomingSc;
+	while(testSc)
+	{
+		if(sc == testSc)
+		{
+			if(prevSc)
+			{
+				prevSc->nextSc = testSc->nextSc;
+			}
+			else
+			{
+		        scm->incomingSc = testSc->nextSc;
+			}
+			testSc = testSc->nextSc;
+			scm->incomingScCount--;
+		}
+		else
+		{
+			prevSc = testSc;
+			testSc = testSc->nextSc;
+		}
+	}
+
+	serviceConnectionDestroyNoMutex(sc);
 
 	pthread_mutex_unlock(&scm->mutex);
 }
@@ -324,6 +349,7 @@ void scManagerProcessCreateScMessage(NodeManagerInterface nmi, CreateServiceConn
 	}
 	newSc->queue = NULL;
 	newSc->queueSize = 0;
+	newSc->nextSc = NULL;
 
 	sc = scFindScInList(supportedScMsg->scList, newSc);
 	if(sc == NULL) // Test to see if the sc does not already exist
