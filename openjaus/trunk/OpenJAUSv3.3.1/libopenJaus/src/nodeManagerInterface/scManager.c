@@ -98,7 +98,7 @@ void serviceConnectionDestroy(ServiceConnection sc, ServiceConnectionManager scm
 {
 	ServiceConnection testSc = NULL;
 	ServiceConnection prevSc = NULL;
-	
+
 	pthread_mutex_lock(&scm->mutex);
 
 	// Check if this sc is in the scm->incomingSc list
@@ -125,7 +125,7 @@ void serviceConnectionDestroy(ServiceConnection sc, ServiceConnectionManager scm
 		}
 	}
 
-	serviceConnectionDestroyNoMutex(sc);
+	serviceConnectionDestroyNoMutex(sc); sc = NULL;
 
 	pthread_mutex_unlock(&scm->mutex);
 }
@@ -189,7 +189,7 @@ void scManagerDestroy(ServiceConnectionManager scm)
 		{
 			sc = supportedScMsg->scList;
 			supportedScMsg->scList = sc->nextSc;
-			serviceConnectionDestroyNoMutex(sc);
+			serviceConnectionDestroyNoMutex(sc); sc = NULL;
 		}
 
 		free(supportedScMsg);
@@ -492,7 +492,7 @@ void scManagerProcessTerminateScMessage(NodeManagerInterface nmi, TerminateServi
 	{
 		// Remove sc from list
 		supportedScMsg->scList = sc->nextSc;
-		serviceConnectionDestroyNoMutex(sc);
+		serviceConnectionDestroyNoMutex(sc); sc = NULL;
 		nmi->scm->outgoingScCount--;
 		pthread_mutex_unlock(&nmi->scm->mutex);
 		return;
@@ -508,7 +508,7 @@ void scManagerProcessTerminateScMessage(NodeManagerInterface nmi, TerminateServi
 		{
 			// Remove sc from list
 			prevSc->nextSc = sc->nextSc;
-			serviceConnectionDestroyNoMutex(sc);
+			serviceConnectionDestroyNoMutex(sc); sc = NULL;
 			nmi->scm->outgoingScCount--;
 			pthread_mutex_unlock(&nmi->scm->mutex);
 			return;
@@ -541,13 +541,13 @@ void scManagerProcessUpdatedSubystem(NodeManagerInterface nmi, JausSubsystem sub
 				if(prevSc)
 				{
 					prevSc->nextSc = sc->nextSc;
-					serviceConnectionDestroyNoMutex(sc);
+					serviceConnectionDestroyNoMutex(sc); sc = NULL;
 					sc = prevSc->nextSc;
 				}
 				else
 				{
 					supportedScMsg->scList = sc->nextSc;
-					serviceConnectionDestroyNoMutex(sc);
+					serviceConnectionDestroyNoMutex(sc); sc = NULL;
 					sc = supportedScMsg->scList;
 				}
 				nmi->scm->outgoingScCount--;
@@ -669,7 +669,7 @@ void scManagerRemoveSupportedMessage(NodeManagerInterface nmi, unsigned short co
 
 				terminateServiceConnectionMessageDestroy(terminateSc);
 
-				serviceConnectionDestroyNoMutex(sc);
+				serviceConnectionDestroyNoMutex(sc); sc = NULL;
 			}
 			free(supportedScMsg);
 			nmi->scm->supportedScMsgCount--;

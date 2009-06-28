@@ -197,6 +197,7 @@ void ojCmptDestroy(OjCmpt ojCmpt)
 				scManagerTerminateServiceConnection(ojCmpt->nmi, ojCmpt->inConnection[i]);
 			}
 			serviceConnectionDestroy(ojCmpt->inConnection[i], ojCmpt->nmi->scm);
+			ojCmpt->inConnection[i] = NULL;
 		}
 	}
 
