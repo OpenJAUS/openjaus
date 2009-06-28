@@ -139,7 +139,7 @@ JausBoolean checkNodeManagerReady(double timeout)
 	}
 	else
 	{
-		stopTime = ojGetTimeSec() + 1e1000;
+		stopTime = ojGetTimeSec() + 1e100;
 	}
 
 	while(stopTime > ojGetTimeSec())

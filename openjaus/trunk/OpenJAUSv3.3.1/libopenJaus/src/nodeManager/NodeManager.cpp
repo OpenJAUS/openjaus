@@ -78,12 +78,12 @@ NodeManager::NodeManager(FileLoader *configData, EventHandler *handler)
 	this->subsystem->id = subsystemId;
 	size_t identificationLength = strlen(configData->GetConfigDataString("JAUS", "Subsystem_Identification").c_str()) + 1;
 	this->subsystem->identification = (char *) malloc(identificationLength);
-	sprintf(this->subsystem->identification, configData->GetConfigDataString("JAUS", "Subsystem_Identification").c_str());
+	memcpy(this->subsystem->identification, configData->GetConfigDataString("JAUS", "Subsystem_Identification").c_str(), identificationLength);
 
 	this->node->id = nodeId;
 	identificationLength = strlen(configData->GetConfigDataString("JAUS", "Node_Identification").c_str()) + 1;
 	this->node->identification = (char *) malloc(identificationLength);
-	sprintf(this->node->identification, configData->GetConfigDataString("JAUS", "Node_Identification").c_str());
+	memcpy(this->node->identification, configData->GetConfigDataString("JAUS", "Node_Identification").c_str(), identificationLength);
 	jausArrayAdd(this->subsystem->nodes, this->node);
 
 	// TODO: Check our config file parameters
