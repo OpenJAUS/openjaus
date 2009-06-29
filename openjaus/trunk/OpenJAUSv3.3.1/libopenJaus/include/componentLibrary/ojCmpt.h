@@ -94,6 +94,8 @@ JAUS_EXPORT int ojCmptGetState(OjCmpt ojCmpt);
 JAUS_EXPORT void ojCmptDefaultMessageProcessor(OjCmpt ojCmpt, JausMessage message);
 JAUS_EXPORT char* ojCmptGetName(OjCmpt ojCmpt);
 JAUS_EXPORT void *ojCmptGetUserData(OjCmpt ojCmpt);
+JAUS_EXPORT void ojCmptUnlockUserData(OjCmpt ojCmpt);
+JAUS_EXPORT void ojCmptLockUserData(OjCmpt ojCmpt);
 JAUS_EXPORT double ojCmptGetRateHz(OjCmpt ojCmpt);
 
 // Component Control

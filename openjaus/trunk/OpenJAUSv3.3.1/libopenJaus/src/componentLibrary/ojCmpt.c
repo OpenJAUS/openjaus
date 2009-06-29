@@ -81,6 +81,7 @@ struct OjCmptStruct
 	NodeManagerInterface nmi;
 
 	void *userData;
+	pthread_mutex_t userDataMutex;	// This mutex protects user data from being accessed twice
 };
 
 void* ojCmptThread(void *threadData);
@@ -100,6 +101,9 @@ OjCmpt ojCmptCreate(char *name, JausByte id, double stateFrequencyHz)
 	ojCmpt->jaus->address->component = id;
 	ojCmptSetState(ojCmpt, JAUS_UNDEFINED_STATE);
 	ojCmptSetFrequencyHz(ojCmpt, stateFrequencyHz);
+
+	ojCmpt->userData = NULL;
+	pthread_mutex_init(&ojCmpt->userDataMutex, NULL);
 
 	for(i=0; i<OJ_CMPT_MAX_STATE_COUNT; i++)
 	{
@@ -211,6 +215,7 @@ void ojCmptDestroy(OjCmpt ojCmpt)
 		nodeManagerClose(ojCmpt->nmi); // Close Node Manager Connection
 	}
 
+	pthread_mutex_destroy(&ojCmpt->userDataMutex);
 	free(ojCmpt->jaus->identification);
 	ojCmpt->jaus->identification = NULL;
 	jausComponentDestroy(ojCmpt->jaus);
@@ -314,6 +319,16 @@ void ojCmptSetUserData(OjCmpt ojCmpt, void *data)
 void *ojCmptGetUserData(OjCmpt ojCmpt)
 {
 	return ojCmpt->userData;
+}
+
+void ojCmptLockUserData(OjCmpt ojCmpt)
+{
+	pthread_mutex_lock(&ojCmpt->userDataMutex);
+}
+
+void ojCmptUnlockUserData(OjCmpt ojCmpt)
+{
+	pthread_mutex_unlock(&ojCmpt->userDataMutex);
 }
 
 void ojCmptProcessMessage(OjCmpt ojCmpt, JausMessage message)
