@@ -1,12 +1,12 @@
 /*****************************************************************************
  *  Copyright (c) 2008, University of Florida
  *  All rights reserved.
- *  
- *  This file is part of OpenJAUS.  OpenJAUS is distributed under the BSD 
+ *
+ *  This file is part of OpenJAUS.  OpenJAUS is distributed under the BSD
  *  license.  See the LICENSE file for details.
- * 
- *  Redistribution and use in source and binary forms, with or without 
- *  modification, are permitted provided that the following conditions 
+ *
+ *  Redistribution and use in source and binary forms, with or without
+ *  modification, are permitted provided that the following conditions
  *  are met:
  *
  *     * Redistributions of source code must retain the above copyright
@@ -15,20 +15,20 @@
  *       copyright notice, this list of conditions and the following
  *       disclaimer in the documentation and/or other materials provided
  *       with the distribution.
- *     * Neither the name of the University of Florida nor the names of its 
- *       contributors may be used to endorse or promote products derived from 
+ *     * Neither the name of the University of Florida nor the names of its
+ *       contributors may be used to endorse or promote products derived from
  *       this software without specific prior written permission.
  *
- *   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- *   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- *   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR 
- *   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT 
+ *   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ *   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ *   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ *   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
  *   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- *   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT 
- *   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
- *   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY 
+ *   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ *   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ *   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
  *   THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
+ *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ****************************************************************************/
 // File Name: SystemTree.cpp
@@ -39,7 +39,7 @@
 //
 // Date: 08/07/08
 //
-// Description: This file defines the SystemTree class which manages the list of 
+// Description: This file defines the SystemTree class which manages the list of
 //				JAUS subsystems and their associated nodes and components.
 
 #include <cstdlib>
@@ -117,7 +117,7 @@ unsigned char SystemTree::getNextInstanceId(JausAddress address)
 {
 	bool instanceAvailable[JAUS_MAXIMUM_INSTANCE_ID] = {true};
 	int i = 0;
-	
+
 	for(i=0; i < JAUS_MAXIMUM_INSTANCE_ID; i++)
 	{
 		instanceAvailable[i] = true;
@@ -132,7 +132,7 @@ unsigned char SystemTree::getNextInstanceId(JausAddress address)
 		for(i=0; i < node->components->elementCount; i++)
 		{
 			JausComponent cmpt = (JausComponent) node->components->elementData[i];
-		
+
 			// if this is the same cmpt Id, we'll mark that instance as used
 			if(cmpt->address->component == address->component)
 			{
@@ -390,10 +390,10 @@ JausAddress SystemTree::lookUpAddressInNode(JausNode node, int lookupCmpt, int l
 						{
 							return jausAddressClone(cmpt->address);
 						}
-					}					
+					}
 				}
 			}
-		}		
+		}
 	}
 	return NULL;
 }
@@ -447,7 +447,7 @@ JausAddress SystemTree::lookUpAddress(int lookupSubs, int lookupNode, int lookup
 	JausSubsystem subs = NULL;
 	JausNode node = NULL;
 	JausComponent cmpt = NULL;
-	
+
 	JausAddress address = jausAddressCreate();
 	if(!address)
 	{
@@ -463,7 +463,7 @@ JausAddress SystemTree::lookUpAddress(int lookupSubs, int lookupNode, int lookup
 	JausAddress returnAddress = address;
 
 	// Find this address
-	// If the subsystem is a wild card 
+	// If the subsystem is a wild card
 	if(lookupSubs == JAUS_ADDRESS_WILDCARD_OCTET)
 	{
 		// Look through all subsystems
@@ -482,7 +482,7 @@ JausAddress SystemTree::lookUpAddress(int lookupSubs, int lookupNode, int lookup
 				for(int j = 0; j < subs->nodes->elementCount; j++)
 				{
 					node = (JausNode) subs->nodes->elementData[j];
-					
+
 					// If the component or the instance is a wild card
 					if(lookupCmpt == JAUS_ADDRESS_WILDCARD_OCTET || lookupInst == JAUS_ADDRESS_WILDCARD_OCTET)
 					{
@@ -549,7 +549,7 @@ JausAddress SystemTree::lookUpAddress(int lookupSubs, int lookupNode, int lookup
 									{
 										address = address->next;
 									}
-								}								
+								}
 							}
 						}
 					}
@@ -583,7 +583,7 @@ JausAddress SystemTree::lookUpAddress(int lookupSubs, int lookupNode, int lookup
 								{
 									address = address->next;
 								}
-							}								
+							}
 						}
 					}
 				}
@@ -654,7 +654,7 @@ JausAddress SystemTree::lookUpAddress(int lookupSubs, int lookupNode, int lookup
 								{
 									address = address->next;
 								}
-							}								
+							}
 						}
 					}
 				}
@@ -688,7 +688,7 @@ JausAddress SystemTree::lookUpAddress(int lookupSubs, int lookupNode, int lookup
 							{
 								address = address->next;
 							}
-						}								
+						}
 					}
 				}
 			}
@@ -711,7 +711,7 @@ JausAddress SystemTree::lookUpAddress(int lookupSubs, int lookupNode, int lookup
 			for(int j = 0; j < subs->nodes->elementCount; j++)
 			{
 				node = (JausNode) subs->nodes->elementData[j];
-				
+
 				if(lookupCmpt == JAUS_ADDRESS_WILDCARD_OCTET || lookupInst == JAUS_ADDRESS_WILDCARD_OCTET)
 				{
 					// Look through all components
@@ -773,7 +773,7 @@ JausAddress SystemTree::lookUpAddress(int lookupSubs, int lookupNode, int lookup
 								{
 									address = address->next;
 								}
-							}								
+							}
 						}
 					}
 				}
@@ -807,7 +807,7 @@ JausAddress SystemTree::lookUpAddress(int lookupSubs, int lookupNode, int lookup
 							{
 								address = address->next;
 							}
-						}								
+						}
 					}
 				}
 			}
@@ -878,7 +878,7 @@ JausAddress SystemTree::lookUpAddress(int lookupSubs, int lookupNode, int lookup
 							{
 								address = address->next;
 							}
-						}								
+						}
 					}
 				}
 			}
@@ -912,7 +912,7 @@ JausAddress SystemTree::lookUpAddress(int lookupSubs, int lookupNode, int lookup
 						{
 							address = address->next;
 						}
-					}								
+					}
 				}
 			}
 		}
@@ -945,7 +945,7 @@ JausAddress SystemTree::lookUpServiceInSystem(int commandCode, int serviceType)
 			for(int k = 0; k < node->components->elementCount; k++)
 			{
 				JausComponent cmpt = (JausComponent) node->components->elementData[k];
-				
+
 				for(int m = 0; m < cmpt->services->elementCount; m++)
 				{
 					JausService service = (JausService) cmpt->services->elementData[m];
@@ -955,11 +955,11 @@ JausAddress SystemTree::lookUpServiceInSystem(int commandCode, int serviceType)
 						case JAUS_SERVICE_INPUT_COMMAND:
 							command = service->inputCommandList;
 							break;
-						
+
 						case JAUS_SERVICE_OUTPUT_COMMAND:
 							command = service->outputCommandList;
 							break;
-						
+
 						default:
 							// ERROR: Unknown service type
 							// SHOULD NEVER GET HERE, CHECKED ABOVE
@@ -974,7 +974,7 @@ JausAddress SystemTree::lookUpServiceInSystem(int commandCode, int serviceType)
 							// Add this component's address to our list
 							JausAddress address = jausAddressClone(cmpt->address);
 							address->next = NULL;
-							
+
 							if(list == NULL)
 							{
 								list = address;
@@ -1013,7 +1013,7 @@ JausSubsystem *SystemTree::getSystem(void)
 
 	JausSubsystem *systemClone = (JausSubsystem *)malloc(subsystemCount*sizeof(JausSubsystem));
 	int systemCloneIndex = 0;
-	
+
 	for(int i = JAUS_MINIMUM_SUBSYSTEM_ID; i < JAUS_MAXIMUM_SUBSYSTEM_ID; i++)
 	{
 		if(system[i])
@@ -1218,7 +1218,7 @@ bool SystemTree::addNode(int subsystemId, int nodeId, JausNode node)
 			}
 
 			node->subsystem = subs;
-			
+
 			jausArrayAdd(subs->nodes, node);
 
 			SystemTreeEvent *e = new SystemTreeEvent(SystemTreeEvent::NodeAdded, node);
@@ -1256,7 +1256,7 @@ bool SystemTree::addSubsystem(int subsystemId, JausSubsystem subs)
 				subs = jausSubsystemCreate();
 				subs->id = subsystemId;
 			}
-			
+
 			system[subs->id] = subs;
 			subsystemCount++;
 
@@ -1358,7 +1358,7 @@ bool SystemTree::removeComponent(int subsystemId, int nodeId, int componentId, i
 				return true;
 			}
 		}
-	}	
+	}
 	return false;
 }
 
@@ -1381,7 +1381,7 @@ bool SystemTree::replaceSubsystem(int subsystemId, JausSubsystem newSubs)
 	{
 		return false;
 	}
-	
+
 	if(currentSubs->identification)
 	{
 		size_t stringLength = strlen(currentSubs->identification) + 1;
@@ -1401,7 +1401,7 @@ bool SystemTree::replaceSubsystem(int subsystemId, JausSubsystem newSubs)
 				cloneNode->identification = (char *) realloc(cloneNode->identification, stringLength);
 				sprintf(cloneNode->identification, "%s", currentNode->identification);
 			}
-			
+
 			for(int i = 0; i < cloneNode->components->elementCount; i++)
 			{
 				JausComponent cloneCmpt = (JausComponent)cloneNode->components->elementData[i];
@@ -1410,7 +1410,7 @@ bool SystemTree::replaceSubsystem(int subsystemId, JausSubsystem newSubs)
 				{
 					size_t stringLength = strlen(currentCmpt->identification) + 1;
 					cloneCmpt->identification = (char *) realloc(cloneCmpt->identification, stringLength);
-					sprintf(cloneCmpt->identification, "%s", currentNode->identification);
+					sprintf(cloneCmpt->identification, "%s", currentCmpt->identification);
 				}
 			}
 		}
@@ -1423,7 +1423,7 @@ bool SystemTree::replaceSubsystem(int subsystemId, JausSubsystem newSubs)
 	//char string[1024] = {0};
 	//jausSubsystemTableToString(cloneSubs, string);
 	//printf("Replaced Subsystem: \n%s\n", string);
-	
+
 	return true;
 }
 
@@ -1452,7 +1452,7 @@ bool SystemTree::replaceNode(int subsystemId, int nodeId, JausNode newNode)
 	cloneNode->identification = (char *) realloc(cloneNode->identification, stringLength);
 	sprintf(cloneNode->identification, "%s", currentNode->identification);
 	cloneNode->subsystem = currentNode->subsystem;
-	
+
 	for(int i = 0; i < newNode->components->elementCount; i++)
 	{
 		JausComponent newCmpt = (JausComponent)newNode->components->elementData[i];
@@ -1483,7 +1483,7 @@ bool SystemTree::replaceNode(int subsystemId, int nodeId, JausNode newNode)
 			break;
 		}
 	}
-	
+
 	cloneNode->subsystem = system[subsystemId];
 	jausArrayAdd(system[subsystemId]->nodes, cloneNode);
 	return true;
@@ -1626,7 +1626,7 @@ std::string SystemTree::toString()
 
 	return output;
 }
-	
+
 std::string SystemTree::toDetailedString()
 {
 	string output = string();
@@ -1673,10 +1673,10 @@ void SystemTree::refresh()
 
 							if(jausComponentIsTimedOut(cmpt))
 							{
-								//NOTE: The order here is important b/c event handlers may inspect the system tree and 
+								//NOTE: The order here is important b/c event handlers may inspect the system tree and
 								//      we have to remove the cmpt from the tree before we notify of the change
 
-								// Create Subsystem Event 
+								// Create Subsystem Event
 								SystemTreeEvent *e = new SystemTreeEvent(SystemTreeEvent::ComponentTimeout, cmpt);
 
 								// Remove this component
@@ -1684,7 +1684,7 @@ void SystemTree::refresh()
 
 								// Destroy this memory
 								jausComponentDestroy(cmpt);
-							
+
 								// Send off our event
 								this->handleEvent(e);
 							}
@@ -1694,16 +1694,16 @@ void SystemTree::refresh()
 					{
 						if(jausNodeIsTimedOut(node))
 						{
-							//NOTE: The order here is important b/c event handlers may inspect the system tree and 
+							//NOTE: The order here is important b/c event handlers may inspect the system tree and
 							//      we have to remove the node from the tree before we notify of the change
-							
+
 							// Create a timeout event
 							SystemTreeEvent *e = new SystemTreeEvent(SystemTreeEvent::NodeTimeout, node);
-							
+
 							// Remove the Node
 							removeNode(node);
 
-							// Handle the event 
+							// Handle the event
 							this->handleEvent(e);
 						}
 					}
@@ -1713,12 +1713,12 @@ void SystemTree::refresh()
 			{
 				if(jausSubsystemIsTimedOut(system[i]))
 				{
-					//NOTE: The order here is important b/c event handlers may inspect the system tree and 
+					//NOTE: The order here is important b/c event handlers may inspect the system tree and
 					//      we have to remove the node from the tree before we notify of the change
-					
+
 					// Create our event with the proper information
 					SystemTreeEvent *e = new SystemTreeEvent(SystemTreeEvent::SubsystemTimeout, system[i]);
-					
+
 					// Remove the dead subsystem
 					removeSubsystem(system[i]->id);
 

@@ -1,12 +1,12 @@
 /*****************************************************************************
  *  Copyright (c) 2008, University of Florida
  *  All rights reserved.
- *  
- *  This file is part of OpenJAUS.  OpenJAUS is distributed under the BSD 
+ *
+ *  This file is part of OpenJAUS.  OpenJAUS is distributed under the BSD
  *  license.  See the LICENSE file for details.
- * 
- *  Redistribution and use in source and binary forms, with or without 
- *  modification, are permitted provided that the following conditions 
+ *
+ *  Redistribution and use in source and binary forms, with or without
+ *  modification, are permitted provided that the following conditions
  *  are met:
  *
  *     * Redistributions of source code must retain the above copyright
@@ -15,20 +15,20 @@
  *       copyright notice, this list of conditions and the following
  *       disclaimer in the documentation and/or other materials provided
  *       with the distribution.
- *     * Neither the name of the University of Florida nor the names of its 
- *       contributors may be used to endorse or promote products derived from 
+ *     * Neither the name of the University of Florida nor the names of its
+ *       contributors may be used to endorse or promote products derived from
  *       this software without specific prior written permission.
  *
- *   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- *   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- *   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR 
- *   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT 
+ *   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ *   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ *   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ *   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
  *   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- *   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT 
- *   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
- *   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY 
+ *   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ *   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ *   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
  *   THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
+ *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ****************************************************************************/
 // File Name: jausMessage.c
@@ -39,7 +39,7 @@
 //
 // Date: 08/07/08
 //
-// Description: This file defines all the attributes of a JausMessage and all pre-defined 
+// Description: This file defines all the attributes of a JausMessage and all pre-defined
 // command codes according to RA 3.2
 
 #include <stdio.h>
@@ -58,7 +58,7 @@ static int headerToString(JausMessage message, char **buf);
 JausMessage jausMessageCreate(void)
 {
 	JausMessage message;
-	
+
 	message = (JausMessage)malloc( sizeof(struct JausMessageStruct) );
 	if(message == NULL)
 	{
@@ -78,7 +78,7 @@ JausMessage jausMessageCreate(void)
 	message->dataFlag = JAUS_SINGLE_DATA_PACKET;
 	message->dataSize = maxDataSizeBytes;
 	message->sequenceNumber = 0;
-	
+
 	message->data = NULL;
 
 	return message;
@@ -94,7 +94,7 @@ void jausMessageDestroy(JausMessage message)
 		}
 		jausAddressDestroy(message->source);
 		jausAddressDestroy(message->destination);
-		free(message);	
+		free(message);
 	}
 }
 
@@ -108,10 +108,10 @@ JausBoolean jausMessageToBuffer(JausMessage message, unsigned char *buffer, unsi
 {
 	if(bufferSizeBytes < jausMessageSize(message))
 	{
-		return JAUS_FALSE; //improper size	
+		return JAUS_FALSE; //improper size
 	}
 	else
-	{	
+	{
 		if(headerToBuffer(message, buffer, bufferSizeBytes))
 		{
 			memcpy(buffer + JAUS_HEADER_SIZE_BYTES, message->data, message->dataSize);
@@ -127,7 +127,7 @@ JausBoolean jausMessageToBuffer(JausMessage message, unsigned char *buffer, unsi
 JausBoolean jausMessageFromBuffer(JausMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
 {
 	int index = 0;
-	
+
 	if(headerFromBuffer(message, buffer + index, bufferSizeBytes - index))
 	{
 		index += JAUS_HEADER_SIZE_BYTES;
@@ -156,7 +156,7 @@ JausBoolean jausMessageIsRejectableCommand(JausMessage message)
 	{
 		return JAUS_FALSE;
 	}
-	
+
 	switch(message->commandCode)
 	{
 		case JAUS_SET_COMPONENT_AUTHORITY:
@@ -166,7 +166,7 @@ JausBoolean jausMessageIsRejectableCommand(JausMessage message)
 		case JAUS_RESET:
 		case JAUS_SET_EMERGENCY:
 		case JAUS_CLEAR_EMERGENCY:
-		case JAUS_SET_TIME:		
+		case JAUS_SET_TIME:
 		case JAUS_RELEASE_COMPONENT_CONTROL:
 		case JAUS_SET_WRENCH_EFFORT:
 		case JAUS_SET_DISCRETE_DEVICES:
@@ -190,11 +190,11 @@ JausBoolean jausMessageIsRejectableCommand(JausMessage message)
 		case JAUS_SET_CAMERA_CAPABILITIES:
 		case JAUS_SET_CAMERA_FORMAT_OPTIONS:
 			return JAUS_TRUE;
-			
+
 		default:
 			return JAUS_FALSE;
 	}
-	return JAUS_FALSE;	
+	return JAUS_FALSE;
 }
 
 char *jausMessageCommandCodeString(JausMessage message)
@@ -205,7 +205,7 @@ char *jausMessageCommandCodeString(JausMessage message)
 char *jausCommandCodeString(unsigned short commandCode)
 {
 	static char string[128] = {0};
-	
+
 	switch(commandCode)
 	{
 		case JAUS_SET_COMPONENT_AUTHORITY:
@@ -516,14 +516,46 @@ char *jausCommandCodeString(unsigned short commandCode)
 			return "JAUS_REPORT_VKS_OBJECTS";
 		case JAUS_REPORT_VKS_DATA_TRANSFER_TERMINATION:
 		  return "JAUS_REPORT_VKS_DATA_TRANSFER_TERMINATION";
-    case JAUS_REPORT_SPOOLING_PREFERENCE:
-      return "JAUS_REPORT_SPOOLING_PREFERENCE";
-    case JAUS_REPORT_MISSION_STATUS:
-      return "JAUS_REPORT_MISSION_STATUS";
+		case JAUS_REPORT_SPOOLING_PREFERENCE:
+			return "JAUS_REPORT_SPOOLING_PREFERENCE";
+		case JAUS_REPORT_MISSION_STATUS:
+			return "JAUS_REPORT_MISSION_STATUS";
+		case JAUS_QUERY_MISSION_STATUS:
+			return "JAUS_QUERY_MISSION_STATUS";
+		case JAUS_QUERY_SPOOLING_PREFERENCE:
+			return "JAUS_QUERY_SPOOLING_PREFERENCE";
+		case JAUS_QUERY_SUBSYSTEM_LIST:
+			return "JAUS_QUERY_SUBSYSTEM_LIST";
+		case JAUS_REPORT_VKS_DATA_TRANSFER_TERMINATION:
+			return "JAUS_REPORT_VKS_DATA_TRANSFER_TERMINATION";
+		case JAUS_REPORT_SUBSYSTEM_LIST:
+			return "JAUS_REPORT_SUBSYSTEM_LIST:";
+		case JAUS_SET_SELECTED_DATA_LINK_STATE:
+			return "JAUS_SET_SELECTED_DATA_LINK_STATE";
+		case JAUS_SET_VELOCITY_STATE:
+			return "JAUS_SET_VELOCITY_STATE";
+		case JAUS_RUN_MISSION:
+			return "JAUS_RUN_MISSION";
+		case JAUS_ABORT_MISSION:
+			return "JAUS_ABORT_MISSION";
+		case JAUS_SPOOL_MISSION:
+			return "JAUS_SPOOL_MISSION";
+		case JAUS_REPLACE_MESSAGES:
+			return "JAUS_REPLACE_MESSAGES";
+		case JAUS_RESUME_MISSION:
+			return "JAUS_RESUME_MISSION";
+		case JAUS_PAUSE_MISSION:
+			return "JAUS_PAUSE_MISSION";
+		case JAUS_REMOVE_MESSAGES:
+			return "JAUS_REMOVE_MESSAGES";
+		case JAUS_SET_VKS_FEATURE_CLASS_METADATA:
+			return "JAUS_SET_VKS_FEATURE_CLASS_METADATA";
+		case JAUS_TERMINATE_VKS_DATA_TRANSFER:
+			return "JAUS_TERMINATE_VKS_DATA_TRANSFER";
 		default:
-			sprintf(string, "UNDEFINED MESSAGE: 0x%04X", commandCode); 
+			sprintf(string, "UNDEFINED MESSAGE: 0x%04X", commandCode);
 			return string;
-	}	
+	}
 }
 
 unsigned short jausMessageGetComplementaryCommandCode(unsigned short commandCode)
@@ -717,7 +749,7 @@ unsigned short jausMessageGetComplementaryCommandCode(unsigned short commandCode
 		default:
 			// Unknown Command Code
 			return 0;
-	}	
+	}
 }
 
 JausMessage jausMessageClone(JausMessage inputMessage)
@@ -729,7 +761,7 @@ JausMessage jausMessageClone(JausMessage inputMessage)
 	{
 		return NULL;
 	}
-	
+
 	outputMessage->properties = inputMessage->properties;
 	outputMessage->commandCode = inputMessage->commandCode;
 
@@ -749,7 +781,7 @@ JausMessage jausMessageClone(JausMessage inputMessage)
 		outputMessage->data =  (unsigned char *)malloc(inputMessage->dataSize);
 		memcpy(outputMessage->data, inputMessage->data, inputMessage->dataSize);
 	}
-		
+
 	return outputMessage;
 }
 
@@ -758,16 +790,16 @@ char* jausMessageToString(JausMessage message)
   if(message)
   {
     char* buf1 = NULL;
-    char* buf = NULL;    
+    char* buf = NULL;
     int returnVal;
-    
+
     //Print the message header to the string buffer
     returnVal = headerToString(message, &buf1);
-    
+
     buf = (char*)malloc(strlen(buf1) +1);
     strcpy(buf, buf1);
     free(buf1);
-    
+
     return buf;
   }
   else
@@ -783,13 +815,13 @@ char* jausMessageToString(JausMessage message)
 static JausBoolean headerToBuffer(JausMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
 {
 	JausUnsignedShort *propertiesPtr = (JausUnsignedShort*)&message->properties;
-	
+
 	if(bufferSizeBytes < JAUS_HEADER_SIZE_BYTES)
 	{
 		return JAUS_FALSE;
 	}
 	else
-	{	
+	{
 		buffer[0] = (unsigned char)(*propertiesPtr & 0xFF);
 		buffer[1] = (unsigned char)((*propertiesPtr & 0xFF00) >> 8);
 
@@ -805,13 +837,13 @@ static JausBoolean headerToBuffer(JausMessage message, unsigned char *buffer, un
 		buffer[9] = (unsigned char)(message->source->component & 0xFF);
 		buffer[10] = (unsigned char)(message->source->node & 0xFF);
 		buffer[11] = (unsigned char)(message->source->subsystem & 0xFF);
-		
+
 		buffer[12] = (unsigned char)(message->dataSize & 0xFF);
 		buffer[13] = (unsigned char)((message->dataFlag & 0xFF) << 4) | (unsigned char)((message->dataSize & 0x0F00) >> 8);
 
 		buffer[14] = (unsigned char)(message->sequenceNumber & 0xFF);
 		buffer[15] = (unsigned char)((message->sequenceNumber & 0xFF00) >> 8);
-		
+
 		return JAUS_TRUE;
 	}
 }
@@ -831,7 +863,7 @@ static JausBoolean headerFromBuffer(JausMessage message, unsigned char *buffer, 
 		message->properties.expFlag	 = ((buffer[0] >> 7) & 0x01);
 		message->properties.version	 = (buffer[1] & 0x3F);
 		message->properties.reserved = ((buffer[1] >> 6) & 0x03);
-		
+
 		message->commandCode = buffer[2] + (buffer[3] << 8);
 
 		message->destination->instance = buffer[4];
@@ -843,25 +875,25 @@ static JausBoolean headerFromBuffer(JausMessage message, unsigned char *buffer, 
 		message->source->component = buffer[9];
 		message->source->node = buffer[10];
 		message->source->subsystem = buffer[11];
-		
+
 		message->dataSize = buffer[12] | ((buffer[13] & 0x0F) << 8);
 		message->dataFlag = (buffer[13] & 0xF0) >> 4;
 
 		message->sequenceNumber = buffer[14] + (buffer[15] << 8);
-		
+
 		return JAUS_TRUE;
 	}
 }
 
 static int headerToString(JausMessage message, char **buf)
 {
-  //message existance already verified 
+  //message existance already verified
 
   //Setup temporary string buffer
-  
+
   unsigned int bufSize = 500;
   (*buf) = (char*)malloc(sizeof(char)*bufSize);
-  
+
   strcpy((*buf), jausCommandCodeString(message->commandCode) );
   strcat((*buf), " (0x");
   sprintf((*buf)+strlen(*buf), "%04X", message->commandCode);
@@ -890,15 +922,15 @@ static int headerToString(JausMessage message, char **buf)
   strcat((*buf), "\nExp. Flag: ");
   if(message->properties.expFlag == 0)
     strcat((*buf), "JAUS");
-  else 
+  else
     strcat((*buf), "Experimental");
-  
+
   strcat((*buf), "\nSC Flag: ");
   if(message->properties.scFlag == 0)
     strcat((*buf), "Service Connection");
   else
     strcat((*buf), "Not Service Connection");
-  
+
   strcat((*buf), "\nACK/NAK: ");
   switch(message->properties.ackNak)
   {
@@ -917,7 +949,7 @@ static int headerToString(JausMessage message, char **buf)
   default:
     break;
   }
-  
+
   strcat((*buf), "\nPriority: ");
   if(message->properties.priority < 12)
   {
@@ -929,16 +961,16 @@ static int headerToString(JausMessage message, char **buf)
     strcat((*buf), "Safety Critical Priority ");
     jausUnsignedShortToString(message->properties.priority, (*buf)+strlen(*buf));
   }
-  
+
   strcat((*buf), "\nSource: ");
   jausAddressToString(message->source, (*buf)+strlen(*buf));
-  
+
   strcat((*buf), "\nDestination: ");
   jausAddressToString(message->destination, (*buf)+strlen(*buf));
-  
+
   strcat((*buf), "\nData Size: ");
   jausUnsignedIntegerToString(message->dataSize, (*buf)+strlen(*buf));
-  
+
   strcat((*buf), "\nData Flag: ");
   jausUnsignedIntegerToString(message->dataFlag, (*buf)+strlen(*buf));
   switch(message->dataFlag)
@@ -962,10 +994,10 @@ static int headerToString(JausMessage message, char **buf)
       strcat((*buf), " Unrecognized data flag code");
       break;
   }
-  
+
   strcat((*buf), "\nSequence Number: ");
   jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
-  
+
   return (int)strlen(*buf);
-  
+
 }
