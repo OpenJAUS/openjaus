@@ -1,12 +1,12 @@
 /*****************************************************************************
  *  Copyright (c) 2008, University of Florida
  *  All rights reserved.
- *  
- *  This file is part of OpenJAUS.  OpenJAUS is distributed under the BSD 
+ *
+ *  This file is part of OpenJAUS.  OpenJAUS is distributed under the BSD
  *  license.  See the LICENSE file for details.
- * 
- *  Redistribution and use in source and binary forms, with or without 
- *  modification, are permitted provided that the following conditions 
+ *
+ *  Redistribution and use in source and binary forms, with or without
+ *  modification, are permitted provided that the following conditions
  *  are met:
  *
  *     * Redistributions of source code must retain the above copyright
@@ -15,20 +15,20 @@
  *       copyright notice, this list of conditions and the following
  *       disclaimer in the documentation and/or other materials provided
  *       with the distribution.
- *     * Neither the name of the University of Florida nor the names of its 
- *       contributors may be used to endorse or promote products derived from 
+ *     * Neither the name of the University of Florida nor the names of its
+ *       contributors may be used to endorse or promote products derived from
  *       this software without specific prior written permission.
  *
- *   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- *   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- *   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR 
- *   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT 
+ *   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ *   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ *   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ *   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
  *   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- *   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT 
- *   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
- *   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY 
+ *   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ *   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ *   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
  *   THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
+ *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ****************************************************************************/
 // File Name: queryVksObjectsMessage.c
@@ -79,9 +79,9 @@ static void dataInitialize(QueryVksObjectsMessage message)
 static void dataDestroy(QueryVksObjectsMessage message)
 {
 	// Free message fields
-	if(message->objectIds) 
+	if(message->objectIds)
 		free(message->objectIds);
-	
+
 	vectorObjectDestroy(message->queryRegion);
 }
 
@@ -102,25 +102,25 @@ static JausBoolean dataFromBuffer(QueryVksObjectsMessage message, unsigned char 
 		// Presence Vector
 		if(!jausByteFromBuffer(&message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
-	
+
 		// Response Presence Vector
 		if(!jausByteFromBuffer(&message->responsePresenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
-	
+
 		// Request Id
 		if(!jausByteFromBuffer(&message->requestId, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
-		
+
 		// Test if objectCount is specified
 		if(jausByteIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_ID_BIT))
 		{
 			// Request Id
 			if(!jausUnsignedShortFromBuffer(&message->objectCount, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 			index += JAUS_BYTE_SIZE_BYTES;
-			
+
 			// Allocate memory for objectIds
 			message->objectIds = (JausUnsignedInteger *)malloc(message->objectCount * JAUS_UNSIGNED_INTEGER_SIZE_BYTES);
-			
+
 			// Unpack Object Ids
 			for(i = 0; i < message->objectCount; i++)
 			{
@@ -132,40 +132,40 @@ static JausBoolean dataFromBuffer(QueryVksObjectsMessage message, unsigned char 
 		{
 			message->objectIds = NULL;
 		}
-		
+
 		// Create the QueryRegion object
 		message->queryRegion = vectorObjectCreate();
 		if(!message->queryRegion) return JAUS_FALSE;
-					
+
 		// Test if a queryRegion is specified
 		if(jausByteIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_REGION_BIT))
 		{
 			// Unpack Region Type
 			if(!jausByteFromBuffer(&message->queryRegion->type, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 			index += JAUS_BYTE_SIZE_BYTES;
-			
+
 			// Buffer is optional
-			if(jausByteIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_REGION_BIT))
+			if(jausByteIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_BUFFER_BIT))
 			{
 				// Unpack Buffer
 				if(!jausFloatFromBuffer(&message->queryRegion->bufferMeters, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 				index += JAUS_FLOAT_SIZE_BYTES;
 			}
 		}
-	
+
 		// Test if Feature Class provided
 		if(jausByteIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_FC_COUNT_BIT))
 		{
 			// FC Count
 			if(!jausByteFromBuffer(&featureClassCount, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 			index += JAUS_BYTE_SIZE_BYTES;
-		
+
 			for(i = 0; i < featureClassCount; i++)
 			{
 				// Create JausWorldModelFeatureClass Object
 				fcClass = featureClassCreate();
 				if(!fcClass) return JAUS_FALSE;
-	
+
 				// This should ALWAYS be true, because VKS_PV_QUERY_OBJECTS_FC_COUNT_BIT is set
 				if(jausByteIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_FEATURE_CLASS_BIT))
 				{
@@ -173,23 +173,23 @@ static JausBoolean dataFromBuffer(QueryVksObjectsMessage message, unsigned char 
 					if(!jausUnsignedShortFromBuffer(&fcClass->id, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 					index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
 				}
-					
+
 				if(jausByteIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_ATTRIBUTE_BIT))
 				{
 					//Destroy the Attribute created by featureClassCreate
 					featureClassAttributeDestroy(fcClass->attribute);
-					
+
 					// Unpack Attribute Data Type & Value
 					fcClass->attribute = featureClassAttributeFromBuffer(buffer+index, bufferSizeBytes-index);
 					if(!fcClass->attribute) return JAUS_FALSE;
 					index += featureClassAttributeSizeBytes(fcClass->attribute);
 				}
-					
+
 				// Add FC to array
 				jausArrayAdd(message->queryRegion->featureClasses, fcClass);
 			}
 		}
-		
+
 		// Test if region points specified
 		// This should be true if the VKS_PV_QUERY_OBJECTS_REGION_BIT is set
 		if(jausByteIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_POINT_COUNT_BIT))
@@ -197,29 +197,29 @@ static JausBoolean dataFromBuffer(QueryVksObjectsMessage message, unsigned char 
 			// Unpack Point Count
 			if(!jausUnsignedShortFromBuffer(&dataPointCount, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 			index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
-			
+
 			for(i = 0; i < dataPointCount; i++)
 			{
 				point = jausGeometryPointLLACreate();
 				if(!point) return JAUS_FALSE;
-			
+
 				// unpack Latitude
 				if(!jausIntegerFromBuffer(&tempInt, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 				index += JAUS_INTEGER_SIZE_BYTES;
-				
+
 				// Scaled Int (-90, 90)
 				point->latitudeRadians = jausIntegerToDouble(tempInt, -90, 90) * JAUS_RAD_PER_DEG;
-				
+
 				// unpack Latitude
 				if(!jausIntegerFromBuffer(&tempInt, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 				index += JAUS_INTEGER_SIZE_BYTES;
-				
+
 				// Scaled Int (-180, 180)
 				point->longitudeRadians = jausIntegerToDouble(tempInt, -180, 180) * JAUS_RAD_PER_DEG;
-				
+
 				jausArrayAdd(message->queryRegion->dataPoints, point);
 			}
-		}	
+		}
 
 		return JAUS_TRUE;
 	}
@@ -253,7 +253,7 @@ static int dataToBuffer(QueryVksObjectsMessage message, unsigned char *buffer, u
 			jausByteClearBit(&message->presenceVector, VKS_PV_QUERY_OBJECTS_BUFFER_BIT);
 		}
 
-		// If the VKS_PV_QUERY_OBJECTS_FEATURE_CLASS_BIT is set or the VKS_PV_QUERY_OBJECTS_ATTRIBUTE_BIT is set, 
+		// If the VKS_PV_QUERY_OBJECTS_FEATURE_CLASS_BIT is set or the VKS_PV_QUERY_OBJECTS_ATTRIBUTE_BIT is set,
 		// then the VKS_PV_QUERY_OBJECTS_FC_COUNT_BIT is required
 		if(	jausByteIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_ATTRIBUTE_BIT) ||
 			jausByteIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_FEATURE_CLASS_BIT))
@@ -269,11 +269,11 @@ static int dataToBuffer(QueryVksObjectsMessage message, unsigned char *buffer, u
 		// Presence Vector
 		if(!jausByteToBuffer(message->presenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
-	
+
 		// Response Presence Vector
 		if(!jausByteToBuffer(message->responsePresenceVector, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
-	
+
 		// Request Id
 		if(!jausByteToBuffer(message->requestId, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 		index += JAUS_BYTE_SIZE_BYTES;
@@ -284,7 +284,7 @@ static int dataToBuffer(QueryVksObjectsMessage message, unsigned char *buffer, u
 			// Object Count
 			if(!jausUnsignedShortToBuffer(message->objectCount, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 			index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
-					
+
 			// Pack Object Ids
 			for(i = 0; i < message->objectCount; i++)
 			{
@@ -299,24 +299,24 @@ static int dataToBuffer(QueryVksObjectsMessage message, unsigned char *buffer, u
 			// Region Type
 			if(!jausByteToBuffer(message->queryRegion->type, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 			index += JAUS_BYTE_SIZE_BYTES;
-			
+
 			// Buffer is Optional
-			if(jausByteIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_REGION_BIT))
+			if(jausByteIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_BUFFER_BIT))
 			{
 				// Buffer
 				if(!jausFloatToBuffer(message->queryRegion->bufferMeters, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 				index += JAUS_FLOAT_SIZE_BYTES;
 			}
 		}
-		
+
 		// Feature Class Information is optional
 		if(jausByteIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_FC_COUNT_BIT))
 		{
 			// Feature Class Count
 			if(!jausByteToBuffer((JausByte)message->queryRegion->featureClasses->elementCount, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 			index += JAUS_BYTE_SIZE_BYTES;
-		}			
-		
+		}
+
 		if(jausByteIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_FEATURE_CLASS_BIT))
 		{
 			for(i = 0; i < message->queryRegion->featureClasses->elementCount; i++)
@@ -326,7 +326,7 @@ static int dataToBuffer(QueryVksObjectsMessage message, unsigned char *buffer, u
 				// Feature Class Id
 				if(!jausUnsignedShortToBuffer(fcClass->id, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 				index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
-				
+
 				// Attribute is Optional
 				if(jausByteIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_ATTRIBUTE_BIT))
 				{
@@ -340,12 +340,12 @@ static int dataToBuffer(QueryVksObjectsMessage message, unsigned char *buffer, u
 			for(i = 0; i < message->queryRegion->featureClasses->elementCount; i++)
 			{
 				fcClass = (JausWorldModelFeatureClass) message->queryRegion->featureClasses->elementData[i];
-	
+
 				if(!featureClassAttributeToBuffer(fcClass->attribute, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
-				index += featureClassAttributeSizeBytes(fcClass->attribute);	
+				index += featureClassAttributeSizeBytes(fcClass->attribute);
 			}
 		}
-		
+
 		// Region is optional, if VKS_PV_QUERY_OBJECTS_REGION_BIT set, points required
 		if(jausByteIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_POINT_COUNT_BIT))
 		{
@@ -356,17 +356,17 @@ static int dataToBuffer(QueryVksObjectsMessage message, unsigned char *buffer, u
 			for(i = 0; i < message->queryRegion->dataPoints->elementCount; i++)
 			{
 				point = (JausGeometryPointLLA) message->queryRegion->dataPoints->elementData[i];
-	
+
 				// Scaled Int (-90, 90)
 				tempInt = jausIntegerFromDouble((point->latitudeRadians * JAUS_DEG_PER_RAD), -90, 90);
-	
+
 				//pack Latitude
 				if(!jausIntegerToBuffer(tempInt, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 				index += JAUS_INTEGER_SIZE_BYTES;
-	
+
 				// Scaled Int (-180, 180)
 				tempInt = jausIntegerFromDouble((point->longitudeRadians * JAUS_DEG_PER_RAD), -180, 180);
-	
+
 				//pack Longitude
 				if(!jausIntegerToBuffer(tempInt, buffer+index, bufferSizeBytes-index)) return JAUS_FALSE;
 				index += JAUS_INTEGER_SIZE_BYTES;
@@ -379,38 +379,38 @@ static int dataToBuffer(QueryVksObjectsMessage message, unsigned char *buffer, u
 
 static int dataToString(QueryVksObjectsMessage message, char **buf)
 {
-  //message already verified 
+  //message already verified
 
   char* region = NULL;
   unsigned short i;
   unsigned int bufSize = 300 + 50 * message->objectCount;
-  
+
   // Region is Optional
   if(jausByteIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_REGION_BIT))
   {
     region = vectorObjectToString(message->queryRegion);
     bufSize += (int)strlen(region);
   }
-  
+
   //Setup temporary string buffer
-  
+
   (*buf) = (char*)malloc(sizeof(char)*bufSize);
-  
+
   strcpy((*buf), "\nPresence Vector: " );
   jausByteToHexString(message->presenceVector, (*buf)+strlen(*buf));
-  
+
   strcat((*buf), "\nResponse Presence Vector: ");
   jausByteToHexString(message->responsePresenceVector, (*buf)+strlen(*buf));
-  
+
   strcat((*buf), "\nRequest Id: ");
   jausByteToString(message->requestId, (*buf)+strlen(*buf));
-  
+
   // objectCount is optional
   if(jausByteIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_ID_BIT))
-  {  
+  {
     strcat((*buf), "\nObject Count: ");
     jausUnsignedShortToString(message->objectCount, (*buf)+strlen(*buf));
-    
+
     for(i=0; i<message->objectCount; i++)
     {
       strcat((*buf), "\nObject Id: ");
@@ -425,7 +425,7 @@ static int dataToString(QueryVksObjectsMessage message, char **buf)
     strcat((*buf), region);
     free(region);
   }
-  
+
   return (int)strlen(*buf);
 }
 
@@ -448,7 +448,7 @@ static unsigned int dataSize(QueryVksObjectsMessage message)
 		jausByteClearBit(&message->presenceVector, VKS_PV_QUERY_OBJECTS_BUFFER_BIT);
 	}
 
-	// If the VKS_PV_QUERY_OBJECTS_FEATURE_CLASS_BIT is set or the VKS_PV_QUERY_OBJECTS_ATTRIBUTE_BIT is set, 
+	// If the VKS_PV_QUERY_OBJECTS_FEATURE_CLASS_BIT is set or the VKS_PV_QUERY_OBJECTS_ATTRIBUTE_BIT is set,
 	// then the VKS_PV_QUERY_OBJECTS_FC_COUNT_BIT is required
 	if(	jausByteIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_ATTRIBUTE_BIT) ||
 		jausByteIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_FEATURE_CLASS_BIT))
@@ -475,7 +475,7 @@ static unsigned int dataSize(QueryVksObjectsMessage message)
 	{
 		// Object Count
 		index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
-				
+
 		// Pack Object Ids
 		for(i = 0; i < message->objectCount; i++)
 		{
@@ -488,7 +488,7 @@ static unsigned int dataSize(QueryVksObjectsMessage message)
 	{
 		// Region Type
 		index += JAUS_BYTE_SIZE_BYTES;
-		
+
 		// Buffer is Optional
 		if(jausByteIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_REGION_BIT))
 		{
@@ -496,14 +496,14 @@ static unsigned int dataSize(QueryVksObjectsMessage message)
 			index += JAUS_FLOAT_SIZE_BYTES;
 		}
 	}
-	
+
 	// Feature Class Information is optional
 	if(jausByteIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_FC_COUNT_BIT))
 	{
 		// Feature Class Count
 		index += JAUS_BYTE_SIZE_BYTES;
-	}			
-	
+	}
+
 	if(jausByteIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_FEATURE_CLASS_BIT))
 	{
 		for(i = 0; i < message->queryRegion->featureClasses->elementCount; i++)
@@ -512,7 +512,7 @@ static unsigned int dataSize(QueryVksObjectsMessage message)
 
 			// Feature Class Id
 			index += JAUS_UNSIGNED_SHORT_SIZE_BYTES;
-			
+
 			// Attribute is Optional
 			if(jausByteIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_ATTRIBUTE_BIT))
 			{
@@ -525,10 +525,10 @@ static unsigned int dataSize(QueryVksObjectsMessage message)
 		for(i = 0; i < message->queryRegion->featureClasses->elementCount; i++)
 		{
 			fcClass = (JausWorldModelFeatureClass) message->queryRegion->featureClasses->elementData[i];
-			index += featureClassAttributeSizeBytes(fcClass->attribute);	
+			index += featureClassAttributeSizeBytes(fcClass->attribute);
 		}
 	}
-	
+
 	// Region is optional, if VKS_PV_QUERY_OBJECTS_REGION_BIT set, points required
 	if(jausByteIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_POINT_COUNT_BIT))
 	{
@@ -561,7 +561,7 @@ QueryVksObjectsMessage queryVksObjectsMessageCreate(void)
 	{
 		return NULL;
 	}
-	
+
 	// Initialize Values
 	message->properties.priority = JAUS_DEFAULT_PRIORITY;
 	message->properties.ackNak = JAUS_ACK_NAK_NOT_REQUIRED;
@@ -575,10 +575,10 @@ QueryVksObjectsMessage queryVksObjectsMessageCreate(void)
 	message->dataFlag = JAUS_SINGLE_DATA_PACKET;
 	message->dataSize = maxDataSizeBytes;
 	message->sequenceNumber = 0;
-	
+
 	dataInitialize(message);
-	
-	return message;	
+
+	return message;
 }
 
 void queryVksObjectsMessageDestroy(QueryVksObjectsMessage message)
@@ -592,7 +592,7 @@ void queryVksObjectsMessageDestroy(QueryVksObjectsMessage message)
 JausBoolean queryVksObjectsMessageFromBuffer(QueryVksObjectsMessage message, unsigned char* buffer, unsigned int bufferSizeBytes)
 {
 	int index = 0;
-	
+
 	if(headerFromBuffer(message, buffer+index, bufferSizeBytes-index))
 	{
 		index += JAUS_HEADER_SIZE_BYTES;
@@ -615,10 +615,10 @@ JausBoolean queryVksObjectsMessageToBuffer(QueryVksObjectsMessage message, unsig
 {
 	if(bufferSizeBytes < queryVksObjectsMessageSize(message))
 	{
-		return JAUS_FALSE; //improper size	
+		return JAUS_FALSE; //improper size
 	}
 	else
-	{	
+	{
 		message->dataSize = dataToBuffer(message, buffer+JAUS_HEADER_SIZE_BYTES, bufferSizeBytes - JAUS_HEADER_SIZE_BYTES);
 		if(headerToBuffer(message, buffer, bufferSizeBytes))
 		{
@@ -634,7 +634,7 @@ JausBoolean queryVksObjectsMessageToBuffer(QueryVksObjectsMessage message, unsig
 QueryVksObjectsMessage queryVksObjectsMessageFromJausMessage(JausMessage jausMessage)
 {
 	QueryVksObjectsMessage message;
-	
+
 	if(jausMessage->commandCode != commandCode)
 	{
 		return NULL; // Wrong message type
@@ -646,7 +646,7 @@ QueryVksObjectsMessage queryVksObjectsMessageFromJausMessage(JausMessage jausMes
 		{
 			return NULL;
 		}
-		
+
 		message->properties.priority = jausMessage->properties.priority;
 		message->properties.ackNak = jausMessage->properties.ackNak;
 		message->properties.scFlag = jausMessage->properties.scFlag;
@@ -661,7 +661,7 @@ QueryVksObjectsMessage queryVksObjectsMessageFromJausMessage(JausMessage jausMes
 		message->dataSize = jausMessage->dataSize;
 		message->dataFlag = jausMessage->dataFlag;
 		message->sequenceNumber = jausMessage->sequenceNumber;
-		
+
 		// Unpack jausMessage->data
 		if(dataFromBuffer(message, jausMessage->data, jausMessage->dataSize))
 		{
@@ -677,13 +677,13 @@ QueryVksObjectsMessage queryVksObjectsMessageFromJausMessage(JausMessage jausMes
 JausMessage queryVksObjectsMessageToJausMessage(QueryVksObjectsMessage message)
 {
 	JausMessage jausMessage;
-	
+
 	jausMessage = (JausMessage)malloc( sizeof(struct JausMessageStruct) );
 	if(jausMessage == NULL)
 	{
 		return NULL;
-	}	
-	
+	}
+
 	jausMessage->properties.priority = message->properties.priority;
 	jausMessage->properties.ackNak = message->properties.ackNak;
 	jausMessage->properties.scFlag = message->properties.scFlag;
@@ -698,10 +698,10 @@ JausMessage queryVksObjectsMessageToJausMessage(QueryVksObjectsMessage message)
 	jausMessage->dataSize = dataSize(message);
 	jausMessage->dataFlag = message->dataFlag;
 	jausMessage->sequenceNumber = message->sequenceNumber;
-	
+
 	jausMessage->data = (unsigned char *)malloc(jausMessage->dataSize);
 	jausMessage->dataSize = dataToBuffer(message, jausMessage->data, jausMessage->dataSize);
-	
+
 	return jausMessage;
 }
 
@@ -718,22 +718,22 @@ char* queryVksObjectsMessageToString(QueryVksObjectsMessage message)
     char* buf1 = NULL;
     char* buf2 = NULL;
     char* buf = NULL;
-    
+
     int returnVal;
-    
+
     //Print the message header to the string buffer
     returnVal = headerToString(message, &buf1);
-    
+
     //Print the message data fields to the string buffer
     returnVal += dataToString(message, &buf2);
-    
+
 buf = (char*)malloc(strlen(buf1)+strlen(buf2)+1);
     strcpy(buf, buf1);
     strcat(buf, buf2);
 
     free(buf1);
     free(buf2);
-    
+
     return buf;
   }
   else
@@ -761,25 +761,25 @@ static JausBoolean headerFromBuffer(QueryVksObjectsMessage message, unsigned cha
 		message->properties.expFlag	 = ((buffer[0] >> 7) & 0x01);
 		message->properties.version	 = (buffer[1] & 0x3F);
 		message->properties.reserved = ((buffer[1] >> 6) & 0x03);
-		
+
 		message->commandCode = buffer[2] + (buffer[3] << 8);
-	
+
 		message->destination->instance = buffer[4];
 		message->destination->component = buffer[5];
 		message->destination->node = buffer[6];
 		message->destination->subsystem = buffer[7];
-	
+
 		message->source->instance = buffer[8];
 		message->source->component = buffer[9];
 		message->source->node = buffer[10];
 		message->source->subsystem = buffer[11];
-		
+
 		message->dataSize = buffer[12] + ((buffer[13] & 0x0F) << 8);
 
 		message->dataFlag = ((buffer[13] >> 4) & 0x0F);
 
 		message->sequenceNumber = buffer[14] + (buffer[15] << 8);
-		
+
 		return JAUS_TRUE;
 	}
 }
@@ -787,13 +787,13 @@ static JausBoolean headerFromBuffer(QueryVksObjectsMessage message, unsigned cha
 static JausBoolean headerToBuffer(QueryVksObjectsMessage message, unsigned char *buffer, unsigned int bufferSizeBytes)
 {
 	JausUnsignedShort *propertiesPtr = (JausUnsignedShort*)&message->properties;
-	
+
 	if(bufferSizeBytes < JAUS_HEADER_SIZE_BYTES)
 	{
 		return JAUS_FALSE;
 	}
 	else
-	{	
+	{
 		buffer[0] = (unsigned char)(*propertiesPtr & 0xFF);
 		buffer[1] = (unsigned char)((*propertiesPtr & 0xFF00) >> 8);
 
@@ -809,26 +809,26 @@ static JausBoolean headerToBuffer(QueryVksObjectsMessage message, unsigned char 
 		buffer[9] = (unsigned char)(message->source->component & 0xFF);
 		buffer[10] = (unsigned char)(message->source->node & 0xFF);
 		buffer[11] = (unsigned char)(message->source->subsystem & 0xFF);
-		
+
 		buffer[12] = (unsigned char)(message->dataSize & 0xFF);
 		buffer[13] = (unsigned char)((message->dataFlag & 0xFF) << 4) | (unsigned char)((message->dataSize & 0x0F00) >> 8);
 
 		buffer[14] = (unsigned char)(message->sequenceNumber & 0xFF);
 		buffer[15] = (unsigned char)((message->sequenceNumber & 0xFF00) >> 8);
-		
+
 		return JAUS_TRUE;
 	}
 }
 
 static int headerToString(QueryVksObjectsMessage message, char **buf)
 {
-  //message existance already verified 
+  //message existance already verified
 
   //Setup temporary string buffer
-  
+
   unsigned int bufSize = 500;
   (*buf) = (char*)malloc(sizeof(char)*bufSize);
-  
+
   strcpy((*buf), jausCommandCodeString(message->commandCode) );
   strcat((*buf), " (0x");
   sprintf((*buf)+strlen(*buf), "%04X", message->commandCode);
@@ -857,15 +857,15 @@ static int headerToString(QueryVksObjectsMessage message, char **buf)
   strcat((*buf), "\nExp. Flag: ");
   if(message->properties.expFlag == 0)
     strcat((*buf), "JAUS");
-  else 
+  else
     strcat((*buf), "Experimental");
-  
+
   strcat((*buf), "\nSC Flag: ");
   if(message->properties.scFlag == 0)
     strcat((*buf), "Service Connection");
   else
     strcat((*buf), "Not Service Connection");
-  
+
   strcat((*buf), "\nACK/NAK: ");
   switch(message->properties.ackNak)
   {
@@ -884,7 +884,7 @@ static int headerToString(QueryVksObjectsMessage message, char **buf)
   default:
     break;
   }
-  
+
   strcat((*buf), "\nPriority: ");
   if(message->properties.priority < 12)
   {
@@ -896,16 +896,16 @@ static int headerToString(QueryVksObjectsMessage message, char **buf)
     strcat((*buf), "Safety Critical Priority ");
     jausUnsignedShortToString(message->properties.priority, (*buf)+strlen(*buf));
   }
-  
+
   strcat((*buf), "\nSource: ");
   jausAddressToString(message->source, (*buf)+strlen(*buf));
-  
+
   strcat((*buf), "\nDestination: ");
   jausAddressToString(message->destination, (*buf)+strlen(*buf));
-  
+
   strcat((*buf), "\nData Size: ");
   jausUnsignedIntegerToString(message->dataSize, (*buf)+strlen(*buf));
-  
+
   strcat((*buf), "\nData Flag: ");
   jausUnsignedIntegerToString(message->dataFlag, (*buf)+strlen(*buf));
   switch(message->dataFlag)
@@ -929,10 +929,10 @@ static int headerToString(QueryVksObjectsMessage message, char **buf)
       strcat((*buf), " Unrecognized data flag code");
       break;
   }
-  
+
   strcat((*buf), "\nSequence Number: ");
   jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
-  
+
   return (int)strlen(*buf);
-  
+
 }
