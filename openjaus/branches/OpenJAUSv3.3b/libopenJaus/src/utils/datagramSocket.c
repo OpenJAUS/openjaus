@@ -136,7 +136,7 @@ int datagramSocketReceive(DatagramSocket datagramSocket, DatagramPacket packet)
 	struct sockaddr_in fromAddress;
 	socklen_t fromAddressLength;
 	int bytesReceived = 0;
-	int selcetReturnVal = -2;
+	int selectReturnVal = -2;
 
 	memset(&fromAddress, 0, sizeof(fromAddress));
 	
@@ -149,8 +149,8 @@ int datagramSocketReceive(DatagramSocket datagramSocket, DatagramPacket packet)
 	FD_ZERO(&readSet);
 	FD_SET(datagramSocket->descriptor, &readSet);
 
-	selcetReturnVal = select(datagramSocket->descriptor + 1, &readSet, NULL, NULL, timeoutPtr);
-	if(selcetReturnVal > 0)
+	selectReturnVal = select(datagramSocket->descriptor + 1, &readSet, NULL, NULL, timeoutPtr);
+	if(selectReturnVal > 0)
 	{
 		if(FD_ISSET(datagramSocket->descriptor, &readSet))
 		{
@@ -171,7 +171,7 @@ int datagramSocketReceive(DatagramSocket datagramSocket, DatagramPacket packet)
 	}
 	else
 	{
-		return selcetReturnVal;
+		return selectReturnVal;
 	}
 }
 
