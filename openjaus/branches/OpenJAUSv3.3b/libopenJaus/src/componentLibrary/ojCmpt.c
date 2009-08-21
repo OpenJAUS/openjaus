@@ -1,12 +1,12 @@
 /*****************************************************************************
  *  Copyright (c) 2008, University of Florida
  *  All rights reserved.
- *  
- *  This file is part of OpenJAUS.  OpenJAUS is distributed under the BSD 
+ *
+ *  This file is part of OpenJAUS.  OpenJAUS is distributed under the BSD
  *  license.  See the LICENSE file for details.
- * 
- *  Redistribution and use in source and binary forms, with or without 
- *  modification, are permitted provided that the following conditions 
+ *
+ *  Redistribution and use in source and binary forms, with or without
+ *  modification, are permitted provided that the following conditions
  *  are met:
  *
  *     * Redistributions of source code must retain the above copyright
@@ -15,20 +15,20 @@
  *       copyright notice, this list of conditions and the following
  *       disclaimer in the documentation and/or other materials provided
  *       with the distribution.
- *     * Neither the name of the University of Florida nor the names of its 
- *       contributors may be used to endorse or promote products derived from 
+ *     * Neither the name of the University of Florida nor the names of its
+ *       contributors may be used to endorse or promote products derived from
  *       this software without specific prior written permission.
  *
- *   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- *   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- *   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR 
- *   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT 
+ *   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ *   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ *   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ *   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
  *   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- *   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT 
- *   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
- *   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY 
+ *   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ *   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ *   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
  *   THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
+ *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ****************************************************************************/
 // File Name: ojCmpt.c
@@ -50,7 +50,7 @@
 #include "nodeManagerInterface/nodeManagerInterface.h"
 #include "componentLibrary/ojCmpt.h"
 
-typedef	struct 
+typedef	struct
 {
 	void (*function)(OjCmpt, JausMessage);
 	unsigned short commandCode;
@@ -58,8 +58,8 @@ typedef	struct
 
 struct OjCmptStruct
 {
-	double frequencyHz;		// Desired frequency of the component 
-	double rateHz;		// Actual running frequency of the component 
+	double frequencyHz;		// Desired frequency of the component
+	double rateHz;		// Actual running frequency of the component
 
 	JausComponent jaus;				// A pointer to the JausComponent structure found in the OpenJAUS libjaus library.
 
@@ -67,9 +67,9 @@ struct OjCmptStruct
 	pthread_mutex_t scMutex;	// TODO: Lock mutex when accessing service connection arrays
 
 	void (*stateCallback[OJ_CMPT_MAX_STATE_COUNT])(OjCmpt);	// An array to hold the pointers to the callback functions
-	void (*mainCallback)(OjCmpt);					
-	void (*processMessageCallback)(OjCmpt, JausMessage);			
-	
+	void (*mainCallback)(OjCmpt);
+	void (*processMessageCallback)(OjCmpt, JausMessage);
+
 	MessageCallback *messageCallback;				// An array to hold the pointers to the message callback functions
 	int messageCallbackCount;
 
@@ -78,9 +78,10 @@ struct OjCmptStruct
 
 	ServiceConnection inConnection[OJ_CMPT_MAX_INCOMING_SC_COUNT];
 
-	NodeManagerInterface nmi;	
-	
+	NodeManagerInterface nmi;
+
 	void *userData;
+	pthread_mutex_t userDataMutex;	// This mutex protects user data from being accessed twice
 };
 
 void* ojCmptThread(void *threadData);
@@ -101,6 +102,9 @@ OjCmpt ojCmptCreate(char *name, JausByte id, double stateFrequencyHz)
 	ojCmptSetState(ojCmpt, JAUS_UNDEFINED_STATE);
 	ojCmptSetFrequencyHz(ojCmpt, stateFrequencyHz);
 
+	ojCmpt->userData = NULL;
+	pthread_mutex_init(&ojCmpt->userDataMutex, NULL);
+
 	for(i=0; i<OJ_CMPT_MAX_STATE_COUNT; i++)
 	{
 		ojCmpt->stateCallback[i] = NULL;
@@ -109,7 +113,7 @@ OjCmpt ojCmptCreate(char *name, JausByte id, double stateFrequencyHz)
 	ojCmpt->processMessageCallback = NULL;
 	ojCmpt->messageCallback = NULL;
 	ojCmpt->messageCallbackCount = 0;
-	
+
 	ojCmpt->run = FALSE;
 
 	if (!jausServiceAddCoreServices(ojCmpt->jaus->services))	// Add core services
@@ -125,7 +129,7 @@ OjCmpt ojCmptCreate(char *name, JausByte id, double stateFrequencyHz)
 	{
 		ojCmpt->inConnection[i] = NULL;
 	}
-	
+
 	ojCmpt->nmi = nodeManagerOpen(ojCmpt->jaus);
 	if(ojCmpt->nmi == NULL)
 	{
@@ -133,7 +137,7 @@ OjCmpt ojCmptCreate(char *name, JausByte id, double stateFrequencyHz)
 		ojCmpt->jaus->identification = NULL;
 		jausComponentDestroy(ojCmpt->jaus);
 		free(ojCmpt);
-		return NULL; 
+		return NULL;
 	}
 
 	return ojCmpt;
@@ -166,7 +170,7 @@ void ojCmptDestroy(OjCmpt ojCmpt)
 	RejectComponentControlMessage rejectComponentControl;
 	JausMessage txMessage;
 	int i = 0;
-	
+
 	if(ojCmpt->run == TRUE)
 	{
 		ojCmpt->run = FALSE;
@@ -187,33 +191,35 @@ void ojCmptDestroy(OjCmpt ojCmpt)
 
 		rejectComponentControlMessageDestroy(rejectComponentControl);
 	}
-	
+
 	for(i=0; i<OJ_CMPT_MAX_INCOMING_SC_COUNT; i++)
 	{
 		if(ojCmpt->inConnection[i])
-		{	
+		{
 			if(ojCmpt->inConnection[i]->isActive)
 			{
 				scManagerTerminateServiceConnection(ojCmpt->nmi, ojCmpt->inConnection[i]);
 			}
-			serviceConnectionDestroy(ojCmpt->inConnection[i]);		
+			serviceConnectionDestroy(ojCmpt->inConnection[i], ojCmpt->nmi->scm);
+			ojCmpt->inConnection[i] = NULL;
 		}
 	}
-	
+
 	if(ojCmpt->messageCallback)
 	{
 		free(ojCmpt->messageCallback);
 	}
-	
+
 	if(ojCmpt->nmi)
 	{
 		nodeManagerClose(ojCmpt->nmi); // Close Node Manager Connection
 	}
-	
+
+	pthread_mutex_destroy(&ojCmpt->userDataMutex);
 	free(ojCmpt->jaus->identification);
 	ojCmpt->jaus->identification = NULL;
 	jausComponentDestroy(ojCmpt->jaus);
-	free(ojCmpt);	
+	free(ojCmpt);
 };
 
 void ojCmptSetFrequencyHz(OjCmpt ojCmpt, double stateFrequencyHz)
@@ -315,10 +321,20 @@ void *ojCmptGetUserData(OjCmpt ojCmpt)
 	return ojCmpt->userData;
 }
 
+void ojCmptLockUserData(OjCmpt ojCmpt)
+{
+	pthread_mutex_lock(&ojCmpt->userDataMutex);
+}
+
+void ojCmptUnlockUserData(OjCmpt ojCmpt)
+{
+	pthread_mutex_unlock(&ojCmpt->userDataMutex);
+}
+
 void ojCmptProcessMessage(OjCmpt ojCmpt, JausMessage message)
 {
 	int i = 0;
-	
+
 	for(i=0; i<ojCmpt->messageCallbackCount; i++)
 	{
 		if(ojCmpt->messageCallback[i].commandCode == message->commandCode && ojCmpt->messageCallback[i].function)
@@ -328,7 +344,7 @@ void ojCmptProcessMessage(OjCmpt ojCmpt, JausMessage message)
 			break;
 		}
 	}
-	
+
 	if(i == ojCmpt->messageCallbackCount)
 	{
 		if(ojCmpt->processMessageCallback)
@@ -340,7 +356,7 @@ void ojCmptProcessMessage(OjCmpt ojCmpt, JausMessage message)
 			defaultJausMessageProcessorNoDestroy(message, ojCmpt->nmi, ojCmpt->jaus);
 		}
 	}
-	
+
 	jausMessageDestroy(message);
 }
 
@@ -358,9 +374,9 @@ void* ojCmptThread(void *threadData)
 	double time = ojGetTimeSec();
 	double nextStateTime = ojGetTimeSec();
 
-	// Get handle to OpenJausComponent that was created 
+	// Get handle to OpenJausComponent that was created
 	ojCmpt = (OjCmpt)threadData;
-	
+
 	while(ojCmpt->run) // Execute state machine code while not in the SHUTDOWN state
 	{
 		switch(nodeManagerTimedReceive(ojCmpt->nmi, &rxMessage, nextStateTime))
@@ -368,10 +384,10 @@ void* ojCmptThread(void *threadData)
 			case NMI_MESSAGE_RECEIVED:
 				// If we were sent a message
 				if(rxMessage)
-				{	
+				{
 					ojCmptProcessMessage(ojCmpt, rxMessage);
 				}
-				
+
 				// Always check for messages on incoming SC queues
 				for(i=0; i<OJ_CMPT_MAX_INCOMING_SC_COUNT; i++)
 				{
@@ -384,13 +400,13 @@ void* ojCmptThread(void *threadData)
 					}
 				}
 				break;
-				
+
 			case NMI_RECEIVE_TIMED_OUT:
 				prevTime = time;
 				time = ojGetTimeSec();
 				ojCmpt->rateHz = 1.0/(time-prevTime); // Compute the update rate of this thread
 				nextStateTime = time + 1.0/ojCmpt->frequencyHz;
-				
+
 				if(ojCmpt->mainCallback)
 				{
 					ojCmpt->mainCallback(ojCmpt);
@@ -400,11 +416,11 @@ void* ojCmptThread(void *threadData)
 				{
 					ojCmpt->stateCallback[ojCmpt->state](ojCmpt);
 				}
-				
+
 				ojCmptManageServiceConnections(ojCmpt);
 				nodeManagerSendCoreServiceConnections(ojCmpt->nmi);
 				break;
-				
+
 			case NMI_CONDITIONAL_WAIT_ERROR:
 				printf("ojCmpt.c : Conditional Wait Error in nodeManagerTimedReceive, Exiting ojCmpt Thread\n");
 				ojCmpt->run = FALSE;
@@ -420,8 +436,8 @@ void* ojCmptThread(void *threadData)
 				ojCmpt->run = FALSE;
 				break;
 		}
-				
-	}	
+
+	}
 
 	return NULL;
 }
@@ -445,7 +461,7 @@ JausAddress ojCmptGetControllerAddress(OjCmpt ojCmpt)
 {
 	if(ojCmptHasController(ojCmpt))
 	{
-		return jausAddressClone(ojCmpt->jaus->controller.address);			
+		return jausAddressClone(ojCmpt->jaus->controller.address);
 	}
 	else
 	{
@@ -456,6 +472,41 @@ JausAddress ojCmptGetControllerAddress(OjCmpt ojCmpt)
 JausBoolean ojCmptHasController(OjCmpt ojCmpt)
 {
 	return ojCmpt->jaus->controller.active;
+}
+
+JausBoolean ojCmptTerminateController(OjCmpt ojCmpt)
+{
+	RejectComponentControlMessage rejectComponentControl = NULL;
+	JausMessage txMessage = NULL;
+
+	if(!ojCmpt)
+	{
+		return JAUS_FALSE;
+	}
+
+	if(!ojCmpt->jaus->controller.active)
+	{
+		return JAUS_FALSE;
+	}
+
+	// Send a reject control message
+	rejectComponentControl = rejectComponentControlMessageCreate();
+	jausAddressCopy(rejectComponentControl->source, ojCmpt->jaus->address);
+	jausAddressCopy(rejectComponentControl->destination, ojCmpt->jaus->controller.address);
+	txMessage = rejectComponentControlMessageToJausMessage(rejectComponentControl);
+	nodeManagerSend(ojCmpt->nmi, txMessage);
+	jausMessageDestroy(txMessage);
+
+	// Clear out the controller structure
+	ojCmpt->jaus->controller.active = JAUS_FALSE;
+	ojCmpt->jaus->controller.authority = 0;
+	ojCmpt->jaus->controller.address->subsystem = 0;
+	ojCmpt->jaus->controller.address->node = 0;
+	ojCmpt->jaus->controller.address->component = 0;
+	ojCmpt->jaus->controller.address->instance = 0;
+	ojCmpt->jaus->controller.state = JAUS_UNDEFINED_STATE;
+
+	return JAUS_TRUE;
 }
 
 void ojCmptDefaultMessageProcessor(OjCmpt ojCmpt, JausMessage message)
@@ -476,7 +527,7 @@ int ojCmptSendMessage(OjCmpt ojCmpt, JausMessage message)
 
 JausBoolean ojCmptAddService(OjCmpt ojCmpt, JausUnsignedShort serviceType)
 {
-	JausService service = jausServiceCreate(serviceType); 
+	JausService service = jausServiceCreate(serviceType);
 	if(service)
 	{
 		return jausServiceAddService(ojCmpt->jaus->services, service);
@@ -487,7 +538,7 @@ JausBoolean ojCmptAddService(OjCmpt ojCmpt, JausUnsignedShort serviceType)
 JausBoolean ojCmptAddServiceInputMessage(OjCmpt ojCmpt, JausUnsignedShort serviceType, JausUnsignedShort commandCode, JausUnsignedInteger presenceVector)
 {
 	JausService service = jausServiceRetrieveService(ojCmpt->jaus->services, serviceType);
-	
+
 	if(service)
 	{
 		return jausServiceAddInputCommand(service, commandCode, presenceVector);
@@ -498,7 +549,7 @@ JausBoolean ojCmptAddServiceInputMessage(OjCmpt ojCmpt, JausUnsignedShort servic
 JausBoolean ojCmptAddServiceOutputMessage(OjCmpt ojCmpt, JausUnsignedShort serviceType, JausUnsignedShort commandCode, JausUnsignedInteger presenceVector)
 {
 	JausService service = jausServiceRetrieveService(ojCmpt->jaus->services, serviceType);
-	
+
 	if(service)
 	{
 		return jausServiceAddOutputCommand(service, commandCode, presenceVector);
@@ -536,13 +587,19 @@ void ojCmptManageServiceConnections(OjCmpt ojCmpt)
 {
 	int i = 0;
 	double time = ojGetTimeSec();
-	
+
 	// Manage Incoming Connections
 	for(i=0; i<OJ_CMPT_MAX_INCOMING_SC_COUNT; i++)
 	{
 		// If not active then attempt to initiate SC
 		if(ojCmpt->inConnection[i] && !ojCmpt->inConnection[i]->isActive && time > ojCmpt->inConnection[i]->nextRequestTimeSec)
 		{
+//char addressString[128];
+//jausAddressToString(ojCmpt->inConnection[i]->address, addressString);
+//printf("Create SC To: %s for %s ", addressString, jausCommandCodeString(ojCmpt->inConnection[i]->commandCode));
+//jausAddressToString(ojCmpt->jaus->address, addressString);
+//printf("from %s\n", addressString);
+
 			// set up the service connection
 			scManagerCreateServiceConnection(ojCmpt->nmi, ojCmpt->inConnection[i]);
 			ojCmpt->inConnection[i]->nextRequestTimeSec = time + ojCmpt->inConnection[i]->timeoutSec;
@@ -553,7 +610,7 @@ void ojCmptManageServiceConnections(OjCmpt ojCmpt)
 int ojCmptEstablishSc(OjCmpt ojCmpt, JausUnsignedShort cCode, JausUnsignedInteger pv, JausAddress address, double rateHz, double timeoutSec, int qSize)
 {
 	int i = 0;
-	
+
 	for(i=0; i<OJ_CMPT_MAX_INCOMING_SC_COUNT; i++)
 	{
 		if(ojCmpt->inConnection[i] == NULL)
@@ -577,37 +634,37 @@ int ojCmptEstablishSc(OjCmpt ojCmpt, JausUnsignedShort cCode, JausUnsignedIntege
 		return i;
 	}
 
-	return -1;	
+	return -1;
 }
 
 int ojCmptTerminateSc(OjCmpt ojCmpt, int scIndex)
-{	
+{
 	if(scIndex < 0 || scIndex >= OJ_CMPT_MAX_INCOMING_SC_COUNT || ojCmpt->inConnection[scIndex] == NULL)
 	{
 		return FALSE;
 	}
-	
+
 	if(ojCmpt->inConnection[scIndex]->isActive)
-	{	
+	{
 		scManagerTerminateServiceConnection(ojCmpt->nmi, ojCmpt->inConnection[scIndex]);
 	}
-	serviceConnectionDestroy(ojCmpt->inConnection[scIndex]);
+	serviceConnectionDestroy(ojCmpt->inConnection[scIndex], ojCmpt->nmi->scm);
 	ojCmpt->inConnection[scIndex] = NULL;
-	
+
 	return TRUE;
 }
 
 JausBoolean ojCmptIsIncomingScActive(OjCmpt ojCmpt, int scIndex)
-{	
+{
 	if(scIndex < 0 || scIndex >= OJ_CMPT_MAX_INCOMING_SC_COUNT || ojCmpt->inConnection[scIndex] == NULL)
 	{
 		return JAUS_FALSE;
 	}
-	
+
 	return ojCmpt->inConnection[scIndex]->isActive;
 }
 
-int ojCmptLookupAddress(OjCmpt ojCmpt, JausAddress address)
+JausBoolean ojCmptLookupAddress(OjCmpt ojCmpt, JausAddress address)
 {
 	return nodeManagerLookupAddress(ojCmpt->nmi, address);
 }

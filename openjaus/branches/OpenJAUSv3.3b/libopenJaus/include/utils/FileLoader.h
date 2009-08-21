@@ -48,6 +48,8 @@
 #include <string>
 #include <fstream>
 #include <math.h>
+#include <string.h>
+#include <cstdlib>
 
 using std::string;
 using std::vector;
