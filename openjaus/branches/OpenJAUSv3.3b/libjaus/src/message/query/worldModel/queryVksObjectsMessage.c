@@ -490,7 +490,7 @@ static unsigned int dataSize(QueryVksObjectsMessage message)
 		index += JAUS_BYTE_SIZE_BYTES;
 
 		// Buffer is Optional
-		if(jausByteIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_REGION_BIT))
+		if(jausByteIsBitSet(message->presenceVector, VKS_PV_QUERY_OBJECTS_BUFFER_BIT))
 		{
 			// Buffer
 			index += JAUS_FLOAT_SIZE_BYTES;
