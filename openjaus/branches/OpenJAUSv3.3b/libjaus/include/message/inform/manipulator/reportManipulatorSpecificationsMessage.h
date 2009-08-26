@@ -1,12 +1,12 @@
 /*****************************************************************************
  *  Copyright (c) 2008, University of Florida
  *  All rights reserved.
- *  
- *  This file is part of OpenJAUS.  OpenJAUS is distributed under the BSD 
+ *
+ *  This file is part of OpenJAUS.  OpenJAUS is distributed under the BSD
  *  license.  See the LICENSE file for details.
- * 
- *  Redistribution and use in source and binary forms, with or without 
- *  modification, are permitted provided that the following conditions 
+ *
+ *  Redistribution and use in source and binary forms, with or without
+ *  modification, are permitted provided that the following conditions
  *  are met:
  *
  *     * Redistributions of source code must retain the above copyright
@@ -15,29 +15,29 @@
  *       copyright notice, this list of conditions and the following
  *       disclaimer in the documentation and/or other materials provided
  *       with the distribution.
- *     * Neither the name of the University of Florida nor the names of its 
- *       contributors may be used to endorse or promote products derived from 
+ *     * Neither the name of the University of Florida nor the names of its
+ *       contributors may be used to endorse or promote products derived from
  *       this software without specific prior written permission.
  *
- *   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- *   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- *   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR 
- *   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT 
+ *   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ *   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ *   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ *   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
  *   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- *   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT 
- *   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
- *   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY 
+ *   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ *   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ *   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
  *   THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
+ *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ****************************************************************************/
 // File Name: reportManipulatorSpecificationsMessage.h
 //
-// Written By: Danny Kent (jaus AT dannykent DOT com), Tom Galluzzo 
+// Written By: Danny Kent (jaus AT dannykent DOT com), Tom Galluzzo
 //
-// Version: 3.3.0a
+// Version: 3.3.0
 //
-// Date: 08/07/08
+// Date: 07/09/08
 //
 // Description: This file defines the attributes of a ReportManipulatorSpecificationsMessage
 
@@ -45,6 +45,12 @@
 #define REPORT_MANIPULATOR_SPECIFICATIONS_MESSAGE_H
 
 #include "jaus.h"
+
+#ifndef JAUS_MANIPULATOR_JOINT_TYPES
+#define JAUS_MANIPULATOR_JOINT_TYPES
+#define JAUS_REVOLUTE_MANIPULATOR_JOINT		1
+#define JAUS_PRISMATIC_MANIPULATOR_JOINT	2
+#endif
 
 typedef struct
 {
@@ -59,20 +65,20 @@ typedef struct
 			JausUnsignedShort expFlag:1;
 			JausUnsignedShort scFlag:1;
 			JausUnsignedShort ackNak:2;
-			JausUnsignedShort priority:4; 
+			JausUnsignedShort priority:4;
 		#elif JAUS_LITTLE_ENDIAN
-			JausUnsignedShort priority:4; 
+			JausUnsignedShort priority:4;
 			JausUnsignedShort ackNak:2;
-			JausUnsignedShort scFlag:1; 
+			JausUnsignedShort scFlag:1;
 			JausUnsignedShort expFlag:1;
-			JausUnsignedShort version:6; 
+			JausUnsignedShort version:6;
 			JausUnsignedShort reserved:2;
 		#else
 			#error "Please define system endianess (see jaus.h)"
 		#endif
 	}properties;
 
-	JausUnsignedShort commandCode; 
+	JausUnsignedShort commandCode;
 
 	JausAddress destination;
 
@@ -81,19 +87,19 @@ typedef struct
 	JausUnsignedInteger dataSize;
 
 	JausUnsignedInteger dataFlag;
-	
+
 	JausUnsignedShort sequenceNumber;
 
 	// MESSAGE DATA MEMBERS GO HERE
 
 	JausByte numJoints;
-	JausByte *jointType;	
-	JausDouble *jointOffset;	
-	JausDouble *linkLength;	
-	JausDouble *twistAngle;	
-	JausDouble *jointMinValue;	
-	JausDouble *jointMaxValue;	
-	JausDouble *jointMaxVelocity;	
+	JausByte *jointType;
+	JausDouble *jointOffset;
+	JausDouble *linkLength;
+	JausDouble *twistAngle;
+	JausDouble *jointMinValue;
+	JausDouble *jointMaxValue;
+	JausDouble *jointMaxVelocity;
 	JausDouble coordinateSysX;
 	JausDouble coordinateSysY;
 	JausDouble coordinateSysZ;
@@ -101,7 +107,7 @@ typedef struct
 	JausDouble coordinateSysB;
 	JausDouble coordinateSysC;
 	JausDouble coordinateSysD;
-		
+
 }ReportManipulatorSpecificationsMessageStruct;
 
 typedef ReportManipulatorSpecificationsMessageStruct* ReportManipulatorSpecificationsMessage;
