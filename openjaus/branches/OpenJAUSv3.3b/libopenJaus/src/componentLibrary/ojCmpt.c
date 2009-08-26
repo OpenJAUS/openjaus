@@ -87,6 +87,7 @@ struct OjCmptStruct
 void* ojCmptThread(void *threadData);
 void ojCmptProcessMessage(OjCmpt ojCmpt, JausMessage message);
 void ojCmptManageServiceConnections(OjCmpt ojCmpt);
+void ojCmptDefaultStateCallback(OjCmpt ojCmpt, JausMessage message);
 
 OjCmpt ojCmptCreate(char *name, JausByte id, double stateFrequencyHz)
 {
@@ -139,6 +140,15 @@ OjCmpt ojCmptCreate(char *name, JausByte id, double stateFrequencyHz)
 		free(ojCmpt);
 		return NULL;
 	}
+
+	// Set default state handling to override default message processor behavior
+	ojCmptSetMessageCallback(ojCmpt, JAUS_SHUTDOWN, ojCmptDefaultStateCallback);
+	ojCmptSetMessageCallback(ojCmpt, JAUS_STANDBY, ojCmptDefaultStateCallback);
+	ojCmptSetMessageCallback(ojCmpt, JAUS_RESUME, ojCmptDefaultStateCallback);
+	ojCmptSetMessageCallback(ojCmpt, JAUS_SHUTDOWN, ojCmptDefaultStateCallback);
+	ojCmptSetMessageCallback(ojCmpt, JAUS_RESET, ojCmptDefaultStateCallback);
+	ojCmptSetMessageCallback(ojCmpt, JAUS_SET_EMERGENCY, ojCmptDefaultStateCallback);
+	ojCmptSetMessageCallback(ojCmpt, JAUS_CLEAR_EMERGENCY, ojCmptDefaultStateCallback);
 
 	return ojCmpt;
 }
@@ -667,4 +677,44 @@ JausBoolean ojCmptIsIncomingScActive(OjCmpt ojCmpt, int scIndex)
 JausBoolean ojCmptLookupAddress(OjCmpt ojCmpt, JausAddress address)
 {
 	return nodeManagerLookupAddress(ojCmpt->nmi, address);
+}
+
+void ojCmptDefaultStateCallback(OjCmpt ojCmpt, JausMessage message)
+{
+	switch(message->commandCode)
+	{
+		case JAUS_SHUTDOWN:
+			ojCmptSetState(ojCmpt, JAUS_SHUTDOWN_STATE);
+			break;
+
+		case JAUS_STANDBY:
+			if(ojCmpt->state == JAUS_READY_STATE)
+			{
+				ojCmptSetState(ojCmpt, JAUS_STANDBY_STATE);
+			}
+			break;
+
+		case JAUS_RESUME:
+			if(ojCmpt->state == JAUS_STANDBY_STATE)
+			{
+				ojCmptSetState(ojCmpt, JAUS_READY_STATE);
+			}
+			break;
+
+		case JAUS_RESET:
+			ojCmptSetState(ojCmpt, JAUS_INITIALIZE_STATE);
+			break;
+
+		case JAUS_SET_EMERGENCY:
+			ojCmptSetState(ojCmpt, JAUS_EMERGENCY_STATE);
+			break;
+
+		case JAUS_CLEAR_EMERGENCY:
+			ojCmptSetState(ojCmpt, JAUS_STANDBY_STATE);
+			break;
+
+		default:
+			// If message is not recognized do nothing
+			break;
+	}
 }
