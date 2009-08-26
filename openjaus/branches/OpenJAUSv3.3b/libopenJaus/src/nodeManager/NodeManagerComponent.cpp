@@ -1,12 +1,12 @@
 /*****************************************************************************
  *  Copyright (c) 2008, University of Florida
  *  All rights reserved.
- *  
- *  This file is part of OpenJAUS.  OpenJAUS is distributed under the BSD 
+ *
+ *  This file is part of OpenJAUS.  OpenJAUS is distributed under the BSD
  *  license.  See the LICENSE file for details.
- * 
- *  Redistribution and use in source and binary forms, with or without 
- *  modification, are permitted provided that the following conditions 
+ *
+ *  Redistribution and use in source and binary forms, with or without
+ *  modification, are permitted provided that the following conditions
  *  are met:
  *
  *     * Redistributions of source code must retain the above copyright
@@ -14,20 +14,20 @@
  *     * Redistributions in binary form must reproduce the above
  *       copyright notice, this list of conditions and the following
  *       with the distribution.
- *     * Neither the name of the University of Florida nor the names of its 
- *       contributors may be used to endorse or promote products derived from 
+ *     * Neither the name of the University of Florida nor the names of its
+ *       contributors may be used to endorse or promote products derived from
  *       this software without specific prior written permission.
  *
- *   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- *   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- *   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR 
- *   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT 
+ *   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ *   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ *   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ *   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
  *   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- *   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT 
- *   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
- *   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY 
+ *   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ *   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ *   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
  *   THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
+ *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ****************************************************************************/
 // File Name: NodeManagerComponent.cpp
@@ -86,7 +86,7 @@ NodeManagerComponent::NodeManagerComponent(FileLoader *configData, EventHandler 
 		eventId[i] = false;
 	}
 
-	// NOTE: These two values should exist in the properties file and should be checked 
+	// NOTE: These two values should exist in the properties file and should be checked
 	// in the NodeManager class prior to constructing this object
 	subsystemId = configData->GetConfigDataInt("JAUS", "SubsystemId");
 	if(subsystemId < JAUS_MINIMUM_SUBSYSTEM_ID || subsystemId > JAUS_MAXIMUM_SUBSYSTEM_ID)
@@ -131,16 +131,16 @@ NodeManagerComponent::~NodeManagerComponent(void)
 	}
 
 	jausComponentDestroy(this->cmpt);
-	
+
 	for(iterator = subsystemChangeList.begin(); iterator != subsystemChangeList.end(); iterator++)
 	{
 		jausAddressDestroy(iterator->second);
-	}	
+	}
 
 	for(iterator = nodeChangeList.begin(); iterator != nodeChangeList.end(); iterator++)
 	{
 		jausAddressDestroy(iterator->second);
-	}	
+	}
 }
 
 bool NodeManagerComponent::startInterface()
@@ -197,7 +197,7 @@ bool NodeManagerComponent::processMessage(JausMessage message)
 			// These messages are ignored!
 			jausMessageDestroy(message);
 			return true;
-		
+
 		case JAUS_CREATE_SERVICE_CONNECTION:
 			return processCreateServiceConnection(message);
 
@@ -271,7 +271,7 @@ JausAddress NodeManagerComponent::checkInLocalComponent(int cmptId)
 {
 	JausComponent component = jausComponentCreate();
 	if(!component) return NULL;
-	
+
 	// Setup query address
 	component->address->subsystem = this->cmpt->address->subsystem;
 	component->address->node = this->cmpt->address->node;
@@ -280,7 +280,7 @@ JausAddress NodeManagerComponent::checkInLocalComponent(int cmptId)
 
 	// Query SystemTree for next valid instance ID
 	component->address->instance = this->getCommunicationManager()->getSystemTree()->getNextInstanceId(component->address);
-	
+
 	// Check returned value
 	if(component->address->instance == JAUS_INVALID_INSTANCE_ID)
 	{
@@ -293,7 +293,7 @@ JausAddress NodeManagerComponent::checkInLocalComponent(int cmptId)
 		{
 			JausAddress address = jausAddressClone(component->address);
 			jausComponentDestroy(component);
-			
+
 			sendNodeChangedEvents();
 			sendSubsystemChangedEvents();
 			return address;
@@ -438,7 +438,7 @@ bool NodeManagerComponent::processReportConfiguration(JausMessage message)
 			for(int j = 0; j < node->components->elementCount; j++)
 			{
 				JausComponent cmpt = (JausComponent) node->components->elementData[j];
-				
+
 				if(!jausComponentHasIdentification(cmpt))
 				{
 					sendQueryComponentIdentification(cmpt->address);
@@ -456,7 +456,7 @@ bool NodeManagerComponent::processReportConfiguration(JausMessage message)
 		jausMessageDestroy(message);
 		return true;
 	} // End !MySubs?
-	
+
 	if(!systemTree->hasNode(reportConf->source))
 	{
 		// Report Conf from unknown node! This is an unsolicited report
@@ -494,7 +494,7 @@ bool NodeManagerComponent::processReportConfiguration(JausMessage message)
 	for(int i = 0; i < node->components->elementCount; i++)
 	{
 		JausComponent cmpt = (JausComponent) node->components->elementData[i];
-		
+
 		if(!jausComponentHasIdentification(cmpt))
 		{
 			sendQueryComponentIdentification(cmpt->address);
@@ -508,7 +508,7 @@ bool NodeManagerComponent::processReportConfiguration(JausMessage message)
 
 	// Send subs changed events
 	sendSubsystemChangedEvents();
-	
+
 	reportConfigurationMessageDestroy(reportConf);
 	jausMessageDestroy(message);
 	return true;
@@ -518,7 +518,7 @@ bool NodeManagerComponent::processReportIdentification(JausMessage message)
 {
 	// This function follows the flowchart designed for NM 2.0 by D. Kent and T. Galluzzo
 	ReportIdentificationMessage reportId = NULL;
-	
+
 	reportId = reportIdentificationMessageFromJausMessage(message);
 	if(!reportId)
 	{
@@ -549,13 +549,13 @@ bool NodeManagerComponent::processReportIdentification(JausMessage message)
 
 			// Add Identification
 			systemTree->setSubsystemIdentification(reportId->source, reportId->identification);
-			
+
 			// Query Subs Conf & Setup event
 			sendQuerySubsystemConfiguration(reportId->source, true);
 			reportIdentificationMessageDestroy(reportId);
 			jausMessageDestroy(message);
 			return true;
-			
+
 		case JAUS_QUERY_FIELD_NODE_IDENTITY:
 			// Has Node?
 			if(!systemTree->hasNode(reportId->source))
@@ -569,7 +569,7 @@ bool NodeManagerComponent::processReportIdentification(JausMessage message)
 
 			// Add Identification
 			systemTree->setNodeIdentification(reportId->source, reportId->identification);
-			
+
 			// Query Subs Conf & Setup event
 			sendQueryNodeConfiguration(reportId->source, true);
 			reportIdentificationMessageDestroy(reportId);
@@ -640,7 +640,7 @@ bool NodeManagerComponent::processReportHeartbeatPulse(JausMessage message)
 	{
 		// Add Subs
 		systemTree->addSubsystem(message->source, NULL);
-		
+
 		// Query SubsId
 		sendQuerySubsystemIdentification(message->source);
 		jausMessageDestroy(message);
@@ -649,7 +649,7 @@ bool NodeManagerComponent::processReportHeartbeatPulse(JausMessage message)
 
 	// Update Subsystem Timestamp
 	systemTree->updateSubsystemTimestamp(message->source);
-	
+
 	// Has SubsId?
 	if(!systemTree->hasSubsystemIdentification(message->source))
 	{
@@ -704,7 +704,7 @@ bool NodeManagerComponent::processReportHeartbeatPulse(JausMessage message)
 			for(int j = 0; j < node->components->elementCount; j++)
 			{
 				JausComponent cmpt = (JausComponent) node->components->elementData[j];
-				
+
 				if(!jausComponentHasIdentification(cmpt))
 				{
 					sendQueryComponentIdentification(cmpt->address);
@@ -803,7 +803,7 @@ bool NodeManagerComponent::processReportHeartbeatPulse(JausMessage message)
 		else
 		{
 			JausNode node = systemTree->getNode(message->source);
-			
+
 			// Check for component ID and Services
 			for(int i = 0; i < node->components->elementCount; i++)
 			{
@@ -822,7 +822,7 @@ bool NodeManagerComponent::processReportHeartbeatPulse(JausMessage message)
 			jausNodeDestroy(node);
 			jausMessageDestroy(message);
 			return false;
-		} 
+		}
 	}// End !MyNode
 
 	// Has Component?
@@ -862,7 +862,7 @@ bool NodeManagerComponent::processCreateEvent(JausMessage message)
 	JausMessage txMessage = NULL;
 	int nextEventId = -1;
 	HASH_MAP <int, JausAddress>::iterator iterator;
-	
+
 	confirmEventRequest = confirmEventRequestMessageCreate();
 	if(!confirmEventRequest)
 	{
@@ -872,7 +872,7 @@ bool NodeManagerComponent::processCreateEvent(JausMessage message)
 	}
 	jausAddressCopy(confirmEventRequest->destination, message->source);
 	jausAddressCopy(confirmEventRequest->source, cmpt->address);
-	
+
 	createEvent = createEventMessageFromJausMessage(message);
 	if(!createEvent)
 	{
@@ -898,12 +898,12 @@ bool NodeManagerComponent::processCreateEvent(JausMessage message)
 			this->commMngr->receiveJausMessage(txMessage, this);
 		}
 		confirmEventRequestMessageDestroy(confirmEventRequest);
-		
+
 		char buf[256];
-		sprintf(buf, "Rejected event from %d.%d.%d.%d. Unsupported command code (0x%04X)", createEvent->source->subsystem, createEvent->source->node, createEvent->source->component, createEvent->source->instance, createEvent->reportMessageCode); 
+		sprintf(buf, "Rejected event from %d.%d.%d.%d. Unsupported command code (0x%04X)", createEvent->source->subsystem, createEvent->source->node, createEvent->source->component, createEvent->source->instance, createEvent->reportMessageCode);
 		DebugEvent *e = new DebugEvent("Event", __FUNCTION__, __LINE__, buf);
 		this->eventHandler->handleEvent(e);
-		
+
 		jausMessageDestroy(message);
 		return false;
 	}
@@ -924,7 +924,7 @@ bool NodeManagerComponent::processCreateEvent(JausMessage message)
 		jausMessageDestroy(message);
 		return false;
 	}
-	
+
 	switch(queryConf->queryField)
 	{
 		case JAUS_SUBSYSTEM_CONFIGURATION:
@@ -958,13 +958,13 @@ bool NodeManagerComponent::processCreateEvent(JausMessage message)
 				confirmEventRequest->eventId = 0;
 
 				char buf[256];
-//				sprintf(buf, "Rejected event from %d.%d.%d.%d. No available Event Ids.", createEvent->source->subsystem, createEvent->source->node, createEvent->source->component, createEvent->source->instance, createEvent->reportMessageCode);	//NMJ 
+//				sprintf(buf, "Rejected event from %d.%d.%d.%d. No available Event Ids.", createEvent->source->subsystem, createEvent->source->node, createEvent->source->component, createEvent->source->instance, createEvent->reportMessageCode);	//NMJ
 				sprintf(buf, "Rejected event from %d.%d.%d.%d. No available Event Ids.", createEvent->source->subsystem, createEvent->source->node, createEvent->source->component, createEvent->source->instance);	// NMJ
 				DebugEvent *e = new DebugEvent("Event", __FUNCTION__, __LINE__, buf);
 				this->eventHandler->handleEvent(e);
 			}
 			break;
-		
+
 		case JAUS_NODE_CONFIGURATION:
 			for(iterator = nodeChangeList.begin(); iterator != nodeChangeList.end(); iterator++)
 			{
@@ -997,7 +997,7 @@ bool NodeManagerComponent::processCreateEvent(JausMessage message)
 
 				char buf[256];
 //				sprintf(buf, "Rejected event from %d.%d.%d.%d. No available Event Ids.", createEvent->source->subsystem, createEvent->source->node, createEvent->source->component, createEvent->source->instance, createEvent->reportMessageCode);  // NMJ
-				sprintf(buf, "Rejected event from %d.%d.%d.%d. No available Event Ids.", createEvent->source->subsystem, createEvent->source->node, createEvent->source->component, createEvent->source->instance);				
+				sprintf(buf, "Rejected event from %d.%d.%d.%d. No available Event Ids.", createEvent->source->subsystem, createEvent->source->node, createEvent->source->component, createEvent->source->instance);
 				DebugEvent *e = new DebugEvent("Event", __FUNCTION__, __LINE__, buf);
 				this->eventHandler->handleEvent(e);
 			}
@@ -1115,35 +1115,35 @@ bool NodeManagerComponent::processRequestComponentControl(JausMessage message)
 	if(cmpt->controller.active)
 	{
 		if(requestComponentControl->authorityCode > cmpt->controller.authority) // Test for higher authority
-		{	
+		{
 			// Terminate control of current component
 			rejectComponentControl = rejectComponentControlMessageCreate();
 			jausAddressCopy(rejectComponentControl->source, cmpt->address);
 			jausAddressCopy(rejectComponentControl->destination, cmpt->controller.address);
-			txMessage = rejectComponentControlMessageToJausMessage(rejectComponentControl); 
+			txMessage = rejectComponentControlMessageToJausMessage(rejectComponentControl);
 			if(txMessage)
 			{
 				this->commMngr->receiveJausMessage(txMessage, this);
 			}
-			
+
 			// Accept control of new component
 			confirmComponentControl = confirmComponentControlMessageCreate();
 			jausAddressCopy(confirmComponentControl->source, cmpt->address);
 			jausAddressCopy(confirmComponentControl->destination, message->source);
 			confirmComponentControl->responseCode = JAUS_CONTROL_ACCEPTED;
-			txMessage = confirmComponentControlMessageToJausMessage(confirmComponentControl); 
+			txMessage = confirmComponentControlMessageToJausMessage(confirmComponentControl);
 			if(txMessage)
 			{
 				this->commMngr->receiveJausMessage(txMessage, this);
 			}
-			
+
 			// Update cmpt controller information
 			jausAddressCopy(cmpt->controller.address, message->source);
 			cmpt->controller.authority = requestComponentControl->authorityCode;
-		
+
 			rejectComponentControlMessageDestroy(rejectComponentControl);
-			confirmComponentControlMessageDestroy(confirmComponentControl);						
-		}	
+			confirmComponentControlMessageDestroy(confirmComponentControl);
+		}
 		else
 		{
 			if(!jausAddressEqual(message->source, cmpt->controller.address))
@@ -1151,7 +1151,7 @@ bool NodeManagerComponent::processRequestComponentControl(JausMessage message)
 				rejectComponentControl = rejectComponentControlMessageCreate();
 				jausAddressCopy(rejectComponentControl->source, cmpt->address);
 				jausAddressCopy(rejectComponentControl->destination, message->source);
-				txMessage = rejectComponentControlMessageToJausMessage(rejectComponentControl); 
+				txMessage = rejectComponentControlMessageToJausMessage(rejectComponentControl);
 				if(txMessage)
 				{
 					this->commMngr->receiveJausMessage(txMessage, this);
@@ -1166,23 +1166,23 @@ bool NodeManagerComponent::processRequestComponentControl(JausMessage message)
 				jausAddressCopy(confirmComponentControl->source, cmpt->address);
 				jausAddressCopy(confirmComponentControl->destination, message->source);
 				confirmComponentControl->responseCode = JAUS_CONTROL_ACCEPTED;
-				txMessage = confirmComponentControlMessageToJausMessage(confirmComponentControl); 
+				txMessage = confirmComponentControlMessageToJausMessage(confirmComponentControl);
 				if(txMessage)
 				{
 					this->commMngr->receiveJausMessage(txMessage, this);
 				}
-				
-				confirmComponentControlMessageDestroy(confirmComponentControl);						
+
+				confirmComponentControlMessageDestroy(confirmComponentControl);
 			}
 		}
-	}					
+	}
 	else // Not currently under component control, so give control
 	{
 		confirmComponentControl = confirmComponentControlMessageCreate();
 		jausAddressCopy(confirmComponentControl->source, cmpt->address);
 		jausAddressCopy(confirmComponentControl->destination, message->source);
 		confirmComponentControl->responseCode = JAUS_CONTROL_ACCEPTED;
-		txMessage = confirmComponentControlMessageToJausMessage(confirmComponentControl); 
+		txMessage = confirmComponentControlMessageToJausMessage(confirmComponentControl);
 		if(txMessage)
 		{
 			this->commMngr->receiveJausMessage(txMessage, this);
@@ -1192,7 +1192,7 @@ bool NodeManagerComponent::processRequestComponentControl(JausMessage message)
 		cmpt->controller.authority = requestComponentControl->authorityCode;
 		cmpt->controller.active = JAUS_TRUE;
 
-		confirmComponentControlMessageDestroy(confirmComponentControl);						
+		confirmComponentControlMessageDestroy(confirmComponentControl);
 	}
 
 	requestComponentControlMessageDestroy(requestComponentControl);
@@ -1216,8 +1216,8 @@ bool NodeManagerComponent::processQueryComponentAuthority(JausMessage message)
 	jausAddressCopy(report->source, cmpt->address);
 	jausAddressCopy(report->destination, message->source);
 	report->authorityCode = cmpt->authority;
-	
-	txMessage = reportComponentAuthorityMessageToJausMessage(report);	
+
+	txMessage = reportComponentAuthorityMessageToJausMessage(report);
 	if(txMessage)
 	{
 		this->commMngr->receiveJausMessage(txMessage, this);
@@ -1238,8 +1238,8 @@ bool NodeManagerComponent::processQueryComponentStatus(JausMessage message)
 	jausAddressCopy(reportComponentStatus->source, cmpt->address);
 	jausAddressCopy(reportComponentStatus->destination, message->source);
 	reportComponentStatus->primaryStatusCode = cmpt->state;
-	
-	txMessage = reportComponentStatusMessageToJausMessage(reportComponentStatus);	
+
+	txMessage = reportComponentStatusMessageToJausMessage(reportComponentStatus);
 	if(txMessage)
 	{
 		this->commMngr->receiveJausMessage(txMessage, this);
@@ -1287,10 +1287,10 @@ bool NodeManagerComponent::processQueryConfiguration(JausMessage message)
 	{
 		// TODO: Log Error. Throw Exception.
 		// Error unpacking message
-		jausMessageDestroy(message);	
+		jausMessageDestroy(message);
 		return false;
 	}
-	
+
 	switch(queryConf->queryField)
 	{
 		case JAUS_SUBSYSTEM_CONFIGURATION:
@@ -1306,7 +1306,7 @@ bool NodeManagerComponent::processQueryConfiguration(JausMessage message)
 					jausMessageDestroy(message);
 					return false;
 				}
-				
+
 				// Remove the subsystem created by the constructor
 				jausSubsystemDestroy(reportConf->subsystem);
 
@@ -1316,7 +1316,7 @@ bool NodeManagerComponent::processQueryConfiguration(JausMessage message)
 				{
 					txMessage = reportConfigurationMessageToJausMessage(reportConf);
 					jausAddressCopy(txMessage->source, cmpt->address);
-					jausAddressCopy(txMessage->destination, reportConf->source);
+					jausAddressCopy(txMessage->destination, queryConf->source);
 					if(txMessage)
 					{
 						this->commMngr->receiveJausMessage(txMessage, this);
@@ -1330,7 +1330,7 @@ bool NodeManagerComponent::processQueryConfiguration(JausMessage message)
 			}
 			else
 			{
-				// This NM is not connected to the subsystem network, 
+				// This NM is not connected to the subsystem network,
 				// therefore no one should be asking us for subsystem configuration
 				// TODO: Log Error. Throw Exception.
 				queryConfigurationMessageDestroy(queryConf);
@@ -1347,7 +1347,7 @@ bool NodeManagerComponent::processQueryConfiguration(JausMessage message)
 				jausMessageDestroy(message);
 				return false;
 			}
-			
+
 			// This call to the systemTree returns a copy, so safe to set this pointer to it
 			node = systemTree->getNode(this->cmpt->address->subsystem, this->cmpt->address->node);
 			if(node)
@@ -1388,11 +1388,11 @@ bool NodeManagerComponent::processQueryIdentification(JausMessage message)
 	if(!queryId)
 	{
 		// TODO: Log Error. Throw Exception.
-		// Error unpacking message	
+		// Error unpacking message
 		jausMessageDestroy(message);
 		return false;
 	}
-	
+
 	switch(queryId->queryField)
 	{
 		case JAUS_QUERY_FIELD_SS_IDENTITY:
@@ -1436,7 +1436,7 @@ bool NodeManagerComponent::processQueryIdentification(JausMessage message)
 			}
 			else
 			{
-				// This NM is not connected to the subsystem network, 
+				// This NM is not connected to the subsystem network,
 				// therefore no one should be asking us for subsystem configuration
 				// TODO: Log Error. Throw Exception.
 				queryIdentificationMessageDestroy(queryId);
@@ -1452,7 +1452,7 @@ bool NodeManagerComponent::processQueryIdentification(JausMessage message)
 				jausMessageDestroy(message);
 				return false;
 			}
-			
+
 			identification = systemTree->getNodeIdentification(cmpt->address);
 			if(strlen(identification) < JAUS_IDENTIFICATION_LENGTH_BYTES)
 			{
@@ -1464,7 +1464,7 @@ bool NodeManagerComponent::processQueryIdentification(JausMessage message)
 				reportId->identification[JAUS_IDENTIFICATION_LENGTH_BYTES-1] = 0;
 			}
 			free(identification);
-			
+
 			reportId->queryType = JAUS_QUERY_FIELD_NODE_IDENTITY;
 			txMessage = reportIdentificationMessageToJausMessage(reportId);
 			jausAddressCopy(txMessage->source, cmpt->address);
@@ -1488,7 +1488,7 @@ bool NodeManagerComponent::processQueryIdentification(JausMessage message)
 				jausMessageDestroy(message);
 				return false;
 			}
-			
+
 			identification = cmpt->identification;
 			if(strlen(identification) < JAUS_IDENTIFICATION_LENGTH_BYTES)
 			{
@@ -1596,7 +1596,7 @@ void NodeManagerComponent::sendNodeChangedEvents()
 	JausMessage txMessage = NULL;
 	EventMessage eventMessage = NULL;
 	HASH_MAP <int, JausAddress>::iterator iterator;
-	
+
 	JausNode thisNode = systemTree->getNode(this->cmpt->address);
 	if(!thisNode)
 	{
@@ -1644,7 +1644,7 @@ void NodeManagerComponent::sendNodeChangedEvents()
 		DebugEvent *e = new DebugEvent("Event", __FUNCTION__, __LINE__, buf);
 		this->eventHandler->handleEvent(e);
 	}
-	
+
 	eventMessageDestroy(eventMessage);	// NMJ
 	jausMessageDestroy(txMessage);
 	reportConfigurationMessageDestroy(reportConf);
@@ -1717,7 +1717,7 @@ void NodeManagerComponent::sendNodeShutdownEvents()
 	JausMessage txMessage = NULL;
 	EventMessage eventMessage = NULL;
 	HASH_MAP <int, JausAddress>::iterator iterator;
-	
+
 	reportConf = reportConfigurationMessageCreate();
 	if(!reportConf)
 	{
@@ -1766,7 +1766,7 @@ void NodeManagerComponent::sendNodeShutdownEvents()
 		DebugEvent *e = new DebugEvent("Event", __FUNCTION__, __LINE__, buf);
 		this->eventHandler->handleEvent(e);
 	}
-	
+
 	eventMessageDestroy(eventMessage);
 	jausMessageDestroy(txMessage);
 	reportConfigurationMessageDestroy(reportConf);
@@ -1785,7 +1785,7 @@ void NodeManagerComponent::sendSubsystemShutdownEvents()
 		// TODO: Record an error. Throw Exception
 		return;
 	}
-	
+
 	// Empty Subsystem for message
 	JausSubsystem emptySubs = jausSubsystemCreate();
 	if(!emptySubs)
@@ -1841,7 +1841,7 @@ void NodeManagerComponent::generateHeartbeats()
 	ReportHeartbeatPulseMessage heartbeat;
 	JausMessage nodeHeartbeat;
 	JausMessage cmptHeartbeat;
-	
+
 	if(ojGetTimeSec() >= nextSendTime)
 	{
 		heartbeat = reportHeartbeatPulseMessageCreate();
@@ -1897,7 +1897,7 @@ bool NodeManagerComponent::sendQueryNodeIdentification(JausAddress address)
 	JausMessage txMessage = NULL;
 
 	// TODO: Check timeout and request limit
-	if( systemTree->hasNode(address) && 
+	if( systemTree->hasNode(address) &&
 		!systemTree->hasNodeIdentification(address))
 	{
 		// Create query message
@@ -1907,7 +1907,7 @@ bool NodeManagerComponent::sendQueryNodeIdentification(JausAddress address)
 			// Constructor Failed
 			return false;
 		}
-		
+
 		queryId->queryField = JAUS_QUERY_FIELD_NODE_IDENTITY;
 		txMessage = queryIdentificationMessageToJausMessage(queryId);
 		if(!txMessage)
@@ -1932,7 +1932,7 @@ bool NodeManagerComponent::sendQuerySubsystemIdentification(JausAddress address)
 	JausMessage txMessage = NULL;
 
 	// TODO: Check timeout and request limit
-	if( systemTree->hasSubsystem(address) && 
+	if( systemTree->hasSubsystem(address) &&
 		!systemTree->hasSubsystemIdentification(address))
 	{
 		// Create query message
@@ -1942,7 +1942,7 @@ bool NodeManagerComponent::sendQuerySubsystemIdentification(JausAddress address)
 			// Constructor Failed
 			return false;
 		}
-		
+
 		queryId->queryField = JAUS_QUERY_FIELD_SS_IDENTITY;
 		txMessage = queryIdentificationMessageToJausMessage(queryId);
 		if(!txMessage)
@@ -1977,7 +1977,7 @@ bool NodeManagerComponent::sendQueryComponentIdentification(JausAddress address)
 			// Constructor Failed
 			return false;
 		}
-		
+
 		queryId->queryField = JAUS_QUERY_FIELD_COMPONENT_IDENTITY;
 		txMessage = queryIdentificationMessageToJausMessage(queryId);
 		if(!txMessage)
@@ -2012,7 +2012,7 @@ bool NodeManagerComponent::sendQueryComponentServices(JausAddress address)
 			// Constructor Failed
 			return false;
 		}
-		
+
 		txMessage = queryServicesMessageToJausMessage(query);
 		if(!txMessage)
 		{
@@ -2060,7 +2060,7 @@ bool NodeManagerComponent::sendQueryNodeConfiguration(JausAddress address, bool 
 		jausAddressCopy(txMessage->destination, address);
 		jausAddressCopy(txMessage->source, cmpt->address);
 		this->commMngr->receiveJausMessage(txMessage, this);
-		
+
 		if(createEvent)
 		{
 			createEventMsg = createEventMessageCreate();
@@ -2069,7 +2069,7 @@ bool NodeManagerComponent::sendQueryNodeConfiguration(JausAddress address, bool 
 				queryConfigurationMessageDestroy(query);
 				return false;
 			}
-			
+
 			// Setup Create Event PV
 			createEventMsg->presenceVector = 0;
 			jausByteSetBit(&createEventMsg->presenceVector, CREATE_EVENT_PV_QUERY_MESSAGE_BIT);
@@ -2084,7 +2084,7 @@ bool NodeManagerComponent::sendQueryNodeConfiguration(JausAddress address, bool 
 				queryConfigurationMessageDestroy(query);
 				return false;
 			}
-			
+
 			txMessage = createEventMessageToJausMessage(createEventMsg);
 			if(!txMessage)
 			{
@@ -2150,7 +2150,7 @@ bool NodeManagerComponent::sendQuerySubsystemConfiguration(JausAddress address, 
 			// Setup Create Event PV
 			createEventMsg->presenceVector = 0;
 			jausByteSetBit(&createEventMsg->presenceVector, CREATE_EVENT_PV_QUERY_MESSAGE_BIT);
-			
+
 			createEventMsg->reportMessageCode = jausMessageGetComplementaryCommandCode(query->commandCode);
 			createEventMsg->eventType = EVENT_EVERY_CHANGE_TYPE;
 			createEventMsg->queryMessage = queryConfigurationMessageToJausMessage(query);
@@ -2161,7 +2161,7 @@ bool NodeManagerComponent::sendQuerySubsystemConfiguration(JausAddress address, 
 				queryConfigurationMessageDestroy(query);
 				return false;
 			}
-			
+
 			txMessage = createEventMessageToJausMessage(createEventMsg);
 			if(!txMessage)
 			{
@@ -2287,6 +2287,6 @@ void NodeManagerComponent::handleEvent(NodeManagerEvent *e)
 		default:
 			delete e;
 			break;
-	}	
+	}
 }
 
