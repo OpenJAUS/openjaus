@@ -1014,7 +1014,7 @@ JausBoolean scManagerReceiveServiceConnection(NodeManagerInterface nmi, ServiceC
 	ServiceConnection prevSc;
 	ServiceConnection sc;
 
-	pthread_mutex_unlock(&nmi->scm->mutex);
+	pthread_mutex_lock(&nmi->scm->mutex);
 
 	sc = nmi->scm->incomingSc;
 	prevSc = NULL;
