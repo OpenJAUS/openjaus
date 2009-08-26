@@ -216,7 +216,7 @@ void OjUdpComponentInterface::run()
 						sprintf(buf, "Invalid Component Id (%d) trying to check in.", componentId);
 						ErrorEvent *e = new ErrorEvent(ErrorEvent::Configuration, __FUNCTION__, __LINE__, buf);
 						this->eventHandler->handleEvent(e);
-						return;
+						break;
 					}
 
 					address = this->nodeManager->checkInLocalComponent(componentId);
