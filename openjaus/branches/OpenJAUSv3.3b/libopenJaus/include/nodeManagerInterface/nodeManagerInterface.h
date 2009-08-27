@@ -164,7 +164,7 @@ typedef struct
 
 typedef NodeManagerInterfaceStruct *NodeManagerInterface;
 
-JAUS_EXPORT JausBoolean checkNodeManagerReady(double timeout);
+JAUS_EXPORT JausBoolean ojNodeManagerIsReady(double timeoutSec);
 
 JAUS_EXPORT NodeManagerInterface nodeManagerOpen(JausComponent);
 JAUS_EXPORT int nodeManagerClose(NodeManagerInterface);
