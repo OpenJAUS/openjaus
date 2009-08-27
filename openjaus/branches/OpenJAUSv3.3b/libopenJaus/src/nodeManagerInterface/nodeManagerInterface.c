@@ -87,7 +87,7 @@ static int checkOutOfNodeManager(NodeManagerInterface);
 void *heartbeatThread(void *);
 void *receiveThread(void *);
 
-JausBoolean checkNodeManagerReady(double timeout)
+JausBoolean ojNodeManagerIsReady(double timeoutSec)
 {
 	// This sends a short message to the NM which lets
 	// the caller know if the nodeManager is ready to connect to components
@@ -133,9 +133,9 @@ JausBoolean checkNodeManagerReady(double timeout)
 	packet->port = NODE_MANAGER_INTERFACE_PORT;
 	packet->address->value = ipAddress->value;
 
-	if(timeout != 0)
+	if(timeoutSec != 0)
 	{
-		stopTime = ojGetTimeSec() + timeout;
+		stopTime = ojGetTimeSec() + timeoutSec;
 	}
 	else
 	{
