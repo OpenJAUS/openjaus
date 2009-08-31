@@ -76,7 +76,16 @@ MessageRouter::MessageRouter(FileLoader *configData, SystemTree *sysTree, EventH
 		return;
 	}
 
-	this->subsComms = new JausSubsystemCommunicationManager(configData, this, systemTree, handler);
+	try
+	{
+		this->subsComms = new JausSubsystemCommunicationManager(configData, this, systemTree, handler);
+	}
+	catch(...)
+	{
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::Configuration, __FUNCTION__, __LINE__, "Failed to construct JausSubsystemCommunicationManager!");
+		this->eventHandler->handleEvent(e);
+		throw;
+	}
 	
 	try
 	{
@@ -84,6 +93,9 @@ MessageRouter::MessageRouter(FileLoader *configData, SystemTree *sysTree, EventH
 	}
 	catch(...)
 	{
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::Configuration, __FUNCTION__, __LINE__, "Failed to construct JausNodeCommunicationManager!");
+		this->eventHandler->handleEvent(e);
+
 		delete this->subsComms;
 		throw;
 	}
@@ -94,6 +106,9 @@ MessageRouter::MessageRouter(FileLoader *configData, SystemTree *sysTree, EventH
 	}
 	catch(...)
 	{
+		ErrorEvent *e = new ErrorEvent(ErrorEvent::Configuration, __FUNCTION__, __LINE__, "Failed to construct JausComponentCommunicationManager!");
+		this->eventHandler->handleEvent(e);
+
 		delete this->subsComms;
 		delete this->nodeComms;
 		throw;
