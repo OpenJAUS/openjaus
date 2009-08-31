@@ -57,7 +57,7 @@
 #include "events/DebugEvent.h"
 #include "events/ConfigurationEvent.h"
 
-#define	OJ_NODE_MANAGER_VERSION	"3.3.0b"
+#define	OJ_NODE_MANAGER_VERSION	"3.3.0b (SEPT 2, 2009)"
 
 class NodeManager : public EventHandler
 {

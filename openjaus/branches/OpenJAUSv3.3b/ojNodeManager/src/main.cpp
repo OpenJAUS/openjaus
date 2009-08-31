@@ -133,7 +133,7 @@ int main(int argc, char **args)
 	bool running = true;
 	int i = 0;
 
-	printf("\nOpenJAUS Node Manager Version %s (August 7, 2008)\n\n", OJ_NODE_MANAGER_VERSION);
+	printf("\nOpenJAUS Node Manager Version %s\n\n", OJ_NODE_MANAGER_VERSION);
 
 	// Setup the console window's input handle
 	handleStdin = GetStdHandle(STD_INPUT_HANDLE);
@@ -181,6 +181,7 @@ int main(int argc, char **args)
 				case KEY_EVENT: // keyboard input
 					if(inputEvents[i].Event.KeyEvent.wVirtualKeyCode == VK_ESCAPE)
 					{
+						printf("Shutting Down Node Manager...\n");
 						running = false;
 					}
 					else if(inputEvents[i].Event.KeyEvent.bKeyDown)
@@ -201,6 +202,7 @@ int main(int argc, char **args)
 	delete configData;
 	delete handler;
 
+	printf("Thank you for choosing OpenJAUS!\n");
 	system("pause");
 
 	return 0;
@@ -226,7 +228,7 @@ int main(int argc, char **args)
 	newTermio.c_cc[VMIN] = 1;
 	tcsetattr(0,TCSANOW,&newTermio);
 
-	printf("\nOpenJAUS Node Manager Version %s (SEPT 2, 2009)\n\n", OJ_NODE_MANAGER_VERSION);
+	printf("\nOpenJAUS Node Manager Version %s\n\n", OJ_NODE_MANAGER_VERSION);
 
 	FileLoader *configData = new FileLoader("nodeManager.conf");
 	MyHandler *handler = new MyHandler();
@@ -254,6 +256,7 @@ int main(int argc, char **args)
 		count = read(0, &choice, 8);
 		if(count == 1 && choice[0] == 27) // ESC
 		{
+			printf("Shutting Down Node Manager...\n");
 			running = false;
 		}
 		else if(count == 1)
@@ -266,6 +269,7 @@ int main(int argc, char **args)
 	delete handler;
 	delete configData;
 
+	printf("Thank you for choosing OpenJAUS!\n");
 	tcsetattr(0, TCSANOW, &storedTermio);
 	return 0;
 }
