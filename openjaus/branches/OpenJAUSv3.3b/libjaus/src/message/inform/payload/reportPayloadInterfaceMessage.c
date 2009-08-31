@@ -89,6 +89,13 @@ static JausBoolean dataFromBuffer(ReportPayloadInterfaceMessage message, unsigne
 	char * tempString = NULL;
 	JausTypeCode minValue, defaultValue, maxValue;
 	
+	// Note: The message->jausPayloadInterface is not constructed by this message and must be constructed by the component 
+	// prior to calling this function
+	if(message->jausPayloadInterface == NULL)
+	{
+		return JAUS_FALSE;
+	}
+
 	if(bufferSizeBytes == message->dataSize)
 	{
 		// Unpack Message Fields from Buffer
@@ -301,6 +308,13 @@ static int dataToBuffer(ReportPayloadInterfaceMessage message, unsigned char *bu
 	char * identifierString = NULL;
 	char * tempString = NULL;
 	JausTypeCode minValue, defaultValue, maxValue;
+
+	// Note: The message->jausPayloadInterface is not constructed by this message and must be constructed by the component 
+	// prior to calling this function
+	if(message->jausPayloadInterface == NULL)
+	{
+		return JAUS_FALSE;
+	}
 
 	if(bufferSizeBytes >= dataSize(message))
 	{
