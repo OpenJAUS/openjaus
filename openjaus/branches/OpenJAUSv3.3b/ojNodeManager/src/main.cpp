@@ -1,12 +1,12 @@
 /*****************************************************************************
  *  Copyright (c) 2008, University of Florida
  *  All rights reserved.
- *  
- *  This file is part of OpenJAUS.  OpenJAUS is distributed under the BSD 
+ *
+ *  This file is part of OpenJAUS.  OpenJAUS is distributed under the BSD
  *  license.  See the LICENSE file for details.
- * 
- *  Redistribution and use in source and binary forms, with or without 
- *  modification, are permitted provided that the following conditions 
+ *
+ *  Redistribution and use in source and binary forms, with or without
+ *  modification, are permitted provided that the following conditions
  *  are met:
  *
  *     * Redistributions of source code must retain the above copyright
@@ -15,20 +15,20 @@
  *       copyright notice, this list of conditions and the following
  *       disclaimer in the documentation and/or other materials provided
  *       with the distribution.
- *     * Neither the name of the University of Florida nor the names of its 
- *       contributors may be used to endorse or promote products derived from 
+ *     * Neither the name of the University of Florida nor the names of its
+ *       contributors may be used to endorse or promote products derived from
  *       this software without specific prior written permission.
  *
- *   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- *   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- *   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR 
- *   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT 
+ *   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ *   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ *   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ *   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
  *   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- *   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT 
- *   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
- *   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY 
+ *   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ *   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ *   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
  *   THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
+ *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ****************************************************************************/
 // File Name: ojNodeManager.cpp
@@ -39,7 +39,7 @@
 //
 // Date: 08/07/08
 //
-// Description: 
+// Description:
 
 #include "openJaus.h"
 
@@ -65,7 +65,7 @@ public:
 	{
 
 	}
-	
+
 	void handleEvent(NodeManagerEvent *e)
 	{
 		SystemTreeEvent *treeEvent;
@@ -133,10 +133,10 @@ int main(int argc, char **args)
 	bool running = true;
 	int i = 0;
 
-	printf("\nOpenJAUS Node Manager Version %s (August 7, 2008)\n\n", OJ_NODE_MANAGER_VERSION); 
+	printf("\nOpenJAUS Node Manager Version %s (August 7, 2008)\n\n", OJ_NODE_MANAGER_VERSION);
 
 	// Setup the console window's input handle
-	handleStdin = GetStdHandle(STD_INPUT_HANDLE); 
+	handleStdin = GetStdHandle(STD_INPUT_HANDLE);
 
 	MyHandler *handler = new MyHandler();
 	FileLoader *configData = new FileLoader("nodeManager.conf");
@@ -162,23 +162,23 @@ int main(int argc, char **args)
 	{
 		// See how many events are waiting for us, this prevents blocking if none
 		GetNumberOfConsoleInputEvents(handleStdin, &eventCount);
-		
+
 		if(eventCount > 0)
 		{
 			// Check for user input here
-			ReadConsoleInput( 
-					handleStdin,		// input buffer handle 
-					inputEvents,		// buffer to read into 
-					128,				// size of read buffer 
-					&eventCount);		// number of records read 
+			ReadConsoleInput(
+					handleStdin,		// input buffer handle
+					inputEvents,		// buffer to read into
+					128,				// size of read buffer
+					&eventCount);		// number of records read
 		}
- 
-	    // Parse console input events 
-        for (i = 0; i < (int) eventCount; i++) 
+
+	    // Parse console input events
+        for (i = 0; i < (int) eventCount; i++)
         {
-            switch(inputEvents[i].EventType) 
-            { 
-				case KEY_EVENT: // keyboard input 
+            switch(inputEvents[i].EventType)
+            {
+				case KEY_EVENT: // keyboard input
 					if(inputEvents[i].Event.KeyEvent.wVirtualKeyCode == VK_ESCAPE)
 					{
 						running = false;
@@ -188,7 +188,7 @@ int main(int argc, char **args)
 						parseUserInput(inputEvents[i].Event.KeyEvent.uChar.AsciiChar);
 					}
 					break;
-				
+
 				default:
 					break;
 			}
@@ -215,10 +215,10 @@ int main(int argc, char **args)
 	bool running = true;
 	char choice[8] = {0};
 	int count = 0;
-	
+
 	tcgetattr(0,&storedTermio);
 	memcpy(&newTermio,&storedTermio,sizeof(struct termios));
-	
+
 	// Disable canonical mode, and set buffer size to 0 byte(s)
 	newTermio.c_lflag &= (~ICANON);
 	newTermio.c_lflag &= (~ECHO);
@@ -226,7 +226,7 @@ int main(int argc, char **args)
 	newTermio.c_cc[VMIN] = 1;
 	tcsetattr(0,TCSANOW,&newTermio);
 
-	printf("\nOpenJAUS Node Manager Version %s (JULY 9, 2008)\n\n", OJ_NODE_MANAGER_VERSION); 
+	printf("\nOpenJAUS Node Manager Version %s (SEPT 2, 2009)\n\n", OJ_NODE_MANAGER_VERSION);
 
 	FileLoader *configData = new FileLoader("nodeManager.conf");
 	MyHandler *handler = new MyHandler();
@@ -265,7 +265,7 @@ int main(int argc, char **args)
 	delete nm;
 	delete handler;
 	delete configData;
-	
+
 	tcsetattr(0, TCSANOW, &storedTermio);
 	return 0;
 }
@@ -282,7 +282,7 @@ void parseUserInput(char input)
 		case 't':
 			printf("\n\n%s", nm->systemTreeToString().c_str());
 			break;
-		
+
 		case 'c':
 		case 'C':
 			system(CLEAR_COMMAND);
@@ -290,7 +290,7 @@ void parseUserInput(char input)
 
 		case '?':
 			printHelpMenu();
-	
+
 		default:
 			break;
 	}
