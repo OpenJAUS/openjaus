@@ -262,8 +262,8 @@ int multicastSocketReceive(MulticastSocket multicastSocket, DatagramPacket packe
 	}
 	else if(FD_ISSET(multicastSocket->multicastSocketDescriptor, &multicastSocket->readSet))
 	{
-		FD_CLR(multicastSocket->unicastSocketDescriptor, &multicastSocket->readSet);
-		bytesReceived = recvfrom(multicastSocket->unicastSocketDescriptor, packet->buffer, packet->bufferSizeBytes, 0, (struct sockaddr*)&fromAddress, &fromAddressLength);
+		FD_CLR(multicastSocket->multicastSocketDescriptor, &multicastSocket->readSet);
+		bytesReceived = recvfrom(multicastSocket->multicastSocketDescriptor, packet->buffer, packet->bufferSizeBytes, 0, (struct sockaddr*)&fromAddress, &fromAddressLength);
 	}
 
 	if(bytesReceived != -1)
