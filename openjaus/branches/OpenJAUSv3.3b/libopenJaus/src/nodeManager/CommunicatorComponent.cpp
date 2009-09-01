@@ -908,10 +908,10 @@ void CommunicatorComponent::sendSubsystemChangedEvents()
 		jausAddressCopy(eventMessage->destination, iterator->second);
 		txMessage = eventMessageToJausMessage(eventMessage);
 		this->commMngr->receiveJausMessage(jausMessageClone(txMessage), this);
-		jausMessageDestroy(txMessage);
 
 		char buf[256];
 		sprintf(buf, "Send Subs Changed event to %d.%d.%d.%d.", txMessage->destination->subsystem, txMessage->destination->node, txMessage->destination->component, txMessage->destination->instance);
+		jausMessageDestroy(txMessage);
 		DebugEvent *e = new DebugEvent("Event", __FUNCTION__, __LINE__, buf);
 		this->eventHandler->handleEvent(e);
 	}
@@ -971,10 +971,10 @@ void CommunicatorComponent::sendSubsystemShutdownEvents()
 		jausAddressCopy(eventMessage->destination, iterator->second);
 		txMessage = eventMessageToJausMessage(eventMessage);
 		this->commMngr->receiveJausMessage(jausMessageClone(txMessage), this);
-		jausMessageDestroy(txMessage);
 
 		char buf[256];
 		sprintf(buf, "Send Subs Shutdown event to %d.%d.%d.%d.", txMessage->destination->subsystem, txMessage->destination->node, txMessage->destination->component, txMessage->destination->instance);
+		jausMessageDestroy(txMessage);
 		DebugEvent *e = new DebugEvent("Event", __FUNCTION__, __LINE__, buf);
 		this->eventHandler->handleEvent(e);
 	}

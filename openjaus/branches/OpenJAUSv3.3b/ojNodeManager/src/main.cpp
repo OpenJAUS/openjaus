@@ -181,7 +181,6 @@ int main(int argc, char **args)
 				case KEY_EVENT: // keyboard input
 					if(inputEvents[i].Event.KeyEvent.wVirtualKeyCode == VK_ESCAPE)
 					{
-						printf("Shutting Down Node Manager...\n");
 						running = false;
 					}
 					else if(inputEvents[i].Event.KeyEvent.bKeyDown)
@@ -197,6 +196,8 @@ int main(int argc, char **args)
 
 		Sleep((DWORD)(0.2*1e3));
 	}
+
+	printf("Shutting Down Node Manager...\n");
 
 	delete nm;
 	delete configData;
