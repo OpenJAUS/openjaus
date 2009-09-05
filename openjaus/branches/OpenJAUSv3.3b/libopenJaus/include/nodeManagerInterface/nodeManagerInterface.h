@@ -145,6 +145,8 @@ typedef struct
 	pthread_cond_t recvCondition;
 	pthread_cond_t hbWakeCondition;
 
+	pthread_mutex_t recvMutex;
+
 	InetAddress ipAddress;
 
 	Queue receiveQueue;
