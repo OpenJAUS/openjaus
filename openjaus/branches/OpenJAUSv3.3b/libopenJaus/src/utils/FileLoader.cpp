@@ -52,17 +52,17 @@
 // @par 10-23-2007 Danny Kent
 // - Updated for use in the NodeManager project
 
-#include <strings.h>
 #include <stdlib.h>
 #include "utils/FileLoader.h"
 
-#ifndef WIN32
+#ifdef WIN32
+	#define stricmp(x,y) _stricmp(x,y)
+#else
 	#include <cstdlib>
 	#include <string.h>
+	#include <strings.h>
 	#define stricmp(x,y) strcasecmp(x,y)
 	#define strtok_s(x,y,z) strtok_r(x,y,z)
-#else
-	#define stricmp(x,y) _stricmp(x,y)
 #endif
 
 
