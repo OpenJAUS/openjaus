@@ -53,6 +53,7 @@
 
 #define _USE_MATH_DEFINES
 #include <math.h>
+#include <malloc.h>
 
 NodeManagerComponent::NodeManagerComponent(FileLoader *configData, EventHandler *handler, JausComponentCommunicationManager *cmptComms)
 {

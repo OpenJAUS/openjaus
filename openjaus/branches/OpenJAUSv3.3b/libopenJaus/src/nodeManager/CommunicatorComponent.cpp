@@ -42,6 +42,7 @@
 // Description: This file defines a CommunicatorComponent class.
 // 				This is derived from a the LocalComponent class.
 
+#include <malloc.h>
 #include "nodeManager/CommunicatorComponent.h"
 #include "nodeManager/JausComponentCommunicationManager.h"
 #include "nodeManager/events/ErrorEvent.h"
