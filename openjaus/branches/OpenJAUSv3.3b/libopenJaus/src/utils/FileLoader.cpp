@@ -1,12 +1,12 @@
 /*****************************************************************************
  *  Copyright (c) 2008, University of Florida
  *  All rights reserved.
- *  
- *  This file is part of OpenJAUS.  OpenJAUS is distributed under the BSD 
+ *
+ *  This file is part of OpenJAUS.  OpenJAUS is distributed under the BSD
  *  license.  See the LICENSE file for details.
- * 
- *  Redistribution and use in source and binary forms, with or without 
- *  modification, are permitted provided that the following conditions 
+ *
+ *  Redistribution and use in source and binary forms, with or without
+ *  modification, are permitted provided that the following conditions
  *  are met:
  *
  *     * Redistributions of source code must retain the above copyright
@@ -15,20 +15,20 @@
  *       copyright notice, this list of conditions and the following
  *       disclaimer in the documentation and/or other materials provided
  *       with the distribution.
- *     * Neither the name of the University of Florida nor the names of its 
- *       contributors may be used to endorse or promote products derived from 
+ *     * Neither the name of the University of Florida nor the names of its
+ *       contributors may be used to endorse or promote products derived from
  *       this software without specific prior written permission.
  *
- *   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- *   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- *   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR 
- *   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT 
+ *   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ *   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ *   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ *   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
  *   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- *   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT 
- *   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
- *   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY 
+ *   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ *   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ *   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
  *   THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
+ *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ****************************************************************************/
 // File Name: FileLoader.cpp
@@ -42,16 +42,18 @@
 // Modifications:
 // 	Date/Author
 // 	Description
-// 
+//
 // @par 04-26-2006 Jeff Kunkle
 // - Initial Creation
-// 
+//
 // @par 12-08-2006 Jeff Kunkle
 // - Updated to Visual Studio 2005.
-// 
+//
 // @par 10-23-2007 Danny Kent
 // - Updated for use in the NodeManager project
 
+#include <strings.h>
+#include <stdlib.h>
 #include "utils/FileLoader.h"
 
 #ifndef WIN32
@@ -72,7 +74,7 @@ FileLoader::~FileLoader(){}
 bool FileLoader::load_cfg( string filename )
 {
 	ifstream cfg_file( filename.c_str(), ios::in );
-	
+
     if( cfg_file.fail() )
     {
 		//DebugUtil::error( "FileLoader: load_cfg: Unable to open file: \"%s\"\n", filename.c_str() );
@@ -82,11 +84,11 @@ bool FileLoader::load_cfg( string filename )
 
     char buffer[256];
     char *token, *next_token;
-    
+
     Config_File_Data_t tmp;
     Config_Data_t tmpInfo;
     tmp.configheader = "";
-	
+
    while( cfg_file.getline( buffer, sizeof( buffer ) - 1 ) )
     {
        token = strtok_s( buffer, ": ", &next_token );
@@ -98,7 +100,7 @@ bool FileLoader::load_cfg( string filename )
 		else if( token[0] == '[' ) // This is a label
 		{
 			if( tmp.configheader != "" ){ configFileData.push_back( tmp ); }
-			
+
 			token = strtok_s( token, "[]", &next_token );
 			tmp.configheader = token;
 			tmp.data.clear();
@@ -123,7 +125,7 @@ bool FileLoader::load_cfg( string filename )
 
 	if( tmp.configheader != "" ){ configFileData.push_back( tmp ); }
     cfg_file.close();
-	
+
     return true;
 }
 
@@ -135,9 +137,9 @@ string FileLoader::GetConfigDataString( string header, string label )
 
     int lbl_index = findLabel( hdr_index, label );
     if( lbl_index == -1 ){ return ""; }
-    
+
     if( configFileData[ hdr_index ].data[ lbl_index ].tok.empty() ){ return ""; }
-    
+
 	return configFileData[ hdr_index ].data[ lbl_index ].tok[0];
 }
 
@@ -167,7 +169,7 @@ vector< string >* FileLoader::GetConfigDataVector( string header, string label )
 {
     int hdr_index = findHeader( header );
     if( hdr_index == -1 ){ return NULL; }
-    
+
     int lbl_index = findLabel( hdr_index, label );
     if( lbl_index == -1 ){ return NULL; }
 
@@ -180,7 +182,7 @@ vector< string >* FileLoader::GetConfigDataVector( string header, string label )
 		string tmp = configFileData[ hdr_index ].data[ lbl_index ].tok[i];
 	    rtnData->push_back( tmp );
 	}
-	
+
 	return rtnData;
 }
 
@@ -203,7 +205,7 @@ int FileLoader::findLabel( int hdrIndex, string label )
 {
 	int rtn = 0;
     vector< Config_Data_t >::iterator findLabel = configFileData[hdrIndex].data.begin();
-	
+
     while( findLabel != configFileData[hdrIndex].data.end() && ( *findLabel ).label != label )
 	{
 		findLabel++;

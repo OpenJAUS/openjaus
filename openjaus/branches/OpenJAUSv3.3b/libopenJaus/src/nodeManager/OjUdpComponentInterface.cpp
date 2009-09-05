@@ -43,6 +43,7 @@
 //				to components using a non-JAUS compliant synchronous UDP port over
 //				the loopback device.
 
+#include <malloc.h>
 #include "nodeManager/OjUdpComponentInterface.h"
 #include "nodeManager/events/ErrorEvent.h"
 

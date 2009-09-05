@@ -1,12 +1,12 @@
 /*****************************************************************************
  *  Copyright (c) 2008, University of Florida
  *  All rights reserved.
- *  
- *  This file is part of OpenJAUS.  OpenJAUS is distributed under the BSD 
+ *
+ *  This file is part of OpenJAUS.  OpenJAUS is distributed under the BSD
  *  license.  See the LICENSE file for details.
- * 
- *  Redistribution and use in source and binary forms, with or without 
- *  modification, are permitted provided that the following conditions 
+ *
+ *  Redistribution and use in source and binary forms, with or without
+ *  modification, are permitted provided that the following conditions
  *  are met:
  *
  *     * Redistributions of source code must retain the above copyright
@@ -15,33 +15,34 @@
  *       copyright notice, this list of conditions and the following
  *       disclaimer in the documentation and/or other materials provided
  *       with the distribution.
- *     * Neither the name of the University of Florida nor the names of its 
- *       contributors may be used to endorse or promote products derived from 
+ *     * Neither the name of the University of Florida nor the names of its
+ *       contributors may be used to endorse or promote products derived from
  *       this software without specific prior written permission.
  *
- *   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- *   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- *   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR 
- *   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT 
+ *   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ *   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ *   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ *   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
  *   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- *   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT 
- *   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
- *   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY 
+ *   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ *   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ *   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
  *   THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
+ *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ****************************************************************************/
 // File Name: JudpInterface.cpp
 //
-// Written By: Danny Kent (jaus AT dannykent DOT com) 
+// Written By: Danny Kent (jaus AT dannykent DOT com)
 //
 // Version: 3.3.0a
 //
 // Date: 08/07/08
 //
-// Description: Defines the standard JAUS UDP interface on port 3792. Is compliant with the 
+// Description: Defines the standard JAUS UDP interface on port 3792. Is compliant with the
 // 				ETG/OPC style of UDP header
 
+#include <malloc.h>
 #include "nodeManager/JudpInterface.h"
 #include "nodeManager/JausSubsystemCommunicationManager.h"
 #include "nodeManager/JausNodeCommunicationManager.h"
@@ -57,7 +58,7 @@ JudpInterface::JudpInterface(FileLoader *configData, EventHandler *handler, Jaus
 	this->configData = configData;
 	this->multicast = false;
 	this->subsystemGatewayDiscovered = false;
-	
+
 	// Determine the type of our commMngr
 	if(dynamic_cast<JausSubsystemCommunicationManager  *>(this->commMngr))
 	{
@@ -77,7 +78,7 @@ JudpInterface::JudpInterface(FileLoader *configData, EventHandler *handler, Jaus
 	}
 
 
-	// NOTE: This value should exist in the properties file and should be checked 
+	// NOTE: This value should exist in the properties file and should be checked
 	// in the NodeManager class prior to constructing this object
 	mySubsystemId = configData->GetConfigDataInt("JAUS", "SubsystemId");
 	if(mySubsystemId < JAUS_MINIMUM_SUBSYSTEM_ID || mySubsystemId > JAUS_MAXIMUM_SUBSYSTEM_ID)
@@ -112,7 +113,7 @@ bool JudpInterface::startInterface(void)
 bool JudpInterface::stopInterface(void)
 {
 	this->running = false;
-	
+
 	// Stop our pThread
 	this->stopThread();
 
@@ -184,7 +185,7 @@ bool JudpInterface::processMessage(JausMessage message)
 			break;
 
 		case NODE_INTERFACE:
-			if(	message->destination->subsystem == mySubsystemId || 
+			if(	message->destination->subsystem == mySubsystemId ||
 				message->destination->subsystem == JAUS_BROADCAST_SUBSYSTEM_ID )
 			{
 				// if node==BROADCAST send multicast
@@ -302,7 +303,7 @@ void JudpInterface::run()
 	while(this->running)
 	{
 		pthread_cond_wait(&threadConditional, &threadMutex);
-		
+
 		while(!this->queue.isEmpty())
 		{
 			// Pop a packet off the queue and send it off
@@ -345,7 +346,7 @@ bool JudpInterface::openSocket(void)
 			// IP Address
 			if(this->configData->GetConfigDataString("Subsystem_Communications", "JUDP_IP_Address") == "")
 			{
-				// Cannot open specified IP Address				
+				// Cannot open specified IP Address
 				ErrorEvent *e = new ErrorEvent(ErrorEvent::Configuration, __FUNCTION__, __LINE__, "No IP Address specified!");
 				this->eventHandler->handleEvent(e);
 				return false;
@@ -358,7 +359,7 @@ bool JudpInterface::openSocket(void)
 					// Cannot open specified IP Address
 					char errorString[128] = {0};
 					sprintf(errorString, "Could not open specified IP Address: %s", this->configData->GetConfigDataString("Subsystem_Communications", "JUDP_IP_Address").c_str());
-					
+
 					ErrorEvent *e = new ErrorEvent(ErrorEvent::Configuration, __FUNCTION__, __LINE__, errorString);
 					this->eventHandler->handleEvent(e);
 					return false;
@@ -427,7 +428,7 @@ bool JudpInterface::openSocket(void)
 			// IP Address
 			if(this->configData->GetConfigDataString("Node_Communications", "JUDP_IP_Address") == "")
 			{
-				// Cannot open specified IP Address				
+				// Cannot open specified IP Address
 				ErrorEvent *e = new ErrorEvent(ErrorEvent::Configuration, __FUNCTION__, __LINE__, "No IP Address specified!");
 				this->eventHandler->handleEvent(e);
 				return false;
@@ -440,7 +441,7 @@ bool JudpInterface::openSocket(void)
 					// Cannot open specified IP Address
 					char errorString[128] = {0};
 					sprintf(errorString, "Could not open specified IP Address: %s", this->configData->GetConfigDataString("Node_Communications", "JUDP_IP_Address").c_str());
-					
+
 					ErrorEvent *e = new ErrorEvent(ErrorEvent::Configuration, __FUNCTION__, __LINE__, errorString);
 					this->eventHandler->handleEvent(e);
 					return false;
@@ -522,7 +523,7 @@ bool JudpInterface::openSocket(void)
 					// Cannot open specified IP Address
 					char errorString[128] = {0};
 					sprintf(errorString, "Could not open default IP Address: %s", JUDP_DEFAULT_COMPONENT_IP.c_str());
-					
+
 					ErrorEvent *e = new ErrorEvent(ErrorEvent::Configuration, __FUNCTION__, __LINE__, errorString);
 					this->eventHandler->handleEvent(e);
 					return false;
@@ -536,7 +537,7 @@ bool JudpInterface::openSocket(void)
 					// Cannot open specified IP Address
 					char errorString[128] = {0};
 					sprintf(errorString, "Could not open specified IP Address: %s", this->configData->GetConfigDataString("Component_Communications", "JUDP_IP_Address").c_str());
-					
+
 					ErrorEvent *e = new ErrorEvent(ErrorEvent::Configuration, __FUNCTION__, __LINE__, errorString);
 					this->eventHandler->handleEvent(e);
 					return false;
@@ -581,7 +582,7 @@ bool JudpInterface::openSocket(void)
 					// Error. Component has no default Multicast group.
 					ErrorEvent *e = new ErrorEvent(ErrorEvent::Configuration, __FUNCTION__, __LINE__, "No default Component Multicast Group and none defined.");
 					this->eventHandler->handleEvent(e);
-					
+
 					inetAddressDestroy(this->ipAddress);
 					return false;
 				}
@@ -610,12 +611,12 @@ bool JudpInterface::openSocket(void)
 		// Error creating our socket
 		char errorString[128] = {0};
 		char buf[24] = {0};
-		
+
 		inetAddressToBuffer(this->ipAddress, buf, 24);
 		sprintf(errorString, "Could not open socket: %s:%d", buf, this->portNumber);
 		ErrorEvent *e = new ErrorEvent(ErrorEvent::Configuration, __FUNCTION__, __LINE__, errorString);
 		this->eventHandler->handleEvent(e);
-		
+
 		inetAddressDestroy(this->ipAddress);
 		return false;
 	}
@@ -641,7 +642,7 @@ bool JudpInterface::openSocket(void)
 			// Error joining our group
 			char errorString[128] = {0};
 			char buf[24] = {0};
-			
+
 			inetAddressToString(this->multicastGroup, buf);
 			sprintf(errorString, "Could not open socket: %s:%d", buf, this->portNumber);
 			ErrorEvent *e = new ErrorEvent(ErrorEvent::Configuration, __FUNCTION__, __LINE__, errorString);
@@ -655,7 +656,7 @@ bool JudpInterface::openSocket(void)
 		// Setup Multicast UdpData
 		multicastData.addressValue = multicastGroup->value;
 		multicastData.port = this->socket->port;
-		
+
 		inetAddressDestroy(this->multicastGroup);
 	}
 
@@ -739,15 +740,15 @@ void JudpInterface::recvThreadRun()
 	packet = datagramPacketCreate();
 	packet->bufferSizeBytes = JUDP_MAX_PACKET_SIZE;
 	packet->buffer = (unsigned char *) calloc(packet->bufferSizeBytes, 1);
-	
+
 	while(this->running)
 	{
 		index = 0;
 		bytesRecv = multicastSocketReceive(this->socket, packet);
-		
+
 		if(bytesRecv > 0)
 		{
-			bufferIndex = 0; 
+			bufferIndex = 0;
 			if(packet->buffer[0] != JUDP_VERSION_NUMBER)
 			{
 				// Error, wrong JUDP version inbound
@@ -756,7 +757,7 @@ void JudpInterface::recvThreadRun()
 				continue;
 			}
 			bufferIndex += 1;
-			
+
 			bytesUnpacked = this->headerCompressionDataFromBuffer(&hcData, packet->buffer + bufferIndex, packet->bufferSizeBytes - bufferIndex);
 			if(bytesUnpacked == 0)
 			{
@@ -819,7 +820,7 @@ void JudpInterface::recvThreadRun()
 					break;
 			}
 
-			// Received message Event	
+			// Received message Event
 			JausMessage tempMessage = jausMessageClone(rxMessage);
 			JausMessageEvent *e = new JausMessageEvent(tempMessage, this, JausMessageEvent::Inbound);
 			this->eventHandler->handleEvent(e);
@@ -866,7 +867,7 @@ void JudpInterface::sendUncompressedMessage(JudpTransportData data, JausMessage 
 	packet->buffer = (unsigned char *) calloc(packet->bufferSizeBytes, 1);
 	packet->port = data.port;
 	packet->address->value = data.addressValue;
-	
+
 	bufferIndex = 0;
 	packet->buffer[0] = JUDP_VERSION_NUMBER;
 	bufferIndex += 1;
@@ -917,7 +918,7 @@ bool JudpInterface::receiveCompressedMessage(JausMessage rxMessage, JudpHeaderCo
 			e = new ErrorEvent(ErrorEvent::Message, __FUNCTION__, __LINE__, "Header Compression not yet supported!");
 			this->eventHandler->handleEvent(e);
 			return false;
-		
+
 		default:
 			e = new ErrorEvent(ErrorEvent::Message, __FUNCTION__, __LINE__, "Unknown Header Compression Flag!");
 			this->eventHandler->handleEvent(e);
@@ -936,7 +937,7 @@ unsigned int JudpInterface::headerCompressionDataToBuffer(JudpHeaderCompressionD
 
 	buffer[0] = (unsigned char) (hcData->headerNumber);
 	buffer[1] = (unsigned char) (((hcData->length & 0x3F) << 6) | (hcData->flags & 0x03));
-	
+
 	// NOTE: The messageLength member is BIG ENDIAN, this is different for other JAUS messages
 	buffer[2] = (unsigned char) ((hcData->messageLength & 0xFF00) >> 8);
 	buffer[3] = (unsigned char) (hcData->messageLength & 0xFF);
