@@ -46,9 +46,11 @@
 	#define WIN32_LEAN_AND_MEAN
 	#include <winsock2.h>
 	#include <windows.h>
-#elif defined(__linux) || defined(linux) || defined(__linux__) || defined(__APPLE__)
+#elif defined(__linux) || defined(linux) || defined(__linux__) || defined(__APPLE__) || defined(__QNX__)
+    #include <pthread.h>
 	#include <unistd.h>
 	#include <sys/time.h>
+	#include <time.h>
 	#include <errno.h>
 #endif
 
@@ -186,6 +188,7 @@ NodeManagerInterface nodeManagerOpen(JausComponent cmpt)
 	nmi->timestamp = ojGetTimeSec();
 	pthread_cond_init(&nmi->recvCondition, NULL);
 	pthread_cond_init(&nmi->hbWakeCondition, NULL);
+	pthread_mutex_init(&nmi->recvMutex, NULL);
 
 	nmi->ipAddress = inetAddressGetLocalHost();
 	if(nmi->ipAddress == NULL)
@@ -314,6 +317,7 @@ int nodeManagerClose(NodeManagerInterface nmi)
 		datagramSocketDestroy(nmi->messageSocket);
 		datagramSocketDestroy(nmi->interfaceSocket);
 		inetAddressDestroy(nmi->ipAddress);
+		pthread_mutex_destroy(&nmi->recvMutex);
 		pthread_cond_destroy(&nmi->recvCondition);
 		pthread_cond_destroy(&nmi->hbWakeCondition);
 		free(nmi);
@@ -826,7 +830,6 @@ int nodeManagerReceive(NodeManagerInterface nmi, JausMessage *message)
 
 int nodeManagerTimedReceive(NodeManagerInterface nmi, JausMessage *message, double timeLimitSec)
 {
-	pthread_mutex_t recvMutex = PTHREAD_MUTEX_INITIALIZER;
 	int condition = -1;
 	struct timespec timeLimitSpec;
 
@@ -846,9 +849,9 @@ int nodeManagerTimedReceive(NodeManagerInterface nmi, JausMessage *message, doub
 			timeLimitSpec.tv_sec = (long)timeLimitSec;
 			timeLimitSpec.tv_nsec = (long)(1e9 * (timeLimitSec - (double)timeLimitSpec.tv_sec));
 
-			pthread_mutex_lock(&recvMutex);
-			condition = pthread_cond_timedwait(&nmi->recvCondition, &recvMutex, &timeLimitSpec);
-			pthread_mutex_unlock(&recvMutex);
+			pthread_mutex_lock(&nmi->recvMutex);
+			condition = pthread_cond_timedwait(&nmi->recvCondition, &nmi->recvMutex, &timeLimitSpec);
+			pthread_mutex_unlock(&nmi->recvMutex);
 
 			switch(condition)
 			{

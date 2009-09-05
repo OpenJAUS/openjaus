@@ -41,12 +41,13 @@
 //
 // Description:
 
+#include <stdlib.h>
 #include "openJaus.h"
 
 #if defined(WIN32)
 	#include <windows.h>
 	#define CLEAR_COMMAND "cls"
-#elif defined(__linux) || defined(linux) || defined(__linux__) || defined(__APPLE__)
+#elif defined(__linux) || defined(linux) || defined(__linux__) || defined(__APPLE__) || defined(__QNX__)
 	#include <cstdlib>
 	#include <unistd.h>
 	#include <termios.h>

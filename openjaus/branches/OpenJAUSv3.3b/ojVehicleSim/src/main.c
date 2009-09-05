@@ -16,7 +16,7 @@
 	#include <curses.h>
 	#include <windows.h>
 	#define CLEAR "cls"
-#elif defined(__linux) || defined(linux) || defined(__linux__) || defined(__APPLE__)
+#elif defined(__linux) || defined(linux) || defined(__linux__) || defined(__APPLE__) || defined(__QNX__)
 	#include <ncurses.h>
 	#include <termios.h>
 	#include <unistd.h>
@@ -67,7 +67,7 @@ void updateScreen(int keyboardLock, int keyPress)
 	PointLla vehiclePosLla;
 	static int lastChoice = '1';
 	JausAddress address;
-	
+
 	if(!keyboardLock && keyPress != -1 && keyPress != 27 && keyPress != 12) //Magic Numbers: 27 = ESC, 12 = Ctrl+l
 	{
 		switch(keyPress)
@@ -75,24 +75,24 @@ void updateScreen(int keyboardLock, int keyPress)
 			case ' ':
 				wdToggleRequestControl(wd);
 				break;
-			
+
 			case 'S':
 				wdSetSpeed(wd);
 				break;
-			
+
 			case 'W':
 				wdCreateWaypoint(wd);
 				break;
-			
+
 			default:
-				lastChoice = keyPress;			
+				lastChoice = keyPress;
 		}
 	}
 
 	clear();
 
 	mvprintw(row,35,"Keyboard Lock:	%s", keyboardLock?"ON, Press ctrl+L to unlock":"OFF, Press ctrl+L to lock");
-	
+
 	mvprintw(row++,0,"+---------------------------+");
 	mvprintw(row++,0,"|     Component Menu        |");
 	mvprintw(row++,0,"|                           |");
@@ -100,8 +100,8 @@ void updateScreen(int keyboardLock, int keyPress)
 	mvprintw(row++,0,"| 2. Primitive Driver       |");
 	mvprintw(row++,0,"| 3. GPOS / VSS             |");
 	mvprintw(row++,0,"| 4. Waypoint Driver        |");
-	mvprintw(row++,0,"|                           |");		
-	mvprintw(row++,0,"| ESC to Exit               |");		
+	mvprintw(row++,0,"|                           |");
+	mvprintw(row++,0,"| ESC to Exit               |");
 	mvprintw(row++,0,"+---------------------------+");
 
 	row = 2;
@@ -109,97 +109,97 @@ void updateScreen(int keyboardLock, int keyPress)
 	switch(lastChoice)
 	{
 		case '1':
-			mvprintw(row++,col,"Vehicle Simulator");	
-			mvprintw(row++,col,"VS Update Rate:	%7.2f", vehicleSimGetUpdateRate());	
-			mvprintw(row++,col,"VS Run/Pause:	%s", vehicleSimGetRunPause() == VEHICLE_SIM_PAUSE ? "Pause" : "Run");	
+			mvprintw(row++,col,"Vehicle Simulator");
+			mvprintw(row++,col,"VS Update Rate:	%7.2f", vehicleSimGetUpdateRate());
+			mvprintw(row++,col,"VS Run/Pause:	%s", vehicleSimGetRunPause() == VEHICLE_SIM_PAUSE ? "Pause" : "Run");
 			row++;
-			mvprintw(row++,col,"VS Vehicle X:\t%9.2f", vehicleSimGetX());	
-			mvprintw(row++,col,"VS Vehicle Y:\t%9.2f", vehicleSimGetY());	
-			mvprintw(row++,col,"VS Vehicle H:\t%9.2f", vehicleSimGetH());	
-			mvprintw(row++,col,"VS Vehicle Speed: %7.2f", vehicleSimGetSpeed());	
-		
+			mvprintw(row++,col,"VS Vehicle X:\t%9.2f", vehicleSimGetX());
+			mvprintw(row++,col,"VS Vehicle Y:\t%9.2f", vehicleSimGetY());
+			mvprintw(row++,col,"VS Vehicle H:\t%9.2f", vehicleSimGetH());
+			mvprintw(row++,col,"VS Vehicle Speed: %7.2f", vehicleSimGetSpeed());
+
 			row++;
-			mvprintw(row++,col,"VS Throttle:\t%9.2f", vehicleSimGetLinearEffortX());	
-			mvprintw(row++,col,"VS Brake:\t%9.2f", vehicleSimGetResistiveEffortX());	
-			mvprintw(row++,col,"VS Steering:\t%9.2f", vehicleSimGetRotationalEffort());	
-		
-			row++;	
+			mvprintw(row++,col,"VS Throttle:\t%9.2f", vehicleSimGetLinearEffortX());
+			mvprintw(row++,col,"VS Brake:\t%9.2f", vehicleSimGetResistiveEffortX());
+			mvprintw(row++,col,"VS Steering:\t%9.2f", vehicleSimGetRotationalEffort());
+
+			row++;
 			vehiclePosLla = vehicleSimGetPositionLla();
 			mvprintw(row++,col,"VS Vehicle Latitude:  %+10.7f", vehiclePosLla? vehiclePosLla->latitudeRadians*DEG_PER_RAD : 0.0);
 			mvprintw(row++,col,"VS Vehicle Longitude: %+10.7f", vehiclePosLla? vehiclePosLla->longitudeRadians*DEG_PER_RAD : 0.0);
 			break;
-	
-		case '2':		
-			mvprintw(row++,col,"Primitive Driver");	
-			mvprintw(row++,col,"PD Update Rate:	%5.2f", ojCmptGetRateHz(pd));	
+
+		case '2':
+			mvprintw(row++,col,"Primitive Driver");
+			mvprintw(row++,col,"PD Update Rate:	%5.2f", ojCmptGetRateHz(pd));
 			address = ojCmptGetAddress(pd);
 			jausAddressToString(address, string);
 			jausAddressDestroy(address);
-			mvprintw(row++,col,"PD Address:\t%s", string);	
-			mvprintw(row++,col,"PD State:\t%s", jausStateGetString(ojCmptGetState(pd)));	
-			
+			mvprintw(row++,col,"PD Address:\t%s", string);
+			mvprintw(row++,col,"PD State:\t%s", jausStateGetString(ojCmptGetState(pd)));
+
 			row++;
 			if(ojCmptHasController(pd))
 			{
 				address = ojCmptGetControllerAddress(pd);
-				jausAddressToString(address, string);	
+				jausAddressToString(address, string);
 				jausAddressDestroy(address);
-				mvprintw(row++,col,"PD Controller:	%s", string);	
+				mvprintw(row++,col,"PD Controller:	%s", string);
 			}
 			else
 			{
-				mvprintw(row++,col,"PD Controller:	None");	
+				mvprintw(row++,col,"PD Controller:	None");
 			}
-			mvprintw(row++,col,"PD Controller SC:	%s", pdGetControllerScStatus(pd)?"Active":"Inactive");	
-			mvprintw(row++,col,"PD Controller State:	%s", jausStateGetString(pdGetControllerState(pd)));	
-			
+			mvprintw(row++,col,"PD Controller SC:	%s", pdGetControllerScStatus(pd)?"Active":"Inactive");
+			mvprintw(row++,col,"PD Controller State:	%s", jausStateGetString(pdGetControllerState(pd)));
+
 			row++;
-			mvprintw(row++,col,"PD Prop Effort X: %0.0lf", pdGetWrenchEffort(pd)? pdGetWrenchEffort(pd)->propulsiveLinearEffortXPercent:-1.0);	
-			mvprintw(row++,col,"PD Rstv Effort X: %0.0lf", pdGetWrenchEffort(pd)? pdGetWrenchEffort(pd)->resistiveLinearEffortXPercent:-1.0);	
-			mvprintw(row++,col,"PD Rtat Effort Z: %0.0lf", pdGetWrenchEffort(pd)? pdGetWrenchEffort(pd)->propulsiveRotationalEffortZPercent:-1.0);	
+			mvprintw(row++,col,"PD Prop Effort X: %0.0lf", pdGetWrenchEffort(pd)? pdGetWrenchEffort(pd)->propulsiveLinearEffortXPercent:-1.0);
+			mvprintw(row++,col,"PD Rstv Effort X: %0.0lf", pdGetWrenchEffort(pd)? pdGetWrenchEffort(pd)->resistiveLinearEffortXPercent:-1.0);
+			mvprintw(row++,col,"PD Rtat Effort Z: %0.0lf", pdGetWrenchEffort(pd)? pdGetWrenchEffort(pd)->propulsiveRotationalEffortZPercent:-1.0);
 			break;
-		
+
 		case '3':
-			mvprintw(row++,col,"Global Pose Sensor");	
-			mvprintw(row++,col,"GPOS Update Rate: %7.2f", ojCmptGetRateHz(gpos));	
+			mvprintw(row++,col,"Global Pose Sensor");
+			mvprintw(row++,col,"GPOS Update Rate: %7.2f", ojCmptGetRateHz(gpos));
 			address = ojCmptGetAddress(gpos);
 			jausAddressToString(address, string );
 			jausAddressDestroy(address);
-			mvprintw(row++,col,"GPOS Address:\t    %s", string);	
-			mvprintw(row++,col,"GPOS State:\t    %s", jausStateGetString(ojCmptGetState(gpos)));	
-			mvprintw(row++,col,"GPOS SC State:\t    %s", gposGetScActive(gpos)? "Active" : "Inactive");	
-			
+			mvprintw(row++,col,"GPOS Address:\t    %s", string);
+			mvprintw(row++,col,"GPOS State:\t    %s", jausStateGetString(ojCmptGetState(gpos)));
+			mvprintw(row++,col,"GPOS SC State:\t    %s", gposGetScActive(gpos)? "Active" : "Inactive");
+
 			row++;
-			mvprintw(row++,col,"Velocity State Sensor");	
-			mvprintw(row++,col,"VSS Update Rate:  %7.2f", ojCmptGetRateHz(vss));	
+			mvprintw(row++,col,"Velocity State Sensor");
+			mvprintw(row++,col,"VSS Update Rate:  %7.2f", ojCmptGetRateHz(vss));
 			address = ojCmptGetAddress(vss);
 			jausAddressToString(address, string );
 			jausAddressDestroy(address);
-			mvprintw(row++,col,"VSS Address:\t    %s", string);	
-			mvprintw(row++,col,"VSS State:\t    %s", jausStateGetString(ojCmptGetState(vss)));	
-			mvprintw(row++,col,"VSS SC State:\t    %s", vssGetScActive(vss)? "Active" : "Inactive");	
+			mvprintw(row++,col,"VSS Address:\t    %s", string);
+			mvprintw(row++,col,"VSS State:\t    %s", jausStateGetString(ojCmptGetState(vss)));
+			mvprintw(row++,col,"VSS SC State:\t    %s", vssGetScActive(vss)? "Active" : "Inactive");
 			break;
-		
+
 		case '4':
-			mvprintw(row++,col,"Waypoint Driver");	
-			mvprintw(row++,col,"WD Update Rate: %7.2f", ojCmptGetRateHz(wd));	
+			mvprintw(row++,col,"Waypoint Driver");
+			mvprintw(row++,col,"WD Update Rate: %7.2f", ojCmptGetRateHz(wd));
 
 			address = ojCmptGetAddress(wd);
 			jausAddressToString(address, string );
 			jausAddressDestroy(address);
-			mvprintw(row++,col,"WD Address:\t  %s", string);	
+			mvprintw(row++,col,"WD Address:\t  %s", string);
 			mvprintw(row++,col,"WD State:\t  %s", jausStateGetString(ojCmptGetState(wd)));
-			
+
 			address = ojCmptGetControllerAddress(wd);
 			if(address)
 			{
-				jausAddressToString(address, string);	
-				mvprintw(row++,col,"WD Controller:\t  %s", string);	
+				jausAddressToString(address, string);
+				mvprintw(row++,col,"WD Controller:\t  %s", string);
 				jausAddressDestroy(address);
 			}
 			else
 			{
-				mvprintw(row++,col,"WD Controller:\t  None");	
+				mvprintw(row++,col,"WD Controller:\t  None");
 			}
 
 			row = 11;
@@ -213,7 +213,7 @@ void updateScreen(int keyboardLock, int keyPress)
 			mvprintw(row++,col,"(Space to Toggle)");
 			mvprintw(row++,col,"WD Control:\t\t%s", wdGetInControlStatus(wd)? "True" : "False");
 			mvprintw(row++,col,"PD State:\t\t%s", jausStateGetString(wdGetPdState(wd)));
-			
+
 			row = 11;
 			col = 40;
 			if(wdGetGlobalWaypoint(wd))
@@ -224,26 +224,26 @@ void updateScreen(int keyboardLock, int keyPress)
 			{
 				mvprintw(row++,col,"Global Waypoint: None");
 			}
-					
+
 			if(wdGetTravelSpeed(wd))
 			{
 				mvprintw(row++,col,"Travel Speed: %7.2f", wdGetTravelSpeed(wd)->speedMps);
 			}
 			else
 			{
-				mvprintw(row++,col,"Travel Speed: None");				
+				mvprintw(row++,col,"Travel Speed: None");
 			}
 
 			mvprintw(row++,col,"dSpeedMps: %7.2f", wdGetDesiredVehicleState(wd)? wdGetDesiredVehicleState(wd)->desiredSpeedMps : 0.0);
 			mvprintw(row++,col,"dPhi:      %7.2f", wdGetDesiredVehicleState(wd)? wdGetDesiredVehicleState(wd)->desiredPhiEffort : 0.0);
-			
+
 			break;
 
 		default:
-			mvprintw(row++,col,"NONE.");	
+			mvprintw(row++,col,"NONE.");
 			break;
 	}
-	
+
 	move(24,0);
 	refresh();
 }
@@ -255,14 +255,14 @@ void parseUserInput(char input)
 		case 12: // 12 == 'ctrl + L'
 			keyboardLock = !keyboardLock;
 			break;
-		
-		case 27: // 27 
+
+		case 27: // 27
 			if(!keyboardLock)
 			{
 				mainRunning = FALSE;
 			}
 			break;
-		
+
 		default:
 			break;
 	}
@@ -274,7 +274,7 @@ void parseCommandLine(int argCount, char **argString)
 	int i = 0;
 	int debugLevel = 0;
 	char debugLogicString[DEFAULT_STRING_LENGTH] = "";
-	
+
 	for(i=1; i<argCount; i++)
 	{
 		if(argString[i][0] == '-')
@@ -285,9 +285,9 @@ void parseCommandLine(int argCount, char **argString)
 					verbose = TRUE;
 					//setLogVerbose(TRUE);
 					break;
-					
+
 				case 'd':
-					if(argString[i][2] == '+') 
+					if(argString[i][2] == '+')
 					{
 						//setDebugLogic(DEBUG_GREATER_THAN);
 						sprintf(debugLogicString, "Greater than or equal to: ");
@@ -340,7 +340,7 @@ void parseCommandLine(int argCount, char **argString)
 					printf("main: Switching to debug level: %s%d\n", debugLogicString, debugLevel);
 					//setDebugLevel(debugLevel);
 					break;
-					
+
 				case 'l':
 					if(argCount > i+1 && argString[i+1][0] != '-')
 					{
@@ -373,7 +373,7 @@ void setupTerminal()
 #if defined(__linux) || defined(linux) || defined(__linux__) || defined(__APPLE__)
 		tcgetattr(0,&storedTermio);
 		memcpy(&newTermio,&storedTermio,sizeof(struct termios));
-		
+
 		// Disable canonical mode, and set buffer size to 0 byte(s)
 		newTermio.c_lflag &= (~ICANON);
 		newTermio.c_lflag &= (~ECHO);
@@ -382,11 +382,11 @@ void setupTerminal()
 		tcsetattr(0,TCSANOW,&newTermio);
 #elif defined(WIN32)
 		// Setup the console window's input handle
-		handleStdin = GetStdHandle(STD_INPUT_HANDLE); 
+		handleStdin = GetStdHandle(STD_INPUT_HANDLE);
 #endif
 	}
 	else
-	{	
+	{
 		// Start up Curses window
 		initscr();
 		cbreak();
@@ -419,7 +419,7 @@ char getUserInput()
 #if defined(WIN32)
 	int i = 0;
 #endif
-	
+
 	if(verbose)
 	{
 	#if defined(WIN32)
@@ -428,27 +428,27 @@ char getUserInput()
 
 		// See how many events are waiting for us, this prevents blocking if none
 		GetNumberOfConsoleInputEvents(handleStdin, &eventCount);
-		
+
 		if(eventCount > 0)
 		{
 			// Check for user input here
-			ReadConsoleInput( 
-					handleStdin,		// input buffer handle 
-					inputEvents,		// buffer to read into 
-					128,				// size of read buffer 
-					&eventCount);		// number of records read 
+			ReadConsoleInput(
+					handleStdin,		// input buffer handle
+					inputEvents,		// buffer to read into
+					128,				// size of read buffer
+					&eventCount);		// number of records read
 		}
- 
-	    // Parse console input events 
-        for (i = 0; i < (int) eventCount; i++) 
+
+	    // Parse console input events
+        for (i = 0; i < (int) eventCount; i++)
         {
-            switch(inputEvents[i].EventType) 
-            { 
-				case KEY_EVENT: // keyboard input 
+            switch(inputEvents[i].EventType)
+            {
+				case KEY_EVENT: // keyboard input
 					parseUserInput(inputEvents[i].Event.KeyEvent.uChar.AsciiChar);
 					retVal = TRUE;
 					break;
-				
+
 				default:
 					break;
 			}
@@ -483,7 +483,7 @@ int main(int argCount, char **argString)
 	int keyboardLock = FALSE;
 	double keyboardLockTime = ojGetTimeSec() + KEYBOARD_LOCK_TIMEOUT_SEC;
 	time_t timeStamp;
-	
+
 	//Get and Format Time String
 	time(&timeStamp);
 	strftime(timeString, DEFAULT_STRING_LENGTH-1, "%m-%d-%Y %X", localtime(&timeStamp));
@@ -503,6 +503,7 @@ int main(int argCount, char **argString)
 //#endif
 //		return 0;
 //	}
+
 	vehicleSimStartup();
 	pd = pdCreate();
 	gpos = gposCreate();
@@ -512,14 +513,14 @@ int main(int argCount, char **argString)
 	setupTerminal();
 
 	mainRunning = TRUE;
-	
+
 	while(mainRunning)
 	{
 		keyPressed = getUserInput();
 
 		if(keyPressed)
 		{
-			keyboardLockTime = ojGetTimeSec() + KEYBOARD_LOCK_TIMEOUT_SEC;		
+			keyboardLockTime = ojGetTimeSec() + KEYBOARD_LOCK_TIMEOUT_SEC;
 		}
 		else if(ojGetTimeSec() > keyboardLockTime)
 		{
@@ -533,25 +534,25 @@ int main(int argCount, char **argString)
 		//else // Not in verbose mode
 		//{
 		//	choice = getch(); // Get the key that the user has selected
-		//	updateScreen(keyboardLock, choice);		
+		//	updateScreen(keyboardLock, choice);
 		//}
-						
+
 		ojSleepMsec(100);
 	}
 
 	cleanupConsole();
-	
+
 	//cDebug(1, "main: Shutting Down %s Node Software\n", simulatorGetName());
 	wdDestroy(wd);
 	pdDestroy(pd);
 	gposDestroy(gpos);
 	vssDestroy(vss);
 	vehicleSimShutdown();
-	
+
 	if(logFile != NULL)
 	{
 		fclose(logFile);
 	}
-	
+
 	return 0;
 }
