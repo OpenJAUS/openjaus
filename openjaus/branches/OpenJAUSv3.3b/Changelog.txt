@@ -1,0 +1,51 @@
+2009-09-08  OpenJAUSv3.3.0b
+	
+	* Added toString functions for all messages and types in libjaus
+	
+	* hashmap.h: Made a change to support gcc 4.x and greater which supports the new <unordered_map>class
+	
+	* jausLong.c:
+	* jausUnsignedLong.c: fixed fromBuffer() methods not allocating enough memory
+
+	* Ticket #97, OjUdpComponentInterface.cpp: Interface no longer fails when a component with invalid id checks in
+	
+	* Ticket #98, scManager.c: Added missing mutex lock in service connection manager
+	
+	* Ticket #99: Fixed missing cases in jausCommandCodeToString()
+	
+	* Ticket #100, reportImageMessage.c: Allocated memory for image data buffer during parsing
+	
+	* Ticket #102, multicastSocket.c: Fixed possible Linux packet loss bug
+	
+	* Ticket #103: Added missing jaus export in jausInteger.h
+
+	* Ticket #105, defaultMessageProcessor.c: Added support for query component control message
+
+	* Ticket #107:
+	* Ticket #108: Fixed world model message errors
+	
+	* Ticket #109: SystemTree.cpp: Fixed Possible segmentation fault in node id string copy
+
+	* Ticket #110: eventMessage.c: Fixed improper report message destination address copy
+		
+	* Ticket #111, setCameraCapabilitiesMessage: Corrected use of incorrect presence vector bit 
+	
+	* Ticket #112, reportPayloadInterfaceMessage.c: Added check for required payloadInterface struct
+	
+	* Ticket #113: jausPayloadInterface.c: Fixed payload string parsing error
+	
+	* Ticket #116, NodeManagerComponent.cpp: Fixed address copy bug, caused NM not to respond to a subsystem query config
+	
+	* Ticket #117: Added fix to component framework that allows state change from external command message by default
+	
+	* Ticket #118, jausComponentCommunicationManager.cpp: Added mutex lock around interfaceMap to fix possible component timeout problem
+	
+	* Ticket #120: Fixed possible memory leak in payload data element
+
+	* Ticket #121: Fixed possible memory leak in Communicator and Node Manager Components
+
+	* Ticket #122, QNX Support: Added header required header files and code change in nodeManagerInterface.c
+	
+	* Ticket #123, reportManipulatorSpecificationsMessage.c: Fixed bug that caused user data to be overwritten
+	
+	
