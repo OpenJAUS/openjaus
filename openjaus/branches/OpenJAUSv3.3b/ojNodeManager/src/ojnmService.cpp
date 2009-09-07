@@ -37,7 +37,7 @@
 //
 // Version: 3.3.0b
 //
-// Date: 07/09/08
+// Date: 09/08/09
 //
 // Description: This file creates a version of the OpenJAUS node manager which
 //              can be used as a service daemon in linux.

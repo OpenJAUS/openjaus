@@ -37,7 +37,7 @@
 //
 // Version: 3.3.0b
 //
-// Date: 08/07/08
+// Date: 09/08/09
 //
 // Description: This file is a wrapper for all other headers in jaus and will provide the user with access 
 // to the complete jaus library

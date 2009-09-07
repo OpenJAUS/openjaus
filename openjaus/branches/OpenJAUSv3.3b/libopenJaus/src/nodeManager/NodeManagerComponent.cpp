@@ -36,7 +36,7 @@
 //
 // Version: 3.3.0b
 //
-// Date: 08/07/08
+// Date: 09/08/09
 //
 // Description: This file defines the behavior of the Node Manager JAUS Component.
 //				It is based on the LocalComponent virtual class.

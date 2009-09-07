@@ -37,7 +37,7 @@
 //
 // Version: 3.3.0b
 //
-// Date: 08/07/08
+// Date: 09/08/09
 //
 // Description: This file describes the stucture and functionality associated with an 
 // EventLimit for use with the Jaus Events Message Set

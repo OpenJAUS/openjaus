@@ -37,7 +37,7 @@
 //
 // Version: 3.3.0b
 //
-// Date: 08/07/08
+// Date: 09/08/09
 //
 // Description: This file provides an interface through which the NM communicates
 //				to components using a non-JAUS compliant synchronous UDP port over

@@ -37,7 +37,7 @@
 //
 // Version: 3.3.0b
 //
-// Date: 08/07/08
+// Date: 09/08/09
 //
 // Description: This file provides the general support functionality ReportPayloadInterfacesMessage
 // NOTE WELL: this message will also be used for general purpose information exchange

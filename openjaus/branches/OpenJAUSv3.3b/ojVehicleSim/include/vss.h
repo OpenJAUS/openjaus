@@ -34,7 +34,7 @@
 // File:		vss.h
 // Version:		3.3.0b
 // Written by:	Tom Galluzzo (galluzzt@ufl.edu)
-// Date:		07/01/2005
+// Date:		09/08/09
 // Description:	This file contains the skeleton C header file code for implementing the vss.c file
 
 #ifndef VSS_H

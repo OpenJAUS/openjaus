@@ -37,7 +37,7 @@
 //
 // Version: 3.3.0b
 //
-// Date: 08/07/08
+// Date: 09/08/09
 //
 // Description: This file defines all the basic JausTypes and allows the user to use the JausType structure 
 // as a place-holder for any one type. This allows functions to operate on all JausTypes based on the 

@@ -37,7 +37,7 @@
 //
 // Version: 3.3.0b
 //
-// Date: 08/07/08
+// Date: 09/08/09
 //
 #ifndef JAUS_MESSAGE_HEADERS_H
 #define JAUS_MESSAGE_HEADERS_H

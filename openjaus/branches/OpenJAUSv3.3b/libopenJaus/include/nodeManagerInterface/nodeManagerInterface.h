@@ -37,7 +37,7 @@
 //
 // Version: 3.3.0b
 //
-// Date: 08/07/08
+// Date: 09/08/09
 //
 #ifndef NODE_MANAGER_H
 #define NODE_MANAGER_H
