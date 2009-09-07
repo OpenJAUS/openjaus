@@ -56,7 +56,7 @@ JausBoolean jausLongFromBuffer(JausLong *jLong, unsigned char *buf, unsigned int
 #ifdef JAUS_BIG_ENDIAN
 	int i = 0;
 #endif	
-	long tempLong = 0;
+	long long tempLong = 0;
 	
 	if(bufferSizeBytes < JAUS_LONG_SIZE_BYTES)
 	{
