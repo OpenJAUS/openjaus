@@ -31,6 +31,14 @@
  *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ****************************************************************************/
+// File Name: nodeManagerInterface.h
+//
+// Written By: Tom Galluzzo
+//
+// Version: 3.3.0b
+//
+// Date: 08/07/08
+//
 #ifndef NODE_MANAGER_H
 #define NODE_MANAGER_H
 

@@ -35,7 +35,7 @@
 //
 // Written By: Bob Touchton, inspired by Danny Kent
 //
-// Version: 3.3.0a
+// Version: 3.3.0b
 //
 // Date: 08/07/08
 //

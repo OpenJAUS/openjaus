@@ -35,7 +35,7 @@
 //
 // Written By: Danny Kent (jaus AT dannykent DOT com), Tom Galluzzo (galluzzo AT gmail DOT com)
 //
-// Version: 3.3.0
+// Version: 3.3.0b
 //
 // Date: 07/09/08
 //
@@ -490,62 +490,62 @@ static int dataToBuffer(ReportManipulatorSpecificationsMessage message, unsigned
 
 static int dataToString(ReportManipulatorSpecificationsMessage message, char **buf)
 {
-  //message already verified 
+  //message already verified
 
   //Setup temporary string buffer
   int joint = 0;
   unsigned int bufSize = 400 + message->numJoints * 25;
   (*buf) = (char*)malloc(sizeof(char)*bufSize);
-  
+
   strcpy((*buf), "\nNumber of Joints: " );
   jausByteToString(message->numJoints, (*buf)+strlen(*buf));
-  
+
   for(joint=0; joint<message->numJoints; joint++)
   {
     strcat((*buf), "\nJoint #");
     jausByteToString(joint, (*buf)+strlen(*buf));
     strcat((*buf), ": ");
-    
+
     strcat((*buf), "\n Joint Type: ");
     jausDoubleToString(message->jointOffset[joint], (*buf)+strlen(*buf));
-    
+
     strcat((*buf), "\n Joint Type: ");
     jausDoubleToString(message->linkLength[joint], (*buf)+strlen(*buf));
-    
+
     strcat((*buf), "\n Joint Type: ");
     jausDoubleToString(message->twistAngle[joint], (*buf)+strlen(*buf));
-    
+
     strcat((*buf), "\n Joint Type: ");
     jausDoubleToString(message->jointMinValue[joint], (*buf)+strlen(*buf));
-    
+
     strcat((*buf), "\n Joint Type: ");
     jausDoubleToString(message->jointMaxValue[joint], (*buf)+strlen(*buf));
-    
+
     strcat((*buf), "\n Joint Type: ");
     jausDoubleToString(message->jointMaxVelocity[joint], (*buf)+strlen(*buf));
   }
-  
+
   strcat((*buf), "\n Coordinate System X(meters): ");
   jausDoubleToString(message->coordinateSysX, (*buf)+strlen(*buf));
-  
+
   strcat((*buf), "\n Coordinate System Y(meters): ");
   jausDoubleToString(message->coordinateSysY, (*buf)+strlen(*buf));
-  
+
   strcat((*buf), "\n Coordinate System Z(meters): ");
   jausDoubleToString(message->coordinateSysZ, (*buf)+strlen(*buf));
-  
+
   strcat((*buf), "\n A of unit quaternion q: ");
   jausDoubleToString(message->coordinateSysA, (*buf)+strlen(*buf));
-  
+
   strcat((*buf), "\n B of unit quaternion q: ");
   jausDoubleToString(message->coordinateSysB, (*buf)+strlen(*buf));
-  
+
   strcat((*buf), "\n C of unit quaternion q: ");
   jausDoubleToString(message->coordinateSysC, (*buf)+strlen(*buf));
-  
+
   strcat((*buf), "\n D of unit quaternion q: ");
   jausDoubleToString(message->coordinateSysD, (*buf)+strlen(*buf));
-  
+
   return (int)strlen(*buf);
 }
 
@@ -747,22 +747,22 @@ char* reportManipulatorSpecificationsMessageToString(ReportManipulatorSpecificat
     char* buf1 = NULL;
     char* buf2 = NULL;
     char* buf = NULL;
-    
+
     int returnVal;
-    
+
     //Print the message header to the string buffer
     returnVal = headerToString(message, &buf1);
-    
+
     //Print the message data fields to the string buffer
     returnVal += dataToString(message, &buf2);
-    
+
 buf = (char*)malloc(strlen(buf1)+strlen(buf2)+1);
     strcpy(buf, buf1);
     strcat(buf, buf2);
 
     free(buf1);
     free(buf2);
-    
+
     return buf;
   }
   else
@@ -851,13 +851,13 @@ static JausBoolean headerToBuffer(ReportManipulatorSpecificationsMessage message
 
 static int headerToString(ReportManipulatorSpecificationsMessage message, char **buf)
 {
-  //message existance already verified 
+  //message existance already verified
 
   //Setup temporary string buffer
-  
+
   unsigned int bufSize = 500;
   (*buf) = (char*)malloc(sizeof(char)*bufSize);
-  
+
   strcpy((*buf), jausCommandCodeString(message->commandCode) );
   strcat((*buf), " (0x");
   sprintf((*buf)+strlen(*buf), "%04X", message->commandCode);
@@ -886,15 +886,15 @@ static int headerToString(ReportManipulatorSpecificationsMessage message, char *
   strcat((*buf), "\nExp. Flag: ");
   if(message->properties.expFlag == 0)
     strcat((*buf), "JAUS");
-  else 
+  else
     strcat((*buf), "Experimental");
-  
+
   strcat((*buf), "\nSC Flag: ");
   if(message->properties.scFlag == 0)
     strcat((*buf), "Service Connection");
   else
     strcat((*buf), "Not Service Connection");
-  
+
   strcat((*buf), "\nACK/NAK: ");
   switch(message->properties.ackNak)
   {
@@ -913,7 +913,7 @@ static int headerToString(ReportManipulatorSpecificationsMessage message, char *
   default:
     break;
   }
-  
+
   strcat((*buf), "\nPriority: ");
   if(message->properties.priority < 12)
   {
@@ -925,16 +925,16 @@ static int headerToString(ReportManipulatorSpecificationsMessage message, char *
     strcat((*buf), "Safety Critical Priority ");
     jausUnsignedShortToString(message->properties.priority, (*buf)+strlen(*buf));
   }
-  
+
   strcat((*buf), "\nSource: ");
   jausAddressToString(message->source, (*buf)+strlen(*buf));
-  
+
   strcat((*buf), "\nDestination: ");
   jausAddressToString(message->destination, (*buf)+strlen(*buf));
-  
+
   strcat((*buf), "\nData Size: ");
   jausUnsignedIntegerToString(message->dataSize, (*buf)+strlen(*buf));
-  
+
   strcat((*buf), "\nData Flag: ");
   jausUnsignedIntegerToString(message->dataFlag, (*buf)+strlen(*buf));
   switch(message->dataFlag)
@@ -958,10 +958,10 @@ static int headerToString(ReportManipulatorSpecificationsMessage message, char *
       strcat((*buf), " Unrecognized data flag code");
       break;
   }
-  
+
   strcat((*buf), "\nSequence Number: ");
   jausUnsignedShortToString(message->sequenceNumber, (*buf)+strlen(*buf));
-  
+
   return (int)strlen(*buf);
-  
+
 }

@@ -35,7 +35,7 @@
 //
 // Written By: Tom Galluzzo (galluzzo AT gmail DOT com) and Danny Kent (jaus AT dannykent DOT com)
 //
-// Version: 3.3.0a
+// Version: 3.3.0b
 //
 // Date: 08/07/08
 //

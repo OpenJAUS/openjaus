@@ -35,7 +35,7 @@
 //
 // Written By: Danny Kent (jaus AT dannykent DOT com)
 //
-// Version: 3.3.0
+// Version: 3.3.0b
 //
 // Date: 07/09/08
 //

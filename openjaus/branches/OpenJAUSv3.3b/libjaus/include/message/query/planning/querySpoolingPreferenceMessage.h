@@ -36,7 +36,7 @@
 // Written By: Danny Kent (jaus AT dannykent DOT com), Tom Galluzzo, 
 //              Luke Roseberry MountainTop Technologies www.mntntp.com 
 //
-// Version: 3.3.0a
+// Version: 3.3.0b
 //
 // Date: 06/3/08
 //
