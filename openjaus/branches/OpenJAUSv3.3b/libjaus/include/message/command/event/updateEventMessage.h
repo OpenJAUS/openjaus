@@ -35,7 +35,7 @@
 //
 // Written By: Danny Kent (jaus AT dannykent DOT com), Tom Galluzzo 
 //
-// Version: 3.3.0a
+// Version: 3.3.0b
 //
 // Date: 11/2/05
 //

@@ -1,12 +1,12 @@
 /*****************************************************************************
  *  Copyright (c) 2008, University of Florida
  *  All rights reserved.
- *  
- *  This file is part of OpenJAUS.  OpenJAUS is distributed under the BSD 
+ *
+ *  This file is part of OpenJAUS.  OpenJAUS is distributed under the BSD
  *  license.  See the LICENSE file for details.
- * 
- *  Redistribution and use in source and binary forms, with or without 
- *  modification, are permitted provided that the following conditions 
+ *
+ *  Redistribution and use in source and binary forms, with or without
+ *  modification, are permitted provided that the following conditions
  *  are met:
  *
  *     * Redistributions of source code must retain the above copyright
@@ -15,30 +15,30 @@
  *       copyright notice, this list of conditions and the following
  *       disclaimer in the documentation and/or other materials provided
  *       with the distribution.
- *     * Neither the name of the University of Florida nor the names of its 
- *       contributors may be used to endorse or promote products derived from 
+ *     * Neither the name of the University of Florida nor the names of its
+ *       contributors may be used to endorse or promote products derived from
  *       this software without specific prior written permission.
  *
- *   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- *   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- *   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR 
- *   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT 
+ *   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ *   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ *   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ *   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
  *   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- *   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT 
- *   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
- *   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY 
+ *   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ *   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ *   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
  *   THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
+ *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ****************************************************************************/
-// File:		pd.c 
-// Version:		3.3
+// File:		pd.c
+// Version:		3.3.0b
 // Written by:	Tom Galluzzo (galluzzt@ufl.edu) and Danny Kent (kentd@ufl.edu)
 // Date:		06/03/2008
 
 #include <jaus.h>
 #include <openJaus.h>
-#include <stdlib.h>	
+#include <stdlib.h>
 #include <string.h>
 #include "vehicleSim.h"
 #include "pd.h"
@@ -68,7 +68,7 @@ OjCmpt pdCreate(void)
 	OjCmpt cmpt;
 	PdData *data;
 	JausAddress pdAddr;
-	
+
 	cmpt = ojCmptCreate("pd", JAUS_PRIMITIVE_DRIVER, PD_THREAD_DESIRED_RATE_HZ);
 
 	ojCmptAddService(cmpt, JAUS_PRIMITIVE_DRIVER);
@@ -84,7 +84,7 @@ OjCmpt pdCreate(void)
 	ojCmptSetStateCallback(cmpt, JAUS_STANDBY_STATE, pdStandbyState);
 	ojCmptSetStateCallback(cmpt, JAUS_READY_STATE, pdReadyState);
 	ojCmptSetState(cmpt, JAUS_STANDBY_STATE);
-	
+
 	pdAddr = ojCmptGetAddress(cmpt);
 
 	data = (PdData*)malloc(sizeof(PdData));
@@ -98,7 +98,7 @@ OjCmpt pdCreate(void)
 	jausAddressDestroy(pdAddr);
 
 	ojCmptSetUserData(cmpt, (void *)data);
-		
+
 	if(ojCmptRun(cmpt))
 	{
 		ojCmptDestroy(cmpt);
@@ -111,7 +111,7 @@ OjCmpt pdCreate(void)
 void pdDestroy(OjCmpt pd)
 {
 	PdData *data;
-	
+
 	data = (PdData*)ojCmptGetUserData(pd);
 
 	if(ojCmptIsIncomingScActive(pd, data->controllerSc))
@@ -134,7 +134,7 @@ void pdDestroy(OjCmpt pd)
 JausBoolean pdGetControllerScStatus(OjCmpt pd)
 {
 	PdData *data;
-	
+
 	data = (PdData*)ojCmptGetUserData(pd);
 
 	return ojCmptIsIncomingScActive(pd, data->controllerSc);
@@ -143,7 +143,7 @@ JausBoolean pdGetControllerScStatus(OjCmpt pd)
 JausState pdGetControllerState(OjCmpt pd)
 {
 	PdData *data;
-	
+
 	data = (PdData*)ojCmptGetUserData(pd);
 
 	return data->controllerStatus->primaryStatusCode;
@@ -152,7 +152,7 @@ JausState pdGetControllerState(OjCmpt pd)
 SetWrenchEffortMessage pdGetWrenchEffort(OjCmpt pd)
 {
 	PdData *data;
-	
+
 	data = (PdData*)ojCmptGetUserData(pd);
 
 	return data->setWrenchEffort;
@@ -172,7 +172,7 @@ void pdProcessMessage(OjCmpt pd, JausMessage message)
 	JausAddress address;
 	JausMessage txMessage;
 	PdData *data;
-	
+
 	data = (PdData*)ojCmptGetUserData(pd);
 
 	// This block of code is intended to reject commands from non-controlling components
@@ -180,14 +180,14 @@ void pdProcessMessage(OjCmpt pd, JausMessage message)
 	{
 		address = ojCmptGetControllerAddress(pd);
 		if(!jausAddressEqual(message->source, address))
-		{		
+		{
 			//jausAddressToString(message->source, buf);
 			//cError("pd: Received command message %s from non-controlling component (%s).\n", jausMessageCommandCodeString(message), buf);
 			jausAddressDestroy(address);
 			return;
 		}
 		jausAddressDestroy(address);
-	}	
+	}
 
 	switch(message->commandCode) // Switch the processing algorithm according to the JAUS message type
 	{
@@ -203,13 +203,13 @@ void pdProcessMessage(OjCmpt pd, JausMessage message)
 				}
 				else
 				{
-					reportComponentStatusMessageDestroy(reportComponentStatus);					
+					reportComponentStatusMessageDestroy(reportComponentStatus);
 				}
 				jausAddressDestroy(address);
 			}
 			break;
-		
-		case JAUS_SET_WRENCH_EFFORT:			
+
+		case JAUS_SET_WRENCH_EFFORT:
 			setWrenchEffort = setWrenchEffortMessageFromJausMessage(message);
 			if(setWrenchEffort)
 			{
@@ -232,16 +232,16 @@ void pdProcessMessage(OjCmpt pd, JausMessage message)
 			if(queryPlatformSpecifications)
 			{
 				reportPlatformSpecifications = reportPlatformSpecificationsMessageCreate();
-				
+
 				jausAddressCopy(reportPlatformSpecifications->destination, queryPlatformSpecifications->source);
 				jausAddressCopy(reportPlatformSpecifications->source, queryPlatformSpecifications->destination);
-				
+
 				reportPlatformSpecifications->maximumVelocityXMps = 10.0;
-				
+
 				txMessage = reportPlatformSpecificationsMessageToJausMessage(reportPlatformSpecifications);
-				ojCmptSendMessage(pd, txMessage);		
+				ojCmptSendMessage(pd, txMessage);
 				jausMessageDestroy(txMessage);
-				
+
 				reportPlatformSpecificationsMessageDestroy(reportPlatformSpecifications);
 				queryPlatformSpecificationsMessageDestroy(queryPlatformSpecifications);
 			}
@@ -257,7 +257,7 @@ void pdProcessMessage(OjCmpt pd, JausMessage message)
 void pdStandbyState(OjCmpt pd)
 {
 	PdData *data;
-	
+
 	data = (PdData*)ojCmptGetUserData(pd);
 
 	pdSendReportWrenchEffort(pd);
@@ -271,7 +271,7 @@ void pdStandbyState(OjCmpt pd)
 		if(data->controllerSc > -1)
 		{
 			ojCmptTerminateSc(pd, data->controllerSc);
-			data->controllerSc = -1;			
+			data->controllerSc = -1;
 		}
 		data->controllerStatus->primaryStatusCode = JAUS_UNKNOWN_STATE;
 	}
@@ -281,9 +281,9 @@ void pdReadyState(OjCmpt pd)
 {
 	PdData *data;
 	JausAddress address;
-	
+
 	data = (PdData*)ojCmptGetUserData(pd);
-	
+
 	pdSendReportWrenchEffort(pd);
 
 	if(	vehicleSimGetState() != VEHICLE_SIM_READY_STATE )
@@ -297,16 +297,16 @@ void pdReadyState(OjCmpt pd)
 		if(data->controllerSc == -1)
 		{
 			address = ojCmptGetControllerAddress(pd);
-			data->controllerSc = ojCmptEstablishSc(	pd, 
+			data->controllerSc = ojCmptEstablishSc(	pd,
 													JAUS_REPORT_COMPONENT_STATUS,
-													CONTROLLER_STATUS_PRESENCE_VECTOR, 
-													address, 
-													CONTROLLER_STATUS_UPDATE_RATE_HZ, 
-													CONTROLLER_STATUS_TIMEOUT_SEC, 
+													CONTROLLER_STATUS_PRESENCE_VECTOR,
+													address,
+													CONTROLLER_STATUS_UPDATE_RATE_HZ,
+													CONTROLLER_STATUS_TIMEOUT_SEC,
 													CONTROLLER_STATUS_QUEUE_SIZE);
 			jausAddressDestroy(address);
 		}
-		
+
 		if(ojCmptIsIncomingScActive(pd, data->controllerSc))
 		{
 			if(data->controllerStatus->primaryStatusCode == JAUS_READY_STATE || data->controllerStatus->primaryStatusCode == JAUS_STANDBY_STATE)
@@ -320,32 +320,32 @@ void pdReadyState(OjCmpt pd)
 				}
 				else
 				{
-					vehicleSimSetCommand(0, 80, data->setWrenchEffort->propulsiveRotationalEffortZPercent);					
+					vehicleSimSetCommand(0, 80, data->setWrenchEffort->propulsiveRotationalEffortZPercent);
 				}
 			}
 			else
 			{
 				vehicleSimSetCommand(0, 80, 0);
-			}			
-		}		
+			}
+		}
 		else
 		{
 			vehicleSimSetCommand(0, 80, 0);
-		}		
+		}
 	}
 	else
 	{
 		if(data->controllerSc > -1)
 		{
 			ojCmptTerminateSc(pd, data->controllerSc);
-			data->controllerSc = -1;			
+			data->controllerSc = -1;
 		}
-		
+
 		data->controllerStatus->primaryStatusCode = JAUS_UNKNOWN_STATE;
-		
+
 		vehicleSimSetCommand(0, 80, 0);
 	}
-	
+
 }
 
 void pdSendReportWrenchEffort(OjCmpt pd)
@@ -356,7 +356,7 @@ void pdSendReportWrenchEffort(OjCmpt pd)
 	ServiceConnection sc;
 
 	data = (PdData*)ojCmptGetUserData(pd);
-	
+
 	scList = ojCmptGetScSendList(pd, JAUS_REPORT_WRENCH_EFFORT);
 	sc = scList;
 	while(sc)
@@ -365,14 +365,14 @@ void pdSendReportWrenchEffort(OjCmpt pd)
 		data->reportWrenchEffort->presenceVector = sc->presenceVector;
 		data->reportWrenchEffort->sequenceNumber = sc->sequenceNumber;
 		data->reportWrenchEffort->properties.scFlag = JAUS_SERVICE_CONNECTION_MESSAGE;
-		
+
 		txMessage = reportWrenchEffortMessageToJausMessage(data->reportWrenchEffort);
-		ojCmptSendMessage(pd, txMessage);		
+		ojCmptSendMessage(pd, txMessage);
 		jausMessageDestroy(txMessage);
 
 		sc = sc->nextSc;
 	}
-	
+
 	ojCmptDestroySendList(scList);
 }
 

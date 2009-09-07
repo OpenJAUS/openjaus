@@ -1,12 +1,12 @@
 /*****************************************************************************
  *  Copyright (c) 2008, University of Florida.
  *  All rights reserved.
- *  
- *  This file is part of OpenJAUS.  OpenJAUS is distributed under the BSD 
+ *
+ *  This file is part of OpenJAUS.  OpenJAUS is distributed under the BSD
  *  license.  See the LICENSE file for details.
- * 
- *  Redistribution and use in source and binary forms, with or without 
- *  modification, are permitted provided that the following conditions 
+ *
+ *  Redistribution and use in source and binary forms, with or without
+ *  modification, are permitted provided that the following conditions
  *  are met:
  *
  *     * Redistributions of source code must retain the above copyright
@@ -15,25 +15,25 @@
  *       copyright notice, this list of conditions and the following
  *       disclaimer in the documentation and/or other materials provided
  *       with the distribution.
- *     * Neither the name of the University of Florida nor the names of its 
- *       contributors may be used to endorse or promote products derived from 
+ *     * Neither the name of the University of Florida nor the names of its
+ *       contributors may be used to endorse or promote products derived from
  *       this software without specific prior written permission.
  *
- *   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- *   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- *   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR 
- *   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT 
+ *   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ *   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ *   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ *   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
  *   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- *   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT 
- *   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
- *   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY 
+ *   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ *   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ *   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
  *   THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
+ *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ****************************************************************************/
-// File:		wd.c 
+// File:		wd.c
 //
-// Version:		1.0
+// Version:		3.3.0b
 //
 // Written by:	Danny Kent (jaus AT dannykent DOT com)
 //
@@ -44,7 +44,7 @@
 
 #include <jaus.h>			// JAUS message set (USER: JAUS libraries must be installed first)
 #include <openJaus.h>	// Node managment functions for sending and receiving JAUS messages (USER: Node Manager must be installed)
-#include <stdlib.h>	
+#include <stdlib.h>
 #include <string.h>
 #include "utm/utmLib.h"
 // USER: Add include files here as appropriate
@@ -89,7 +89,7 @@
 #define STICKTION_EFFORT				-17.5
 //#define PITCH_FF_EFFORT_PER_RAD			150
 #define STEERING_FF_EFFORT				200
-#define WHEEL_ROTATION_EFFORT_PER_RAD	100	
+#define WHEEL_ROTATION_EFFORT_PER_RAD	100
 #define WHEEL_ROTATION_RAD_PER_EFFORT	0.006
 
 // Private function prototypes
@@ -121,10 +121,10 @@ typedef struct
 
 	JausState pdState;
 	JausAddress pdAddress;
-	
+
 	JausBoolean inControl;
 	JausBoolean requestControl;
-	
+
 	JausArray waypoints;					// Array of commaned waypoints
 	int currentWaypoint;
 	double waypointDistance;
@@ -136,7 +136,7 @@ OjCmpt wdCreate(void)
 	OjCmpt cmpt;
 	WdData *data;
 	JausAddress addr;
-	
+
 	cmpt = ojCmptCreate("Waypoint Driver", JAUS_GLOBAL_WAYPOINT_DRIVER, WD_THREAD_DESIRED_RATE_HZ);
 
 	ojCmptAddService(cmpt, JAUS_GLOBAL_WAYPOINT_DRIVER);
@@ -156,20 +156,20 @@ OjCmpt wdCreate(void)
 	ojCmptSetStateCallback(cmpt, JAUS_STANDBY_STATE, wdStandbyState);
 	ojCmptSetStateCallback(cmpt, JAUS_READY_STATE, wdReadyState);
 	ojCmptSetState(cmpt, JAUS_INITIALIZE_STATE);
-	
+
 	ojCmptSetAuthority(cmpt, 127);
-	
+
 	addr = ojCmptGetAddress(cmpt);
-	
+
 	data = (WdData*)malloc(sizeof(WdData));
-	
+
 	data->setWrench = setWrenchEffortMessageCreate();
 	jausAddressCopy(data->setWrench->source, addr);
 	data->setWrench->presenceVector = 0;
 	jausUnsignedShortSetBit(&data->setWrench->presenceVector, JAUS_WRENCH_PV_PROPULSIVE_LINEAR_X_BIT);
 	jausUnsignedShortSetBit(&data->setWrench->presenceVector, JAUS_WRENCH_PV_PROPULSIVE_ROTATIONAL_Z_BIT);
 	jausUnsignedShortSetBit(&data->setWrench->presenceVector, JAUS_WRENCH_PV_RESISTIVE_LINEAR_X_BIT);
-	
+
 	data->reportWrench = reportWrenchEffortMessageCreate();
 	data->reportGpos = reportGlobalPoseMessageCreate();
 	data->reportVss = reportVelocityStateMessageCreate();
@@ -180,7 +180,7 @@ OjCmpt wdCreate(void)
 	data->pdAddress->subsystem = addr->subsystem;
 	data->pdAddress->component = JAUS_PRIMITIVE_DRIVER;
 	data->pdState = JAUS_UNDEFINED_STATE;
-	
+
 	data->inControl = JAUS_FALSE;
 	data->requestControl = JAUS_FALSE;
 
@@ -188,45 +188,45 @@ OjCmpt wdCreate(void)
 	addr->node = 0;
 	addr->instance = 0;
 	addr->component = JAUS_GLOBAL_POSE_SENSOR;
-	data->gposSc = ojCmptEstablishSc(	cmpt, 
+	data->gposSc = ojCmptEstablishSc(	cmpt,
 										JAUS_REPORT_GLOBAL_POSE,
-										WD_INC_SC_PRESENCE_VECTOR, 
-										addr, 
-										WD_INC_SC_UPDATE_RATE_HZ, 
-										WD_INC_SC_TIMEOUT_SEC, 
+										WD_INC_SC_PRESENCE_VECTOR,
+										addr,
+										WD_INC_SC_UPDATE_RATE_HZ,
+										WD_INC_SC_TIMEOUT_SEC,
 										WD_INC_SC_QUEUE_SIZE);
 	addr->component = JAUS_VELOCITY_STATE_SENSOR;
-	data->vssSc = ojCmptEstablishSc(	cmpt, 
+	data->vssSc = ojCmptEstablishSc(	cmpt,
 										JAUS_REPORT_VELOCITY_STATE,
-										WD_INC_SC_PRESENCE_VECTOR, 
-										addr, 
-										WD_INC_SC_UPDATE_RATE_HZ, 
-										WD_INC_SC_TIMEOUT_SEC, 
+										WD_INC_SC_PRESENCE_VECTOR,
+										addr,
+										WD_INC_SC_UPDATE_RATE_HZ,
+										WD_INC_SC_TIMEOUT_SEC,
 										WD_INC_SC_QUEUE_SIZE);
 	addr->component = JAUS_PRIMITIVE_DRIVER;
-	data->pdWrenchSc = ojCmptEstablishSc(	cmpt, 
+	data->pdWrenchSc = ojCmptEstablishSc(	cmpt,
 											JAUS_REPORT_WRENCH_EFFORT,
-											WD_INC_SC_PRESENCE_VECTOR, 
-											addr, 
-											WD_INC_SC_UPDATE_RATE_HZ, 
-											WD_INC_SC_TIMEOUT_SEC, 
+											WD_INC_SC_PRESENCE_VECTOR,
+											addr,
+											WD_INC_SC_UPDATE_RATE_HZ,
+											WD_INC_SC_TIMEOUT_SEC,
 											WD_INC_SC_QUEUE_SIZE);
-	data->pdStatusSc = ojCmptEstablishSc(	cmpt, 
+	data->pdStatusSc = ojCmptEstablishSc(	cmpt,
 											JAUS_REPORT_COMPONENT_STATUS,
-											WD_INC_SC_PRESENCE_VECTOR, 
-											addr, 
-											WD_INC_SC_UPDATE_RATE_HZ, 
-											WD_INC_SC_TIMEOUT_SEC, 
+											WD_INC_SC_PRESENCE_VECTOR,
+											addr,
+											WD_INC_SC_UPDATE_RATE_HZ,
+											WD_INC_SC_TIMEOUT_SEC,
 											WD_INC_SC_QUEUE_SIZE);
-	jausAddressDestroy(addr);	
-	
-	data->waypoints = jausArrayCreate();	
+	jausAddressDestroy(addr);
+
+	data->waypoints = jausArrayCreate();
 	data->vehicleState = vehicleStateCreate();
 	data->waypointDistance = 0;
 	data->currentWaypoint = 0;
-	
+
 	ojCmptSetUserData(cmpt, (void *)data);
-		
+
 	if(ojCmptRun(cmpt))
 	{
 		ojCmptDestroy(cmpt);
@@ -242,7 +242,7 @@ void wdDestroy(OjCmpt wd)
 	JausMessage txMessage;
 	JausAddress address;
 	WdData *data;
-	
+
 	data = (WdData*)ojCmptGetUserData(wd);
 
 	if(ojCmptIsIncomingScActive(wd, data->gposSc))
@@ -269,14 +269,14 @@ void wdDestroy(OjCmpt wd)
 		jausAddressCopy(releaseControl->source, address);
 		jausAddressDestroy(address);
 		jausAddressCopy(releaseControl->destination, data->pdAddress);
-		
+
 		txMessage = releaseComponentControlMessageToJausMessage(releaseControl);
 		ojCmptSendMessage(wd, txMessage);
 		jausMessageDestroy(txMessage);
-		
+
 		releaseComponentControlMessageDestroy(releaseControl);
 	}
-	
+
 	ojCmptDestroy(wd);
 
 	// Destory Global Messages
@@ -299,18 +299,18 @@ void wdDestroy(OjCmpt wd)
 	jausArrayDestroy(data->waypoints, (void *)setGlobalWaypointMessageDestroy);
 	setWrenchEffortMessageDestroy(data->setWrench);
 	jausAddressDestroy(data->pdAddress);
-	vehicleStateDestroy(data->vehicleState);	
+	vehicleStateDestroy(data->vehicleState);
 	free(data);
 }
 
 ReportWrenchEffortMessage wdGetReportedWrench(OjCmpt wd)
-{ 
+{
 	WdData *data;
 	data = (WdData*)ojCmptGetUserData(wd);
-	
+
 	if(ojCmptIsIncomingScActive(wd, data->pdWrenchSc))
 	{
-		return data->reportWrench; 
+		return data->reportWrench;
 	}
 	else
 	{
@@ -319,27 +319,27 @@ ReportWrenchEffortMessage wdGetReportedWrench(OjCmpt wd)
 }
 
 SetWrenchEffortMessage wdGetCommandedWrench(OjCmpt wd)
-{ 
+{
 	WdData *data;
 	data = (WdData*)ojCmptGetUserData(wd);
 
-	return data->setWrench; 
+	return data->setWrench;
 }
 
 ReportVelocityStateMessage wdGetVss(OjCmpt wd)
-{ 
+{
 	WdData *data;
 	data = (WdData*)ojCmptGetUserData(wd);
 
-	return data->reportVss; 
+	return data->reportVss;
 }
 
 ReportGlobalPoseMessage wdGetGpos(OjCmpt wd)
-{ 
+{
 	WdData *data;
 	data = (WdData*)ojCmptGetUserData(wd);
 
-	return data->reportGpos; 
+	return data->reportGpos;
 }
 
 SetTravelSpeedMessage wdGetTravelSpeed(OjCmpt wd)
@@ -362,7 +362,7 @@ SetGlobalWaypointMessage wdGetGlobalWaypoint(OjCmpt wd)
 	else
 	{
 		return NULL;
-	} 
+	}
 }
 
 JausState wdGetPdState(OjCmpt wd)
@@ -465,24 +465,24 @@ void wdCreateWaypoint(OjCmpt wd)
 {
 	SetGlobalWaypointMessage setWaypoint = NULL;
 	JausMessage message = NULL;
-	
+
 	setWaypoint = setGlobalWaypointMessageCreate();
 	setWaypoint->latitudeDegrees = 29.001;
 	setWaypoint->longitudeDegrees = -80.001;
-	
+
 	message = setGlobalWaypointMessageToJausMessage(setWaypoint);
 	setGlobalWaypointMessageDestroy(setWaypoint);
-	wdProcessMessage(wd, message);	
+	wdProcessMessage(wd, message);
 }
 
 void wdSetSpeed(OjCmpt wd)
 {
 	SetTravelSpeedMessage setSpeed = NULL;
 	JausMessage message = NULL;
-	
+
 	setSpeed = setTravelSpeedMessageCreate();
 	setSpeed->speedMps = 4.0;
-	
+
 	message = setTravelSpeedMessageToJausMessage(setSpeed);
 	setTravelSpeedMessageDestroy(setSpeed);
 	wdProcessMessage(wd, message);
@@ -506,11 +506,11 @@ void wdProcessMessage(OjCmpt wd, JausMessage message)
 	SetTravelSpeedMessage setTravelSpeed;
 	ReportGlobalPoseMessage reportGpos;
 	ReportVelocityStateMessage reportVss;
-	ReportWrenchEffortMessage reportWrench;	
+	ReportWrenchEffortMessage reportWrench;
 	SetGlobalWaypointMessage tempGlobalWaypoint;
 	int i;
 	WdData *data;
-	
+
 	data = (WdData*)ojCmptGetUserData(wd);
 
 	// This block of code is intended to reject commands from non-controlling components
@@ -518,17 +518,17 @@ void wdProcessMessage(OjCmpt wd, JausMessage message)
 	{
 		address = ojCmptGetControllerAddress(wd);
 		if(!jausAddressEqual(message->source, address))
-		{		
+		{
 			//jausAddressToString(message->source, buf);
 			//cError("pd: Received command message %s from non-controlling component (%s).\n", jausMessageCommandCodeString(message), buf);
 			jausAddressDestroy(address);
 			return;
 		}
 		jausAddressDestroy(address);
-	}	
+	}
 
 	switch(message->commandCode) // Switch the processing algorithm according to the JAUS message type
-	{	
+	{
 		case JAUS_REPORT_COMPONENT_STATUS:
 			reportComponentStatus = reportComponentStatusMessageFromJausMessage(message);
 			if(reportComponentStatus)
@@ -553,20 +553,20 @@ void wdProcessMessage(OjCmpt wd, JausMessage message)
 				confirmComponentControlMessageDestroy(confirmComponentControl);
 			}
 			break;
-			
+
 		case JAUS_REJECT_COMPONENT_CONTROL:
 			rejectComponentControl = rejectComponentControlMessageFromJausMessage(message);
 			if(rejectComponentControl)
 			{
 				if(jausAddressEqual(rejectComponentControl->source, data->pdAddress))
-				{			
+				{
 					//cDebug(4,"wd: Lost control of PD\n");
 					data->inControl = JAUS_FALSE;
 				}
 				rejectComponentControlMessageDestroy(rejectComponentControl);
 			}
 			break;
-			
+
 		case JAUS_SET_TRAVEL_SPEED:
 			setTravelSpeed = setTravelSpeedMessageFromJausMessage(message);
 			if(setTravelSpeed)
@@ -592,10 +592,10 @@ void wdProcessMessage(OjCmpt wd, JausMessage message)
 																data->reportGpos->longitudeDegrees * RAD_PER_DEG,
 																tempGlobalWaypoint->latitudeDegrees * RAD_PER_DEG,
 																tempGlobalWaypoint->longitudeDegrees * RAD_PER_DEG);
-								
+
 				if(data->waypointDistance < WAYPOINT_POP_DISTANCE_M)
 				{
-					//cError("wd: popping waypoint: %d\n",currentWaypointIndex); 
+					//cError("wd: popping waypoint: %d\n",currentWaypointIndex);
 					data->currentWaypoint++;
 				}
 			}
@@ -618,7 +618,7 @@ void wdProcessMessage(OjCmpt wd, JausMessage message)
 				data->reportWrench = reportWrench;
 			}
 			break;
-			
+
 		case JAUS_SET_GLOBAL_WAYPOINT:
 			tempGlobalWaypoint = setGlobalWaypointMessageFromJausMessage(message);
 			if(tempGlobalWaypoint)
@@ -654,7 +654,7 @@ void wdProcessMessage(OjCmpt wd, JausMessage message)
 			}
 			queryGlobalWaypointMessageDestroy(queryGlobalWaypointMessage);
 			break;
-			
+
 		case JAUS_QUERY_WAYPOINT_COUNT:
 			queryWaypointCountMessage = queryWaypointCountMessageFromJausMessage(message);
 			if(!queryWaypointCountMessage)
@@ -672,7 +672,7 @@ void wdProcessMessage(OjCmpt wd, JausMessage message)
 			ojCmptSendMessage(wd, txMessage);
 			queryWaypointCountMessageDestroy(queryWaypointCountMessage);
 			break;
-		
+
 		default:
 			ojCmptDefaultMessageProcessor(wd, message);
 			break;
@@ -682,9 +682,9 @@ void wdProcessMessage(OjCmpt wd, JausMessage message)
 void wdInitState(OjCmpt wd)
 {
 	WdData *data;
-	
+
 	data = (WdData*)ojCmptGetUserData(wd);
-		
+
 	if(data->pdAddress->node == 0)
 	{
 		if(ojCmptLookupAddress(wd, data->pdAddress))
@@ -711,7 +711,7 @@ void wdInitState(OjCmpt wd)
 void wdStandbyState(OjCmpt wd)
 {
 	WdData *data;
-	
+
 	data = (WdData*)ojCmptGetUserData(wd);
 
 	if(	!ojCmptIsIncomingScActive(wd, data->gposSc) ||
@@ -723,18 +723,18 @@ void wdStandbyState(OjCmpt wd)
 		ojCmptSetState(wd, JAUS_INITIALIZE_STATE);
 		return;
 	}
-		
+
 	wdManagePdControl(wd);
 
-	// Setup Vehicle State		
+	// Setup Vehicle State
 	data->vehicleState->desiredSpeedMps = 0;
 	data->vehicleState->desiredPhiEffort = 0;
 	wdExcecuteControl(wd, data->vehicleState);
-	
+
 	if(data->pdState == JAUS_READY_STATE)
 	{
 		ojCmptSetState(wd, JAUS_READY_STATE);
-	}	
+	}
 }
 
 void wdReadyState(OjCmpt wd)
@@ -743,7 +743,7 @@ void wdReadyState(OjCmpt wd)
 	double waypointHeading = 0;
 	double headingDelta = 0;
 	WdData *data;
-	
+
 	data = (WdData*)ojCmptGetUserData(wd);
 
 	if(	!ojCmptIsIncomingScActive(wd, data->gposSc) ||
@@ -755,13 +755,13 @@ void wdReadyState(OjCmpt wd)
 		ojCmptSetState(wd, JAUS_INITIALIZE_STATE);
 		return;
 	}
-	
+
 	if(data->pdState != JAUS_READY_STATE)
 	{
 		ojCmptSetState(wd, JAUS_STANDBY_STATE);
 		return;
-	}	
-	
+	}
+
 	wdManagePdControl(wd);
 
 	data->vehicleState->speedMps = data->reportVss? (float)data->reportVss->velocityXMps : 0.0f;
@@ -779,11 +779,11 @@ void wdReadyState(OjCmpt wd)
 											tempGlobalWaypoint->latitudeDegrees * RAD_PER_DEG,
 											tempGlobalWaypoint->longitudeDegrees * RAD_PER_DEG);
 		headingDelta = wdAngleSubtract(waypointHeading, data->reportGpos->yawRadians);
-		
+
 		data->vehicleState->desiredPhiEffort = (float)(WHEEL_ROTATION_EFFORT_PER_RAD * headingDelta);
 		data->vehicleState->desiredSpeedMps = data->setSpeed? (float)data->setSpeed->speedMps : 0.0f;
 		//cLog("HeadingDelta: %7.2f\n", headingDelta);
-		//cLog("vehicleState->desiredPhiEffort: %7.2f\n", data->vehicleState->desiredPhiEffort);		
+		//cLog("vehicleState->desiredPhiEffort: %7.2f\n", data->vehicleState->desiredPhiEffort);
 	}
 	else
 	{
@@ -791,7 +791,7 @@ void wdReadyState(OjCmpt wd)
 		data->vehicleState->desiredSpeedMps = 0;
 		data->vehicleState->desiredPhiEffort = 0;
 	}
-	
+
 	wdExcecuteControl(wd, data->vehicleState);
 }
 
@@ -802,9 +802,9 @@ void wdManagePdControl(OjCmpt wd)
 	ReleaseComponentControlMessage releaseControl = NULL;
 	RequestComponentControlMessage requestControl = NULL;
 	WdData *data;
-	
+
 	data = (WdData*)ojCmptGetUserData(wd);
-	
+
 	// Check Control
 	if(data->requestControl)
 	{
@@ -812,18 +812,18 @@ void wdManagePdControl(OjCmpt wd)
 		{
 			//jausAddressToString(pd->address, buf);
 			//cDebug(4, "wd: Requesting control of PD %s\n", buf);
-	
+
 			requestControl = requestComponentControlMessageCreate();
 			address = ojCmptGetAddress(wd);
 			jausAddressCopy(requestControl->source, address);
 			jausAddressDestroy(address);
 			jausAddressCopy(requestControl->destination, data->pdAddress);
 			requestControl->authorityCode = ojCmptGetAuthority(wd);
-			
+
 			message = requestComponentControlMessageToJausMessage(requestControl);
 			ojCmptSendMessage(wd, message);
 			jausMessageDestroy(message);
-			
+
 			requestComponentControlMessageDestroy(requestControl);
 		}
 	}
@@ -837,13 +837,13 @@ void wdManagePdControl(OjCmpt wd)
 			jausAddressCopy(releaseControl->source, address);
 			jausAddressDestroy(address);
 			jausAddressCopy(releaseControl->destination, data->pdAddress);
-			
+
 			message = releaseComponentControlMessageToJausMessage(releaseControl);
 			ojCmptSendMessage(wd, message);
 			jausMessageDestroy(message);
-			
+
 			releaseComponentControlMessageDestroy(releaseControl);
-			
+
 			data->inControl = JAUS_FALSE;
 		}
 	}
@@ -856,16 +856,16 @@ void wdExcecuteControl(OjCmpt wd, VehicleState vehicleState)
 	static double dampedSpeedErrorDerivative = 0;
 	static double acceleration = ACCELERATION_MPSPS; //Mpsps
 	static double decceleration = DECCELERATION_MPSPS; //Mpsps
-	static double lastExcecuteTime = -1; 
+	static double lastExcecuteTime = -1;
 	static double dt;
 	static double linearEffortInt = 0.0;
 	double linearEffort;
 	double speedError;
 	JausMessage txMessage;
 	WdData *data;
-	
+
 	data = (WdData*)ojCmptGetUserData(wd);
-	
+
 	if(lastExcecuteTime < 0)
 	{
 		lastExcecuteTime = ojGetTimeSec();
@@ -876,7 +876,7 @@ void wdExcecuteControl(OjCmpt wd, VehicleState vehicleState)
 		dt = ojGetTimeSec() - lastExcecuteTime;
 		lastExcecuteTime = ojGetTimeSec();
 	}
-	
+
 	if(speedCommand < vehicleState->desiredSpeedMps)
 	{
 		speedCommand += acceleration * dt;
@@ -884,17 +884,17 @@ void wdExcecuteControl(OjCmpt wd, VehicleState vehicleState)
 		{
 			speedCommand = vehicleState->desiredSpeedMps;
 		}
-	}	
+	}
 	else
 	{
-		speedCommand -= decceleration * dt;		
+		speedCommand -= decceleration * dt;
 		if(speedCommand < vehicleState->desiredSpeedMps)
 		{
 			speedCommand = vehicleState->desiredSpeedMps;
 		}
 	}
-	
-	speedError = speedCommand - vehicleState->speedMps;	
+
+	speedError = speedCommand - vehicleState->speedMps;
 
 	linearEffortInt += speedError * dt;
 	if(linearEffortInt > LINEAR_EFFORT_I_LIM)
@@ -912,24 +912,24 @@ void wdExcecuteControl(OjCmpt wd, VehicleState vehicleState)
 		prevSpeedError = speedError;
 	}
 
-	linearEffort = LINEAR_EFFORT_K_FF * speedCommand + LINEAR_EFFORT_BIAS_FF; 
+	linearEffort = LINEAR_EFFORT_K_FF * speedCommand + LINEAR_EFFORT_BIAS_FF;
 	linearEffort += LINEAR_EFFORT_K_P * speedError;
 	linearEffort += LINEAR_EFFORT_K_I * linearEffortInt;
 	linearEffort += LINEAR_EFFORT_K_D * dampedSpeedErrorDerivative;
-	
+
 	// Pitch feed forward
 	//linearEffort += PITCH_FF_EFFORT_PER_RAD * sin(wdDampedPitchRad); // Pitch feed forward effort
-	
+
 	// Steering feed forward
 	if(data->reportWrench)
 	{
 		linearEffort += STEERING_FF_EFFORT * (1.0/cos(data->reportWrench->propulsiveRotationalEffortZPercent * WHEEL_ROTATION_RAD_PER_EFFORT) - 1.0);
 	}
-	
+
 	// Sticktion feed forward
 	if(speedCommand < WD_DEFAULT_MIN_SPEED_MPS)
 	{
-		linearEffort += STICKTION_EFFORT; 
+		linearEffort += STICKTION_EFFORT;
 	}
 
 	if(linearEffort > 0)
@@ -975,7 +975,7 @@ void wdExcecuteControl(OjCmpt wd, VehicleState vehicleState)
 	jausAddressCopy(data->setWrench->destination, data->pdAddress);
 
 	txMessage = setWrenchEffortMessageToJausMessage(data->setWrench);
-	ojCmptSendMessage(wd, txMessage);		
+	ojCmptSendMessage(wd, txMessage);
 	jausMessageDestroy(txMessage);
 }
 
@@ -983,4 +983,4 @@ void wdExcecuteControl(OjCmpt wd, VehicleState vehicleState)
 double wdAngleSubtract(double a, double b)
 {
    return atan2(sin(a-b), cos(a-b));
-} 
+}

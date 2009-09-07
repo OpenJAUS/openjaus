@@ -32,7 +32,7 @@
  *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ****************************************************************************/
 // File:		libNodeManager.c
-// Version:		3.3 BETA
+// Version:		3.3.0b
 // Written by:	Tom Galluzzo (galluzzo AT gmail DOT com) and Danny Kent (jaus AT dannykent DOT com)
 // Date:		04/15/08
 // Description:	The libnodeManager provides an interface for a commponent to access core node management,

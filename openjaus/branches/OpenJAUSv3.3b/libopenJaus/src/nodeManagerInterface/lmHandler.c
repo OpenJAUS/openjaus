@@ -32,7 +32,7 @@
  *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ****************************************************************************/
 // File:		lmHandler.c
-// Version:		3.3 BETA
+// Version:		3.3.0b
 // Written by:	Danny Kent (jaus AT dannykent DOT com)
 // Date:		04/15/08
 // Description:	LargeMessageHandler handles the queueing of large sets of Jaus Messages for 
