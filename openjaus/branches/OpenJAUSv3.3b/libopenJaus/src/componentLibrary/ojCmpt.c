@@ -37,7 +37,7 @@
 //
 // Version: 3.3.0b
 //
-// Date: 08/07/08
+// Date: 09/08/09
 //
 // Description: This file contains the code associated with the OpenJAUS
 //				Component Library. The Component Library is a wrapper around

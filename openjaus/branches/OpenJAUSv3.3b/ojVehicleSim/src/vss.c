@@ -34,7 +34,7 @@
 // File:		vss.c
 // Version:		3.3.0b
 // Written by:	Tom Galluzzo (galluzzt@ufl.edu) and Danny Kent (kentd@ufl.edu)
-// Date:		07/01/2005
+// Date:		09/08/09
 // Description:	This file contains the skeleton C code for implementing a JAUS component in a Linux environment
 //				This code is designed to work with the node manager and JAUS library software written by CIMAR
 

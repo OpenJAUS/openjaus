@@ -35,7 +35,7 @@
 // Version:		3.3.0b
 // Written by:	Tom Galluzzo (galluzzo AT gmail DOT com) and
 //              Danny Kent (jaus AT dannykent DOT com)
-// Date:		04/15/08
+// Date:		09/08/09
 // Description:	Provides the core service connection management routines
 
 #include <stdlib.h>

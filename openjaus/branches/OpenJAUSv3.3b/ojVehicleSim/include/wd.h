@@ -37,7 +37,7 @@
 //
 // Written by:	Danny Kent (jaus AT dannykent DOT com)
 //
-// Date:		08/24/06
+// Date:		09/08/09
 //
 // Description:	This file contains the skeleton C header file code for implementing the wd.c file
 

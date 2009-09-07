@@ -37,7 +37,7 @@
 //
 // Version: 3.3.0b
 //
-// Date: 08/07/08
+// Date: 09/08/09
 //
 // Description: This file describes all the functionality associated with a JausWorldModelFeatureClass. 
 // FeatureClasses are used to support metadata and attributes associated with objects in the JausWorldModel message set.

@@ -37,7 +37,7 @@
 //
 // Version: 3.3.0b
 //
-// Date: 08/07/08
+// Date: 09/08/09
 //
 // Description: This file defines the attributes of a AbortMissionMessage
 // Modified by: David M. Plasil (MountainTop Technology, Inc) to add Planner

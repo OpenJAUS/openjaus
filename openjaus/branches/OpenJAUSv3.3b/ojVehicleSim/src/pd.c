@@ -34,7 +34,7 @@
 // File:		pd.c
 // Version:		3.3.0b
 // Written by:	Tom Galluzzo (galluzzt@ufl.edu) and Danny Kent (kentd@ufl.edu)
-// Date:		06/03/2008
+// Date:		09/08/09
 
 #include <jaus.h>
 #include <openJaus.h>

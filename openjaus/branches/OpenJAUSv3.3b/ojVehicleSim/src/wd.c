@@ -37,7 +37,7 @@
 //
 // Written by:	Danny Kent (jaus AT dannykent DOT com)
 //
-// Date:		08/24/06
+// Date:		09/08/09
 //
 // Description:	This file contains the skeleton C code for implementing a JAUS component in a Linux environment
 //				This code is designed to work with the node manager and JAUS library software written by CIMAR

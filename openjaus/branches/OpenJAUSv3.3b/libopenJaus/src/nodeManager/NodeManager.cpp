@@ -37,7 +37,7 @@
 //
 // Version: 3.3.0b
 //
-// Date: 08/07/08
+// Date: 09/08/09
 //
 // Description: Wrapper class for the Node Manager as a whole. Provides user interface to create and run a Node Manager.
 

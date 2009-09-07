@@ -37,7 +37,7 @@
 //
 // Version: 3.3.0b
 //
-// Date: 08/07/08
+// Date: 09/08/09
 //
 // Description: This file defines all the basic JausShort funtionality, this should be primarily used through the JausType file and its methods
 

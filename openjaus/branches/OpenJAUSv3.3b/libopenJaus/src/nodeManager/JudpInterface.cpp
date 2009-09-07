@@ -37,7 +37,7 @@
 //
 // Version: 3.3.0b
 //
-// Date: 08/07/08
+// Date: 09/08/09
 //
 // Description: Defines the standard JAUS UDP interface on port 3792. Is compliant with the
 // 				ETG/OPC style of UDP header

@@ -36,7 +36,7 @@
 // Written By: Danny Kent (jaus AT dannykent DOT com), Tom Galluzzo (galluzzo AT gmail DOT com)
 //
 // Version: 3.3.0b
-//// Date: 08/07/08
+//// Date: 09/08/09
 //
 // Description: This file defines the functionality of a RequestComponentControlMessage
 

@@ -37,7 +37,7 @@
 //
 // Version: 3.3.0b
 //
-// Date: 08/14/07
+// Date: 09/08/09
 //
 // Description: This file defines the functions of a JausGeometryPoint Object
 

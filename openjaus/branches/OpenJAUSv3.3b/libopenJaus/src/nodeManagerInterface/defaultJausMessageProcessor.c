@@ -34,7 +34,7 @@
 // File:		defaultJausMessageProcessor.c
 // Version:		3.3.0b
 // Written by:	Tom Galluzzo (galluzzo AT gmail DOT com) and Danny Kent (jaus AT dannykent DOT com)
-// Date:		04/15/08
+// Date:		09/08/09
 // Description:	Processes a given JAUS message with the expected JAUS defined behavior
 
 #include <stdio.h>
