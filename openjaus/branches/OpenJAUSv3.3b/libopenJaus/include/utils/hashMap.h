@@ -31,61 +31,39 @@
  *   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  *   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ****************************************************************************/
-// File Name: JausCommunicationManager.h
+// File Name: timeLib.h
 //
-// Written By: Danny Kent (jaus AT dannykent DOT com)
+// Written by: Danny Kent (jaus AT dannykent DOT com)
 //
 // Version: 3.3.0b
 //
 // Date: 09/08/09
 //
-// Description:
+// Description:	Provides HASH_MAP define depending on operating system / compiler flags
 
-#ifndef JAUS_COMMUNICATION_MANAGER
-#define JAUS_COMMUNICATION_MANAGER
+#ifndef HASHMAP_H_
+#define HASHMAP_H_
 
 #ifdef WIN32
-	#include <errno.h>
+	#include <hash_map>
+	#define HASH_MAP stdext::hash_map
+#elif defined(__GNUC__)
+	#if defined(__QNX__)
+		#include <hash_map>                             // QNX 6.3 - GNU 3.3.5
+		#define HASH_MAP _NAMESPACE_STLPORT::hash_map   // QNX 6.3 - GNU 3.3.5
+	#else
+		#include <features.h>
+		#if __GNUC_PREREQ(4,0)
+			#include <tr1/unordered_map>
+			#define HASH_MAP std::tr1::unordered_map
+		#else
+			#include <ext/hash_map>
+			#define HASH_MAP __gnu_cxx::hash_map
+		# endif
+	#endif
+#else
+	#error "No HASH_MAP equivalent defined for this system. Please define in .../libopenJaus/utils/hashMap.h"
 #endif
 
-#include <vector>
-#include "JausTransportInterface.h"
-#include "utils/hashMap.h"
-#include "utils/FileLoader.h"
-#include "MessageRouter.h"
-#include "SystemTree.h"
-#include "EventHandler.h"
 
-class JausCommunicationManager
-{
-public:
-	JausCommunicationManager(void);
-	virtual ~JausCommunicationManager(void);
-
-	unsigned long getInterfaceCount(void);
-	JausTransportInterface *getJausInterface(unsigned long index);
-	JausTransportInterface *getJausInterface(std::string interfaceName);
-	bool interfaceExists(std::string interfaceName);
-	void enable(void);
-	void disable(void);
-	bool isEnabled(void);
-	SystemTree *getSystemTree();
-	virtual bool sendJausMessage(JausMessage message) = 0;
-	virtual bool receiveJausMessage(JausMessage message, JausTransportInterface *jtInterface) = 0;
-	MessageRouter *getMessageRouter();
-	virtual bool startInterfaces(void) = 0;
-
-protected:
-	MessageRouter *msgRouter;
-	std::vector <JausTransportInterface *> interfaces;
-	HASH_MAP<int, JausTransportInterface *> interfaceMap;
-	pthread_mutex_t mapMutex;
-	FileLoader *configData;
-	SystemTree *systemTree;
-	EventHandler *eventHandler;
-	JausByte mySubsystemId;
-	JausByte myNodeId;
-	bool enabled;
-};
-
-#endif
+#endif /* HASHMAP_H_ */
