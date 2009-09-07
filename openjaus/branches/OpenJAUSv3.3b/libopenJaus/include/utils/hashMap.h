@@ -59,7 +59,7 @@
 		#else
 			#include <ext/hash_map>
 			#define HASH_MAP __gnu_cxx::hash_map
-		# endif
+		#endif
 	#endif
 #else
 	#error "No HASH_MAP equivalent defined for this system. Please define in .../libopenJaus/utils/hashMap.h"
