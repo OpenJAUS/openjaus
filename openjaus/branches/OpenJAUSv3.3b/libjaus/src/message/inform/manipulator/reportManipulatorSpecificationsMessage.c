@@ -885,12 +885,12 @@ static int headerToString(ReportManipulatorSpecificationsMessage message, char *
 
   strcat((*buf), "\nExp. Flag: ");
   if(message->properties.expFlag == 0)
-    strcat((*buf), "JAUS");
+    strcat((*buf), "Not Experimental");
   else
     strcat((*buf), "Experimental");
 
   strcat((*buf), "\nSC Flag: ");
-  if(message->properties.scFlag == 0)
+  if(message->properties.scFlag == 1)
     strcat((*buf), "Service Connection");
   else
     strcat((*buf), "Not Service Connection");

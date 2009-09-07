@@ -371,16 +371,14 @@ static int dataToString(DeleteVksObjectsMessage message, char **buf)
   char* region = NULL;
   int i = 0;
 
-  // Region is Optional
+  // Region is Optional, if bit is set, increase bufSize to accomodate
   if(jausByteIsBitSet(message->presenceVector, VKS_PV_DELETE_OBJECTS_REGION_BIT))
   {
-    strcat((*buf), "\nDeletion Region: ");
     region = vectorObjectToString(message->deletionRegion);
     bufSize += (int)strlen(region);
   }
 
   //Setup temporary string buffer
-
   (*buf) = (char*)malloc(sizeof(char)*bufSize);
 
   strcpy((*buf), "\nPresence Vector: " );
@@ -405,8 +403,9 @@ static int dataToString(DeleteVksObjectsMessage message, char **buf)
   // Region is Optional
   if(region != NULL)
   {
-    strcat((*buf), region);
-    free(region);
+	  strcat((*buf), "\nDeletion Region: \n");
+	  strcat((*buf), region);
+	  free(region);
   }
 
   return (int)strlen(*buf);
@@ -837,12 +836,12 @@ static int headerToString(DeleteVksObjectsMessage message, char **buf)
 
   strcat((*buf), "\nExp. Flag: ");
   if(message->properties.expFlag == 0)
-    strcat((*buf), "JAUS");
+    strcat((*buf), "Not Experimental");
   else
     strcat((*buf), "Experimental");
 
   strcat((*buf), "\nSC Flag: ");
-  if(message->properties.scFlag == 0)
+  if(message->properties.scFlag == 1)
     strcat((*buf), "Service Connection");
   else
     strcat((*buf), "Not Service Connection");

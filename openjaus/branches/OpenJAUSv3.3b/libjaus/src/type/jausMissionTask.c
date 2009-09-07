@@ -162,7 +162,8 @@ JausBoolean missionTaskFromBuffer(JausMissionTask *taskPointer, unsigned char *b
     }
     
     *taskPointer = task;
-		return JAUS_TRUE;
+    free(childIndex);
+	return JAUS_TRUE;
 	}
 	else
 	{

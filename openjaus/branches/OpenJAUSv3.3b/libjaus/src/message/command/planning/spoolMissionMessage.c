@@ -83,12 +83,12 @@ static void dataInitialize(SpoolMissionMessage message)
   message->missionId = newJausUnsignedShort(0); 
   message->appendFlag = newJausByte(JAUS_REPLACE_CURRENT_MISSION_WITH_NEW_MISSION);    
   // Setup dynamic data fields [3 to 8+n+3m.] for task messages and children.
-  if ((message->naryTree = missionTaskCreate()) == NULL) {
+  message->naryTree = missionTaskCreate();
+  if (message->naryTree == NULL)
+  {
     //DMPDO: Log error?  Cannot do anything else because no returnval.
   }
 }
-
-
 
 // Destructs the message-specific fields
 static void dataDestroy(SpoolMissionMessage message)
@@ -96,8 +96,6 @@ static void dataDestroy(SpoolMissionMessage message)
   // Free dynamcially allocated data fields [3 to 8+n+3m].
   missionTaskDestroy(message->naryTree);
 }
-
-
 
 //UNPACK the external component's buffered data into a JAUS message data area to
 //complete receive and then return boolean of success.
@@ -124,6 +122,7 @@ static JausBoolean dataFromBuffer(SpoolMissionMessage message,
     // Unpacks data fields [3 to 8+n+3m] from Buffer.  NOTE: handles all task 
     // messages and children where tree traversal is depth first with left
     // to right processing.
+    missionTaskDestroy(message->naryTree);
     if(!missionTaskFromBuffer(&message->naryTree, 
                               buffer+index, 
                               bufferSizeBytes-index)) return JAUS_FALSE;
@@ -550,12 +549,12 @@ static int headerToString(SpoolMissionMessage message, char **buf)
 
   strcat((*buf), "\nExp. Flag: ");
   if(message->properties.expFlag == 0)
-    strcat((*buf), "JAUS");
+    strcat((*buf), "Not Experimental");
   else 
     strcat((*buf), "Experimental");
   
   strcat((*buf), "\nSC Flag: ");
-  if(message->properties.scFlag == 0)
+  if(message->properties.scFlag == 1)
     strcat((*buf), "Service Connection");
   else
     strcat((*buf), "Not Service Connection");

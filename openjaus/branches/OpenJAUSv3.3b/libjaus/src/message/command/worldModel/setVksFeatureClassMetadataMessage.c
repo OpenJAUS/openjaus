@@ -182,10 +182,15 @@ static int dataToBuffer(SetVksFeatureClassMetadataMessage message, unsigned char
 static int dataToString(SetVksFeatureClassMetadataMessage message, char **buf)
 {
   //message already verified 
+  unsigned int bufSize = 150;
 
   //Setup temporary string buffer
-  
-  unsigned int bufSize = 150 + (int)strlen(message->featureClassMetadataString);
+  if(message->featureClassMetadataString != NULL)
+  {
+	  bufSize += (int)strlen(message->featureClassMetadataString);
+  }
+
+  // Allocate character array
   (*buf) = (char*)malloc(sizeof(char)*bufSize);
   
   strcpy((*buf), "\nMetadata Options: " );
@@ -213,7 +218,14 @@ static int dataToString(SetVksFeatureClassMetadataMessage message, char **buf)
   jausUnsignedShortToString(message->featureClassID, (*buf)+strlen(*buf));
   
   strcat((*buf), "\n Feature Class Metadata String: ");
-  strcat((*buf), message->featureClassMetadataString);
+  if(message->featureClassMetadataString != NULL)
+  {
+	  strcat((*buf), message->featureClassMetadataString);
+  }
+  else
+  {
+	  strcat((*buf), "None.");
+  }
   
   return (int)strlen(*buf);
 }
@@ -549,12 +561,12 @@ static int headerToString(SetVksFeatureClassMetadataMessage message, char **buf)
 
   strcat((*buf), "\nExp. Flag: ");
   if(message->properties.expFlag == 0)
-    strcat((*buf), "JAUS");
+    strcat((*buf), "Not Experimental");
   else 
     strcat((*buf), "Experimental");
   
   strcat((*buf), "\nSC Flag: ");
-  if(message->properties.scFlag == 0)
+  if(message->properties.scFlag == 1)
     strcat((*buf), "Service Connection");
   else
     strcat((*buf), "Not Service Connection");
