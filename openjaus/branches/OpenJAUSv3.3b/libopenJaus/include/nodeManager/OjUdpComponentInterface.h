@@ -44,26 +44,12 @@
 #ifndef OJ_UDP_COMPONENT_INTERFACE_H
 #define OJ_UDP_COMPONENT_INTERFACE_H
 
-#if defined(WIN32)
-	#include <hash_map>
-	#define HASH_MAP stdext::hash_map
-#elif defined(__GNUC__)
-	#if defined(__QNX__)
-		#include <hash_map>                             // QNX 6.3 - GNU 3.3.5
-		#define HASH_MAP _NAMESPACE_STLPORT::hash_map   // QNX 6.3 - GNU 3.3.5
-	#else
-		#include <ext/hash_map>
-		#define HASH_MAP __gnu_cxx::hash_map
-	#endif
-#else
-	#error "Hash Map undefined in OjUdpComponentInterface.h."
-#endif
-
 #include "JausTransportInterface.h"
 #include "JausComponentCommunicationManager.h"
 #include "SystemTree.h"
 #include "NodeManagerComponent.h"
 #include "utils/datagramSocket.h"
+#include "utils/hashMap.h"
 
 #define OJ_UDP_INTERFACE_MESSAGE_SIZE_BYTES	8
 #define OJ_UDP_DEFAULT_PORT					24627 // Per OJ Nodemanager Interface Document
