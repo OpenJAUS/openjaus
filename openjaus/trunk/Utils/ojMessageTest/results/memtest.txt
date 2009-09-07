@@ -1,0 +1,17 @@
+==30946== Memcheck, a memory error detector.
+==30946== Copyright (C) 2002-2008, and GNU GPL'd, by Julian Seward et al.
+==30946== Using LibVEX rev 1884, a library for dynamic binary translation.
+==30946== Copyright (C) 2004-2008, and GNU GPL'd, by OpenWorks LLP.
+==30946== Using valgrind-3.4.1-Debian, a dynamic binary instrumentation framework.
+==30946== Copyright (C) 2000-2008, and GNU GPL'd, by Julian Seward et al.
+==30946== For more details, rerun with: -v
+==30946== 
+==30946== My PID = 30946, parent PID = 23098.  Prog and args are:
+==30946==    ./messageTest
+==30946== 
+==30946== 
+==30946== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 13 from 1)
+==30946== malloc/free: in use at exit: 0 bytes in 0 blocks.
+==30946== malloc/free: 2,041 allocs, 2,041 frees, 329,301 bytes allocated.
+==30946== For counts of detected errors, rerun with: -v
+==30946== All heap blocks were freed -- no leaks are possible.

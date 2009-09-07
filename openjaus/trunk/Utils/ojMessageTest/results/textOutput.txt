@@ -1,0 +1,2738 @@
+Testing setCameraCapabilitiesMessage:
+JAUS_SET_CAMERA_CAPABILITIES (0x0805)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 22
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Presence Vector: 0xFFFF
+Camera Id: 0
+Horizontal FOV(radians): 0.000000
+Vertical FOV(radians): 0.000000
+Horizontal Resolution: 0
+Vertical Resolution: 0
+Focus(%): 0.000000
+Iris(%): 0.000000
+Gain(%): 0.000000
+Frame Rate(Frames/Second): 0
+Shutter Speed(Seconds): 0
+Auto Focus: Off
+Auto Exposure/Iris: Off
+Image Stabilization: Off
+White Balance: Off
+Sync Flash/Strobe: Off
+Red Eye: Off
+Auto Shutter: Off
+Video Auto Gain: Off
+Interlaced Video: Non-Interlaced
+Audio Enabled: Off
+Audio Auto Gain: Off
+Stereo Audio: Off
+Directional Audio: Off
+Front Microphone: Off
+Rear Microphone: Off
+Left Microphone: Off
+Right Microphone: Off
+
+Testing setCameraPoseMessage:
+JAUS_SET_CAMERA_POSE (0x0801)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 15
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Presence Vector: 0xFF
+Camera Id: 255
+Linear Mode X: Rate Mode
+Linear Mode Y: Rate Mode
+Linear Mode Z: Rate Mode
+Angular Mode X: Rate Mode
+Angular Mode Y: Rate Mode
+Angular Mode Z: Rate Mode
+Linear X Displacement or Rate(%): 0.000000
+Linear Y Displacement or Rate(%): 0.000000
+Linear Z Displacement or Rate(%): 0.000000
+Angular X Displacement or Rate(%): 0.000000
+Angular Y Displacement or Rate(%): 0.000000
+Angular Z Displacement or Rate(%): 0.000000
+
+Testing selectCameraMessage:
+JAUS_SELECT_CAMERA (0x0802)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 1
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Camera Id: 0
+
+Testing setCameraFormatOptionsMessage:
+JAUS_SET_CAMERA_FORMAT_OPTIONS (0x0806)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 8
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Presence Vector: 0xFF
+Camera Id: 0
+Audio Format: Unused
+Image Format: Unused
+Format Option: 0
+
+Testing setEndEffectorVelocityStateMessage:
+JAUS_SET_END_EFFECTOR_VELOCITY_STATE (0x0606)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 25
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Coordinate System: 0 Aligned with vehicle coordinate system
+Angular Velocity X(rad/s): 0.000000
+Angular Velocity Y(rad/s): 0.000000
+Angular Velocity Z(rad/s): 0.000000
+Linear Velocity X(m/s): 0.000000
+Linear Velocity Y(m/s): 0.000000
+Linear Velocity Z(m/s): 0.000000
+
+Testing setJointVelocitiesMessage:
+JAUS_SET_JOINT_VELOCITIES (0x0603)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 1
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Number of Joints: 0
+
+Testing setJointMotionMessage:
+JAUS_SET_JOINT_MOTION (0x0607)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 2
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Number of Joints: 0
+Number of Poses: 0
+
+Testing setJointEffortsMessage:
+JAUS_SET_JOINT_EFFORTS (0x0601)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 1
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Number of Joints: 0
+
+Testing setJointPositionsMessage:
+JAUS_SET_JOINT_POSITIONS (0x0602)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 1
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Number of Joints: 0
+
+Testing setToolPointMessage:
+JAUS_SET_TOOL_POINT (0x0604)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 12
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+X Tool Point Coordinate(m): 0.000000
+Y Tool Point Coordinate(m): 0.000000
+Z Tool Point Coordinate(m): 0.000000
+
+Testing setEndEffectorPathMotionMessage:
+JAUS_SET_END_EFFECTOR_PATH_MOTION (0x0608)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 1
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Number of Poses: 0
+
+Testing setEndEffectorPoseMessage:
+JAUS_SET_END_EFFECTOR_POSE (0x0605)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 28
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+X Tool Point Pose: 0.000000
+Y Tool Point Pose: 0.000000
+Z Tool Point Pose: 0.000000
+D Quaterion Pose: 0.000000
+A Quaterion Pose: 0.000000
+B Quaterion Pose: 0.000000
+C Quaterion Pose: 0.000000
+
+Testing createVksObjectsMessage:
+JAUS_CREATE_VKS_OBJECTS (0x0A20)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 5
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Presence Vector: 0xFF
+Message Properties: 0xFF
+  Request Confirmation of Object Creation
+Local Request Id: 0
+
+Testing deleteVksObjectsMessage:
+JAUS_DELETE_VKS_OBJECTS (0x0A25)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 0
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Presence Vector: 0xFF
+Request Id: 0
+Object Count: 0
+Deletion Region: 
+World Model Vector Object Id: 0
+World Model Vector Object Type: Unknown
+World Model Vector Object Buffer(meters): 0.000000
+
+Testing setVksFeatureClassMetadataMessage:
+JAUS_SET_VKS_FEATURE_CLASS_METADATA (0x0A21)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 5
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Metadata Options: 0 APPEND
+ Feature Class Id: 0
+ Feature Class Metadata String: None.
+
+Testing terminateVksDataTransferMessage:
+JAUS_TERMINATE_VKS_DATA_TRANSFER (0x0A24)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 0
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+terminateVksDataTransferMessageToJausMessage failed
+
+Testing pauseMissionMessage:
+JAUS_PAUSE_MISSION (0x0E03)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 4
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Mission Id: 0
+Task Id: 0 Pause entire mission
+
+Testing replaceMessagesMessage:
+JAUS_REPLACE_MESSAGES (0x0E06)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 8
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Mission Id: 0
+Task Id: 0
+Number of Messages To Remove: 0
+Number of Messages To Replace: 0
+
+Testing spoolMissionMessage:
+JAUS_SPOOL_MISSION (0x0E00)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 9
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Mission Id: 0
+Append Flag: 0 Replace current mission with new mission
+Task: 0
+Task Commands:
+Children: 
+
+Testing removeMessagesMessage:
+JAUS_REMOVE_MESSAGES (0x0E05)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 6
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Mission Id: 0
+Task Id: 0
+Number of Messages: 0
+
+Testing abortMissionMessage:
+JAUS_ABORT_MISSION (0x0E02)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 4
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Mission Id: 0
+Task Id: 0 Abort entire mission
+
+Testing runMissionMessage:
+JAUS_RUN_MISSION (0x0E01)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 2
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Mission Id: 0
+
+Testing resumeMissionMessage:
+JAUS_RESUME_MISSION (0x0E04)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 4
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Mission Id: 0
+Task Id: 0 Resume entire mission
+
+Testing standbyMessage:
+JAUS_STANDBY (0x0003)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 0
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+
+standbyMessageToJausMessage failed
+
+Testing shutdownMessage:
+JAUS_SHUTDOWN (0x0002)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 0
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+
+shutdownMessageToJausMessage failed
+
+Testing confirmServiceConnectionMessage:
+JAUS_CONFIRM_SERVICE_CONNECTION (0x0009)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 6
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Service Connection Command Code: UNDEFINED MESSAGE: 0x0000
+Instance Id: 0
+Confirmed Periodic Update Rate(Hz): 0.000000
+Response Code: 6 Command not supported
+
+Testing setEmergencyMessage:
+JAUS_SET_EMERGENCY (0x0006)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 2
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Transition To Emergency: False
+
+Testing activateServiceConnectionMessage:
+JAUS_ACTIVATE_SERVICE_CONNECTION (0x000A)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 3
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Service Connection Command Code: JAUS_ACTIVATE_SERVICE_CONNECTION
+Instance Id: 0
+
+Testing setComponentAuthorityMessage:
+JAUS_SET_COMPONENT_AUTHORITY (0x0001)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 1
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Authority Code: 0
+
+Testing rejectComponentControlMessage:
+JAUS_REJECT_COMPONENT_CONTROL (0x0010)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 0
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+
+rejectComponentControlMessageToJausMessage failed
+
+Testing terminateServiceConnectionMessage:
+JAUS_TERMINATE_SERVICE_CONNECTION (0x000C)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 3
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Service Connection Command Code: JAUS_TERMINATE_SERVICE_CONNECTION
+Instance Id: 0
+
+Testing requestComponentControlMessage:
+JAUS_REQUEST_COMPONENT_CONTROL (0x000D)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 1
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Authority Code: 0
+
+Testing setTimeMessage:
+JAUS_SET_TIME (0x0011)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 7
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Presence Vector: 0xFF
+Time: 00:00:00.0
+Date: January 00, 0000
+
+Testing resumeMessage:
+JAUS_RESUME (0x0004)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 0
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+
+resumeMessageToJausMessage failed
+
+Testing suspendServiceConnectionMessage:
+JAUS_SUSPEND_SERVICE_CONNECTION (0x000B)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 3
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Service Connection Command Code: JAUS_SUSPEND_SERVICE_CONNECTION
+Instance Id: 0
+
+Testing resetMessage:
+JAUS_RESET (0x0005)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 0
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+
+resetMessageToJausMessage failed
+
+Testing createServiceConnectionMessage:
+JAUS_CREATE_SERVICE_CONNECTION (0x0008)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 8
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Service Connection Command Code: UNDEFINED MESSAGE: 0x0000
+Requested Periodic Update Rate(Hz): 0.000000
+Presence Vector: 0xFFFFFFFF
+
+Testing releaseComponentControlMessage:
+JAUS_RELEASE_COMPONENT_CONTROL (0x000E)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 0
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+
+releaseComponentControlMessageToJausMessage failed
+
+Testing clearEmergencyMessage:
+JAUS_CLEAR_EMERGENCY (0x0007)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 2
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Clear Emergency: False
+
+Testing confirmComponentControlMessage:
+JAUS_CONFIRM_COMPONENT_CONTROL (0x000F)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 1
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Response Code: Control Accepted
+
+Testing rejectEventRequestMessage:
+JAUS_REJECT_EVENT_REQUEST (0x01F4)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 5
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Presence Vector: 0xFF
+requestId: 0
+Response Code: 0
+Error Message: 
+
+Testing updateEventMessage:
+JAUS_UPDATE_EVENT (0x01F1)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 22
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Presence Vector: 0xFF
+Request Id: 0
+Message Code: 0
+Event Type: 0 Periodic(SC)
+Event Boundary: 0 Equal
+Limit Data Field: 0
+Lower Limit
+Limit Data Field Type: 0 Byte
+Limit: 0
+Upper Limit
+Limit Data Field Type: 0 Byte
+Limit: 0
+State Limit
+Limit Data Field Type: 0 Byte
+Limit: 0
+Requested Minimum Periodic Rate(Hz): 0.000000
+Requested Periodic Update Rate(Hz): 0.000000
+Event Id: 0
+Query MessageInvalid Jaus Message
+
+Testing createEventMessage:
+JAUS_CREATE_EVENT (0x01F0)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 21
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Presence Vector: 0xFF
+Request Id: 0
+Message Code: 0
+Event Type: 0 Periodic(SC)
+Event Boundary: 0 Equal
+Limit Data Field: 0
+Lower Limit
+Limit Data Field Type: 0 Byte
+Limit: 0
+Upper Limit
+Limit Data Field Type: 0 Byte
+Limit: 0
+State Limit
+Limit Data Field Type: 0 Byte
+Limit: 0
+Requested Minimum Periodic Rate(Hz): 0.000000
+Requested Periodic Update Rate(Hz): 0.000000
+Query MessageInvalid Jaus Message
+
+Testing cancelEventMessage:
+JAUS_CANCEL_EVENT (0x01F2)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 5
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Presence Vector: 0xFF
+Request Id: 0
+Message Code: 0
+Event Id: 0
+
+Testing confirmEventRequestMessage:
+JAUS_CONFIRM_EVENT_REQUEST (0x01F3)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 8
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Presence Vector: 0xFF
+Request Id: 0
+Message Code: 0
+Event Id: 0
+Confirmed Periodic Update Rate(Hz): 0
+Response Code: 0 Successful
+
+Testing setSelectedDataLinkStateMessage:
+JAUS_SET_SELECTED_DATA_LINK_STATE (0x0202)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 2
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Data Link Id: 0
+Data Link State: 0 Off (disconnect link)
+
+Testing setDataLinkStatusMessage:
+JAUS_SET_DATA_LINK_STATUS (0x0200)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 1
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Data Link State: 1 On (send and receive messages)
+
+Testing setDataLinkSelectMessage:
+JAUS_SET_DATA_LINK_SELECT (0x0201)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 1
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Data Link Id: 0
+
+Testing setLocalWaypointMessage:
+JAUS_SET_LOCAL_WAYPOINT (0x040D)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 21
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Presence Vector: 0xFF
+Waypoint Number: 0
+X(meters): 0.000000
+Y(meters): 0.000000
+Z(meters): 0.000000
+Roll(radians): 0.000000
+Pitch(radians): 0.000000
+Yaw(radians): 0.000000
+
+Testing setLocalVectorMessage:
+JAUS_SET_LOCAL_VECTOR (0x0408)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 6
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Speed(meters/second): 0.000000
+Heading(radians): 0.000000
+
+Testing setVelocityStateMessage:
+JAUS_SET_VELOCITY_STATE (0x0404)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 30
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Presence Vector: 0xFFFF
+Velocity X(meters/sec): 0.000000
+Velocity Y(meters/sec): 0.000000
+Velocity Z(meters/sec): 0.000000
+Velocity RMS(meters/sec): 0.000000
+Roll Rate(rad/sec): 0.000000
+Pitch Rate(rad/sec): 0.000000
+Yaw Rate(rad/sec): 0.000000
+Rate RMS(rad/sec): 0.000000
+Time Stamp: 0
+
+Testing setGlobalPathSegmentMessage:
+JAUS_SET_GLOBAL_PATH_SEGMENT (0x040F)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 29
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Presence Vector: 0xFF
+Path Segment Number: 0
+Point(1,Latitude)(degrees): 0.000000
+Point(1,Longitude)(degrees): 0.000000
+Point(1,Altitude)(ASL)(meters): 0.000000
+Point(2,Latitude)(degrees): 0.000000
+Point(2,Longitude)(degrees): 0.000000
+Point(2,Altitude)(ASL)(meters): 0.000000
+Weighting Factor: 0.000000
+
+Testing setGlobalWaypointMessage:
+JAUS_SET_GLOBAL_WAYPOINT (0x040C)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 21
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Presence Vector: 0xFF
+Waypoint Number: 0
+Latitude(degrees): 0.000000
+Longitude(degrees): 0.000000
+Altitude(ASL)(meters): 0.000000
+Roll(radians): 0.000000
+Pitch(radians): 0.000000
+Yaw(radians): 0.000000
+
+Testing setDiscreteDevicesMessage:
+JAUS_SET_DISCRETE_DEVICES (0x0406)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 5
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Transfer Case: 0 Low
+
+Testing setWrenchEffortMessage:
+JAUS_SET_WRENCH_EFFORT (0x0405)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 20
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Presence Vector: 0xFFFF
+Propulsive Linear Effort X(%): 0.000000
+Propulsive Linear Effort Y(%): 0.000000
+Propulsive Linear Effort Z(%): 0.000000
+Propulsive Rotational Effort X(%): 0.000000
+Propulsive Rotational Effort Y(%): 0.000000
+Propulsive Rotational Effort Z(%): 0.000000
+Resistive Linear Effort X(%): 0.000000
+Resistive Linear Effort Y(%): 0.000000
+Resistive Linear Effort Z(%): 0.000000
+Resistive Rotational Effort X(%): 0.000000
+Resistive Rotational Effort Y(%): 0.000000
+Resistive Rotational Effort Z(%): 0.000000
+
+Testing setLocalPathSegmentMessage:
+JAUS_SET_LOCAL_PATH_SEGMENT (0x0410)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 29
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Presence Vector: 0xFF
+Path Segment Number: 0
+Point(1,X)(meters): 0.000000
+Point(1,Y)(meters): 0.000000
+Point(1,Z)(meters): 0.000000
+Point(2,X)(meters): 0.000000
+Point(2,Y)(meters): 0.000000
+Point(2,Z)(meters): 0.000000
+Weighting Factor: 0.000000
+
+Testing setTravelSpeedMessage:
+JAUS_SET_TRAVEL_SPEED (0x040A)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 2
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Speed(meters/second): 0.000000
+
+Testing setGlobalVectorMessage:
+JAUS_SET_GLOBAL_VECTOR (0x0407)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 13
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Presence Vector: 0xFF
+Speed(meters/seconds): 0.000000
+Altitude(meters): 0.000000
+Heading(radians): 0.000000
+Roll(radians): 0.000000
+Pitch(radians): 0.000000
+
+Testing queryImageMessage:
+JAUS_QUERY_IMAGE (0x2807)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 0
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+queryImageMessageToJausMessage failed
+
+Testing querySelectedCameraMessage:
+JAUS_QUERY_SELECTED_CAMERA (0x2804)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 0
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+querySelectedCameraMessageToJausMessage failed
+
+Testing queryCameraFormatOptionsMessage:
+JAUS_QUERY_CAMERA_FORMAT_OPTIONS (0x2806)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 2
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Presence Vector: 0xFF
+Camera Id: 0
+
+Testing queryCameraCountMessage:
+JAUS_QUERY_CAMERA_COUNT (0x2801)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 0
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+queryCameraCountMessageToJausMessage failed
+
+Testing queryCameraPoseMessage:
+JAUS_QUERY_CAMERA_POSE (0x2800)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 3
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Presence Vector: 0xFFFF
+Camera Id: 0
+
+Testing queryCameraCapabilitiesMessage:
+JAUS_QUERY_CAMERA_CAPABILITIES (0x2805)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 3
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Presence Vector: 0xFFFF
+Camera Id: 0
+
+Testing queryRelativeObjectPositionMessage:
+JAUS_QUERY_RELATIVE_OBJECT_POSITION (0x2802)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 1
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Presence Vector: 255
+
+Testing queryJointForceTorquesMessage:
+JAUS_QUERY_JOINT_FORCE_TORQUES (0x2605)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 0
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+queryJointForceTorquesMessageToJausMessage failed
+
+Testing queryManipulatorSpecificationsMessage:
+JAUS_QUERY_MANIPULATOR_SPECIFICATIONS (0x2600)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 0
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+queryManipulatorSpecificationsMessageToJausMessage failed
+
+Testing queryToolPointMessage:
+JAUS_QUERY_TOOL_POINT (0x2604)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 0
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+queryToolPointMessageToJausMessage failed
+
+Testing queryJointEffortsMessage:
+JAUS_QUERY_JOINT_EFFORTS (0x2601)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 0
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+queryJointEffortsMessageToJausMessage failed
+
+Testing queryJointVelocitiesMessage:
+JAUS_QUERY_JOINT_VELOCITIES (0x2603)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 0
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+queryJointVelocitiesMessageToJausMessage failed
+
+Testing queryJointPositionsMessage:
+JAUS_QUERY_JOINT_POSITIONS (0x2602)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 0
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+queryJointPositionsMessageToJausMessage failed
+
+Testing queryVksObjectsMessage:
+JAUS_QUERY_VKS_OBJECTS (0x2A23)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 512000
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Presence Vector: 0xFF
+Response Presence Vector: 0xFF
+Request Id: 0
+Object Count: 0
+Query Region: World Model Vector Object Id: 0
+World Model Vector Object Type: Unknown
+World Model Vector Object Buffer(meters): 0.000000
+
+Testing queryVksFeatureClassMetadataMessage:
+JAUS_QUERY_VKS_FEATURE_CLASS_METADATA (0x2A21)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 2
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Feature Class Id: 0
+
+Testing queryVksBoundsMessage:
+JAUS_QUERY_VKS_BOUNDS (0x2A22)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 3
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Request Id: 0
+Feature Class Id: 0
+
+Testing querySubsystemListMessage:
+JAUS_QUERY_SUBSYSTEM_LIST (0x2B02)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 0
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+querySubsystemListMessageToJausMessage failed
+
+Testing queryIdentificationMessage:
+JAUS_QUERY_IDENTIFICATION (0x2B00)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 1
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Query Field: 0 Unkown Value
+
+Testing queryServicesMessage:
+JAUS_QUERY_SERVICES (0x2B03)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 0
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+queryServicesMessageToJausMessage failed
+
+Testing queryConfigurationMessage:
+JAUS_QUERY_CONFIGURATION (0x2B01)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 1
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Query Field: 0 Unkown value
+
+Testing queryMissionStatusMessage:
+JAUS_QUERY_MISSION_STATUS (0x2E01)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 8
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Presence Vector: 0x0
+Type: 0 Mission
+Mission Id: 0
+Task Id: 0
+UID: 0
+
+Testing querySpoolingPreferenceMessage:
+JAUS_QUERY_SPOOLING_PREFERENCE (0x2E00)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 0
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+querySpoolingPreferenceMessageToJausMessage failed
+
+Testing queryComponentStatusMessage:
+JAUS_QUERY_COMPONENT_STATUS (0x2002)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 0
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+
+queryComponentStatusMessageToJausMessage failed
+
+Testing queryTimeMessage:
+JAUS_QUERY_TIME (0x2011)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 1
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Presence Vector: 0xFF
+
+Testing queryComponentControlMessage:
+JAUS_QUERY_COMPONENT_CONTROL (0x200D)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 0
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+
+queryComponentControlMessageToJausMessage failed
+
+Testing queryComponentAuthorityMessage:
+JAUS_QUERY_COMPONENT_AUTHORITY (0x2001)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 0
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+
+queryComponentAuthorityMessageToJausMessage failed
+
+Testing queryEventsMessage:
+JAUS_QUERY_EVENTS (0x21F0)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 5
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Presence Vector: 0xFF
+Message Code: 0
+Event Type: 0 Periodic
+Event Id: 0
+
+Testing queryHeartbeatPulseMessage:
+JAUS_QUERY_HEARTBEAT_PULSE (0x2202)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 0
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+queryHeartbeatPulseMessageToJausMessage failed
+
+Testing querySelectedDataLinkStatusMessage:
+JAUS_QUERY_SELECTED_DATA_LINK_STATUS (0x2201)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 0
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+querySelectedDataLinkStatusMessageToJausMessage failed
+
+Testing queryDataLinkStatusMessage:
+JAUS_QUERY_DATA_LINK_STATUS (0x2200)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 1
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Data Link Id: 0
+
+Testing queryWaypointCountMessage:
+JAUS_QUERY_WAYPOINT_COUNT (0x240B)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 0
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+queryWaypointCountMessageToJausMessage failed
+
+Testing queryLocalWaypointMessage:
+JAUS_QUERY_LOCAL_WAYPOINT (0x240D)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 2
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Waypoint Number: 0
+
+Testing queryLocalPoseMessage:
+JAUS_QUERY_LOCAL_POSE (0x2403)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 2
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Presence Vector: 0xFFFF
+
+Testing queryLocalPathSegmentMessage:
+JAUS_QUERY_LOCAL_PATH_SEGMENT (0x2410)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 3
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Path Segment Number: 0
+Presence Vector: 0xFF
+
+Testing queryGlobalPoseMessage:
+JAUS_QUERY_GLOBAL_POSE (0x2402)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 2
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Presence Vector: 0xFFFF
+
+Testing queryGlobalVectorMessage:
+JAUS_QUERY_GLOBAL_VECTOR (0x2407)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 1
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Presence Vector: 0xFF
+
+Testing queryGlobalPathSegmentMessage:
+JAUS_QUERY_GLOBAL_PATH_SEGMENT (0x240F)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 3
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Path Segment Number: 0
+Presence Vector: 0xFF
+
+Testing queryDiscreteDevicesMessage:
+JAUS_QUERY_DISCRETE_DEVICES (0x2406)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 1
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Presence Vector: 0xFF
+
+Testing queryPathSegmentCountMessage:
+JAUS_QUERY_PATH_SEGMENT_COUNT (0x240E)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 0
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+queryPathSegmentCountMessageToJausMessage failed
+
+Testing queryTravelSpeedMessage:
+JAUS_QUERY_TRAVEL_SPEED (0x240A)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 0
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+queryTravelSpeedMessageToJausMessage failed
+
+Testing queryPlatformOperationalDataMessage:
+JAUS_QUERY_PLATFORM_OPERATIONAL_DATA (0x2401)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 1
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Presence Vector: 0xFF
+
+Testing queryWrenchEffortMessage:
+JAUS_QUERY_WRENCH_EFFORT (0x2405)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 2
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Presence Vector: 0xFFFF
+
+Testing queryVelocityStateMessage:
+JAUS_QUERY_VELOCITY_STATE (0x2404)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 2
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Presence Vector: 0xFFFF
+
+Testing queryGlobalWaypointMessage:
+JAUS_QUERY_GLOBAL_WAYPOINT (0x240C)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 2
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Waypoint Number: 0
+
+Testing queryLocalVectorMessage:
+JAUS_QUERY_LOCAL_VECTOR (0x2408)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 0
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+queryLocalVectorMessageToJausMessage failed
+
+Testing queryPlatformSpecificationsMessage:
+JAUS_QUERY_PLATFORM_SPECIFICATIONS (0x2400)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 4
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Presence Vector: 0xFFFFFFFF
+
+Testing reportRelativeObjectPositionMessage:
+JAUS_REPORT_RELATIVE_OBJECT_POSITION (0x4802)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 32
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Presence Vector: 0xFF
+Time Stamp: January 00, 0000  00:00:00.0
+
+Range(meters): 0.000000
+Range Error(meters): 0.000000
+Bearing(radians): 0.000000
+Bearing Error(radians): 0.000000
+Inclinationradians): 0.000000
+Inclination Error(radians): 0.000000
+Confidance(0=Low, 255=Highest: 0
+Object Id: 0
+
+Testing reportImageMessage:
+JAUS_REPORT_IMAGE (0x4807)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 0
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Camera Id: 0
+Video Format: 0
+Image Data Size(bytes): 0
+
+Testing reportCameraCapabilitiesMessage:
+JAUS_REPORT_CAMERA_CAPABILITIES (0x4805)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 81
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Presence Vector: 0xFFFF
+Camera Id: 0
+Description: 
+Max Horizontal FOV(radians): 0.000000
+Min Horizontal FOV(radians): 0.000000
+Max Vertical FOV(radians): 0.000000
+Min Vertical FOV(radians): 0.000000
+Max Horizontal Resolution: 0
+Min Horizontal Resolution: 0
+Max Vertical Resolution: 0
+Min Vertical Resolution: 0
+Max Frame Rate(frames per second): 0
+Min Frame Rate(frames per second): 0
+Max Shutter Speed(seconds): 0
+Min Shutter Speed(seconds): 0
+Auto Focus Available: False
+Auto Exposure/Iris Available: False
+Image Stabilization Available: False
+White Balance Available: False
+Sync Flash/Strobe Available: False
+Red Eye Available: False
+Auto Shutter Available: False
+Video Auto Gain Available: False
+Interlaced Video Available: False
+Audio Enabled Available: False
+Audio Auto Gain Available: False
+Stereo Audio Available: False
+Directional Audio Available: False
+Front Microphone Available: False
+Rear Microphone Available: False
+Left Microphone Available: False
+Right Microphone Available: False
+
+Testing reportSelectedCameraMessage:
+JAUS_REPORT_SELECTED_CAMERA (0x4804)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 1
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Camera Id: 0
+
+Testing reportCameraCountMessage:
+JAUS_REPORT_CAMERA_COUNT (0x4801)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 1
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Camera Count: 0
+
+Testing reportCameraFormatOptionsMessage:
+JAUS_REPORT_CAMERA_FORMAT_OPTIONS (0x4806)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 12
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Presence Vector: 0xFF
+Camer Id: 0
+Audio Format 1: Unused
+Audio Format 2: Unused
+Image Format 1: Unused
+Image Format 2: Unused
+Image Format 3: Unused
+Image Format 4: Unused
+Format Option: 0
+
+Testing reportCameraPoseMessage:
+JAUS_REPORT_CAMERA_POSE (0x4800)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 36
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Presence Vector: 65535
+Camera Id: 0
+Camera Name: 
+X Camera Origin(meters): 0.000000
+Y Camera Origin(meters): 0.000000
+Z Camera Origin(meters): 0.000000
+X Camera Axis Direction Cosine X: 0.000000
+X Camera Axis Direction Cosine Y: 0.000000
+X Camera Axis Direction Cosine Z: 0.000000
+Z Camera Axis Direction Cosine X: 0.000000
+Z Camera Axis Direction Cosine Y: 0.000000
+Z Camera Axis Direction Cosine Z: 0.000000
+
+Testing reportJointPositionsMessage:
+JAUS_REPORT_JOINT_POSITIONS (0x4602)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 1
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Number of Joints: 0
+
+Testing reportJointVelocitiesMessage:
+JAUS_REPORT_JOINT_VELOCITIES (0x4603)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 1
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Number of Joints: 0
+
+Testing reportManipulatorSpecificationsMessage:
+JAUS_REPORT_MANIPULATOR_SPECIFICATIONS (0x4600)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 1
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Number of Joints: 0
+ Coordinate System X(meters): 0.000000
+ Coordinate System Y(meters): 0.000000
+ Coordinate System Z(meters): 0.000000
+ A of unit quaternion q: 0.000000
+ B of unit quaternion q: 0.000000
+ C of unit quaternion q: 0.000000
+ D of unit quaternion q: 0.000000
+
+Testing reportJointEffortsMessage:
+JAUS_REPORT_JOINT_EFFORTS (0x4601)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 1
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Number of Joints: 0
+
+Testing reportToolPointMessage:
+JAUS_REPORT_TOOL_POINT (0x4604)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 12
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+X Coordinate of Tool Point(meters): 0.000000
+Y Coordinate of Tool Point(meters): 0.000000
+Z Coordinate of Tool Point(meters): 0.000000
+
+Testing reportJointForceTorquesMessage:
+JAUS_REPORT_JOINT_FORCE_TORQUES (0x4605)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 1
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Number of Joints: 0
+
+Testing reportVksBoundsMessage:
+JAUS_REPORT_VKS_BOUNDS (0x4A22)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 19
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Request Id: 0
+Feature Class: 0x0 See Feature Class Table
+South West Latitude(degrees): 0.000000
+South West Longitude(degrees): 0.000000
+North East Latitude(degrees): 0.000000
+North East Longitude(degrees): 0.000000
+
+Testing reportVksFeatureClassMetadataMessage:
+JAUS_REPORT_VKS_FEATURE_CLASS_METADATA (0x4A21)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 65539
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Feature Class Id: 0x0
+Number of String Characters: 0
+Feature Class Metadata: 
+
+Testing reportVksDataTransferTerminationMessage:
+JAUS_REPORT_VKS_DATA_TRANSFER_TERMINATION (0x4A24)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 0
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+reportVksDataTransferTerminationMessageToJausMessage failed
+
+Testing reportVksObjectsCreationMessage:
+JAUS_REPORT_VKS_OBJECTS_CREATION (0x4A20)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 262143
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Request Id: 0
+Object Count: 0
+
+Testing reportVksObjectsMessage:
+JAUS_REPORT_VKS_OBJECTS (0x4A23)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 512000
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Presence Vector: 0xFF
+Request Id: 0
+Object Count: 0
+
+Testing reportServicesMessage:
+JAUS_REPORT_SERVICES (0x4B03)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 1
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0 No Services
+
+Testing reportIdentificationMessage:
+JAUS_REPORT_IDENTIFICATION (0x4B00)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 84
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Query Type: 0 Reserved Type
+Authority: 0
+Type: 0 Reserved Type
+Identification: 
+
+Testing reportConfigurationMessage:
+JAUS_REPORT_CONFIGURATION (0x4B01)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 1
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0JausSubsystem-0
+
+Testing reportSubsystemListMessage:
+JAUS_REPORT_SUBSYSTEM_LIST (0x4B02)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 1
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Subsystem Count: 0
+
+Testing reportMissionStatusMessage:
+JAUS_REPORT_MISSION_STATUS (0x4E01)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 9
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Type: 0 Mission
+Status: 4 Finished
+Secondary Status: 0 Non-Error Condition
+Mission Id: 0
+Task Id: 0
+UID: 0
+
+Testing reportSpoolingPreferenceMessage:
+JAUS_REPORT_SPOOLING_PREFERENCE (0x4E00)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 5
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Spool Type: 0 Count
+ Data: 0 Messages Distance
+ Data: 0 Meters Time
+ Data: 0 Seconds Unknown Type
+ Data: 0
+
+Testing reportTimeMessage:
+JAUS_REPORT_TIME (0x4011)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 7
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Presence Vector: 0xFF
+Time: 00:00:00.0
+Date: January 00, 0000
+
+Testing reportComponentAuthorityMessage:
+JAUS_REPORT_COMPONENT_AUTHORITY (0x4001)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 1
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Authority Code: 0
+
+Testing reportComponentStatusMessage:
+JAUS_REPORT_COMPONENT_STATUS (0x4002)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 5
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Primary Status Code: Undefined
+Secondary Status Code: 0
+
+Testing reportComponentControlMessage:
+JAUS_REPORT_COMPONENT_CONTROL (0x400D)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 5
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Subsystem Id: 0
+Node Id: 0
+Component Id: 0
+Instance Id: 0
+Authority Code: 0
+
+Testing reportEventsMessage:
+JAUS_REPORT_EVENTS (0x41F0)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 1
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Count: 0
+
+Testing eventMessage:
+JAUS_EVENT (0x41F1)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 8
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Event Id: 0
+Event Sequence Number: 0
+Report Message: Invalid Jaus Message
+
+Testing reportDataLinkStatusMessage:
+JAUS_REPORT_DATA_LINK_STATUS (0x4200)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 2
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Data Link Id: 0
+Data Link State: 1 On
+
+Testing reportHeartbeatPulseMessage:
+JAUS_REPORT_HEARTBEAT_PULSE (0x4202)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 0
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+reportHeartbeatPulseMessageToJausMessage failed
+
+Testing reportSelectedDataLinkStatusMessage:
+JAUS_REPORT_SELECTED_DATA_LINK_STATUS (0x4201)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 1
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Data Link Id: 0
+
+Testing reportVelocityStateMessage:
+JAUS_REPORT_VELOCITY_STATE (0x4404)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 30
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Presence Vector: 0xFFFF
+X Velocty(meters/second): 0.000000
+Y Velocty(meters/second): 0.000000
+Z Velocty(meters/second): 0.000000
+Velocty RMS(meters/second): 0.000000
+Roll Rate(radians/second): 0.000000
+Pitch Rate(radians/second): 0.000000
+Yaw Rate(radians/second): 0.000000
+Rate RMS(radians/second): 0.000000
+Time Stamp: January 00, 0000  00:00:00.0
+
+
+Testing reportPlatformSpecificationsMessage:
+JAUS_REPORT_PLATFORM_SPECIFICATIONS (0x4400)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 59
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Presence Vector: 0xFFFFFFFF
+Platform Name: 
+Distance from vehicle origin to front(meters): 0.000000
+Distance from vehicle origin to back(meters): 0.000000
+Distance from vehicle origin to right(meters): 0.000000
+Distance from vehicle origin to left(meters): 0.000000
+Distance from vehicle origin to bottom(meters): 0.000000
+Distance from vehicle origin to top(meters): 0.000000
+Distance from vehicle origin to X center of gravity(meters): 0.000000
+Distance from vehicle origin to Y center of gravity(meters): 0.000000
+Distance from vehicle origin to Z center of gravity(meters): 0.000000
+Minimum Turning Radius(meters): 0.000000
+Wheel Base(meters): 0.000000
+Track Width(meters): 0.000000
+Static Pitch Over(radians): 0.000000
+Static Roll Over(radians): 0.000000
+Maximum Velocity X(meters/second): 0.000000
+Maximum Velocity Y(meters/second): 0.000000
+Maximum Velocity Z(meters/second): 0.000000
+Maximum Roll Rate(radians/second): 0.000000
+Maximum Pitch Rate(radians/second): 0.000000
+Maximum Yaw Rate(radians/second): 0.000000
+
+Testing reportWrenchEffortMessage:
+JAUS_REPORT_WRENCH_EFFORT (0x4405)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 20
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Presence Vector: 0xFFFF
+Propulsive Linear Effort X(%): 0.000000
+Propulsive Linear Effort Y(%): 0.000000
+Propulsive Linear Effort Z(%): 0.000000
+Propulsive Rotational Effort X(%): 0.000000
+Propulsive Rotational Effort Y(%): 0.000000
+Propulsive Rotational Effort Z(%): 0.000000
+Resistive Linear Effort X(%): 0.000000
+Resistive Linear Effort Y(%): 0.000000
+Resistive Linear Effort Z(%): 0.000000
+Resistive Rotational Effort X(%): 0.000000
+Resistive Rotational Effort Y(%): 0.000000
+Resistive Rotational Effort Z(%): 0.000000
+
+Testing reportLocalPathSegmentMessage:
+JAUS_REPORT_LOCAL_PATH_SEGMENT (0x4410)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 29
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Presence Vector: 0xFF
+Path Segment Number: 0
+Point 1 X Coordinate(meters): 0.000000
+Point 1 Y Coordinate(meters): 0.000000
+Point 1 Z Coordinate(meters): 0.000000
+Point 2 X Coordinate(meters): 0.000000
+Point 2 Y Coordinate(meters): 0.000000
+Point 2 Z Coordinate(meters): 0.000000
+Weighting Factor: 0.000000
+
+Testing reportWaypointCountMessage:
+JAUS_REPORT_WAYPOINT_COUNT (0x440B)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 2
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Waypoint Count: 0
+
+Testing reportLocalPoseMessage:
+JAUS_REPORT_LOCAL_POSE (0x4403)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 30
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Presence Vector: 0xFFFF
+X(meters): 0.000000
+Y(meters): 0.000000
+Z(meters): 0.000000
+Position RMS(meters): 0.000000
+Roll(radians): 0.000000
+Pitch(Radians): 0.000000
+Yaw(Radians): 0.000000
+Attitude RMS(radians): 0.000000
+Time Stamp: January 00, 0000  00:00:00.0
+
+
+Testing reportLocalWaypointMessage:
+JAUS_REPORT_LOCAL_WAYPOINT (0x440D)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 21
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Presence Vector: 0xFF
+Waypoint Number: 0
+X(meters): 0.000000
+Y(meters): 0.000000
+Z(meters): 0.000000
+Roll(radians): 0.000000
+Pitch(radians): 0.000000
+Yaw(radians): 0.000000
+
+Testing reportPathSegmentCountMessage:
+JAUS_REPORT_PATH_SEGMENT_COUNT (0x440E)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 2
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Path Segment Count: 0
+
+Testing reportPlatformOperationalDataMessage:
+JAUS_REPORT_PLATFORM_OPERATIONAL_DATA (0x4401)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 10
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Presence Vector: 0xFF
+Engine Temperature(celsius): 0.000000
+Odometer(meters): 0.000000
+Battery Voltage(%): 0.000000
+Fuel Level(%): 0.000000
+Oil Pressure(%): 0.000000
+
+Testing reportGlobalPoseMessage:
+JAUS_REPORT_GLOBAL_POSE (0x4402)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 30
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Presence Vector: 0xFFFF
+Latitude(degrees): 0.000000
+Longitude(degrees): 0.000000
+Elevation(meters): 0.000000
+Position RMS(meters): 0.000000
+Roll(radians): 0.000000
+Pitch(radians): 0.000000
+Yaw(radians): 0.000000
+Attitude RMS(radians): 0.000000
+Time Stamp: January 00, 0000  00:00:00.0
+
+
+Testing reportLocalVectorMessage:
+JAUS_REPORT_LOCAL_VECTOR (0x4408)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 6
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Speed(meters/second): 0.000000
+Heading(radians): 0.000000
+
+Testing reportDiscreteDevicesMessage:
+JAUS_REPORT_DISCRETE_DEVICES (0x4406)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 5
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Presence Vector: 0xFF
+Main Propulsion
+  Main Propulsion: Off
+  Main Energy/Fuel Supply: Off
+  Auxiliary Energy/Fuel Supply: Off
+  Power to Auxiliary Devices: Off
+  Starting Device: Off
+  Cold Start: False
+  Commence Automatic Start Sequence: False
+  Commence Automatic Shutdown Sequence: False
+Parking Brake and Horn
+  Parking Brake: Release
+  Horn: Off
+Gear: 0 Park
+Transfer Case: 0 Low
+
+Testing reportGlobalPathSegmentMessage:
+JAUS_REPORT_GLOBAL_PATH_SEGMENT (0x440F)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 29
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Presence Vector: 0xFF
+Path Segment Number: 0
+Point 1 Latitude(degrees): 0.000000
+Point 1 Longitude(degrees): 0.000000
+Point 1 Altitude(meters): 0.000000
+Point 2 Latitude(degrees): 0.000000
+Point 2 Longitude(degrees): 0.000000
+Point 2 Altitude(meters): 0.000000
+Weighting Factor: 0.000000
+
+Testing reportTravelSpeedMessage:
+JAUS_REPORT_TRAVEL_SPEED (0x440A)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 2
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Speed(meters/second): 0.000000
+
+Testing reportGlobalWaypointMessage:
+JAUS_REPORT_GLOBAL_WAYPOINT (0x440C)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 21
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Presence Vector: 0xFF
+Waypoint Number: 0
+Latitude(degrees): 0.000000
+Longitude(degrees): 0.000000
+Elevation(meters): 0.000000
+Roll(radians): 0.000000
+Pitch(radians): 0.000000
+Yaw(radians): 0.000000
+
+Testing reportGlobalVectorMessage:
+JAUS_REPORT_GLOBAL_VECTOR (0x4407)
+Reserved: 0
+Version: 3.2 and 3.3 compatible
+Exp. Flag: Not Experimental
+SC Flag: Not Service Connection
+ACK/NAK: None
+Priority: Normal Priority 6
+Source: 0.0.0.0
+Destination: 0.0.0.0
+Data Size: 13
+Data Flag: 0 Only data packet in single-packet stream
+Sequence Number: 0
+Presence Vector: 0xFF
+Speed(meters/second): 0.000000
+Altitude(meters): 0.000000
+Heading(radians): 0.000000
+Roll(radians): 0.000000
+pitch(radians): 0.000000
+
