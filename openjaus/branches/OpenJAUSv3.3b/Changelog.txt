@@ -2,10 +2,24 @@
 	
 	* Added toString functions for all messages and types in libjaus
 	
-	* hashmap.h: Made a change to support gcc 4.x and greater which supports the new <unordered_map>class
+	* hashmap.h: Made a change to support gcc 4.x and greater which supports the new <unordered_map> class
 	
 	* jausLong.c:
 	* jausUnsignedLong.c: fixed fromBuffer() methods not allocating enough memory
+
+    * jausTime: Added the ability to explicitly set a JausTime from a time_t structure using jausTimeSetTime()
+    
+    * ojCmpt: Added the ability to terminate a controller with ojCmptTerminateController()
+              Added a mutex for the userData which can be locked and unlocked using the new functions: ojCmptUnlockUserData() and ojCmptLockUserData()
+                 
+    * Added a function to the nodeManagerInterface to check if a node manager is up and running and ready to be used, ojNodeManagerIsReady()
+      This can be configured to block, not block or wait a given timeout period for a nodemanager response
+      Uses two new NMI messages: READY_CHECK(0x0E) and REPORT_READY(0x0F)
+	
+	* scManager: Added significantly more mutex locking behavior, also identified an issue with deletion of sc pointers which were in the scm->incomingSC list.
+	             NOTE: serviceConnectionDestroy() now requires a pointer to the ServiceConnectionManager object to check the scm->incomingSC list for possible lost pointers
+	
+	* 
 
 	* Ticket #97, OjUdpComponentInterface.cpp: Interface no longer fails when a component with invalid id checks in
 	
