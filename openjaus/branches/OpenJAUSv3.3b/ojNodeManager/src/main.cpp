@@ -254,7 +254,7 @@ int main(int argc, char **args)
 
 	while(running)
 	{
-		bzero(choice, 8);
+		memset(choice, 0, 8);
 		count = read(0, &choice, 8);
 		if(count == 1 && choice[0] == 27) // ESC
 		{
