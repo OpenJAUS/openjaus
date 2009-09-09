@@ -1,5 +1,5 @@
 /*****************************************************************************
- *  Copyright (c) 2008, University of Florida.
+ *  Copyright (c) 2009, OpenJAUS.com.
  *  All rights reserved.
  *
  *  This file is part of OpenJAUS.  OpenJAUS is distributed under the BSD
