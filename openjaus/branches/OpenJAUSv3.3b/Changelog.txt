@@ -19,8 +19,6 @@
 	* scManager: Added significantly more mutex locking behavior, also identified an issue with deletion of sc pointers which were in the scm->incomingSC list.
 	             NOTE: serviceConnectionDestroy() now requires a pointer to the ServiceConnectionManager object to check the scm->incomingSC list for possible lost pointers
 	
-	* 
-
 	* Ticket #97, OjUdpComponentInterface.cpp: Interface no longer fails when a component with invalid id checks in
 	
 	* Ticket #98, scManager.c: Added missing mutex lock in service connection manager
