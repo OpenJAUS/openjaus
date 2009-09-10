@@ -1,0 +1,25 @@
+To install the OpenJAUS Node Manager Service Daemon for Linux machines do the following:
+
+1. Extract the ojnmService folder into the OpenJAUS3.3.x folder of your main OpenJAUS distribution.
+
+2. Compile the ojnmService binary by executing "make" in the ojnmService folder.
+
+3. Copy the ojnmService binary to the /usr/sbin directory:
+	"cp ./bin/ojnmService /usr/sbin/ojnmService"
+
+4. Create the proper ojNodeManager.conf file using the supplied template.
+
+5. Copy the ojNodeManager.conf file to the /etc folder:
+	"cp ./ojNodeManager.conf /etc/ojNodeManager.conf"
+
+6. Copy the ojnmd script to the /etc/init.d/ folder:
+	"cp ./ojnmd /etc/init.d/ojnmd"
+
+7. Setup the startup script, in Ubuntu this is done by the following:
+	"sudo update-rc.d ojnmd defaults"
+
+8. Start the OpenJAUS Node Manager service with:
+	"/etc/init.d/ojnmd start"
+
+9. Check the file /var/log/ojNodeManager.log for any warnings or errors.
+

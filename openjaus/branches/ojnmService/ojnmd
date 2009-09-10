@@ -10,7 +10,7 @@
 #                    OpenJAUS Node Manager service
 ### END INIT INFO
 
-# Author: Danny Kent <danny@openjaus.com>
+# Author: Danny Kent <danny AT openjaus DOT com>
 
 # Do NOT "set -e"
 
