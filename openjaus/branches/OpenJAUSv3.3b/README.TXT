@@ -185,11 +185,6 @@ Known Issues:
    definitions and function prototypes. Often the functions you seek can be
    found quickly by browsing the include/ directories.
 
-*  A "ToString" method for each JAUS message and data structure is lacking from 
-   this implementation and thus makes displaying critical information to the
-   user more cumbersome.
-
-
 Copyright Notices
 -----------------
 
