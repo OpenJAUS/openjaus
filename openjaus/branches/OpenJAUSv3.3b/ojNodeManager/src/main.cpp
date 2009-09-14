@@ -210,7 +210,7 @@ int main(int argc, char **args)
 	return 0;
 }
 
-#elif defined(__linux) || defined(linux) || defined(__linux__) || defined(__APPLE__)
+#elif defined(__linux) || defined(linux) || defined(__linux__) || defined(__APPLE__) || defined(__QNX__)
 
 int main(int argc, char **args)
 {
